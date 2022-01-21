@@ -1,21 +1,4 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material
-
-import React from "react";
+import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
@@ -26,9 +9,48 @@ import Card from "@mui/material/Card";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 function Departments() {
+  const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = departmentTableData();
+
+  const [namex, setName] = useState("");
+  const [descripx, setDescrip] = useState("");
+
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    const raw = JSON.stringify({ orgID: "3", name: namex, descrip: descripx });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://kubuservice.herokuapp.com/department/add", requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
 
   return (
     <DashboardLayout>
@@ -37,13 +59,27 @@ function Departments() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="text" label="Name" variant="standard" fullWidth />
+              <MDInput
+                type="text"
+                label="Name"
+                value={namex || ""}
+                onChange={(e) => setName(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Description" variant="standard" fullWidth />
+              <MDInput
+                type="text"
+                value={descripx || ""}
+                onChange={(e) => setDescrip(e.target.value)}
+                label="Description"
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" width="50%">
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>

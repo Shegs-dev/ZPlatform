@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@emotion/cache": "11.4.0",
-    "@emotion/react": "11.4.1",
+    "@emotion/react": "11.7.1",
     "@emotion/styled": "11.3.0",
     "@mui/icons-material": "5.2.0",
     "@mui/material": "5.2.0",
@@ -39,6 +39,8 @@
     "react-table": "7.7.0",
     "stylis": "4.0.10",
     "stylis-plugin-rtl": "2.1.0",
+    "sweetalert2": "^11.3.6",
+    "sweetalert2-react-content": "^4.2.0",
     "web-vitals": "1.0.1",
     "yup": "0.32.9"
   },
