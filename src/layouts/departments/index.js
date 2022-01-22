@@ -94,7 +94,6 @@ function Departments() {
           showTotalEntries
           noEndBorder
           canSearch
-          pagination
         />
       </MDBox>
       <Footer />
