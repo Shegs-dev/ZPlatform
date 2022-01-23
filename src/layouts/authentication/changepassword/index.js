@@ -1,38 +1,35 @@
 import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import DataTable from "examples/Tables/DataTable";
-import departmentTableData from "layouts/departments/data/departmentTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Footer from "examples/Footer";
+import MDTypography from "components/MDTypography";
 
-function Departments() {
+function ChangePassword() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = departmentTableData();
-
-  const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
+  const [passwordx, setpassword] = useState("");
+  const [npasswordx, setnpassword] = useState("");
+  const [retypepasswordx, setretypepassword] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
     e.preventDefault();
-    const raw = JSON.stringify({ orgID: "3", name: namex, descrip: descripx });
+    const raw = JSON.stringify({ username: "yuo", password: passwordx, npassword: npasswordx });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-
-    fetch("http://kubuservice.herokuapp.com/department/add", requestOptions)
+    fetch("http://zaveservice.herokuapp.com/login/changepass", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -56,49 +53,64 @@ function Departments() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
+        <MDBox pt={3} pb={3} px={30}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              CHANGE PASSWORD
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput
-                type="text"
-                label="Name"
-                value={namex || ""}
-                onChange={(e) => setName(e.target.value)}
+                type="password"
+                label="Old Password"
+                value={passwordx || ""}
+                onChange={(e) => setpassword(e.target.value)}
                 variant="standard"
                 fullWidth
               />
             </MDBox>
             <MDBox mb={2}>
               <MDInput
-                type="text"
-                value={descripx || ""}
-                onChange={(e) => setDescrip(e.target.value)}
-                label="Description"
+                type="password"
+                value={npasswordx || ""}
+                onChange={(e) => setnpassword(e.target.value)}
+                label="New Password"
+                variant="standard"
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="password"
+                value={retypepasswordx || ""}
+                onChange={(e) => setretypepassword(e.target.value)}
+                label="Retype Password"
                 variant="standard"
                 fullWidth
               />
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="40%">
                 Save
               </MDButton>
             </MDBox>
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
 
-export default Departments;
+export default ChangePassword;

@@ -43,6 +43,7 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import ChangePassword from "layouts/authentication/changepassword";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -112,6 +113,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "collapse",
+    name: "Change Password",
+    key: "ChangePassword",
+    icon: <Icon fontSize="small">edit</Icon>,
+    route: "/authentication/changepassword",
+    component: <ChangePassword />,
   },
 ];
 
