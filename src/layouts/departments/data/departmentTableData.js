@@ -16,7 +16,7 @@ export default function data() {
   };
 
   useEffect(() => {
-    fetch("http://kubuservice.herokuapp.com/department/gets/3")
+    fetch("https://kubuservice.herokuapp.com/department/gets/3")
       .then((res) => res.json())
       .then((result) => {
         setItems(result);
@@ -28,7 +28,7 @@ export default function data() {
       { Header: "name", accessor: "name", align: "left" },
       { Header: "description", accessor: "descrip", align: "left" },
       {
-        Header: "created_time",
+        Header: "Time Created",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
         align: "center",
