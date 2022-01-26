@@ -5,9 +5,7 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 
-import MDButton from "components/MDButton";
-
-export default function data({ handleUpdate }) {
+export default function data() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
 
@@ -34,16 +32,6 @@ export default function data({ handleUpdate }) {
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
         align: "center",
-      },
-      {
-        Header: "Actions",
-        accessor: "id",
-        Cell: () => (
-          <MDButton variant="gradient" onClick={handleUpdate()} color="info" width="50%">
-            Edit
-          </MDButton>
-        ),
-        align: "left",
       },
     ],
 
