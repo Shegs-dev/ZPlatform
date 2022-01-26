@@ -32,7 +32,7 @@ function Departments() {
       redirect: "follow",
     };
 
-    fetch("http://kubuservice.herokuapp.com/department/add", requestOptions)
+    fetch("https://kubuservice.herokuapp.com/department/add", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({

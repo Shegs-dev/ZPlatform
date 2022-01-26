@@ -16,7 +16,7 @@ export default function data() {
   };
 
   useEffect(() => {
-    fetch("http://kubuservice.herokuapp.com/department/gets/3")
+    fetch("https://kubuservice.herokuapp.com/department/gets/3")
       .then((res) => res.json())
       .then((result) => {
         setItems(result);
