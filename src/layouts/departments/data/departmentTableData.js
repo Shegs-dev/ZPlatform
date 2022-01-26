@@ -28,7 +28,7 @@ export default function data() {
       { Header: "name", accessor: "name", align: "left" },
       { Header: "description", accessor: "descrip", align: "left" },
       {
-        Header: "created_time",
+        Header: "Time Created",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
         align: "center",
