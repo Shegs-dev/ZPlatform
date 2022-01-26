@@ -5,6 +5,7 @@ import DataTable from "examples/Tables/DataTable";
 import departmentTableData from "layouts/departments/data/departmentTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
+import MDTypography from "components/MDTypography";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -14,7 +15,10 @@ import withReactContent from "sweetalert2-react-content";
 
 function Departments() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = departmentTableData();
+
+  const handleUpdate = () => {};
+
+  const { columns: pColumns, rows: pRows } = departmentTableData(handleUpdate());
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -57,6 +61,21 @@ function Departments() {
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Add New Department
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput
