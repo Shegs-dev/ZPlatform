@@ -5,6 +5,7 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import DataTable from "examples/Tables/DataTable";
+import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 
 export default function data() {
@@ -40,8 +41,7 @@ export default function data() {
 
   useEffect(() => {
     const deptsArray = JSON.parse(JSON.stringify(items));
-    console.log(deptsArray);
-    updateDepartment(3);
+    updateDepartment(deptsArray[0].id);
   }, [items]);
 
   const columns = [
@@ -70,13 +70,15 @@ export default function data() {
   const rows = items;
 
   return (
-    <DataTable
-      table={{ columns, rows }}
-      isSorted
-      entriesPerPage
-      showTotalEntries
-      noEndBorder
-      canSearch
-    />
+    <MDBox pt={3}>
+      <DataTable
+        table={{ columns, rows }}
+        isSorted
+        entriesPerPage
+        showTotalEntries
+        noEndBorder
+        canSearch
+      />
+    </MDBox>
   );
 }
