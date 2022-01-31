@@ -47,6 +47,8 @@ import SignUp from "layouts/authentication/sign-up";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
+import Branches from "layouts/branches/index";
+import CompanyReg from "layouts/authentication/companyRegistration";
 
 const routes = [
   {
@@ -64,6 +66,14 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
     component: <Tables />,
+  },
+  {
+    type: "collapse",
+    name: "Branches",
+    key: "branches",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/branches",
+    component: <Branches />,
   },
   {
     type: "collapse",
@@ -112,6 +122,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "collapse",
+    name: "Company Regitration",
+    key: "companyRegistration",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/companyRegistration",
+    component: <CompanyReg />,
   },
 ];
 

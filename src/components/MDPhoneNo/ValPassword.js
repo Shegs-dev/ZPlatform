@@ -38,24 +38,26 @@ function ValPassword() {
     }
   };
 
-  <MDBox component="form" role="form" onClick={handleSubmit()}>
-    <MDInput
-      label="New Password"
-      type="password"
-      ref={register({ required: true })}
-      name="newpassword"
-      onChange={(e) => setNewPassword(e.target.value)}
-      onBlur={OnVerifyNewPassword}
-    />
+  return (
+    <MDBox component="form" role="form" onClick={handleSubmit()}>
+      <MDInput
+        label="New Password"
+        type="password"
+        ref={register({ required: true })}
+        name="newpassword"
+        onChange={(e) => setNewPassword(e.target.value)}
+        onBlur={OnVerifyNewPassword}
+      />
 
-    <MDInput
-      label="New Password"
-      type="password"
-      ref={register({ required: true })}
-      name="confirmpassword"
-      onChange={(e) => setConfirmPassword(e.target.value)}
-      onBlur={OnVerifyNewPassword}
-    />
-  </MDBox>;
+      <MDInput
+        label="New Password"
+        type="password"
+        ref={register({ required: true })}
+        name="confirmpassword"
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        onBlur={OnVerifyNewPassword}
+      />
+    </MDBox>
+  );
 }
 export default ValPassword;

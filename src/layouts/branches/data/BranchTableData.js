@@ -4,6 +4,7 @@
 
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
+// import MDButton from "components/MDButton";
 import { Dropdown, Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import IconButton from "@mui/material/IconButton";
@@ -14,12 +15,13 @@ import MDInput from "components/MDInput";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-export default function data() {
-  const MySwal = withReactContent(Swal);
+export default function Branchdata() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
   const [id, setId] = useState("");
-
+  const orgID = 3;
+  const MySwal = withReactContent(Swal);
+  // const axios = require("axios");
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -27,7 +29,12 @@ export default function data() {
     MySwal.fire({
       title: "Update Department",
       html: `<input type="text" class="swal2-input" placeholder="Name">
-      <input type="text" class="swal2-input" placeholder="Description">`,
+      <input type="email" class="swal2-input" placeholder="Email">
+      <input type="text" class="swal2-input" placeholder="Street">
+      <input type="text" class="swal2-input" placeholder="City">
+      <input type="text" class="swal2-input" placeholder="State">
+      <input type="text" class="swal2-input" placeholder="Country">
+      <input type="text" class="swal2-input" placeholder="Phone Number">`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -35,16 +42,30 @@ export default function data() {
     });
   };
 
-  const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
-
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+
+  const [namex, setName] = useState("");
+  const [emailx, setEmail] = useState("");
+  const [streetx, setStreet] = useState("");
+  const [cityx, setCity] = useState("");
+  const [statex, setState] = useState("");
+  const [countryx, setCountry] = useState("");
+  const [pnox, setPno] = useState("");
 
   // Method to handle update
   const handleUpdate = (e) => {
     e.preventDefault();
-    const raw = JSON.stringify({ orgID: "3", name: namex, descrip: descripx });
+    const raw = JSON.stringify({
+      orgID: "3",
+      name: namex,
+      email: emailx,
+      street: streetx,
+      city: cityx,
+      state: statex,
+      country: countryx,
+      pno: pnox,
+    });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -52,7 +73,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/update", requestOptions)
+    fetch("https://kubuservice.herokuapp.com/branch/update", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -86,7 +107,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://kubuservice.herokuapp.com/department/delete/${value}`, { method: "DELETE" })
+        fetch(`http://kubuservice.herokuapp.com/branch/delete/${value}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -109,7 +130,7 @@ export default function data() {
   };
 
   // Method to change date from timestamp
-  const changeDate = (timestamp) => {
+  const changeBranchDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
@@ -119,25 +140,28 @@ export default function data() {
   const getCellValue = (value) => {
     setId(value);
   };
-
-  // Method to fetch all departments
+  // Method to fetch all Branch
   useEffect(() => {
-    fetch("http://kubuservice.herokuapp.com/department/gets/3")
+    fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgID}`)
       .then((res) => res.json())
       .then((result) => {
         setItems(result);
       });
   }, []);
 
-  // Return table
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
-      { Header: "description", accessor: "descrip", align: "left" },
+      { Header: "Name", accessor: "name", align: "left" },
+      { Header: "Email", accessor: "email", align: "left" },
+      { Header: "Street", accessor: "street", align: "left" },
+      { Header: "City", accessor: "city", align: "left" },
+      { Header: "State", accessor: "state", align: "left" },
+      { Header: "Country", accessor: "country", align: "left" },
+      { Header: "Phone Number", accessor: "pno", align: "left" },
       {
         Header: "created_time",
         accessor: "createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
+        Cell: ({ cell: { value } }) => changeBranchDate(value),
         align: "center",
       },
       {
@@ -193,9 +217,59 @@ export default function data() {
                   <MDBox mb={2}>
                     <MDInput
                       type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
+                      value={emailx || ""}
+                      onChange={(e) => setEmail(e.target.value)}
+                      label="Email"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      value={streetx || ""}
+                      onChange={(e) => setStreet(e.target.value)}
+                      label="Street"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      value={cityx || ""}
+                      onChange={(e) => setCity(e.target.value)}
+                      label="City"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      value={statex || ""}
+                      onChange={(e) => setState(e.target.value)}
+                      label="State"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      value={countryx || ""}
+                      onChange={(e) => setCountry(e.target.value)}
+                      label="Country"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      value={pnox || ""}
+                      onChange={(e) => setPno(e.target.value)}
+                      label="Phone Number"
                       variant="standard"
                       fullWidth
                     />
