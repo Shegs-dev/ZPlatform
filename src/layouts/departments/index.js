@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
+import DataTable from "examples/Tables/DataTable";
 import departmentTableData from "layouts/departments/data/departmentTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
@@ -13,7 +14,7 @@ import withReactContent from "sweetalert2-react-content";
 
 function Departments() {
   const MySwal = withReactContent(Swal);
-  const { departmentData } = departmentTableData();
+  const { columns: pColumns, rows: pRows } = departmentTableData();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -85,7 +86,16 @@ function Departments() {
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>{departmentData}</MDBox>
+      <MDBox pt={3}>
+        <DataTable
+          table={{ columns: pColumns, rows: pRows }}
+          isSorted
+          entriesPerPage
+          showTotalEntries
+          noEndBorder
+          canSearch
+        />
+      </MDBox>
       <Footer />
     </DashboardLayout>
   );
