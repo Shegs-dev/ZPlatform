@@ -38,7 +38,6 @@
     "react": "17.0.2",
     "react-accessible-dropdown-menu-hook": "^3.2.0",
     "react-bootstrap": "^2.1.1",
-    "react-bootstrap-table-next": "^4.0.3",
     "react-calendar": "^3.6.0",
     "react-chartjs-2": "3.0.4",
     "react-date-picker": "^8.3.6",
