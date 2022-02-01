@@ -18,7 +18,6 @@ export default function data() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
-  const [id, setId] = useState("");
 
   const [show, setShow] = useState(false);
 
@@ -73,8 +72,7 @@ export default function data() {
   };
 
   // Method to handle diable
-  const handleDisable = () => {
-    const value = id;
+  const handleDisable = (value) => {
     console.log(`Hey ${value}`);
     MySwal.fire({
       title: "Are you sure?",
@@ -113,11 +111,6 @@ export default function data() {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
-  };
-
-  // Function to get cell value
-  const getCellValue = (value) => {
-    setId(value);
   };
 
   // Method to fetch all departments
@@ -162,7 +155,6 @@ export default function data() {
                   disableRipple
                   color="light"
                   sx={navbarIconButton}
-                  onClick={getCellValue(value)}
                 >
                   <Icon sx={{ fontWeight: "light" }}>settings</Icon>
                 </IconButton>
@@ -170,7 +162,7 @@ export default function data() {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleShow}>Update</Dropdown.Item>
-                <Dropdown.Item onClick={handleDisable}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
@@ -237,7 +229,6 @@ export default function data() {
                   disableRipple
                   color="light"
                   sx={navbarIconButton}
-                  onClick={getCellValue(value)}
                 >
                   <Icon sx={{ fontWeight: "light" }}>settings</Icon>
                 </IconButton>
@@ -245,7 +236,7 @@ export default function data() {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={handleShow}>Update</Dropdown.Item>
-                <Dropdown.Item onClick={handleDisable}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 

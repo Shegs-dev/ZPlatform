@@ -65,7 +65,6 @@ function Cover() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(phonex);
     const raw = JSON.stringify({
       fname: fnamex,
       lname: lnamex,
