@@ -65,7 +65,6 @@ function Cover() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(phonex);
     const raw = JSON.stringify({
       fname: fnamex,
       lname: lnamex,
@@ -92,7 +91,6 @@ function Cover() {
     fetch("https://zaveservice.herokuapp.com/personal/add", requestOptions)
       .then((res) => res.json())
       .then((result) => {
-        console.log(`Here ${result.data.id}`);
         MySwal.fire({
           title: result.status,
           type: "success",

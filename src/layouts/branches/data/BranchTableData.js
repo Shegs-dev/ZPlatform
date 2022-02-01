@@ -95,7 +95,6 @@ export default function Branchdata() {
 
   // Method to handle diable
   const handleDisable = (val) => {
-    console.log(val);
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
