@@ -18,7 +18,7 @@ export default function data() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
 
   const [show, setShow] = useState(false);
 
@@ -52,7 +52,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/update", requestOptions)
+    fetch("https://kubuservice.herokuapp.com/position/update", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -73,9 +73,8 @@ export default function data() {
   };
 
   // Method to handle diable
-  const handleDisable = () => {
-    const value = id;
-    console.log(`Hey ${value}`);
+  const handleDisable = (val) => {
+    console.log(val);
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -86,7 +85,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://kubuservice.herokuapp.com/department/delete/${value}`, { method: "DELETE" })
+        fetch(`http://kubuservice.herokuapp.com/position/delete/${val}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -116,13 +115,13 @@ export default function data() {
   };
 
   // Function to get cell value
-  const getCellValue = (value) => {
-    setId(value);
-  };
+  // const getCellValue = (value) => {
+  //   setId(value);
+  // };
 
-  // Method to fetch all departments
+  // Method to fetch all position
   useEffect(() => {
-    fetch("http://kubuservice.herokuapp.com/department/gets/3")
+    fetch("http://kubuservice.herokuapp.com/position/gets/3")
       .then((res) => res.json())
       .then((result) => {
         setItems(result);
@@ -138,7 +137,7 @@ export default function data() {
         Header: "Date Created",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
-        align: "center",
+        align: "left",
       },
       {
         Header: "actions",
@@ -162,15 +161,14 @@ export default function data() {
                   disableRipple
                   color="light"
                   sx={navbarIconButton}
-                  onClick={getCellValue(value)}
                 >
                   <Icon sx={{ fontWeight: "light" }}>settings</Icon>
                 </IconButton>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={handleShow}>Update</Dropdown.Item>
-                <Dropdown.Item onClick={handleDisable}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleShow(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
             <Modal show={show} onHide={handleClose}>
