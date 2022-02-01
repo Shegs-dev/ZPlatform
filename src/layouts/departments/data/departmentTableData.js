@@ -138,7 +138,7 @@ export default function data() {
         Header: "created_time",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
-        align: "center",
+        align: "left",
       },
       {
         Header: "actions",
