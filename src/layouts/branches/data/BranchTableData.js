@@ -18,7 +18,7 @@ import withReactContent from "sweetalert2-react-content";
 export default function Branchdata() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
   const orgID = 3;
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
@@ -28,13 +28,13 @@ export default function Branchdata() {
   const handleShow = () => {
     MySwal.fire({
       title: "Update Department",
-      html: `<input type="text" class="swal2-input" placeholder="Name">
-      <input type="email" class="swal2-input" placeholder="Email">
-      <input type="text" class="swal2-input" placeholder="Street">
-      <input type="text" class="swal2-input" placeholder="City">
-      <input type="text" class="swal2-input" placeholder="State">
-      <input type="text" class="swal2-input" placeholder="Country">
-      <input type="text" class="swal2-input" placeholder="Phone Number">`,
+      html: `<input type="text" class="swal2-input" name="namex" placeholder="Name">
+      <input type="email" class="swal2-input" name="emailx" placeholder="Email">
+      <input type="text" class="swal2-input" name="streetx" placeholder="Street">
+      <input type="text" class="swal2-input" name="cityx" placeholder="City">
+      <input type="text" class="swal2-input" name="statex" placeholder="State">
+      <input type="text" class="swal2-input" name="countryx" placeholder="Country">
+      <input type="text" class="swal2-input" name="pnox" placeholder="Phone Number">`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -94,9 +94,8 @@ export default function Branchdata() {
   };
 
   // Method to handle diable
-  const handleDisable = () => {
-    const value = id;
-    console.log(`Hey ${value}`);
+  const handleDisable = (val) => {
+    console.log(val);
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -107,7 +106,7 @@ export default function Branchdata() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://kubuservice.herokuapp.com/branch/delete/${value}`, { method: "DELETE" })
+        fetch(`http://kubuservice.herokuapp.com/branch/delete/${val}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -137,9 +136,9 @@ export default function Branchdata() {
   };
 
   // Function to get cell value
-  const getCellValue = (value) => {
-    setId(value);
-  };
+  // const getCellValue = (value) => {
+  //   setId(value);
+  // };
   // Method to fetch all Branch
   useEffect(() => {
     fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgID}`)
@@ -186,15 +185,15 @@ export default function Branchdata() {
                   disableRipple
                   color="light"
                   sx={navbarIconButton}
-                  onClick={getCellValue(value)}
+                  // onClick={getCellValue(value)}
                 >
                   <Icon sx={{ fontWeight: "light" }}>settings</Icon>
                 </IconButton>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={handleShow}>Update</Dropdown.Item>
-                <Dropdown.Item onClick={handleDisable}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleShow(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
