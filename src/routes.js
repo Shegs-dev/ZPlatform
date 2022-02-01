@@ -49,6 +49,8 @@ import Position from "layouts/position";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
+import Branches from "layouts/branches/index";
+import CompanyReg from "layouts/authentication/companyRegistration";
 
 const routes = [
   {
@@ -66,6 +68,14 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
     component: <Tables />,
+  },
+  {
+    type: "collapse",
+    name: "Branches",
+    key: "branches",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/branches",
+    component: <Branches />,
   },
   {
     type: "collapse",
@@ -130,6 +140,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
     component: <Position />,
+  },
+  {
+    name: "Company Regitration",
+    key: "companyRegistration",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/companyRegistration",
+    component: <CompanyReg />,
   },
 ];
 
