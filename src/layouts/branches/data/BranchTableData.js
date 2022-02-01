@@ -158,10 +158,10 @@ export default function Branchdata() {
       { Header: "Country", accessor: "country", align: "left" },
       { Header: "Phone Number", accessor: "pno", align: "left" },
       {
-        Header: "created_time",
+        Header: "Date Created",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeBranchDate(value),
-        align: "center",
+        align: "left",
       },
       {
         Header: "actions",
