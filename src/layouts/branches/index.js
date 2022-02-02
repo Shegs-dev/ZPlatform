@@ -6,6 +6,8 @@ import DataTable from "examples/Tables/DataTable";
 import BranchTableData from "layouts/branches/data/BranchTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -89,7 +91,7 @@ function Branches() {
           </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
@@ -112,10 +114,10 @@ function Branches() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-8">
                     <MDInput
@@ -138,10 +140,10 @@ function Branches() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
@@ -164,7 +166,7 @@ function Branches() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
               <MDInput
