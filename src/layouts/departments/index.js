@@ -59,34 +59,27 @@ function Departments() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Name"
-                      value={namex || ""}
-                      onChange={(e) => setName(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </container>
+              <MDInput
+                type="text"
+                label="Name"
+                value={namex || ""}
+                onChange={(e) => setName(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                value={descripx || ""}
+                onChange={(e) => setDescrip(e.target.value)}
+                label="Description"
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%" align>
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>
