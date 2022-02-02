@@ -155,7 +155,7 @@ export default function data() {
         Header: "Date Created",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
-        align: "center",
+        align: "left",
       },
       {
         Header: "actions",
@@ -180,7 +180,7 @@ export default function data() {
             </Dropdown>
           </div>
         ),
-        align: "center",
+        align: "left",
       },
     ],
 
