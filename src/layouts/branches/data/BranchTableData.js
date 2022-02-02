@@ -5,13 +5,11 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 // import MDButton from "components/MDButton";
-import { Dropdown, Modal, Button } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import IconButton from "@mui/material/IconButton";
 import { navbarIconButton } from "examples/Navbars/DashboardNavbar/styles";
 import Icon from "@mui/material/Icon";
-import MDBox from "components/MDBox";
-import MDInput from "components/MDInput";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -22,41 +20,25 @@ export default function Branchdata() {
   const orgID = 3;
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
-    MySwal.fire({
-      title: "Update Department",
-      html: `<input type="text" class="swal2-input" name="namex" placeholder="Name">
-      <input type="email" class="swal2-input" name="emailx" placeholder="Email">
-      <input type="text" class="swal2-input" name="streetx" placeholder="Street">
-      <input type="text" class="swal2-input" name="cityx" placeholder="City">
-      <input type="text" class="swal2-input" name="statex" placeholder="State">
-      <input type="text" class="swal2-input" name="countryx" placeholder="Country">
-      <input type="text" class="swal2-input" name="pnox" placeholder="Phone Number">`,
-      confirmButtonText: "Save",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    });
-  };
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  const [namex, setName] = useState("");
-  const [emailx, setEmail] = useState("");
-  const [streetx, setStreet] = useState("");
-  const [cityx, setCity] = useState("");
-  const [statex, setState] = useState("");
-  const [countryx, setCountry] = useState("");
-  const [pnox, setPno] = useState("");
-
   // Method to handle update
-  const handleUpdate = (e) => {
-    e.preventDefault();
+  const handleUpdate = (
+    idx,
+    namex,
+    emailx,
+    streetx,
+    cityx,
+    statex,
+    countryx,
+    pnox,
+    createdTimex,
+    deleteFlagx
+  ) => {
     const raw = JSON.stringify({
+      id: idx,
       orgID: "3",
       name: namex,
       email: emailx,
@@ -65,6 +47,8 @@ export default function Branchdata() {
       state: statex,
       country: countryx,
       pno: pnox,
+      createdTime: createdTimex,
+      deletedFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",
@@ -73,6 +57,7 @@ export default function Branchdata() {
       redirect: "follow",
     };
 
+    console.log(`raw ${raw}`);
     fetch("https://kubuservice.herokuapp.com/branch/update", requestOptions)
       .then((res) => res.json())
       .then((result) => {
@@ -91,6 +76,72 @@ export default function Branchdata() {
           text: error.message,
         });
       });
+  };
+
+  // Method to filter departments
+  const handleShow = (filteredData, value) => {
+    let namex = "";
+    let emailx = "";
+    let streetx = "";
+    let cityx = "";
+    let statex = "";
+    let countryx = "";
+    let pnox = "";
+    let createdTime = 0;
+    let deleteFlag = 0;
+    // Avoid filter for empty string
+    if (!value) {
+      namex = "";
+      emailx = "";
+      streetx = "";
+      cityx = "";
+      statex = "";
+      countryx = "";
+      pnox = "";
+      createdTime = 0;
+      deleteFlag = 0;
+    } else {
+      const filteredItems = filteredData.filter((item) => item.id === value);
+
+      namex = filteredItems[0].name;
+      emailx = filteredItems[0].email;
+      streetx = filteredItems[0].street;
+      cityx = filteredItems[0].city;
+      statex = filteredItems[0].state;
+      countryx = filteredItems[0].country;
+      pnox = filteredItems[0].pno;
+      createdTime = filteredItems[0].createdTime;
+      deleteFlag = filteredItems[0].deleteFlag;
+
+      MySwal.fire({
+        title: "Update Department",
+        html: `<input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name">
+    <input type="email" class="swal2-input" id="email" value="${emailx}" placeholder="Email">
+    <input type="text" class="swal2-input" id="street" value="${streetx}" placeholder="Street">
+    <input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City">
+    <input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State">
+    <input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country">
+    <input type="text" class="swal2-input" id="pno" value="${pnox}" placeholder="Phone Number">`,
+        confirmButtonText: "Save",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        preConfirm: () => {
+          const name = Swal.getPopup().querySelector("#name").value;
+          const email = Swal.getPopup().querySelector("#email").value;
+          const street = Swal.getPopup().querySelector("#street").value;
+          const city = Swal.getPopup().querySelector("#city").value;
+          const state = Swal.getPopup().querySelector("#state").value;
+          const country = Swal.getPopup().querySelector("#country").value;
+          const pno = Swal.getPopup().querySelector("#pno").value;
+          const id = value;
+          if (!name) {
+            Swal.showValidationMessage(`Please enter name`);
+          }
+          handleUpdate(id, name, email, street, city, state, country, pno, createdTime, deleteFlag);
+        },
+      });
+    }
   };
 
   // Method to handle diable
@@ -191,98 +242,10 @@ export default function Branchdata() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleShow(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Update Department</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <MDBox component="form" role="form">
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      label="Name"
-                      value={namex || ""}
-                      onChange={(e) => setName(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      value={emailx || ""}
-                      onChange={(e) => setEmail(e.target.value)}
-                      label="Email"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      value={streetx || ""}
-                      onChange={(e) => setStreet(e.target.value)}
-                      label="Street"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      value={cityx || ""}
-                      onChange={(e) => setCity(e.target.value)}
-                      label="City"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      value={statex || ""}
-                      onChange={(e) => setState(e.target.value)}
-                      label="State"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      value={countryx || ""}
-                      onChange={(e) => setCountry(e.target.value)}
-                      label="Country"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      value={pnox || ""}
-                      onChange={(e) => setPno(e.target.value)}
-                      label="Phone Number"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                </MDBox>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={handleUpdate}>
-                  Save
-                </Button>
-              </Modal.Footer>
-            </Modal>
           </div>
         ),
         align: "center",
