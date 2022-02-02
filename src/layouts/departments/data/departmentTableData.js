@@ -6,8 +6,6 @@
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import IconButton from "@mui/material/IconButton";
-import { navbarIconButton } from "examples/Navbars/DashboardNavbar/styles";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -173,18 +171,7 @@ export default function data() {
           >
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                <IconButton
-                  style={{
-                    height: "7px",
-                    width: "10px",
-                    borderRadius: "2px",
-                  }}
-                  disableRipple
-                  color="light"
-                  sx={navbarIconButton}
-                >
-                  <Icon sx={{ fontWeight: "light" }}>settings</Icon>
-                </IconButton>
+                <Icon sx={{ fontWeight: "light" }}>settings</Icon>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>

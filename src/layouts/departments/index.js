@@ -5,6 +5,8 @@ import DataTable from "examples/Tables/DataTable";
 import departmentTableData from "layouts/departments/data/departmentTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -59,7 +61,7 @@ function Departments() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
@@ -83,10 +85,16 @@ function Departments() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%" align>
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                color="info"
+                width="50%"
+                align="left"
+              >
                 Save
               </MDButton>
             </MDBox>
