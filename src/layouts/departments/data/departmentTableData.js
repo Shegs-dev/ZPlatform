@@ -37,7 +37,6 @@ export default function data() {
       redirect: "follow",
     };
 
-    console.log(`raw ${raw}`);
     fetch("https://kubuservice.herokuapp.com/department/update", requestOptions)
       .then((res) => res.json())
       .then((result) => {

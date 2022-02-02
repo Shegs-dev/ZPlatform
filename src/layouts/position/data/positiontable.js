@@ -70,11 +70,8 @@ export default function data() {
           text: error.message,
         });
       });
-  };
-
-  // Method to handle diable
+  }; // Method to handle diable
   const handleDisable = (val) => {
-    console.log(val);
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
