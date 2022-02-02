@@ -3,7 +3,7 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 import Card from "@mui/material/Card";
-import fetchPosition from "layouts/position/data/fetchPosition";
+import positiontable from "layouts/position/data/positiontable";
 import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -14,7 +14,7 @@ import withReactContent from "sweetalert2-react-content";
 
 function Position() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = fetchPosition();
+  const { columns: pColumns, rows: pRows } = positiontable();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -32,7 +32,7 @@ function Position() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/add", requestOptions)
+    fetch("https://kubuservice.herokuapp.com/position/add", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
