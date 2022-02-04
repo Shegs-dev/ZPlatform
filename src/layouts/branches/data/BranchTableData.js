@@ -13,7 +13,7 @@ import withReactContent from "sweetalert2-react-content";
 
 export default function Branchdata() {
   // const axios = require("axios");
-  const [items, setItems] = useStateIfMounted([]);
+  const [items, setItems] = useState([]);
   // const [id, setId] = useState("");
   const orgID = 3;
   const MySwal = withReactContent(Swal);
@@ -188,11 +188,17 @@ export default function Branchdata() {
   // };
   // Method to fetch all Branch
   useEffect(() => {
+    let isMounted = true;
     fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgID}`)
       .then((res) => res.json())
       .then((result) => {
-        setItems(result);
+        if(isMounted){
+          setItems(result);
+        }
       });
+      return () => {
+        isMounted = false;
+      };
   }, []);
 
   return {

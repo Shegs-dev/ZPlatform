@@ -40,25 +40,25 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 function Cover() {
-  const [phonex, setPhone] = useStateIfMounted("");
-  const [startDate, setStartDate] = useStateIfMounted(new Date());
+  const [phonex, setPhone] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
 
-  const [fnamex, setFname] = useStateIfMounted("");
-  const [lnamex, setLname] = useStateIfMounted("");
-  const [onamex, setOname] = useStateIfMounted("");
-  const [emailx, setEmail] = useStateIfMounted("");
-  const [nationalityx, setNationality] = useStateIfMounted("");
-  const [residentialStreetx, setResidentialStreet] = useStateIfMounted("");
-  const [residentialCityx, setResidentialCity] = useStateIfMounted("");
-  const [residentialStatex, setResidentialState] = useStateIfMounted("");
-  const [residentialCountryx, setResidentialCountry] = useStateIfMounted("");
-  const [dayOfBirthx, setDayOfBirth] = useStateIfMounted("");
-  const [monthOfBirthx, setMonthOfBirth] = useStateIfMounted("");
-  const [yearOfBirthx, setYearOfBirth] = useStateIfMounted("");
-  const [maritalStatusx, setMaritalStatus] = useStateIfMounted("");
+  const [fnamex, setFname] = useState("");
+  const [lnamex, setLname] = useState("");
+  const [onamex, setOname] = useState("");
+  const [emailx, setEmail] = useState("");
+  const [nationalityx, setNationality] = useState("");
+  const [residentialStreetx, setResidentialStreet] = useState("");
+  const [residentialCityx, setResidentialCity] = useState("");
+  const [residentialStatex, setResidentialState] = useState("");
+  const [residentialCountryx, setResidentialCountry] = useState("");
+  const [dayOfBirthx, setDayOfBirth] = useState("");
+  const [monthOfBirthx, setMonthOfBirth] = useState("");
+  const [yearOfBirthx, setYearOfBirth] = useState("");
+  const [maritalStatusx, setMaritalStatus] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

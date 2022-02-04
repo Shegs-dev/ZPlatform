@@ -40,16 +40,16 @@ import withReactContent from "sweetalert2-react-content";
 function CompanyReg() {
   const MySwal = withReactContent(Swal);
 
-  const [namex, setName] = useStateIfMounted("");
+  const [namex, setName] = useState("");
 
-  const [emailx, setEmail] = useStateIfMounted("");
+  const [emailx, setEmail] = useState("");
 
-  const [pnox, setPno] = useStateIfMounted("");
-  const [descripx, setDescrip] = useStateIfMounted("");
-  const [Streetx, setStreet] = useStateIfMounted("");
-  const [Cityx, setCity] = useStateIfMounted("");
-  const [Statex, setState] = useStateIfMounted("");
-  const [Countryx, setCountry] = useStateIfMounted("");
+  const [pnox, setPno] = useState("");
+  const [descripx, setDescrip] = useState("");
+  const [Streetx, setStreet] = useState("");
+  const [Cityx, setCity] = useState("");
+  const [Statex, setState] = useState("");
+  const [Countryx, setCountry] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

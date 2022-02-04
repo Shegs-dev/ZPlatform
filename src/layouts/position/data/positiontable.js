@@ -14,9 +14,9 @@ import withReactContent from "sweetalert2-react-content";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
-  const [items, setItems] = useStateIfMounted([]);
+  const [items, setItems] = useState([]);
 
-  const [show, setShow] = useStateIfMounted(false);
+  const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -31,8 +31,8 @@ export default function data() {
     });
   };
 
-  const [namex, setName] = useStateIfMounted("");
-  const [descripx, setDescrip] = useStateIfMounted("");
+  const [namex, setName] = useState("");
+  const [descripx, setDescrip] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -111,11 +111,17 @@ export default function data() {
 
   // Method to fetch all position
   useEffect(() => {
+    let isMounted = true;
     fetch("http://kubuservice.herokuapp.com/position/gets/3")
       .then((res) => res.json())
       .then((result) => {
-        setItems(result);
+        if(isMounted){
+          setItems(result);
+        }
       });
+      return () => {
+        isMounted = false;
+      };
   }, []);
 
   // Return table

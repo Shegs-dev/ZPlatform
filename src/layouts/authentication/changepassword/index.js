@@ -13,9 +13,9 @@ import MDTypography from "components/MDTypography";
 
 function ChangePassword() {
   const MySwal = withReactContent(Swal);
-  const [passwordx, setpassword] = useStateIfMounted("");
-  const [npasswordx, setnpassword] = useStateIfMounted("");
-  const [retypepasswordx, setretypepassword] = useStateIfMounted("");
+  const [passwordx, setpassword] = useState("");
+  const [npasswordx, setnpassword] = useState("");
+  const [retypepasswordx, setretypepassword] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

@@ -13,7 +13,7 @@ import withReactContent from "sweetalert2-react-content";
 export default function data() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
-  const [items, setItems] = useStateIfMounted([]);
+  const [items, setItems] = useState([]);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -139,11 +139,17 @@ export default function data() {
 
   // Method to fetch all departments
   useEffect(() => {
+    let isMounted = true;
     fetch("http://kubuservice.herokuapp.com/department/gets/3")
       .then((res) => res.json())
       .then((result) => {
-        setItems(result);
+        if(isMounted){
+          setItems(result);
+        }
       });
+      return () => {
+        isMounted = false;
+      };
   }, []);
 
   // Return table
