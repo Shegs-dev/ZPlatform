@@ -192,13 +192,13 @@ export default function Branchdata() {
     fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgID}`)
       .then((res) => res.json())
       .then((result) => {
-        if(isMounted){
+        if (isMounted) {
           setItems(result);
         }
       });
-      return () => {
-        isMounted = false;
-      };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return {

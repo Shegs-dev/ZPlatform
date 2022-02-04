@@ -115,13 +115,13 @@ export default function data() {
     fetch("http://kubuservice.herokuapp.com/position/gets/3")
       .then((res) => res.json())
       .then((result) => {
-        if(isMounted){
+        if (isMounted) {
           setItems(result);
         }
       });
-      return () => {
-        isMounted = false;
-      };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Return table
