@@ -18,8 +18,8 @@ function Departments() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = departmentTableData();
 
-  const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
+  const [namex, setName] = useStateIfMounted("");
+  const [descripx, setDescrip] = useStateIfMounted("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

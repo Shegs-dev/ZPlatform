@@ -13,7 +13,7 @@ import withReactContent from "sweetalert2-react-content";
 
 export default function Branchdata() {
   // const axios = require("axios");
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useStateIfMounted([]);
   // const [id, setId] = useState("");
   const orgID = 3;
   const MySwal = withReactContent(Swal);

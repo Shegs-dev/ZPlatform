@@ -14,9 +14,9 @@ import withReactContent from "sweetalert2-react-content";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useStateIfMounted([]);
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useStateIfMounted(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -31,8 +31,8 @@ export default function data() {
     });
   };
 
-  const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
+  const [namex, setName] = useStateIfMounted("");
+  const [descripx, setDescrip] = useStateIfMounted("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

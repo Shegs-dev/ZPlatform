@@ -19,13 +19,13 @@ function Branches() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = BranchTableData();
 
-  const [namex, setName] = useState("");
-  const [emailx, setEmail] = useState("");
-  const [streetx, setStreet] = useState("");
-  const [cityx, setCity] = useState("");
-  const [statex, setState] = useState("");
-  const [countryx, setCountry] = useState("");
-  const [pnox, setPno] = useState("");
+  const [namex, setName] = useStateIfMounted("");
+  const [emailx, setEmail] = useStateIfMounted("");
+  const [streetx, setStreet] = useStateIfMounted("");
+  const [cityx, setCity] = useStateIfMounted("");
+  const [statex, setState] = useStateIfMounted("");
+  const [countryx, setCountry] = useStateIfMounted("");
+  const [pnox, setPno] = useStateIfMounted("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");

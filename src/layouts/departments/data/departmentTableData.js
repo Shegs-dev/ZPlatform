@@ -13,7 +13,7 @@ import withReactContent from "sweetalert2-react-content";
 export default function data() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useStateIfMounted([]);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
