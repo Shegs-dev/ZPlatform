@@ -80,7 +80,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://kubuservice.herokuapp.com/position/delete/${val}`, { method: "DELETE" })
+        fetch(`https://kubuservice.herokuapp.com/position/delete/${val}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -112,7 +112,7 @@ export default function data() {
   // Method to fetch all position
   useEffect(() => {
     let isMounted = true;
-    fetch("http://kubuservice.herokuapp.com/position/gets/3")
+    fetch("https://kubuservice.herokuapp.com/position/gets/3")
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
