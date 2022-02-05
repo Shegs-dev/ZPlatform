@@ -12,13 +12,12 @@ import withReactContent from "sweetalert2-react-content";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  // Method to handle update
+  // Method to handle diable
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
     const raw = JSON.stringify({
       id: idx,
@@ -35,7 +34,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/update", requestOptions)
+    fetch("https://kubuservice.herokuapp.com/position/update", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -77,7 +76,7 @@ export default function data() {
     }
 
     MySwal.fire({
-      title: "Update Department",
+      title: "Update Position",
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
            <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
       confirmButtonText: "Save",
@@ -108,7 +107,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://kubuservice.herokuapp.com/department/delete/${value}`, { method: "DELETE" })
+        fetch(`https://kubuservice.herokuapp.com/position/delete/${value}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -137,10 +136,10 @@ export default function data() {
     return retDate;
   };
 
-  // Method to fetch all departments
+  // Method to fetch all positions
   useEffect(() => {
     let isMounted = true;
-    fetch("https://kubuservice.herokuapp.com/department/gets/3")
+    fetch("https://kubuservice.herokuapp.com/position/gets/3")
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
@@ -193,3 +192,4 @@ export default function data() {
     rows: items,
   };
 }
+

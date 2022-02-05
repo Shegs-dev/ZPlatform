@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // react-router-dom components
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -34,31 +34,22 @@ import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
 import React, { useState } from "react";
 
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Cover() {
-  const [phonex, setPhone] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const navigate = useNavigate();
-
+function CompanyReg() {
   const MySwal = withReactContent(Swal);
 
-  const [fnamex, setFname] = useState("");
-  const [lnamex, setLname] = useState("");
-  const [onamex, setOname] = useState("");
+  const [namex, setName] = useState("");
+
   const [emailx, setEmail] = useState("");
-  const [nationalityx, setNationality] = useState("");
-  const [residentialStreetx, setResidentialStreet] = useState("");
-  const [residentialCityx, setResidentialCity] = useState("");
-  const [residentialStatex, setResidentialState] = useState("");
-  const [residentialCountryx, setResidentialCountry] = useState("");
-  const [dayOfBirthx, setDayOfBirth] = useState("");
-  const [monthOfBirthx, setMonthOfBirth] = useState("");
-  const [yearOfBirthx, setYearOfBirth] = useState("");
-  const [maritalStatusx, setMaritalStatus] = useState("");
+
+  const [pnox, setPno] = useState("");
+  const [descripx, setDescrip] = useState("");
+  const [Streetx, setStreet] = useState("");
+  const [Cityx, setCity] = useState("");
+  const [Statex, setState] = useState("");
+  const [Countryx, setCountry] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -66,20 +57,14 @@ function Cover() {
   const handleClick = (e) => {
     e.preventDefault();
     const raw = JSON.stringify({
-      fname: fnamex,
-      lname: lnamex,
-      oname: onamex,
+      name: namex,
       email: emailx,
-      pno: phonex,
-      nationality: nationalityx,
-      residentialStreet: residentialStreetx,
-      residentialCity: residentialCityx,
-      residentialState: residentialStatex,
-      residentialCountry: residentialCountryx,
-      dayOfBirth: dayOfBirthx,
-      monthOfBirth: monthOfBirthx,
-      yearOfBirth: yearOfBirthx,
-      maritalStatus: maritalStatusx,
+      pno: pnox,
+      descrip: descripx,
+      Street: Streetx,
+      City: Cityx,
+      State: Statex,
+      Country: Countryx,
     });
     const requestOptions = {
       method: "POST",
@@ -88,7 +73,7 @@ function Cover() {
       redirect: "follow",
     };
 
-    fetch("https://zaveservice.herokuapp.com/personal/add", requestOptions)
+    fetch("https://kubuservice.herokuapp.com/company/add", requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -96,8 +81,7 @@ function Cover() {
           type: "success",
           text: result.message,
         }).then(() => {
-          localStorage.setItem("user", JSON.stringify(result.data));
-          navigate("/authentication/companyRegistration", { replace: true });
+          window.location.reload();
         });
       })
       .catch((error) => {
@@ -127,7 +111,7 @@ function Cover() {
             PlutoSpace
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Create an Account
+            Register Company
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -144,41 +128,15 @@ function Cover() {
               textAlign="center"
             >
               <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                BASIC INFO
+                COMPANY INFO
               </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
-              <container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="First Name"
-                      value={fnamex || ""}
-                      onChange={(e) => setFname(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Last Name"
-                      value={lnamex || ""}
-                      onChange={(e) => setLname(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </container>
             </MDBox>
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="Other Name"
-                value={onamex || ""}
-                onChange={(e) => setOname(e.target.value)}
+                label="Company Name"
+                value={namex || ""}
+                onChange={(e) => setName(e.target.value)}
                 variant="standard"
                 fullWidth
               />
@@ -194,47 +152,11 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <container>
-                <div className="row">
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="number"
-                      label="Day of Birth"
-                      value={dayOfBirthx || ""}
-                      onChange={(e) => setDayOfBirth(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="number"
-                      label="Month of Birth"
-                      value={monthOfBirthx || ""}
-                      onChange={(e) => setMonthOfBirth(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="number"
-                      label="Year of Birth"
-                      value={yearOfBirthx || ""}
-                      onChange={(e) => setYearOfBirth(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </container>
-            </MDBox>
-            <MDBox mb={2} mx={0}>
               <MDInput
                 type="number"
                 label="Phone Number"
-                value={phonex || ""}
-                onChange={(e) => setPhone(e.target.value)}
+                value={pnox || ""}
+                onChange={(e) => setPno(e.target.value)}
                 variant="standard"
                 fullWidth
               />
@@ -242,34 +164,12 @@ function Cover() {
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="Marital Status"
-                value={maritalStatusx || ""}
-                onChange={(e) => setMaritalStatus(e.target.value)}
+                label="Description"
+                value={descripx || ""}
+                onChange={(e) => setDescrip(e.target.value)}
                 variant="standard"
                 fullWidth
               />
-            </MDBox>
-            <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
-              Date Of Birth
-            </MDTypography>
-            <MDBox mb={4} mt={-1}>
-              <div>
-                <style>
-                  {`.date-picker input {
-                      width: 50%
-                 }`}
-                </style>
-                <DatePicker
-                  wrapperClassName="date-picker"
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  peekNextMonth
-                  showMonthDropdown
-                  showYearDropdown
-                  dropdownMode="select"
-                />
-                <sub>Don&apos;t Fill this DOB yet, stiil under process</sub>
-              </div>
             </MDBox>
             <MDBox
               variant="gradient"
@@ -283,18 +183,8 @@ function Cover() {
               textAlign="center"
             >
               <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                ADDRESS
+                COMPANY ADDRESS
               </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Nationality"
-                value={nationalityx || ""}
-                onChange={(e) => setNationality(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
             </MDBox>
             <MDBox mb={2}>
               <container>
@@ -303,8 +193,8 @@ function Cover() {
                     <MDInput
                       type="text"
                       label="Street"
-                      value={residentialStreetx || ""}
-                      onChange={(e) => setResidentialStreet(e.target.value)}
+                      value={Streetx || ""}
+                      onChange={(e) => setStreet(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -313,8 +203,8 @@ function Cover() {
                     <MDInput
                       type="text"
                       label="City"
-                      value={residentialCityx || ""}
-                      onChange={(e) => setResidentialCity(e.target.value)}
+                      value={Cityx || ""}
+                      onChange={(e) => setCity(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -329,19 +219,18 @@ function Cover() {
                     <MDInput
                       type="text"
                       label="State"
-                      value={residentialStatex || ""}
-                      onChange={(e) => setResidentialState(e.target.value)}
+                      value={Statex || ""}
+                      onChange={(e) => setState(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
-
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
                       label="Country"
-                      value={residentialCountryx || ""}
-                      onChange={(e) => setResidentialCountry(e.target.value)}
+                      value={Countryx || ""}
+                      onChange={(e) => setCountry(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -367,6 +256,7 @@ function Cover() {
             <MDBox mb={2}>
               <MDInput type="password" label="Password" variant="standard" fullWidth />
             </MDBox>
+
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
               <MDTypography
@@ -390,7 +280,7 @@ function Cover() {
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
-                Create Account
+                sign in
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
@@ -404,7 +294,7 @@ function Cover() {
                   fontWeight="medium"
                   textGradient
                 >
-                  Create Account
+                  Sign In
                 </MDTypography>
               </MDTypography>
             </MDBox>
@@ -415,4 +305,4 @@ function Cover() {
   );
 }
 
-export default Cover;
+export default CompanyReg;

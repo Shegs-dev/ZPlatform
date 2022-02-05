@@ -5,6 +5,8 @@ import DataTable from "examples/Tables/DataTable";
 import departmentTableData from "layouts/departments/data/departmentTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -59,27 +61,40 @@ function Departments() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name"
-                value={namex || ""}
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                value={descripx || ""}
-                onChange={(e) => setDescrip(e.target.value)}
-                label="Description"
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      label="Name"
+                      value={namex || ""}
+                      onChange={(e) => setName(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      value={descripx || ""}
+                      onChange={(e) => setDescrip(e.target.value)}
+                      label="Description"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                color="info"
+                width="50%"
+                align="left"
+              >
                 Save
               </MDButton>
             </MDBox>
