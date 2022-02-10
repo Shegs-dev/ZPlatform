@@ -35,7 +35,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/update", requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -108,7 +108,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://kubuservice.herokuapp.com/department/delete/${value}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_KUBU_URL}/department/delete/${value}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -138,9 +138,10 @@ export default function data() {
   };
 
   // Method to fetch all departments
+  // env.environments
   useEffect(() => {
     let isMounted = true;
-    fetch("https://kubuservice.herokuapp.com/department/gets/3")
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/3`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {

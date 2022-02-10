@@ -73,7 +73,7 @@ function CompanyReg() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/company/add", requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/company/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({

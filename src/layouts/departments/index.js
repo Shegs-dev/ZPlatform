@@ -34,7 +34,7 @@ function Departments() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/add", requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({

@@ -32,7 +32,7 @@ function Position() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/position/add", requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/position/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({

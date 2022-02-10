@@ -55,7 +55,7 @@ export default function Branchdata() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/branch/update", requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -153,7 +153,7 @@ export default function Branchdata() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://kubuservice.herokuapp.com/branch/delete/${val}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_KUBU_URL}/branch/delete/${val}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({

@@ -88,7 +88,7 @@ function Cover() {
       redirect: "follow",
     };
 
-    fetch("https://zaveservice.herokuapp.com/personal/add", requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({

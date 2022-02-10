@@ -29,7 +29,7 @@ function ChangePassword() {
       body: raw,
       redirect: "follow",
     };
-    fetch("https://zaveservice.herokuapp.com/login/changepass", requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
