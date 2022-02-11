@@ -88,7 +88,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Roles",
+    name: "Company Roles",
     key: "roles",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/roles",
