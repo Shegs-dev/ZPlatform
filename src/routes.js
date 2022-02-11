@@ -49,6 +49,7 @@ import Position from "layouts/position";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
+import Roles from "layouts/companyroles";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
 
@@ -84,6 +85,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/departments",
     component: <Departments />,
+  },
+  {
+    type: "collapse",
+    name: "Roles",
+    key: "roles",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/roles",
+    component: <Roles />,
   },
   {
     type: "collapse",
