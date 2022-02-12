@@ -12,20 +12,21 @@ import withReactContent from "sweetalert2-react-content";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
+  // const axios = require("axios");
   const [items, setItems] = useState([]);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  // Method to handle diable
-  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
+  // Method to handle update
+  const handleUpdate = (idx, orgIDx, namex, descripx, deleteFlagx, createdTimex) => {
     const raw = JSON.stringify({
       id: idx,
-      orgID: "3",
+      orgID: orgIDx,
       name: namex,
       descrip: descripx,
-      createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
+      craetedTime: createdTimex,
     });
     const requestOptions = {
       method: "POST",
@@ -34,7 +35,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/role/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -76,7 +77,7 @@ export default function data() {
     }
 
     MySwal.fire({
-      title: "Update Position",
+      title: "Update Company Roles",
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
            <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
       confirmButtonText: "Save",
@@ -90,7 +91,7 @@ export default function data() {
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, name, descrip, createdTime, deleteFlag);
+        handleUpdate(id, "3", name, descrip, deleteFlag, createdTime);
       },
     });
   };
@@ -107,7 +108,9 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/position/delete/${value}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_KUBU_URL}/role/delete/${value}`, {
+          method: "DELETE",
+        })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -129,17 +132,11 @@ export default function data() {
     });
   };
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
-
-  // Method to fetch all positions
+  // Method to fetch all companyroles
+  // env.environments
   useEffect(() => {
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/3`)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/3`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
@@ -156,12 +153,6 @@ export default function data() {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
       { Header: "description", accessor: "descrip", align: "left" },
-      {
-        Header: "Date Created",
-        accessor: "createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
-        align: "left",
-      },
       {
         Header: "actions",
         accessor: "id",

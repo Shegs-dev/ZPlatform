@@ -6,8 +6,6 @@
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import IconButton from "@mui/material/IconButton";
-import { navbarIconButton } from "examples/Navbars/DashboardNavbar/styles";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -37,7 +35,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/department/update", requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -110,7 +108,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://kubuservice.herokuapp.com/department/delete/${value}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_KUBU_URL}/department/delete/${value}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -140,12 +138,19 @@ export default function data() {
   };
 
   // Method to fetch all departments
+  // env.environments
   useEffect(() => {
-    fetch("http://kubuservice.herokuapp.com/department/gets/3")
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/3`)
       .then((res) => res.json())
       .then((result) => {
-        setItems(result);
+        if (isMounted) {
+          setItems(result);
+        }
       });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Return table
@@ -157,7 +162,7 @@ export default function data() {
         Header: "Date Created",
         accessor: "createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
-        align: "center",
+        align: "left",
       },
       {
         Header: "actions",
@@ -172,18 +177,7 @@ export default function data() {
           >
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                <IconButton
-                  style={{
-                    height: "7px",
-                    width: "10px",
-                    borderRadius: "2px",
-                  }}
-                  disableRipple
-                  color="light"
-                  sx={navbarIconButton}
-                >
-                  <Icon sx={{ fontWeight: "light" }}>settings</Icon>
-                </IconButton>
+                <Icon sx={{ fontWeight: "light" }}>settings</Icon>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
@@ -193,7 +187,7 @@ export default function data() {
             </Dropdown>
           </div>
         ),
-        align: "center",
+        align: "left",
       },
     ],
 

@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
-import Card from "@mui/material/Card";
-import positiontable from "layouts/position/data/positiontable";
+import companyRoles from "layouts/companyroles/data/companyRoles";
 import MDButton from "components/MDButton";
+import Card from "@mui/material/Card";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -12,9 +14,9 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Position() {
+function Roles() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = positiontable();
+  const { columns: pColumns, rows: pRows } = companyRoles();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -24,7 +26,11 @@ function Position() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const raw = JSON.stringify({ orgID: "3", name: namex, descrip: descripx });
+    const raw = JSON.stringify({
+      orgID: "3",
+      name: namex,
+      descrip: descripx,
+    });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -32,7 +38,7 @@ function Position() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/role/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -59,27 +65,40 @@ function Position() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name"
-                value={namex || ""}
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                value={descripx || ""}
-                onChange={(e) => setDescrip(e.target.value)}
-                label="Description"
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      label="Name"
+                      value={namex || ""}
+                      onChange={(e) => setName(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      value={descripx || ""}
+                      onChange={(e) => setDescrip(e.target.value)}
+                      label="Description"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                color="info"
+                width="50%"
+                align="left"
+              >
                 Save
               </MDButton>
             </MDBox>
@@ -101,4 +120,4 @@ function Position() {
   );
 }
 
-export default Position;
+export default Roles;

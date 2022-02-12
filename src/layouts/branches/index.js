@@ -49,7 +49,7 @@ function Branches() {
       redirect: "follow",
     };
 
-    fetch("https://kubuservice.herokuapp.com/branch/add", requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
