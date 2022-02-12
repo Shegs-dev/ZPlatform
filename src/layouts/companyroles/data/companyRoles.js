@@ -22,7 +22,7 @@ export default function data() {
   const handleUpdate = (idx, orgIDx, namex, descripx, deleteFlagx, createdTimex) => {
     const raw = JSON.stringify({
       id: idx,
-      orgID: orgIDx,
+      orgID: "3",
       name: namex,
       descrip: descripx,
       deleteFlag: deleteFlagx,
@@ -59,21 +59,21 @@ export default function data() {
   const handleShow = (filteredData, value) => {
     let namex = "";
     let descripx = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
+    let createdTimex = 0;
+    let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
       descripx = "";
-      createdTime = 0;
-      deleteFlag = 0;
+      createdTimex = 0;
+      deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
       descripx = filteredItems[0].descrip;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      createdTimex = filteredItems[0].createdTime;
+      deleteFlagx = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
@@ -91,7 +91,7 @@ export default function data() {
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, "3", name, descrip, deleteFlag, createdTime);
+        handleUpdate(id, "3", name, descrip, deleteFlagx, createdTimex);
       },
     });
   };
