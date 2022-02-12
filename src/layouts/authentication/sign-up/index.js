@@ -19,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 // @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
+import { Container } from "react-bootstrap";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -42,6 +43,7 @@ import withReactContent from "sweetalert2-react-content";
 function Cover() {
   const [phonex, setPhone] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
@@ -50,20 +52,30 @@ function Cover() {
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
+  const [emaily, setOemail] = useState("");
   const [nationalityx, setNationality] = useState("");
   const [residentialStreetx, setResidentialStreet] = useState("");
   const [residentialCityx, setResidentialCity] = useState("");
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
-  const [dayOfBirthx, setDayOfBirth] = useState("");
-  const [monthOfBirthx, setMonthOfBirth] = useState("");
-  const [yearOfBirthx, setYearOfBirth] = useState("");
   const [maritalStatusx, setMaritalStatus] = useState("");
+  const [passwordx, setPassword] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate != null) {
+      const sDate = startDate.getTime();
+      console.log(`startDate: ${startDate}`);
+      console.log(`sDate: ${sDate}`);
+      dayx = startDate.getDate();
+      monthx = startDate.getMonth() + 1;
+      yearx = startDate.getFullYear();
+    }
     e.preventDefault();
     const raw = JSON.stringify({
       fname: fnamex,
@@ -76,9 +88,9 @@ function Cover() {
       residentialCity: residentialCityx,
       residentialState: residentialStatex,
       residentialCountry: residentialCountryx,
-      dayOfBirth: dayOfBirthx,
-      monthOfBirth: monthOfBirthx,
-      yearOfBirth: yearOfBirthx,
+      dayOfBirth: dayx,
+      monthOfBirth: monthx,
+      yearOfBirth: yearx,
       maritalStatus: maritalStatusx,
     });
     const requestOptions = {
@@ -91,14 +103,25 @@ function Cover() {
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          localStorage.setItem("user", JSON.stringify(result.data));
-          navigate("/authentication/companyRegistration", { replace: true });
-        });
+        if (result.status === "SUCCESS") {
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            localStorage.setItem("user", JSON.stringify(result.data));
+            let data1 = localStorage.getItem("user");
+            data1 = JSON.parse(data1);
+            console.log(data1);
+            navigate("/authentication/companyRegistration", { replace: true });
+          });
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
+        }
       })
       .catch((error) => {
         MySwal.fire({
@@ -148,7 +171,7 @@ function Cover() {
               </MDTypography>
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
@@ -171,7 +194,7 @@ function Cover() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
               <MDInput
@@ -186,7 +209,7 @@ function Cover() {
             <MDBox mb={2}>
               <MDInput
                 type="email"
-                label="Email"
+                label="Personal Email"
                 value={emailx || ""}
                 onChange={(e) => setEmail(e.target.value)}
                 variant="standard"
@@ -194,40 +217,14 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <container>
-                <div className="row">
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="number"
-                      label="Day of Birth"
-                      value={dayOfBirthx || ""}
-                      onChange={(e) => setDayOfBirth(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="number"
-                      label="Month of Birth"
-                      value={monthOfBirthx || ""}
-                      onChange={(e) => setMonthOfBirth(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="number"
-                      label="Year of Birth"
-                      value={yearOfBirthx || ""}
-                      onChange={(e) => setYearOfBirth(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </container>
+              <MDInput
+                type="email"
+                label="Official Email"
+                value={emaily || ""}
+                onChange={(e) => setOemail(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2} mx={0}>
               <MDInput
@@ -260,7 +257,28 @@ function Cover() {
                  }`}
                 </style>
                 <DatePicker
+                  date={startDate}
                   wrapperClassName="date-picker"
+                  placeholder="Select Birth Date"
+                  dateFormat="dd/MM/yyyy"
+                  confirmBtnText="Confirm"
+                  showCancelButton="true"
+                  customStyles={{
+                    placeholderText: {
+                      fontSize: 5,
+                    },
+                    dateIcon: {
+                      height: 0,
+                      width: 0,
+                    },
+                    dateText: {
+                      color: "#b3b4b5",
+                      fontSize: 16,
+                    },
+                    dateInput: {
+                      borderWidth: 0,
+                    },
+                  }}
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   peekNextMonth
@@ -268,7 +286,6 @@ function Cover() {
                   showYearDropdown
                   dropdownMode="select"
                 />
-                <sub>Don&apos;t Fill this DOB yet, stiil under process</sub>
               </div>
             </MDBox>
             <MDBox
@@ -297,7 +314,7 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-8">
                     <MDInput
@@ -320,10 +337,10 @@ function Cover() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
@@ -347,7 +364,7 @@ function Cover() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox
               variant="gradient"
@@ -365,7 +382,14 @@ function Cover() {
               </MDTypography>
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                value={passwordx || ""}
+                onChange={(e) => setPassword(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />

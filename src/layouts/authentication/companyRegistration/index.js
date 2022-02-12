@@ -25,7 +25,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-
+import { Container } from "react-bootstrap";
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
@@ -55,16 +55,18 @@ function CompanyReg() {
   myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
+    const user = JSON.parse(localStorage.getItem("user"));
     e.preventDefault();
     const raw = JSON.stringify({
       name: namex,
       email: emailx,
       pno: pnox,
       descrip: descripx,
-      Street: Streetx,
-      City: Cityx,
-      State: Statex,
-      Country: Countryx,
+      street: Streetx,
+      city: Cityx,
+      state: Statex,
+      country: Countryx,
+      createdBy: user.id,
     });
     const requestOptions = {
       method: "POST",
@@ -81,7 +83,53 @@ function CompanyReg() {
           type: "success",
           text: result.message,
         }).then(() => {
-          window.location.reload();
+          // localStorage.setItem("company", JSON.stringify(result.data));
+          const raw1 = JSON.stringify({
+            orgID: result.data.id,
+            personalID: user.id,
+            email: localStorage.getItem("email1"),
+          });
+          const requestOptions1 = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw1,
+            redirect: "follow",
+          };
+
+          fetch("https://zaveservice.herokuapp.com/personalcompany/add", requestOptions1)
+            .then((res) => res.json())
+            .then((resultx) => {
+              MySwal.fire({
+                title: resultx.status,
+                type: "success",
+                text: resultx.message,
+              }).then(() => {
+                localStorage.setItem("company", JSON.stringify(resultx.data));
+                const raw2 = JSON.stringify({
+                  orgID: result.data.id,
+                  empID: user.id,
+                  username: user.email,
+                  password: localStorage.getItem("pass1"),
+                });
+                const requestOptions2 = {
+                  method: "POST",
+                  headers: myHeaders,
+                  body: raw2,
+                  redirect: "follow",
+                };
+                fetch("https://zaveservice.herokuapp.com/login/add", requestOptions2)
+                  .then((res) => res.json())
+                  .then((resulty) => {
+                    MySwal.fire({
+                      title: resulty.status,
+                      type: "success",
+                      text: resulty.message,
+                    }).then(() => {
+                      window.location.reload();
+                    });
+                  });
+              });
+            });
         });
       })
       .catch((error) => {
@@ -187,7 +235,7 @@ function CompanyReg() {
               </MDTypography>
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-8">
                     <MDInput
@@ -210,10 +258,10 @@ function CompanyReg() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
-              <container>
+              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
@@ -236,7 +284,7 @@ function CompanyReg() {
                     />
                   </div>
                 </div>
-              </container>
+              </Container>
             </MDBox>
             <MDBox
               variant="gradient"
