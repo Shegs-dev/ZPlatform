@@ -1,4 +1,4 @@
-/**
+/*
 =========================================================
 * Material Dashboard 2 React - v2.0.0
 =========================================================
@@ -16,13 +16,15 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -43,8 +45,57 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const navigate = useNavigate();
 
+  const [usernamex, setUsername] = useState("");
+  const [passwordx, setPassword] = useState("");
+  const MySwal = withReactContent(Swal);
+
+  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    const raw = JSON.stringify({ orgID: "3", username: usernamex, password: passwordx });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        localStorage.setItem("user1", JSON.stringify(result.data));
+        let data11 = localStorage.getItem("user1");
+        data11 = JSON.parse(data11);
+        console.log(data11);
+        if (result.status === "SUCCESS") {
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            navigate("/dashboard", { replace: true });
+          });
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
   return (
     <BasicLayout image={bgImage}>
       <Card>
@@ -81,17 +132,24 @@ function Basic() {
           </Grid>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox display="flex" alignItems="center">
-            <MDTypography variant="caption" color="secondary">
-              &nbsp;&nbsp;entries per page
-            </MDTypography>
-          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput
+                type="email"
+                value={usernamex || ""}
+                onChange={(e) => setUsername(e.target.value)}
+                label="Email"
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput
+                type="password"
+                value={passwordx || ""}
+                onChange={(e) => setPassword(e.target.value)}
+                label="Password"
+                fullWidth
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -106,7 +164,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
                 sign In
               </MDButton>
             </MDBox>

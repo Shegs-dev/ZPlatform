@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -40,8 +40,9 @@ import withReactContent from "sweetalert2-react-content";
 function CompanyReg() {
   const MySwal = withReactContent(Swal);
 
-  const [namex, setName] = useState("");
+  const navigate = useNavigate();
 
+  const [namex, setName] = useState("");
   const [emailx, setEmail] = useState("");
 
   const [pnox, setPno] = useState("");
@@ -75,7 +76,7 @@ function CompanyReg() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/company/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/company/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -84,6 +85,10 @@ function CompanyReg() {
           text: result.message,
         }).then(() => {
           // localStorage.setItem("company", JSON.stringify(result.data));
+          console.log(result.data.id);
+          console.log(user.id);
+          const data12 = localStorage.getItem("email1");
+          console.log(data12);
           const raw1 = JSON.stringify({
             orgID: result.data.id,
             personalID: user.id,
@@ -96,7 +101,7 @@ function CompanyReg() {
             redirect: "follow",
           };
 
-          fetch("https://zaveservice.herokuapp.com/personalcompany/add", requestOptions1)
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
             .then((res) => res.json())
             .then((resultx) => {
               MySwal.fire({
@@ -117,7 +122,7 @@ function CompanyReg() {
                   body: raw2,
                   redirect: "follow",
                 };
-                fetch("https://zaveservice.herokuapp.com/login/add", requestOptions2)
+                fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
                   .then((res) => res.json())
                   .then((resulty) => {
                     MySwal.fire({
@@ -125,7 +130,7 @@ function CompanyReg() {
                       type: "success",
                       text: resulty.message,
                     }).then(() => {
-                      window.location.reload();
+                      navigate("/authentication/sign-in", { replace: true });
                     });
                   });
               });
