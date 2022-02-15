@@ -14,18 +14,19 @@ Coded by www.creative-tim.com
 */
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
+import { Container } from "react-bootstrap";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-import { Container } from "react-bootstrap";
+
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
@@ -34,39 +35,63 @@ import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
 import React, { useState } from "react";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function CompanyReg() {
+function Cover() {
+  const [phonex, setPhone] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+
+  const navigate = useNavigate();
+
   const MySwal = withReactContent(Swal);
 
-  const [namex, setName] = useState("");
-
+  const [fnamex, setFname] = useState("");
+  const [lnamex, setLname] = useState("");
+  const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
-
-  const [pnox, setPno] = useState("");
-  const [descripx, setDescrip] = useState("");
-  const [Streetx, setStreet] = useState("");
-  const [Cityx, setCity] = useState("");
-  const [Statex, setState] = useState("");
-  const [Countryx, setCountry] = useState("");
+  const [emaily, setOemail] = useState("");
+  const [nationalityx, setNationality] = useState("");
+  const [residentialStreetx, setResidentialStreet] = useState("");
+  const [residentialCityx, setResidentialCity] = useState("");
+  const [residentialStatex, setResidentialState] = useState("");
+  const [residentialCountryx, setResidentialCountry] = useState("");
+  const [maritalStatusx, setMaritalStatus] = useState("");
+  const [passwordx, setPassword] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate != null) {
+      const sDate = startDate.getTime();
+      console.log(`startDate: ${startDate}`);
+      console.log(`sDate: ${sDate}`);
+      dayx = startDate.getDate();
+      monthx = startDate.getMonth() + 1;
+      yearx = startDate.getFullYear();
+    }
     e.preventDefault();
     const raw = JSON.stringify({
-      name: namex,
+      fname: fnamex,
+      lname: lnamex,
+      oname: onamex,
       email: emailx,
-      pno: pnox,
-      descrip: descripx,
-      street: Streetx,
-      city: Cityx,
-      state: Statex,
-      country: Countryx,
-      createdBy: user.id,
+      pno: phonex,
+      nationality: nationalityx,
+      residentialStreet: residentialStreetx,
+      residentialCity: residentialCityx,
+      residentialState: residentialStatex,
+      residentialCountry: residentialCountryx,
+      dayOfBirth: dayx,
+      monthOfBirth: monthx,
+      yearOfBirth: yearx,
+      maritalStatus: maritalStatusx,
     });
     const requestOptions = {
       method: "POST",
@@ -75,62 +100,28 @@ function CompanyReg() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/company/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          // localStorage.setItem("company", JSON.stringify(result.data));
-          const raw1 = JSON.stringify({
-            orgID: result.data.id,
-            personalID: user.id,
-            email: localStorage.getItem("email1"),
+        if (result.status === "SUCCESS") {
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            localStorage.setItem("user", JSON.stringify(result.data));
+            let data1 = localStorage.getItem("user");
+            data1 = JSON.parse(data1);
+            console.log(data1);
+            navigate("/authentication/companyRegistration", { replace: true });
           });
-          const requestOptions1 = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw1,
-            redirect: "follow",
-          };
-
-          fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
-            .then((res) => res.json())
-            .then((resultx) => {
-              MySwal.fire({
-                title: resultx.status,
-                type: "success",
-                text: resultx.message,
-              }).then(() => {
-                localStorage.setItem("company", JSON.stringify(resultx.data));
-                const raw2 = JSON.stringify({
-                  orgID: result.data.id,
-                  empID: user.id,
-                  username: user.email,
-                  password: localStorage.getItem("pass1"),
-                });
-                const requestOptions2 = {
-                  method: "POST",
-                  headers: myHeaders,
-                  body: raw2,
-                  redirect: "follow",
-                };
-                fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
-                  .then((res) => res.json())
-                  .then((resulty) => {
-                    MySwal.fire({
-                      title: resulty.status,
-                      type: "success",
-                      text: resulty.message,
-                    }).then(() => {
-                      window.location.reload();
-                    });
-                  });
-              });
-            });
-        });
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
+        }
       })
       .catch((error) => {
         MySwal.fire({
@@ -159,7 +150,7 @@ function CompanyReg() {
             PlutoSpace
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Register Company
+            Create an Account
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -176,15 +167,41 @@ function CompanyReg() {
               textAlign="center"
             >
               <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                COMPANY INFO
+                BASIC INFO
               </MDTypography>
+            </MDBox>
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      label="First Name"
+                      value={fnamex || ""}
+                      onChange={(e) => setFname(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      label="Last Name"
+                      value={lnamex || ""}
+                      onChange={(e) => setLname(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="Company Name"
-                value={namex || ""}
-                onChange={(e) => setName(e.target.value)}
+                label="Other Name"
+                value={onamex || ""}
+                onChange={(e) => setOname(e.target.value)}
                 variant="standard"
                 fullWidth
               />
@@ -192,7 +209,7 @@ function CompanyReg() {
             <MDBox mb={2}>
               <MDInput
                 type="email"
-                label="Email"
+                label="Personal Email"
                 value={emailx || ""}
                 onChange={(e) => setEmail(e.target.value)}
                 variant="standard"
@@ -201,10 +218,20 @@ function CompanyReg() {
             </MDBox>
             <MDBox mb={2}>
               <MDInput
+                type="email"
+                label="Official Email"
+                value={emaily || ""}
+                onChange={(e) => setOemail(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2} mx={0}>
+              <MDInput
                 type="number"
                 label="Phone Number"
-                value={pnox || ""}
-                onChange={(e) => setPno(e.target.value)}
+                value={phonex || ""}
+                onChange={(e) => setPhone(e.target.value)}
                 variant="standard"
                 fullWidth
               />
@@ -212,12 +239,54 @@ function CompanyReg() {
             <MDBox mb={2}>
               <MDInput
                 type="text"
-                label="Description"
-                value={descripx || ""}
-                onChange={(e) => setDescrip(e.target.value)}
+                label="Marital Status"
+                value={maritalStatusx || ""}
+                onChange={(e) => setMaritalStatus(e.target.value)}
                 variant="standard"
                 fullWidth
               />
+            </MDBox>
+            <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
+              Date Of Birth
+            </MDTypography>
+            <MDBox mb={4} mt={-1}>
+              <div>
+                <style>
+                  {`.date-picker input {
+                      width: 50%
+                 }`}
+                </style>
+                <DatePicker
+                  date={startDate}
+                  wrapperClassName="date-picker"
+                  placeholder="Select Birth Date"
+                  dateFormat="dd/MM/yyyy"
+                  confirmBtnText="Confirm"
+                  showCancelButton="true"
+                  customStyles={{
+                    placeholderText: {
+                      fontSize: 5,
+                    },
+                    dateIcon: {
+                      height: 0,
+                      width: 0,
+                    },
+                    dateText: {
+                      color: "#b3b4b5",
+                      fontSize: 16,
+                    },
+                    dateInput: {
+                      borderWidth: 0,
+                    },
+                  }}
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  peekNextMonth
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
+                />
+              </div>
             </MDBox>
             <MDBox
               variant="gradient"
@@ -231,8 +300,18 @@ function CompanyReg() {
               textAlign="center"
             >
               <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                COMPANY ADDRESS
+                ADDRESS
               </MDTypography>
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                label="Nationality"
+                value={nationalityx || ""}
+                onChange={(e) => setNationality(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
               <Container>
@@ -241,8 +320,8 @@ function CompanyReg() {
                     <MDInput
                       type="text"
                       label="Street"
-                      value={Streetx || ""}
-                      onChange={(e) => setStreet(e.target.value)}
+                      value={residentialStreetx || ""}
+                      onChange={(e) => setResidentialStreet(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -251,8 +330,8 @@ function CompanyReg() {
                     <MDInput
                       type="text"
                       label="City"
-                      value={Cityx || ""}
-                      onChange={(e) => setCity(e.target.value)}
+                      value={residentialCityx || ""}
+                      onChange={(e) => setResidentialCity(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -267,18 +346,19 @@ function CompanyReg() {
                     <MDInput
                       type="text"
                       label="State"
-                      value={Statex || ""}
-                      onChange={(e) => setState(e.target.value)}
+                      value={residentialStatex || ""}
+                      onChange={(e) => setResidentialState(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
+
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
                       label="Country"
-                      value={Countryx || ""}
-                      onChange={(e) => setCountry(e.target.value)}
+                      value={residentialCountryx || ""}
+                      onChange={(e) => setResidentialCountry(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -302,9 +382,15 @@ function CompanyReg() {
               </MDTypography>
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                value={passwordx || ""}
+                onChange={(e) => setPassword(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
-
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
               <MDTypography
@@ -328,7 +414,7 @@ function CompanyReg() {
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
-                sign in
+                Create Account
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
@@ -336,13 +422,13 @@ function CompanyReg() {
                 Already have an account?{" "}
                 <MDTypography
                   component={Link}
-                  to="/authentication/sign-in"
+                  to="layouts/companyroles/company"
                   variant="button"
                   color="info"
                   fontWeight="medium"
                   textGradient
                 >
-                  Sign In
+                  Create Account
                 </MDTypography>
               </MDTypography>
             </MDBox>
@@ -353,4 +439,4 @@ function CompanyReg() {
   );
 }
 
-export default CompanyReg;
+export default Cover;

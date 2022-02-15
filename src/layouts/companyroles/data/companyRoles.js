@@ -10,7 +10,7 @@ import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-export default function data() {
+export default function ComRole() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
@@ -133,7 +133,6 @@ export default function data() {
   };
 
   // Method to fetch all companyroles
-  // env.environments
   useEffect(() => {
     let isMounted = true;
     fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/3`)
@@ -148,7 +147,6 @@ export default function data() {
     };
   }, []);
 
-  // Return table
   return {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
