@@ -99,6 +99,12 @@ function Cover() {
       body: raw,
       redirect: "follow",
     };
+    localStorage.setItem("pass1", passwordx);
+    const data123 = localStorage.getItem("pass1");
+    console.log(data123);
+    localStorage.setItem("email1", emailx);
+    const data12 = localStorage.getItem("email1");
+    console.log(data12);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
       .then((res) => res.json())
