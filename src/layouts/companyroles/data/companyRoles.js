@@ -20,9 +20,14 @@ export default function ComRole() {
 
   // Method to handle update
   const handleUpdate = (idx, orgIDx, namex, descripx, deleteFlagx, createdTimex) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
-      orgID: "3",
+      orgID: orgIDs,
       name: namex,
       descrip: descripx,
       deleteFlag: deleteFlagx,
@@ -134,8 +139,13 @@ export default function ComRole() {
 
   // Method to fetch all companyroles
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/3`)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {

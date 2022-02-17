@@ -15,7 +15,7 @@ export default function Branchdata() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
   // const [id, setId] = useState("");
-  const orgID = 3;
+
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
 
@@ -35,9 +35,14 @@ export default function Branchdata() {
     createdTimex,
     deleteFlagx
   ) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
-      orgID: "3",
+      orgID: orgIDs,
       name: namex,
       email: emailx,
       street: streetx,
@@ -188,8 +193,13 @@ export default function Branchdata() {
   // };
   // Method to fetch all Branch
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     let isMounted = true;
-    fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgID}`)
+    fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
-import companyRoles from "layouts/companyroles/data/companyRoles";
+import systemRolesTable from "layouts/systemRoles/data/systemRolesTables";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
@@ -14,9 +14,9 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Roles() {
+function SysRoles() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = companyRoles();
+  const { columns: pColumns, rows: pRows } = systemRolesTable();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -44,7 +44,7 @@ function Roles() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -126,4 +126,4 @@ function Roles() {
   );
 }
 
-export default Roles;
+export default SysRoles;

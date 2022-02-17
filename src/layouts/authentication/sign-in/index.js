@@ -72,6 +72,8 @@ function Basic() {
         let data11 = localStorage.getItem("user1");
         data11 = JSON.parse(data11);
         console.log(data11);
+        const orgIDs = data11.orgID;
+        console.log(orgIDs);
         if (result.status === "SUCCESS") {
           MySwal.fire({
             title: result.status,

@@ -4,33 +4,38 @@
 
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-export default function data() {
+export default function SysRole() {
   const MySwal = withReactContent(Swal);
+  // const axios = require("axios");
   const [items, setItems] = useState([]);
+
+  const navigate = useNavigate();
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  // Method to handle diable
-  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
+  // Method to handle update
+  const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
+
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
       name: namex,
       descrip: descripx,
-      createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
+      craetedTime: createdTimex,
     });
     const requestOptions = {
       method: "POST",
@@ -39,7 +44,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -63,25 +68,29 @@ export default function data() {
   const handleShow = (filteredData, value) => {
     let namex = "";
     let descripx = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
+    let createdTimex = 0;
+    let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
       descripx = "";
-      createdTime = 0;
-      deleteFlag = 0;
+      createdTimex = 0;
+      deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
       descripx = filteredItems[0].descrip;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      createdTimex = filteredItems[0].createdTime;
+      deleteFlagx = filteredItems[0].deleteFlag;
     }
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
 
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     MySwal.fire({
-      title: "Update Position",
+      title: "Update Company Roles",
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
            <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
       confirmButtonText: "Save",
@@ -95,7 +104,7 @@ export default function data() {
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, name, descrip, createdTime, deleteFlag);
+        handleUpdate(id, orgIDs, name, descrip, deleteFlagx, createdTimex);
       },
     });
   };
@@ -112,7 +121,9 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/position/delete/${value}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/delete/${value}`, {
+          method: "DELETE",
+        })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -134,14 +145,7 @@ export default function data() {
     });
   };
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
-
-  // Method to fetch all positions
+  // Method to fetch all companyroles
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
@@ -149,7 +153,7 @@ export default function data() {
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
@@ -161,17 +165,10 @@ export default function data() {
     };
   }, []);
 
-  // Return table
   return {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
       { Header: "description", accessor: "descrip", align: "left" },
-      {
-        Header: "Date Created",
-        accessor: "createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
-        align: "left",
-      },
       {
         Header: "actions",
         accessor: "id",
@@ -191,6 +188,11 @@ export default function data() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => navigate("/systemRoles/addRolesAndPerms", { replace: true })}
+                >
+                  View
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
