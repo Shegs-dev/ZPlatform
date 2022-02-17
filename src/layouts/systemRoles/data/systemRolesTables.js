@@ -37,6 +37,7 @@ export default function SysRole() {
       deleteFlag: deleteFlagx,
       craetedTime: createdTimex,
     });
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -104,7 +105,7 @@ export default function SysRole() {
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, orgIDs, name, descrip, deleteFlagx, createdTimex);
+        handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
       },
     });
   };

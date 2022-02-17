@@ -23,7 +23,7 @@ export default function ComRole() {
   myHeaders.append("Content-Type", "application/json");
 
   // Method to handle update
-  const handleUpdate = (idx, orgIDx, namex, descripx, deleteFlagx, createdTimex) => {
+  const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -84,7 +84,11 @@ export default function ComRole() {
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
 
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     MySwal.fire({
       title: "Update Company Roles",
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
@@ -100,7 +104,7 @@ export default function ComRole() {
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, "3", name, descrip, deleteFlagx, createdTimex);
+        handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
       },
     });
   };
