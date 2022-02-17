@@ -47,6 +47,7 @@ import Position from "layouts/position";
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
+import Checklists from "layouts/checklists";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
 
@@ -78,10 +79,17 @@ const routes = [
   {
     type: "collapse",
     name: "Company Roles",
-    key: "roles",
+    key: "companyroles",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/roles",
+    route: "/Company-Roles",
     component: <Roles />,
+  },
+  {
+    name: "Checklists",
+    key: "checklists",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/checklists",
+    component: <Checklists />,
   },
   {
     type: "collapse",

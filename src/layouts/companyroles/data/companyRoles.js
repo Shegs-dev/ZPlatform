@@ -9,11 +9,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 
 export default function ComRole() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
+
+  // use of navigate button
+  const navigate = useNavigate();
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -22,7 +26,7 @@ export default function ComRole() {
   const handleUpdate = (idx, orgIDx, namex, descripx, deleteFlagx, createdTimex) => {
     const raw = JSON.stringify({
       id: idx,
-      orgID: "3",
+      orgID: orgIDx,
       name: namex,
       descrip: descripx,
       deleteFlag: deleteFlagx,
@@ -170,6 +174,11 @@ export default function ComRole() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => navigate(`/checklists?id=${value}`, { replace: true })}
+                >
+                  View
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

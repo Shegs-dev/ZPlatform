@@ -20,6 +20,8 @@ function Roles() {
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
+  const data11 = JSON.parse(localStorage.getItem("user1"));
+  console.log(data11);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -27,7 +29,7 @@ function Roles() {
   const handleClick = (e) => {
     e.preventDefault();
     const raw = JSON.stringify({
-      orgID: "3",
+      orgID: data11.orgID,
       name: namex,
       descrip: descripx,
     });
