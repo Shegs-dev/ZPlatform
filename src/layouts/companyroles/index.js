@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
-import companyRoles from "layouts/companyroles/data/companyRoles";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
+import companyRoles from "layouts/companyroles/data/companyRoles";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -20,16 +20,20 @@ function Roles() {
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
     e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
+
     const raw = JSON.stringify({
-      orgID: data11.orgID,
+      orgID: orgIDs,
       name: namex,
       descrip: descripx,
     });

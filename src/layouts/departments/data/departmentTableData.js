@@ -20,9 +20,14 @@ export default function data() {
 
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
-      orgID: "3",
+      orgID: orgIDs,
       name: namex,
       descrip: descripx,
       createdTime: createdTimex,
@@ -140,8 +145,13 @@ export default function data() {
   // Method to fetch all departments
   // env.environments
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/3`)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {

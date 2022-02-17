@@ -32,8 +32,13 @@ function Branches() {
 
   const handleClick = (e) => {
     e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     const raw = JSON.stringify({
-      orgID: "3",
+      orgID: orgIDs,
       name: namex,
       email: emailx,
       street: streetx,

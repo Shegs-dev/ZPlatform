@@ -50,6 +50,8 @@ import Roles from "layouts/companyroles";
 import Checklists from "layouts/checklists";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
+import SysRoles from "layouts/systemRoles";
+import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
 
 const routes = [
   {
@@ -85,6 +87,13 @@ const routes = [
     component: <Roles />,
   },
   {
+    name: "Add Roles And Permissions",
+    key: "addRolesAndPerms",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/systemRoles/addRolesAndPerms",
+    component: <RolesAndPerms />,
+  },
+  {
     name: "Checklists",
     key: "checklists",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -93,19 +102,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Sign In",
-    key: "sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
-  },
-  {
-    type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
+    name: "System Roles",
+    key: "systemRoles",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/sign-up",
-    component: <SignUp />,
+    route: "/systemRoles",
+    component: <SysRoles />,
   },
   {
     type: "collapse",
@@ -129,6 +130,22 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/companyRegistration",
     component: <CompanyReg />,
+  },
+  {
+    type: "collapse",
+    name: "Sign In",
+    key: "sign-in",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/sign-in",
+    component: <SignIn />,
+  },
+  {
+    type: "collapse",
+    name: "Sign Up",
+    key: "sign-up",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/sign-up",
+    component: <SignUp />,
   },
 ];
 

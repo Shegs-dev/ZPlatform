@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
-import departmentTableData from "layouts/departments/data/departmentTableData";
+import systemRolesTable from "layouts/systemRoles/data/systemRolesTables";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
@@ -14,9 +14,9 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Departments() {
+function SysRoles() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = departmentTableData();
+  const { columns: pColumns, rows: pRows } = systemRolesTable();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -31,7 +31,12 @@ function Departments() {
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
-    const raw = JSON.stringify({ orgID: orgIDs, name: namex, descrip: descripx });
+
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      name: namex,
+      descrip: descripx,
+    });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -39,7 +44,7 @@ function Departments() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -121,4 +126,4 @@ function Departments() {
   );
 }
 
-export default Departments;
+export default SysRoles;
