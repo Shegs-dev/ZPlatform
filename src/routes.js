@@ -47,6 +47,7 @@ import Position from "layouts/position";
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
+import Steps from "layouts/companysteps";
 import Checklists from "layouts/checklists";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
@@ -85,6 +86,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Company-Roles",
     component: <Roles />,
+  },
+  {
+    type: "collapse",
+    name: "Company Steps",
+    key: "companysteps",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Company-Steps",
+    component: <Steps />,
   },
   {
     name: "Add Roles And Permissions",
