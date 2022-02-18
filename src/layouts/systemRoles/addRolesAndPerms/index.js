@@ -24,20 +24,6 @@ export default function RolesAndPerms() {
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Admin" />
             </Form.Group>
-            &nbsp; Select your company steps:
-            <div className="topping">
-              &nbsp; &nbsp;
-              <input type="checkbox" id="topping" name="topping" value="Paneer" />
-              Paneer
-              <br />
-              &nbsp; &nbsp;
-              <input type="checkbox" id="topping" name="topping" value="Paneer" />
-              Admin
-              <br />
-              &nbsp; &nbsp;
-              <input type="checkbox" id="topping" name="topping" value="Paneer" />
-              User
-            </div>
           </Form>
         </MDBox>
       </Card>
