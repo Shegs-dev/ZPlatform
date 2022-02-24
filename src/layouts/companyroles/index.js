@@ -83,7 +83,6 @@ function Roles() {
                       fullWidth
                     />
                   </div>
-
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
