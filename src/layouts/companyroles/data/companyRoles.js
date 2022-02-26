@@ -188,9 +188,7 @@ export default function ComRole() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => navigate(`/checklists?id=${value}`, { replace: true })}
-                >
+                <Dropdown.Item onClick={() => navigate(`/checklists?id=${value}`)}>
                   View
                 </Dropdown.Item>
               </Dropdown.Menu>

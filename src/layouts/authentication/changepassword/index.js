@@ -20,9 +20,15 @@ function ChangePassword() {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
+  const data11 = JSON.parse(localStorage.getItem("user1"));
+  console.log(data11);
+
+  const emails = data11.email;
+  console.log(emails);
+
   const handleClick = (e) => {
     e.preventDefault();
-    const raw = JSON.stringify({ username: "yuo", password: passwordx, npassword: npasswordx });
+    const raw = JSON.stringify({ username: emails, password: passwordx, npassword: npasswordx });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
