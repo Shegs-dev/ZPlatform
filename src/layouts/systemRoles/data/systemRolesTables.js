@@ -85,11 +85,6 @@ export default function SysRole() {
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
     MySwal.fire({
       title: "Update Company Roles",
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
@@ -146,11 +141,14 @@ export default function SysRole() {
     });
   };
 
+  const handleView = (value) => {
+    navigate(`/systemRoles/addRolesAndPerms?id=${value}`);
+  };
+
   // Method to fetch all companyroles
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
-
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
@@ -189,11 +187,7 @@ export default function SysRole() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => navigate("/systemRoles/addRolesAndPerms", { replace: true })}
-                >
-                  View
-                </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
