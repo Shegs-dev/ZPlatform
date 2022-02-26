@@ -19,7 +19,7 @@ export default function ComRole() {
   myHeaders.append("Content-Type", "application/json");
 
   // Method to handle update
-  const handleUpdate = (idx, orgIDx, namex, descripx, deleteFlagx, createdTimex) => {
+  const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -96,7 +96,7 @@ export default function ComRole() {
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, "3", name, descrip, deleteFlagx, createdTimex);
+        handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
       },
     });
   };

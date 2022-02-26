@@ -49,7 +49,7 @@ import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
-import AddRole from "layouts/systemRoles/addRolesAndPerms";
+import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
 import SysRoles from "layouts/systemRoles";
 
 const routes = [
@@ -90,7 +90,7 @@ const routes = [
     key: "addRolesAndPerms",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/systemRoles/addRolesAndPerms",
-    component: <AddRole />,
+    component: <RolesAndPerms />,
   },
   {
     type: "collapse",

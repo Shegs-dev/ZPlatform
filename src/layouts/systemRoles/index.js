@@ -26,42 +26,47 @@ function SysRoles() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
+    const regEx = /[a-zA-Z]/;
+    if (namex.match(regEx)) {
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+      console.log(data11);
 
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
+      const orgIDs = data11.orgID;
+      console.log(orgIDs);
 
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      name: namex,
-      descrip: descripx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+      const raw = JSON.stringify({
+        orgID: orgIDs,
+        name: namex,
+        descrip: descripx,
       });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
+        .then((res) => res.json())
+        .then((result) => {
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    } else {
+      alert("Please enter letters and numbers only.");
+    }
   };
 
   return (
@@ -69,7 +74,7 @@ function SysRoles() {
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" name="form1">
             <MDBox mb={2}>
               <Container>
                 <div className="row">
@@ -77,6 +82,7 @@ function SysRoles() {
                     <MDInput
                       type="text"
                       label="Name"
+                      name="name"
                       value={namex || ""}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
