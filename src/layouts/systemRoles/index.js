@@ -27,7 +27,7 @@ function SysRoles() {
   const handleClick = (e) => {
     e.preventDefault();
     const regEx = /[a-zA-Z]/;
-    if (namex.match(regEx)) {
+    if (namex.matchAll(regEx)) {
       const data11 = JSON.parse(localStorage.getItem("user1"));
       console.log(data11);
 
