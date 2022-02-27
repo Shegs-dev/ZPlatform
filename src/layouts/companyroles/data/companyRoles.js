@@ -9,11 +9,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 
 export default function ComRole() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
+
+  // use of navigate button
+  const navigate = useNavigate();
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -80,7 +84,11 @@ export default function ComRole() {
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
 
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
     MySwal.fire({
       title: "Update Company Roles",
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
@@ -180,6 +188,9 @@ export default function ComRole() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => navigate(`/checklists?id=${value}`)}>
+                  View
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

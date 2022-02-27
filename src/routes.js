@@ -47,10 +47,12 @@ import Position from "layouts/position";
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
+import Steps from "layouts/companysteps";
+import Checklists from "layouts/checklists";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
-import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
 import SysRoles from "layouts/systemRoles";
+import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
 
 const routes = [
   {
@@ -80,10 +82,18 @@ const routes = [
   {
     type: "collapse",
     name: "Company Roles",
-    key: "roles",
+    key: "companyroles",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/roles",
+    route: "/Company-Roles",
     component: <Roles />,
+  },
+  {
+    type: "collapse",
+    name: "Company Steps",
+    key: "companysteps",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Company-Steps",
+    component: <Steps />,
   },
   {
     name: "Add Roles And Permissions",
@@ -91,6 +101,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/systemRoles/addRolesAndPerms",
     component: <RolesAndPerms />,
+  },
+  {
+    name: "Checklists",
+    key: "checklists",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/checklists",
+    component: <Checklists />,
   },
   {
     type: "collapse",

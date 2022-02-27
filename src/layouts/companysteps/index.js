@@ -4,7 +4,7 @@ import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import companyRoles from "layouts/companyroles/data/companyRoles";
+import companySteps from "layouts/companysteps/data/companySteps";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -14,12 +14,11 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Roles() {
+function Steps() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = companyRoles();
+  const { columns: pColumns, rows: pRows } = companySteps();
 
   const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -35,7 +34,6 @@ function Roles() {
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,
-      descrip: descripx,
     });
     const requestOptions = {
       method: "POST",
@@ -44,7 +42,7 @@ function Roles() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/step/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -83,16 +81,6 @@ function Roles() {
                       fullWidth
                     />
                   </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
                 </div>
               </Container>
             </MDBox>
@@ -125,4 +113,4 @@ function Roles() {
   );
 }
 
-export default Roles;
+export default Steps;

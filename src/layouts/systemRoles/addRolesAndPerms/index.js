@@ -221,14 +221,12 @@ function RolesAndPerms() {
           <Form>
             {vPermissions.map((api) => (
               <div key={api.id} className="mb-3">
-                <Form.Check type="checkbox">
-                  <Form.Check.Input
-                    type="checkbox"
-                    defaultChecked={api.isCheck}
-                    onClick={(e) => handleOnClick(e, api)}
-                  />
-                  <Form.Check.Label>{api.name}</Form.Check.Label>
-                </Form.Check>
+                <Form.Check.Input
+                  type="checkbox"
+                  defaultChecked={api.isCheck}
+                  onClick={(e) => handleOnClick(e, api)}
+                />
+                <Form.Check.Label>{api.name}</Form.Check.Label>
               </div>
             ))}
           </Form>
