@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import DataTable from "examples/Tables/DataTable";
-import DepartmentData from "layouts/departments/data/departmentTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
@@ -14,9 +12,8 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Departments() {
+function UserProfile() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = DepartmentData();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
@@ -106,19 +103,9 @@ function Departments() {
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
 
-export default Departments;
+export default UserProfile;

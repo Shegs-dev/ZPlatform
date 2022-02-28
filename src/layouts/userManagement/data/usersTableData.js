@@ -4,22 +4,37 @@
 
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
+// import MDButton from "components/MDButton";
 import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-export default function DepartmentData() {
-  const MySwal = withReactContent(Swal);
+export default function UserData() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
+  // const [id, setId] = useState("");
+
+  const MySwal = withReactContent(Swal);
+  // const axios = require("axios");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   // Method to handle update
-  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
+  const handleUpdate = (
+    idx,
+    namex,
+    emailx,
+    streetx,
+    cityx,
+    statex,
+    countryx,
+    pnox,
+    createdTimex,
+    deleteFlagx
+  ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -29,7 +44,12 @@ export default function DepartmentData() {
       id: idx,
       orgID: orgIDs,
       name: namex,
-      descrip: descripx,
+      email: emailx,
+      street: streetx,
+      city: cityx,
+      state: statex,
+      country: countryx,
+      pno: pnox,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -40,7 +60,7 @@ export default function DepartmentData() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -63,46 +83,71 @@ export default function DepartmentData() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let descripx = "";
+    let emailx = "";
+    let streetx = "";
+    let cityx = "";
+    let statex = "";
+    let countryx = "";
+    let pnox = "";
     let createdTime = 0;
     let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      descripx = "";
+      emailx = "";
+      streetx = "";
+      cityx = "";
+      statex = "";
+      countryx = "";
+      pnox = "";
       createdTime = 0;
       deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      descripx = filteredItems[0].descrip;
+      emailx = filteredItems[0].email;
+      streetx = filteredItems[0].street;
+      cityx = filteredItems[0].city;
+      statex = filteredItems[0].state;
+      countryx = filteredItems[0].country;
+      pnox = filteredItems[0].pno;
       createdTime = filteredItems[0].createdTime;
       deleteFlag = filteredItems[0].deleteFlag;
-    }
 
-    MySwal.fire({
-      title: "Update Department",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
-      confirmButtonText: "Save",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
-        }
-        handleUpdate(id, name, descrip, createdTime, deleteFlag);
-      },
-    });
+      MySwal.fire({
+        title: "Update Department",
+        html: `<input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name">
+    <input type="email" class="swal2-input" id="email" value="${emailx}" placeholder="Email">
+    <input type="text" class="swal2-input" id="street" value="${streetx}" placeholder="Street">
+    <input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City">
+    <input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State">
+    <input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country">
+    <input type="text" class="swal2-input" id="pno" value="${pnox}" placeholder="Phone Number">`,
+        confirmButtonText: "Save",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        preConfirm: () => {
+          const name = Swal.getPopup().querySelector("#name").value;
+          const email = Swal.getPopup().querySelector("#email").value;
+          const street = Swal.getPopup().querySelector("#street").value;
+          const city = Swal.getPopup().querySelector("#city").value;
+          const state = Swal.getPopup().querySelector("#state").value;
+          const country = Swal.getPopup().querySelector("#country").value;
+          const pno = Swal.getPopup().querySelector("#pno").value;
+          const id = value;
+          if (!name) {
+            Swal.showValidationMessage(`Please enter name`);
+          }
+          handleUpdate(id, name, email, street, city, state, country, pno, createdTime, deleteFlag);
+        },
+      });
+    }
   };
 
   // Method to handle diable
-  const handleDisable = (value) => {
+  const handleDisable = (val) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -113,7 +158,7 @@ export default function DepartmentData() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/department/delete/${value}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_KUBU_URL}/branch/delete/${val}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -135,15 +180,11 @@ export default function DepartmentData() {
     });
   };
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
-
-  // Method to fetch all departments
-  // env.environments
+  // Function to get cell value
+  // const getCellValue = (value) => {
+  //   setId(value);
+  // };
+  // Method to fetch all Branch
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
@@ -151,7 +192,7 @@ export default function DepartmentData() {
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
@@ -163,20 +204,24 @@ export default function DepartmentData() {
     };
   }, []);
 
-  // Return table
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
-      { Header: "description", accessor: "descrip", align: "left" },
+      { Header: "First Name", accessor: "personal.fname", align: "left" },
+      { Header: "Last Name", accessor: "personal.lname", align: "left" },
+      { Header: "Email", accessor: "personal.email", align: "left" },
+      { Header: "Phone Number", accessor: "personal.pno", align: "left" },
+      { Header: "Marital Status", accessor: "personal.maritalStatus", align: "left" },
+      { Header: "Street", accessor: "personal.residentialStreet", align: "left" },
+      { Header: "City", accessor: "personal.residentialCity", align: "left" },
+      { Header: "State", accessor: "personal.residentialState", align: "left" },
       {
         Header: "Date Created",
-        accessor: "createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
+        accessor: "personal.createdTime",
         align: "left",
       },
       {
-        Header: "actions",
-        accessor: "id",
+        Header: "Actions",
+        accessor: "personal.id",
         Cell: ({ cell: { value } }) => (
           <div
             style={{
@@ -197,7 +242,7 @@ export default function DepartmentData() {
             </Dropdown>
           </div>
         ),
-        align: "left",
+        align: "center",
       },
     ],
 

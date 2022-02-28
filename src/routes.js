@@ -53,6 +53,8 @@ import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
 import SysRoles from "layouts/systemRoles";
 import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
+import UserManagement from "layouts/userManagement";
+import UserProfile from "layouts/userProfile";
 
 const routes = [
   {
@@ -62,6 +64,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "User Management",
+    key: "userManagement",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/userManagement",
+    component: <UserManagement />,
   },
   {
     type: "collapse",
@@ -132,6 +142,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
     component: <Position />,
+  },
+  {
+    name: "User Profile",
+    key: "userProfile",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/userProfile",
+    component: <UserProfile />,
   },
   {
     name: "Company Regitration",

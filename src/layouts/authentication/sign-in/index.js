@@ -68,13 +68,13 @@ function Basic() {
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
-        localStorage.setItem("user1", JSON.stringify(result.data));
-        let data11 = localStorage.getItem("user1");
-        data11 = JSON.parse(data11);
-        console.log(data11);
-        const orgIDs = data11.orgID;
-        console.log(orgIDs);
         if (result.status === "SUCCESS") {
+          localStorage.setItem("user1", JSON.stringify(result.data));
+          let data11 = localStorage.getItem("user1");
+          data11 = JSON.parse(data11);
+          console.log(data11);
+          const orgIDs = data11.orgID;
+          console.log(orgIDs);
           MySwal.fire({
             title: result.status,
             type: "success",

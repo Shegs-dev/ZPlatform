@@ -139,11 +139,20 @@ function DashboardNavbar({ absolute, light, isMini }) {
               <MDInput label="Search here" />
             </MDBox>
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
+              <Link to="/userProfile">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
               </Link>
+              <IconButton
+                size="small"
+                disableRipple
+                color="inherit"
+                sx={navbarIconButton}
+                onClick={handleConfiguratorOpen}
+              >
+                <Icon sx={iconsStyle}>corporate_fare</Icon>
+              </IconButton>
               <IconButton
                 size="small"
                 disableRipple
