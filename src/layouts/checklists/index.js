@@ -142,7 +142,7 @@ function Checkbox() {
           mx={4}
           mt={2}
         >
-          Permissions
+          Steps
         </MDTypography>
         <MDBox pt={0} px={4}>
           &nbsp;
