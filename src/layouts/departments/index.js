@@ -73,6 +73,7 @@ function Departments() {
                       type="text"
                       label="Name"
                       value={namex || ""}
+                      className="form-control"
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth

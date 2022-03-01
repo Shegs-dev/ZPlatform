@@ -13,10 +13,10 @@ function Checkbox() {
   const [roleStep, setRoleStep] = useState([]);
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
 
   const orgIDs = data11.orgID;
-  console.log(orgIDs);
+
+  // 0683357418
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -29,11 +29,9 @@ function Checkbox() {
   const handleOnClick = (e, apix) => {
     let isChecked = 0;
     const checks = e.target.checked;
-    console.log(checks);
     if (checks) {
       isChecked = 1;
     }
-    console.log(isChecked);
     const raw = JSON.stringify({
       orgID: orgIDs,
       roleID: id,
@@ -58,7 +56,6 @@ function Checkbox() {
     .then((res) => res.json())
     .then((resultg) => {
       setRolName(resultg[0].name);
-      console.log(rolName);
     });
 
   const permissionsList = [];
@@ -70,19 +67,16 @@ function Checkbox() {
       .then((resulta) => {
         if (isMounted) {
           setPermissions(resulta);
-          console.log(resulta);
         }
 
         fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${id}`)
           .then((res) => res.json())
           .then((resultrs) => {
             setRoleStep(resultrs);
-            console.log(resultrs);
 
             // eslint-disable-next-line array-callback-return
             resulta.map((permission) => {
               let check = false;
-              console.log(resultrs);
               if (resultrs != null) {
                 // eslint-disable-next-line array-callback-return
                 resultrs.map((rolPermi) => {
@@ -104,10 +98,8 @@ function Checkbox() {
               permissionsList.push(pObj);
             });
             console.log(roleStep);
-            console.log(permissionsList);
             setVPermissions(permissionsList);
             console.log(permissions);
-            console.log(vPermissions);
           });
       });
     return () => {
