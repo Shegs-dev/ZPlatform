@@ -3,7 +3,6 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
-import BranchData from "layouts/branches/data/BranchTableData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
@@ -14,10 +13,11 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import UserData from "./data/usersTableData";
 
-function Branches() {
+function UserManagement() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = BranchData();
+  const { columns: pColumns, rows: pRows } = UserData();
 
   const [namex, setName] = useState("");
   const [emailx, setEmail] = useState("");
@@ -205,4 +205,4 @@ function Branches() {
   );
 }
 
-export default Branches;
+export default UserManagement;
