@@ -24,8 +24,27 @@ function Departments() {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
+
+    const letterNumber = /^[0-9a-zA-Z]+$/;
+    if (namex.length > 0 && !namex.match(letterNumber)) {
+      MySwal.fire({
+        title: "NAME_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+    if (descripx.length > 0 && !descripx.match(letterNumber)) {
+      MySwal.fire({
+        title: "DESCRIPTION_ERROR",
+        type: "error",
+        text: "Input Description Invalid",
+      });
+      return false;
+    }
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -71,7 +90,7 @@ function Departments() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name"
+                      label="Name *"
                       value={namex || ""}
                       className="form-control"
                       onChange={(e) => setName(e.target.value)}
@@ -79,7 +98,6 @@ function Departments() {
                       fullWidth
                     />
                   </div>
-
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
