@@ -25,7 +25,8 @@ export default function UserData() {
   // Method to handle update
   const handleUpdate = (
     idx,
-    namex,
+    fnamex,
+    lnamex,
     emailx,
     streetx,
     cityx,
@@ -43,7 +44,8 @@ export default function UserData() {
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
-      name: namex,
+      fname: fnamex,
+      lname: lnamex,
       email: emailx,
       street: streetx,
       city: cityx,
@@ -117,7 +119,7 @@ export default function UserData() {
 
       MySwal.fire({
         title: "Update Department",
-        html: `<input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name">
+        html: `<input type="text" class="swal2-input" id="fname" value="${namex}" placeholder="Name">
     <input type="email" class="swal2-input" id="email" value="${emailx}" placeholder="Email">
     <input type="text" class="swal2-input" id="street" value="${streetx}" placeholder="Street">
     <input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City">
@@ -209,11 +211,6 @@ export default function UserData() {
       { Header: "First Name", accessor: "personal.fname", align: "left" },
       { Header: "Last Name", accessor: "personal.lname", align: "left" },
       { Header: "Email", accessor: "personal.email", align: "left" },
-      { Header: "Phone Number", accessor: "personal.pno", align: "left" },
-      { Header: "Marital Status", accessor: "personal.maritalStatus", align: "left" },
-      { Header: "Street", accessor: "personal.residentialStreet", align: "left" },
-      { Header: "City", accessor: "personal.residentialCity", align: "left" },
-      { Header: "State", accessor: "personal.residentialState", align: "left" },
       {
         Header: "Date Created",
         accessor: "personal.createdTime",
@@ -236,7 +233,7 @@ export default function UserData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleShow(items, value)}>Edit</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

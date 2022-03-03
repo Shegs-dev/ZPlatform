@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import MDTypography from "components/MDTypography";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -102,6 +103,19 @@ function UserProfile() {
             </MDBox>
           </MDBox>
         </MDBox>
+      </Card>
+      &nbsp;
+      <Card>
+        <MDTypography
+          variant="h4"
+          textAlign="left"
+          fontWeight="medium"
+          color="secondary"
+          mx={4}
+          mt={2}
+        >
+          Permissions
+        </MDTypography>
       </Card>
       <Footer />
     </DashboardLayout>

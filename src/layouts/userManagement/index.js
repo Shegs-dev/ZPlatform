@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+// import { Select } from "@mui/material";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -21,14 +22,12 @@ function UserManagement() {
 
   const [namex, setName] = useState("");
   const [emailx, setEmail] = useState("");
-  const [streetx, setStreet] = useState("");
-  const [cityx, setCity] = useState("");
-  const [statex, setState] = useState("");
-  const [countryx, setCountry] = useState("");
-  const [pnox, setPno] = useState("");
+  const [lastNamex, setLastName] = useState("");
 
   const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+
+  const [items, setItems] = useState([]);
+  console.log(items);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -39,13 +38,9 @@ function UserManagement() {
     console.log(orgIDs);
     const raw = JSON.stringify({
       orgID: orgIDs,
-      name: namex,
+      fname: namex,
       email: emailx,
-      street: streetx,
-      city: cityx,
-      state: statex,
-      country: countryx,
-      pno: pnox,
+      lastname: lastNamex,
     });
     const requestOptions = {
       method: "POST",
@@ -53,6 +48,30 @@ function UserManagement() {
       body: raw,
       redirect: "follow",
     };
+
+    const appp = [];
+
+    useEffect(() => {
+      let isMounted = true;
+      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`)
+        .then((res) => res.json())
+        .then((resultapi) => {
+          if (isMounted) {
+            const jApi = JSON.stringify(resultapi);
+            const apppi = JSON.parse(jApi);
+            let apiList = [];
+            apiList = apppi;
+            console.log(apiList);
+            setItems(resultapi);
+            // apiList = resultapi;
+            console.log(apppi);
+            console.log(appp);
+          }
+        });
+      return () => {
+        isMounted = false;
+      };
+    }, []);
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
       .then((res) => res.json())
@@ -74,6 +93,24 @@ function UserManagement() {
       });
   };
 
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (isMounted) {
+          setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -91,7 +128,7 @@ function UserManagement() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add New Branch
+              Invite Other Users
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
@@ -101,13 +138,29 @@ function UserManagement() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name"
+                      label="First Name"
                       value={namex || ""}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      value={lastNamex || ""}
+                      onChange={(e) => setLastName(e.target.value)}
+                      label="Last Name"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                </div>
+              </Container>
+            </MDBox>
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
@@ -118,73 +171,22 @@ function UserManagement() {
                       fullWidth
                     />
                   </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDInput
-                      type="text"
-                      value={streetx || ""}
-                      onChange={(e) => setStreet(e.target.value)}
-                      label="Street"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="text"
-                      value={cityx || ""}
-                      onChange={(e) => setCity(e.target.value)}
-                      label="City"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
                   <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={statex || ""}
-                      onChange={(e) => setState(e.target.value)}
-                      label="State"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={countryx || ""}
-                      onChange={(e) => setCountry(e.target.value)}
-                      label="Country"
-                      variant="standard"
-                      fullWidth
-                    />
+                    <Form.Select aria-label="Default select example" width="50%" mx={34}>
+                      <option>--Select Roles--</option>
+                      {items.map((api) => (
+                        <option key={api.id} value={api.name}>
+                          {api.name}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </div>
                 </div>
               </Container>
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                value={pnox || ""}
-                onChange={(e) => setPno(e.target.value)}
-                label="Phone Number"
-                variant="standard"
-              />
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
-                Save
+                Invite User
               </MDButton>
             </MDBox>
           </MDBox>
