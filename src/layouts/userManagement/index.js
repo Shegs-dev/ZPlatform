@@ -20,60 +20,73 @@ function UserManagement() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = UserData();
 
-  const [namex, setName] = useState("");
+  const [fnamex, setName] = useState("");
   const [emailx, setEmail] = useState("");
-  const [lastNamex, setLastName] = useState("");
+  const [lNamex, setLastName] = useState("");
+  const [roleIDs, setRoleID] = useState("");
 
   const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
 
   const [items, setItems] = useState([]);
-  console.log(items);
+  const [company, setCompany] = useState([]);
 
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDz = data11.orgID;
+    // const idVal = JSON.parse([orgIDz]);
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDz}`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (isMounted) {
+          console.log(result);
+          setCompany(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
+    const letterNumber = /^[0-9a-zA-Z]+$/;
+    if (fnamex.length > 0 && !fnamex.match(letterNumber)) {
+      MySwal.fire({
+        title: "NAME_ERROR",
+        type: "error",
+        text: "Input First Name Invalid",
+      });
+      return false;
+    }
+    if (lNamex.length > 0 && !lNamex.match(letterNumber)) {
+      MySwal.fire({
+        title: "NAME_ERROR",
+        type: "error",
+        text: "Input Last Name Invalid",
+      });
+      return false;
+    }
+    console.log(company[0]);
+    console.log(roleIDs);
     const raw = JSON.stringify({
-      orgID: orgIDs,
-      fname: namex,
+      roleID: roleIDs,
+      fname: fnamex,
       email: emailx,
-      lastname: lastNamex,
+      lname: lNamex,
+      companyName: company[0].name,
     });
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-
-    const appp = [];
-
-    useEffect(() => {
-      let isMounted = true;
-      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`)
-        .then((res) => res.json())
-        .then((resultapi) => {
-          if (isMounted) {
-            const jApi = JSON.stringify(resultapi);
-            const apppi = JSON.parse(jApi);
-            let apiList = [];
-            apiList = apppi;
-            console.log(apiList);
-            setItems(resultapi);
-            // apiList = resultapi;
-            console.log(apppi);
-            console.log(appp);
-          }
-        });
-      return () => {
-        isMounted = false;
-      };
-    }, []);
-
-    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/invite`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -92,7 +105,6 @@ function UserManagement() {
         });
       });
   };
-
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
@@ -138,8 +150,8 @@ function UserManagement() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="First Name"
-                      value={namex || ""}
+                      label="First Name *"
+                      value={fnamex || ""}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -148,9 +160,9 @@ function UserManagement() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      value={lastNamex || ""}
+                      value={lNamex || ""}
                       onChange={(e) => setLastName(e.target.value)}
-                      label="Last Name"
+                      label="Last Name *"
                       variant="standard"
                       fullWidth
                     />
@@ -166,16 +178,21 @@ function UserManagement() {
                       type="text"
                       value={emailx || ""}
                       onChange={(e) => setEmail(e.target.value)}
-                      label="Email"
+                      label="Email *"
                       variant="standard"
                       fullWidth
                     />
                   </div>
                   <div className="col-sm-6">
-                    <Form.Select aria-label="Default select example" width="50%" mx={34}>
-                      <option>--Select Roles--</option>
+                    <Form.Select
+                      aria-label="Default select example"
+                      width="50%"
+                      mx={34}
+                      onChange={(e) => setRoleID(e.target.value)}
+                    >
+                      <option>Select Roles *</option>
                       {items.map((api) => (
-                        <option key={api.id} value={api.name}>
+                        <option key={api.id} value={api.id}>
                           {api.name}
                         </option>
                       ))}
