@@ -5,7 +5,8 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 // import MDButton from "components/MDButton";
-import { Dropdown } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Dropdown, Button, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
@@ -15,6 +16,19 @@ export default function UserData() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
   // const [id, setId] = useState("");
+  const navigate = useNavigate();
+
+  const [modal, setModal] = useState(false);
+  const [modalVal, setModalVal] = useState("");
+  const [idVaal, setIdVaal] = useState("");
+  //   console.log(modalVal);
+
+  const handleClose = () => setModal(false);
+  const handleModal = (value) => {
+    setModal(true);
+    setIdVaal(value);
+    console.log(value);
+  };
 
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
@@ -146,38 +160,37 @@ export default function UserData() {
     }
   };
 
-  // Method to handle diable
-  const handleDisable = (val) => {
-    MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/branch/delete/${val}`, { method: "DELETE" })
-          .then((res) => res.json())
-          .then((resx) => {
-            MySwal.fire({
-              title: resx.status,
-              type: "success",
-              text: resx.message,
-            }).then(() => {
-              window.location.reload();
-            });
-          })
-          .catch((error) => {
-            MySwal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
-          });
-      }
-    });
+  const handleModalDel = () => {
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${idVaal}/${modalVal}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((resx) => {
+        MySwal.fire({
+          title: resx.status,
+          type: "success",
+          text: resx.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleView = (value) => {
+    navigate(`/userManagement/viewUser?id=${value}`);
+  };
+
+  const handleVaalue = (e) => {
+    e.preventDefault();
+    const val = e.target.value;
+    setModalVal(val);
   };
 
   // Function to get cell value
@@ -204,6 +217,13 @@ export default function UserData() {
     };
   }, []);
 
+  // Method to change date from timestamp
+  const changeDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    return retDate;
+  };
+
   return {
     columns: [
       { Header: "First Name", accessor: "personal.fname", align: "left" },
@@ -217,29 +237,57 @@ export default function UserData() {
       {
         Header: "Date Created",
         accessor: "personal.createdTime",
+        Cell: ({ cell: { value } }) => changeDate(value),
         align: "left",
       },
       {
         Header: "Actions",
         accessor: "personal.id",
         Cell: ({ cell: { value } }) => (
-          <div
-            style={{
-              width: "100%",
-              backgroundColor: "#dadada",
-              borderRadius: "2px",
-            }}
-          >
-            <Dropdown>
-              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                <Icon sx={{ fontWeight: "light" }}>settings</Icon>
-              </Dropdown.Toggle>
+          <div>
+            <div
+              style={{
+                width: "100%",
+                backgroundColor: "#dadada",
+                borderRadius: "2px",
+              }}
+            >
+              <Dropdown>
+                <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                  <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleModal(value)}>Disable</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+            <div>
+              <Modal show={modal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Select onChange={handleVaalue} aria-label="Default select example">
+                    <option value="ROD">---Reason For Delete---</option>
+                    <option value="Retired">Retired</option>
+                    <option value="Late">Late</option>
+                    <option value="Resigned">Resigned</option>
+                    <option value="Sacked">Sacked</option>
+                  </Form.Select>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant="primary" onClick={() => handleModalDel()}>
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
           </div>
         ),
         align: "center",

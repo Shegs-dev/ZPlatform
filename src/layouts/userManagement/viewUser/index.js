@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import MDButton from "components/MDButton";
-import Card from "@mui/material/Card";
 import MDTypography from "components/MDTypography";
+import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,7 +11,12 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-function UserProfile() {
+function VIewUser() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const id = urlParams.get("id");
+  const idVal = JSON.parse([id]);
+
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
@@ -33,14 +37,12 @@ function UserProfile() {
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
-  const personalIds = data11.personalID;
-  console.log(personalIds);
   const orgIDs = data11.orgID;
   console.log(orgIDs);
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${personalIds}`)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${idVal}`)
       .then((res) => res.json())
       .then((resultp) => {
         if (isMounted) {
@@ -70,86 +72,24 @@ function UserProfile() {
       isMounted = false;
     };
   }, []);
+
+  // console.log(new Date(dateStamp).getTime());
+
+  //   const toTimestamp = (strDate) => {
+
+  //     const dt = new Date(strDate).getTime();
+  //     return dt / 1000;
+  //   };
+  // console.log(toTimestamp(dateStamp));
+
+  // console.log(dateStamp);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <div className="row">
-        <div className="col-sm-4">
-          <Card>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="info"
-              mx={2}
-              mt={-3}
-              p={2}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                Sign In
-              </MDTypography>
-            </MDBox>
-            <MDBox pt={4} pb={3} px={3}>
-              <MDBox component="form" role="form">
-                <MDBox mb={2}>
-                  <MDInput type="email" label="Email" fullWidth />
-                </MDBox>
-                <MDBox mb={2}>
-                  <MDInput type="password" label="Password" fullWidth />
-                </MDBox>
-                <MDBox mt={4} mb={1}>
-                  <MDButton variant="gradient" color="info" fullWidth>
-                    sign In
-                  </MDButton>
-                </MDBox>
-                <MDBox mt={3} mb={1} textAlign="center">
-                  <MDTypography variant="button" color="text">
-                    Don&apos;t have an account?{" "}
-                    <MDTypography variant="button" color="info" fontWeight="medium" textGradient>
-                      Sign Up
-                    </MDTypography>
-                  </MDTypography>
-                </MDBox>
-              </MDBox>
-            </MDBox>
-          </Card>
-          &nbsp;
-          <Card>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="info"
-              mx={2}
-              mt={-3}
-              p={2}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                Sign In
-              </MDTypography>
-            </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={10}
-              mt={2}
-              p={2}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                User Profile
-              </MDTypography>
-            </MDBox>
-          </Card>
-        </div>
-        <div className="col-sm-7">
+        <div className="col-sm-2">&nbsp;</div>
+        <div className="col-sm-8" align="center">
           <Card>
             <MDBox pt={4} pb={3} px={3}>
               <MDBox component="form" role="form">
@@ -389,17 +329,17 @@ function UserProfile() {
             </MDBox>
           </Card>
           &nbsp;
-          <Card>
+          <Card mt={0} mb={1}>
             <MDBox
               variant="gradient"
               bgColor="info"
               borderRadius="lg"
               coloredShadow="success"
-              mx={30}
-              mt={2}
-              p={2}
+              mx={25}
+              mt={-2}
+              p={3}
               mb={1}
-              textAlign="center"
+              textAlign="left"
             >
               <MDTypography
                 variant="h4"
@@ -419,9 +359,9 @@ function UserProfile() {
               bgColor="info"
               borderRadius="lg"
               coloredShadow="success"
-              mx={30}
-              mt={2}
-              p={2}
+              mx={25}
+              mt={-2}
+              p={3}
               mb={1}
               textAlign="center"
             >
@@ -443,4 +383,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default VIewUser;
