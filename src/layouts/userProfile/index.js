@@ -411,38 +411,9 @@ function UserProfile() {
                 Bank Account
               </MDTypography>
             </MDBox>
-<<<<<<< HEAD
-          </Card>
-          &nbsp;
-          <Card>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={30}
-              mt={2}
-              p={2}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography
-                variant="h4"
-                fontWeight="medium"
-                color="white"
-                textAlign="center"
-                mt={1}
-              >
-                Next Of Kin
-              </MDTypography>
-            </MDBox>
           </Card>
         </div>
       </div>
-=======
-          </MDBox>
-        </MDBox>
-      </Card>
       &nbsp;
       <Card>
         <MDTypography
@@ -456,7 +427,6 @@ function UserProfile() {
           Permissions
         </MDTypography>
       </Card>
->>>>>>> 90629366b9e105b9ca5336aea6a0c7829181f5fa
       <Footer />
     </DashboardLayout>
   );
