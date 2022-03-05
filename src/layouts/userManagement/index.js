@@ -14,7 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import UserData from "./data/usersTableData";
+import UserData from "./data/userTableData";
 
 function UserManagement() {
   const MySwal = withReactContent(Swal);
