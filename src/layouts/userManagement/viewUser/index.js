@@ -115,6 +115,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="First Name"
+                          disabled
                           value={fnamex || ""}
                           onChange={(e) => setFname(e.target.value)}
                           variant="standard"
@@ -125,6 +126,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="Last Name"
+                          disabled
                           value={lnamex || ""}
                           onChange={(e) => setLname(e.target.value)}
                           variant="standard"
@@ -141,6 +143,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="Other Name"
+                          disabled
                           value={onamex || ""}
                           onChange={(e) => setOname(e.target.value)}
                           variant="standard"
@@ -157,6 +160,7 @@ function VIewUser() {
                         <MDInput
                           type="email"
                           label="Personal Email"
+                          disabled
                           value={emailx || ""}
                           onChange={(e) => setEmail(e.target.value)}
                           variant="standard"
@@ -173,6 +177,7 @@ function VIewUser() {
                         <MDInput
                           type="number"
                           label="Phone Number"
+                          disabled
                           value={phonex || ""}
                           onChange={(e) => setPhone(e.target.value)}
                           variant="standard"
@@ -189,6 +194,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="Marital Status"
+                          disabled
                           value={maritalStatusx || ""}
                           onChange={(e) => setMaritalStatus(e.target.value)}
                           variant="standard"
@@ -225,6 +231,7 @@ function VIewUser() {
                             date={startDate}
                             wrapperClassName="date-picker"
                             placeholder="Select Birth Date"
+                            disabled
                             dateFormat="MM/dd/yyyy"
                             confirmBtnText="Confirm"
                             showCancelButton="true"
@@ -263,6 +270,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="Nationality"
+                          disabled
                           value={nationalityx || ""}
                           onChange={(e) => setNationality(e.target.value)}
                           variant="standard"
@@ -279,6 +287,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="Street"
+                          disabled
                           value={residentialStreetx || ""}
                           onChange={(e) => setResidentialStreet(e.target.value)}
                           variant="standard"
@@ -289,6 +298,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="City"
+                          disabled
                           value={residentialCityx || ""}
                           onChange={(e) => setResidentialCity(e.target.value)}
                           variant="standard"
@@ -305,6 +315,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="State"
+                          disabled
                           value={residentialStatex || ""}
                           onChange={(e) => setResidentialState(e.target.value)}
                           variant="standard"
@@ -316,6 +327,7 @@ function VIewUser() {
                         <MDInput
                           type="text"
                           label="Country"
+                          disabled
                           value={residentialCountryx || ""}
                           onChange={(e) => setResidentialCountry(e.target.value)}
                           variant="standard"
