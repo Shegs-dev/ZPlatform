@@ -254,7 +254,6 @@ export default function UserData() {
                   <Icon sx={{ fontWeight: "light" }}>settings</Icon>
                 </Dropdown.Toggle>
 
-<<<<<<< HEAD
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleModal(value)}>Disable</Dropdown.Item>
@@ -286,13 +285,6 @@ export default function UserData() {
                 </Modal.Footer>
               </Modal>
             </div>
-=======
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleShow(items, value)}>Edit</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
->>>>>>> 90629366b9e105b9ca5336aea6a0c7829181f5fa
           </div>
         ),
         align: "center",

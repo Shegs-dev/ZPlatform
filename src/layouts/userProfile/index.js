@@ -411,7 +411,6 @@ function UserProfile() {
                 Bank Account
               </MDTypography>
             </MDBox>
-<<<<<<< HEAD
           </Card>
           &nbsp;
           <Card>
@@ -439,24 +438,6 @@ function UserProfile() {
           </Card>
         </div>
       </div>
-=======
-          </MDBox>
-        </MDBox>
-      </Card>
-      &nbsp;
-      <Card>
-        <MDTypography
-          variant="h4"
-          textAlign="left"
-          fontWeight="medium"
-          color="secondary"
-          mx={4}
-          mt={2}
-        >
-          Permissions
-        </MDTypography>
-      </Card>
->>>>>>> 90629366b9e105b9ca5336aea6a0c7829181f5fa
       <Footer />
     </DashboardLayout>
   );
