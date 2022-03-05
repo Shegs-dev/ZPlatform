@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-import Card from "@mui/material/Card";
 import MDTypography from "components/MDTypography";
+import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -411,6 +411,7 @@ function UserProfile() {
                 Bank Account
               </MDTypography>
             </MDBox>
+<<<<<<< HEAD
           </Card>
           &nbsp;
           <Card>
@@ -438,6 +439,24 @@ function UserProfile() {
           </Card>
         </div>
       </div>
+=======
+          </MDBox>
+        </MDBox>
+      </Card>
+      &nbsp;
+      <Card>
+        <MDTypography
+          variant="h4"
+          textAlign="left"
+          fontWeight="medium"
+          color="secondary"
+          mx={4}
+          mt={2}
+        >
+          Permissions
+        </MDTypography>
+      </Card>
+>>>>>>> 90629366b9e105b9ca5336aea6a0c7829181f5fa
       <Footer />
     </DashboardLayout>
   );
