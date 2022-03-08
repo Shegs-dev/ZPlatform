@@ -144,15 +144,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
               </Link>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon sx={iconsStyle}>corporate_fare</Icon>
-              </IconButton>
+              <Link to="/companiesProfile">
+                <IconButton sx={navbarIconButton} size="small" disableRipple>
+                  <Icon sx={iconsStyle}>corporate_fare</Icon>
+                </IconButton>
+              </Link>
               <IconButton
                 size="small"
                 disableRipple
