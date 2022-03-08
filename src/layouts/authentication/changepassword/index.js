@@ -59,7 +59,7 @@ function ChangePassword() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={3} pb={3} px={30}>
+        <MDBox pt={3.5} pb={3.5} px={30}>
           <MDBox
             variant="gradient"
             bgColor="info"
