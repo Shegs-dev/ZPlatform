@@ -11,7 +11,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-function VIewUser() {
+function ViewUser() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const id = urlParams.get("id");
@@ -395,4 +395,4 @@ function VIewUser() {
   );
 }
 
-export default VIewUser;
+export default ViewUser;

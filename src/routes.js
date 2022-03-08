@@ -55,7 +55,7 @@ import SysRoles from "layouts/systemRoles";
 import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
 import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
-import VIewUser from "layouts/userManagement/viewUser";
+import ViewUser from "layouts/userManagement/viewUser";
 
 const routes = [
   {
@@ -156,7 +156,7 @@ const routes = [
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/userManagement/viewUser",
-    component: <VIewUser />,
+    component: <ViewUser />,
   },
   {
     name: "Company Regitration",

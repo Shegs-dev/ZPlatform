@@ -19,15 +19,15 @@ export default function UserData() {
   const navigate = useNavigate();
 
   const [modal, setModal] = useState(false);
-  const [modalVal, setModalVal] = useState("");
   const [idVaal, setIdVaal] = useState("");
-  //   console.log(modalVal);
 
   const handleClose = () => setModal(false);
   const handleModal = (value) => {
-    setModal(true);
-    setIdVaal(value);
-    console.log(value);
+    if (!modal) {
+      setModal(true);
+      setIdVaal(value);
+      console.log(value);
+    }
   };
 
   const MySwal = withReactContent(Swal);
@@ -163,6 +163,8 @@ export default function UserData() {
   };
 
   const handleModalDel = () => {
+    const modalVal = document.getElementById("reasonForDelete").value;
+    console.log(modalVal);
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${idVaal}/${modalVal}`, {
       method: "DELETE",
     })
@@ -187,12 +189,6 @@ export default function UserData() {
 
   const handleView = (value) => {
     navigate(`/userManagement/viewUser?id=${value}`);
-  };
-
-  const handleVaalue = (e) => {
-    e.preventDefault();
-    const val = e.target.value;
-    setModalVal(val);
   };
 
   // Function to get cell value
@@ -262,12 +258,12 @@ export default function UserData() {
               </Dropdown>
             </div>
             <div>
-              <Modal show={modal} onHide={handleClose}>
+              <Modal show={modal} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
+                  <Modal.Title>Reason For Delete</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <Form.Select onChange={handleVaalue} aria-label="Default select example">
+                  <Form.Select id="reasonForDelete" aria-label="Default select example">
                     <option value="ROD">---Reason For Delete---</option>
                     <option value="Retired">Retired</option>
                     <option value="Late">Late</option>
