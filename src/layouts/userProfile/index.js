@@ -412,21 +412,32 @@ function UserProfile() {
               </MDTypography>
             </MDBox>
           </Card>
+          &nbsp;
+          <Card>
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={30}
+              mt={2}
+              p={2}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography
+                variant="h4"
+                fontWeight="medium"
+                color="white"
+                textAlign="center"
+                mt={1}
+              >
+                Next Of Kin
+              </MDTypography>
+            </MDBox>
+          </Card>
         </div>
       </div>
-      &nbsp;
-      <Card>
-        <MDTypography
-          variant="h4"
-          textAlign="left"
-          fontWeight="medium"
-          color="secondary"
-          mx={4}
-          mt={2}
-        >
-          Permissions
-        </MDTypography>
-      </Card>
       <Footer />
     </DashboardLayout>
   );
