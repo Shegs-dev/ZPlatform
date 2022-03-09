@@ -56,6 +56,9 @@ import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
 import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import ViewUser from "layouts/userManagement/viewUser";
+import ResetPass from "layouts/authentication/reset-password";
+import ComResetPass from "layouts/authentication/complete-resetPassword";
+import UserAudit from "layouts/userHistory";
 
 const routes = [
   {
@@ -70,7 +73,7 @@ const routes = [
     type: "collapse",
     name: "User Management",
     key: "userManagement",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/userManagement",
     component: <UserManagement />,
   },
@@ -78,7 +81,7 @@ const routes = [
     type: "collapse",
     name: "Branches",
     key: "branches",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/branches",
     component: <Branches />,
   },
@@ -86,7 +89,7 @@ const routes = [
     type: "collapse",
     name: "Departments",
     key: "departments",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
   },
@@ -180,6 +183,28 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    name: "Reset Password",
+    key: "resetPassword",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/resetPassword",
+    component: <ResetPass />,
+  },
+  {
+    name: "Complete Reset Password",
+    key: "complete-ResetPassword",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/complete-ResetPassword",
+    component: <ComResetPass />,
+  },
+  {
+    type: "collapse",
+    name: "User History",
+    key: "userHistory",
+    icon: <Icon fontSize="small">history</Icon>,
+    route: "/userHistory",
+    component: <UserAudit />,
   },
 ];
 
