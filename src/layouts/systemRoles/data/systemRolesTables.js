@@ -35,7 +35,7 @@ export default function SysRole() {
       name: namex,
       descrip: descripx,
       deleteFlag: deleteFlagx,
-      craetedTime: createdTimex,
+      createdTime: createdTimex,
     });
     console.log(raw);
     const requestOptions = {
