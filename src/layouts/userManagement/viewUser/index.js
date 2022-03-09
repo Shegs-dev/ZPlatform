@@ -35,10 +35,16 @@ function ViewUser() {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
+  const [maNoOfSpousesx, setMaNoOfSpouses] = useState("");
+  const [maNoOfChildrenx, setMaNoOfChildren] = useState("");
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
   const orgIDs = data11.orgID;
   console.log(orgIDs);
+
+  console.log(data11);
+  const personalIds = data11.personalID;
+  // console.log(personalIds);
 
   useEffect(() => {
     let isMounted = true;
@@ -83,6 +89,26 @@ function ViewUser() {
   // console.log(toTimestamp(dateStamp));
 
   // console.log(dateStamp);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${personalIds}`)
+      .then((res) => res.json())
+      .then((resultma) => {
+        console.log(resultma);
+        console.log(resultma.length);
+        if (isMounted) {
+          // eslint-disable-next-line eqeqeq
+          if (resultma.length != 0) {
+            setMaNoOfSpouses(resultma[0].noOfSpouses);
+            setMaNoOfChildren(resultma[0].noOfChildren);
+          }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <DashboardLayout>
@@ -204,7 +230,6 @@ function ViewUser() {
                     </div>
                   </Container>
                 </MDBox>
-
                 <Container>
                   <div className="row">
                     <div className="col-sm-8">
@@ -341,27 +366,59 @@ function ViewUser() {
             </MDBox>
           </Card>
           &nbsp;
-          <Card mt={0} mb={1}>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={25}
-              mt={-2}
-              p={3}
-              mb={1}
-              textAlign="left"
-            >
-              <MDTypography
-                variant="h4"
-                fontWeight="medium"
-                color="white"
-                textAlign="center"
-                mt={1}
-              >
-                Bank Account
-              </MDTypography>
+          <Card>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox component="form" role="form">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={2}
+                  mt={-6}
+                  p={2}
+                  mb={7}
+                  textAlign="center"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    Marital
+                  </MDTypography>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Number Of Spouses"
+                          disabled
+                          value={maNoOfSpousesx || ""}
+                          onChange={(e) => setMaNoOfSpouses(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Number Of Children"
+                          disabled
+                          value={maNoOfChildrenx || ""}
+                          onChange={(e) => setMaNoOfChildren(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+              </MDBox>
             </MDBox>
           </Card>
           &nbsp;
