@@ -28,7 +28,7 @@ function Departments() {
   const handleClick = (e) => {
     e.preventDefault();
 
-    const letterNumber = /^[0-9a-zA-Z]+$/;
+    const letterNumber = /^[a-zA-Z]+$/;
     if (namex.length > 0 && !namex.match(letterNumber)) {
       MySwal.fire({
         title: "NAME_ERROR",

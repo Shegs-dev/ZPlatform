@@ -28,7 +28,7 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
-function Cover() {
+function UserAudit() {
   return (
     <CoverLayout coverHeight="50vh" image={bgImage}>
       <Card>
@@ -67,4 +67,4 @@ function Cover() {
   );
 }
 
-export default Cover;
+export default UserAudit;
