@@ -69,9 +69,59 @@ function CompanyProfile() {
       isMounted = false;
     };
   }, []);
-
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
+
+    const letterNumber = /^[0-9a-zA-Z]+$/;
+    if (namex.length > 0 && !namex.match(letterNumber)) {
+      MySwal.fire({
+        title: "NAME_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+    if (namex.length > 0 && !cityx.match(letterNumber)) {
+      MySwal.fire({
+        title: "CITY_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+    if (namex.length > 0 && !statex.match(letterNumber)) {
+      MySwal.fire({
+        title: "STATE_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+    if (namex.length > 0 && !countryx.match(letterNumber)) {
+      MySwal.fire({
+        title: "COUNTRY_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+    if (namex.length > 0 && !pnox.match(letterNumber)) {
+      MySwal.fire({
+        title: "PHONENUMBER_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+    if (namex.length > 0 && !descripx.match(letterNumber)) {
+      MySwal.fire({
+        title: "DESCRIPTION_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
     const raw = JSON.stringify({
       id: idx,
       name: namex,
@@ -144,7 +194,7 @@ function CompanyProfile() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name"
+                      label="Name *"
                       value={namex || ""}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
@@ -182,7 +232,7 @@ function CompanyProfile() {
                       type="text"
                       value={cityx || ""}
                       onChange={(e) => setCity(e.target.value)}
-                      label="City"
+                      label="City *"
                       variant="standard"
                       fullWidth
                     />
@@ -198,7 +248,7 @@ function CompanyProfile() {
                       type="text"
                       value={statex || ""}
                       onChange={(e) => setState(e.target.value)}
-                      label="State"
+                      label="State *"
                       variant="standard"
                       fullWidth
                     />
@@ -224,7 +274,7 @@ function CompanyProfile() {
                       type="text"
                       value={pnox || ""}
                       onChange={(e) => setPno(e.target.value)}
-                      label="Phone Number"
+                      label="Phone Number *"
                       variant="standard"
                     />
                   </div>
