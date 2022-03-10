@@ -15,13 +15,15 @@ import withReactContent from "sweetalert2-react-content";
 export default function UserData() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
+
   // const [id, setId] = useState("");
   const navigate = useNavigate();
+
+  const MySwal = withReactContent(Swal);
 
   const [modal, setModal] = useState(false);
   const [modalVal, setModalVal] = useState("");
   const [idVaal, setIdVaal] = useState("");
-  //   console.log(modalVal);
 
   const handleClose = () => setModal(false);
   const handleModal = (value) => {
@@ -30,7 +32,25 @@ export default function UserData() {
     console.log(value);
   };
 
-  const MySwal = withReactContent(Swal);
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (isMounted) {
+          setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // const axios = require("axios");
 
   const myHeaders = new Headers();
@@ -194,30 +214,13 @@ export default function UserData() {
     const val = e.target.value;
     setModalVal(val);
   };
+  console.log(handleVaalue);
 
   // Function to get cell value
   // const getCellValue = (value) => {
   //   setId(value);
   // };
   // Method to fetch all Branch
-  useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
-      .then((res) => res.json())
-      .then((result) => {
-        if (isMounted) {
-          setItems(result);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
@@ -225,6 +228,12 @@ export default function UserData() {
     const retDate = date.toDateString();
     return retDate;
   };
+
+  const data11 = JSON.parse(localStorage.getItem("user1"));
+  console.log(data11);
+
+  const orgIDs = data11.orgID;
+  console.log(orgIDs);
 
   return {
     columns: [
@@ -267,7 +276,7 @@ export default function UserData() {
                   <Modal.Title>Modal heading</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <Form.Select onChange={handleVaalue} aria-label="Default select example">
+                  <Form.Select id="reasonForDelete" aria-label="Default select example">
                     <option value="ROD">---Reason For Delete---</option>
                     <option value="Retired">Retired</option>
                     <option value="Late">Late</option>

@@ -199,7 +199,7 @@ export default function Branchdata() {
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`https://kubuservice.herokuapp.com/branch/gets/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
