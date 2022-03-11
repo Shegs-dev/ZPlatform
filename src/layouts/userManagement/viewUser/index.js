@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -47,11 +48,16 @@ function ViewUser() {
   const [branch, setBranch] = useState([]);
   // continue sha
   const [officeItems, setOfficeItem] = useState([]);
+  // medical
+  const [meBloodGroupx, setMeBloodGroup] = useState("");
+  const [meGenotypex, setMeGenotype] = useState("");
   // onChange const
   const [departx, setDepartx] = useState("");
   const [companyx, setCompanyx] = useState("");
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
+  const [meIDx, setMeID] = useState("");
+  console.log(setMeID);
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
@@ -235,20 +241,54 @@ function ViewUser() {
     };
   }, []);
 
-  // console.log(new Date(dateStamp).getTime());
+  console.log(data11);
+  const personalIds = data11.personalID;
 
-  //   const toTimestamp = (strDate) => {
+  const handleAddME = (e) => {
+    e.preventDefault();
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      empID: personalIds,
+      bloodGroup: meBloodGroupx,
+      genotype: meGenotypex,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
-  //     const dt = new Date(strDate).getTime();
-  //     return dt / 1000;
-  //   };
-  // console.log(toTimestamp(dateStamp));
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
 
-  // console.log(dateStamp);
+  const handleMEAddUpdate = (e) => {
+    e.preventDefault();
+    if (meIDx == null) {
+      handleAddME(e);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${id}`)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`)
       .then((res) => res.json())
       .then((resultma) => {
         console.log(resultma);
@@ -256,8 +296,8 @@ function ViewUser() {
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultma.length != 0) {
-            setMaNoOfSpouses(resultma[0].noOfSpouses);
-            setMaNoOfChildren(resultma[0].noOfChildren);
+            setMeBloodGroup(resultma[0].bloodGroup);
+            setMeGenotype(resultma[0].genotype);
           }
         }
       });
@@ -518,6 +558,72 @@ function ViewUser() {
                     </div>
                   </Container>
                 </MDBox>
+              </MDBox>
+            </MDBox>
+          </Card>
+          &nbsp;
+          <Card>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox component="form" role="form">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={2}
+                  mt={-6}
+                  p={2}
+                  mb={7}
+                  textAlign="center"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    Medical
+                  </MDTypography>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Blood Group"
+                          value={meBloodGroupx || ""}
+                          onChange={(e) => setMeBloodGroup(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Genotype"
+                          value={meGenotypex || ""}
+                          onChange={(e) => setMeGenotype(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <div align="center">
+                  <MDBox mt={4} mb={1}>
+                    <MDButton
+                      variant="gradient"
+                      onClick={handleMEAddUpdate}
+                      color="info"
+                      width="50%"
+                    >
+                      Save
+                    </MDButton>
+                  </MDBox>
+                </div>
               </MDBox>
             </MDBox>
           </Card>

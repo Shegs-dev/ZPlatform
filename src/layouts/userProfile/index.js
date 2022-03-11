@@ -673,6 +673,26 @@ function UserProfile() {
     console.log(baCountryx);
   };
 
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`)
+      .then((res) => res.json())
+      .then((resultma) => {
+        console.log(resultma);
+        console.log(resultma.length);
+        if (isMounted) {
+          // eslint-disable-next-line eqeqeq
+          if (resultma.length != 0) {
+            setMeBloodGroup(resultma[0].bloodGroup);
+            setMeGenotype(resultma[0].genotype);
+          }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
