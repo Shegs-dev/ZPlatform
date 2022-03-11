@@ -491,9 +491,9 @@ function ViewUser() {
                         <div>
                           <style>
                             {`.date-picker input {
-                      width: 50%
-                      align: left
-                 }`}
+                              width: 50%
+                              align: left
+                            }`}
                           </style>
                           <DatePicker
                             date={startDate}
