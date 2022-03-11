@@ -6,7 +6,6 @@ import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";

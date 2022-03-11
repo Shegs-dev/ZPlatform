@@ -23,8 +23,20 @@ function Steps() {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
+
+    const letterNumber = /^[a-zA-Z]+$/;
+    if (namex.length > 0 && !namex.match(letterNumber)) {
+      MySwal.fire({
+        title: "NAME_ERROR",
+        type: "error",
+        text: "Input Name Invalid",
+      });
+      return false;
+    }
+
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -74,7 +86,7 @@ function Steps() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name"
+                      label="Name *"
                       value={namex || ""}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
