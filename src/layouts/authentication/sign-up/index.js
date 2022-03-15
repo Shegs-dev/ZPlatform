@@ -19,13 +19,14 @@ import { Link, useNavigate } from "react-router-dom";
 // @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -39,12 +40,24 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 function Cover() {
+  const [passwordShown, setPasswordShown] = useState(false);
+
+  // Password toggle handler
+  const togglePassword = () => {
+    // When the handler is invoked
+    // inverse the boolean state of passwordShown
+    setPasswordShown(!passwordShown);
+  };
   const [phonex, setPhone] = useState("");
   const [startDate, setStartDate] = useState(new Date());
 
   const navigate = useNavigate();
+
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
   const MySwal = withReactContent(Swal);
 
@@ -60,6 +73,8 @@ function Cover() {
   const [residentialCountryx, setResidentialCountry] = useState("");
   const [maritalStatusx, setMaritalStatus] = useState("");
   const [passwordx, setPassword] = useState("");
+  const [retypePasswordx, setRetypePassword] = useState("");
+  const [allStates, setAllStates] = useState([]);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -106,36 +121,203 @@ function Cover() {
     const data12 = localStorage.getItem("email1");
     console.log(data12);
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.status === "SUCCESS") {
+    if (passwordx === retypePasswordx) {
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.status === "SUCCESS") {
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              localStorage.setItem("user", JSON.stringify(result.data));
+              let data1 = localStorage.getItem("user");
+              data1 = JSON.parse(data1);
+              console.log(data1);
+              navigate("/authentication/companyRegistration", { replace: true });
+            });
+          } else {
+            MySwal.fire({
+              title: result.status,
+              type: "error",
+              text: result.message,
+            });
+          }
+        })
+        .catch((error) => {
           MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            localStorage.setItem("user", JSON.stringify(result.data));
-            let data1 = localStorage.getItem("user");
-            data1 = JSON.parse(data1);
-            console.log(data1);
-            navigate("/authentication/companyRegistration", { replace: true });
-          });
-        } else {
-          MySwal.fire({
-            title: result.status,
+            title: error.status,
             type: "error",
-            text: result.message,
+            text: error.message,
           });
-        }
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
         });
-      });
+    }
+  };
+
+  const handleOnChangeRCCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setResidentialCountry(e.target.value);
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
+  };
+
+  const handleOnChangeNationality = (e) => {
+    setNationality(e.target.value);
+    console.log(nationalityx);
+  };
+
+  const handleOnFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML =
+        "First Name - input only capital and small letters<br>";
+    }
+    if (fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "";
+    }
+    if (fnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "First Name is required<br>";
+    }
+  };
+
+  const handleOnLastKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML =
+        "Last Name - input only capital and small letters<br>";
+    }
+    if (lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "";
+    }
+    if (lnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "Last Name is required<br>";
+    }
+  };
+
+  const handleOnOtherKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML =
+        "Other Name - input only capital and small letters<br>";
+    }
+    if (onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "";
+    }
+    if (onamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "Other Name is required<br>";
+    }
+  };
+
+  const handleOnPEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnOEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emaily.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emaily.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emaily.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (residentialStreetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnCityKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!residentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
+    }
+    if (residentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "";
+    }
+    if (residentialCityx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City is required<br>";
+    }
+  };
+
+  const handleOnPasswordKeys = () => {
+    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    if (!passwordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML =
+        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+    }
+    if (passwordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML = "";
+    }
+    if (passwordx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML = "Password is required<br>";
+    }
+  };
+
+  const handleOnRTPasswordKeys = () => {
+    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    if (!retypePasswordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML =
+        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+    }
+    if (retypePasswordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("rtPassword").innerHTML = "";
+    }
+    if (retypePasswordx !== passwordx) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
+    }
   };
 
   return (
@@ -176,6 +358,33 @@ function Cover() {
                 BASIC INFO
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="first">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="last">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="other">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+                {" "}
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
               <Container>
                 <div className="row">
@@ -184,6 +393,7 @@ function Cover() {
                       type="text"
                       label="First Name"
                       value={fnamex || ""}
+                      onKeyUp={handleOnFirstKeys}
                       onChange={(e) => setFname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -194,6 +404,7 @@ function Cover() {
                       type="text"
                       label="Last Name"
                       value={lnamex || ""}
+                      onKeyUp={handleOnLastKeys}
                       onChange={(e) => setLname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -202,98 +413,140 @@ function Cover() {
                 </div>
               </Container>
             </MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-10">
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      label="Other Name"
+                      value={onamex || ""}
+                      onKeyUp={handleOnOtherKeys}
+                      onChange={(e) => setOname(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
+            <Container>
+              <div className="row">
+                <div className="col-sm-10">
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="email"
+                      label="Personal Email"
+                      value={emailx || ""}
+                      onKeyUp={handleOnPEmailKeys}
+                      onChange={(e) => setEmail(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
+            <Container>
+              <div className="row">
+                <div className="col-sm-10">
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="email"
+                      label="Official Email"
+                      value={emaily || ""}
+                      onKeyUp={handleOnOEmailKeys}
+                      onChange={(e) => setOemail(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Other Name"
-                value={onamex || ""}
-                onChange={(e) => setOname(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text">
+                      Phone Number
+                    </MDTypography>
+                    <PhoneInput
+                      value={phonex}
+                      inputStyle={{ width: "150%" }}
+                      buttonStyle={{}}
+                      onChange={setPhone}
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="email"
-                label="Personal Email"
-                value={emailx || ""}
-                onChange={(e) => setEmail(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="email"
-                label="Official Email"
-                value={emaily || ""}
-                onChange={(e) => setOemail(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2} mx={0}>
-              <MDInput
-                type="number"
-                label="Phone Number"
-                value={phonex || ""}
-                onChange={(e) => setPhone(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Marital Status"
-                value={maritalStatusx || ""}
-                onChange={(e) => setMaritalStatus(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
-              Date Of Birth
-            </MDTypography>
-            <MDBox mb={4} mt={-1}>
-              <div>
-                <style>
-                  {`.date-picker input {
+            <Container>
+              <div className="row">
+                <div className="col-sm-8">
+                  <MDBox mb={2}>
+                    <Form.Select
+                      onChange={(e) => setMaritalStatus(e.target.value)}
+                      value={maritalStatusx || ""}
+                      aria-label="Default select example"
+                    >
+                      <option>---Marital Status---</option>
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                      <option value="Divorced">Divorced</option>
+                    </Form.Select>
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
+            <Container>
+              <div className="row">
+                <div className="col-sm-12">
+                  <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
+                    Date Of Birth
+                  </MDTypography>
+                  <MDBox mb={4} mt={-1}>
+                    <div>
+                      <style>
+                        {`.date-picker input {
                       width: 50%
                  }`}
-                </style>
-                <DatePicker
-                  date={startDate}
-                  wrapperClassName="date-picker"
-                  placeholder="Select Birth Date"
-                  dateFormat="dd/MM/yyyy"
-                  confirmBtnText="Confirm"
-                  showCancelButton="true"
-                  customStyles={{
-                    placeholderText: {
-                      fontSize: 5,
-                    },
-                    dateIcon: {
-                      height: 0,
-                      width: 0,
-                    },
-                    dateText: {
-                      color: "#b3b4b5",
-                      fontSize: 16,
-                    },
-                    dateInput: {
-                      borderWidth: 0,
-                    },
-                  }}
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  peekNextMonth
-                  showMonthDropdown
-                  showYearDropdown
-                  dropdownMode="select"
-                />
+                      </style>
+                      <DatePicker
+                        date={startDate}
+                        wrapperClassName="date-picker"
+                        placeholder="Select Birth Date"
+                        dateFormat="dd/MM/yyyy"
+                        confirmBtnText="Confirm"
+                        showCancelButton="true"
+                        customStyles={{
+                          placeholderText: {
+                            fontSize: 5,
+                          },
+                          dateIcon: {
+                            height: 0,
+                            width: 0,
+                          },
+                          dateText: {
+                            color: "#b3b4b5",
+                            fontSize: 16,
+                          },
+                          dateInput: {
+                            borderWidth: 0,
+                          },
+                        }}
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                      />
+                    </div>
+                  </MDBox>
+                </div>
               </div>
-            </MDBox>
+            </Container>
             <MDBox
               variant="gradient"
               bgColor="info"
@@ -309,15 +562,48 @@ function Cover() {
                 ADDRESS
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+                {" "}
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Nationality"
-                value={nationalityx || ""}
-                onChange={(e) => setNationality(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={3}>
+                      Nationality
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={nationalityx || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeNationality}
+                      >
+                        <option>--Select Nationality--</option>
+                        {AlCountry.map((apic) => (
+                          <option key={apic.code3} value={apic.name}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
               <Container>
@@ -327,6 +613,7 @@ function Cover() {
                       type="text"
                       label="Street"
                       value={residentialStreetx || ""}
+                      onKeyUp={handleOnStreetKeys}
                       onChange={(e) => setResidentialStreet(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -337,6 +624,7 @@ function Cover() {
                       type="text"
                       label="City"
                       value={residentialCityx || ""}
+                      onKeyUp={handleOnCityKeys}
                       onChange={(e) => setResidentialCity(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -348,26 +636,47 @@ function Cover() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="State"
-                      value={residentialStatex || ""}
-                      onChange={(e) => setResidentialState(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      Country
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={residentialCountryx || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCCountry}
+                      >
+                        <option>--Select Country--</option>
+                        {AlCountry.map((apic) => (
+                          <option key={apic.code3} value={apic.name}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
                   </div>
-
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Country"
-                      value={residentialCountryx || ""}
-                      onChange={(e) => setResidentialCountry(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
+                </div>
+              </Container>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      State
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={residentialStatex || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCState}
+                      >
+                        <option>--Select State--</option>
+                        {allStates.map((apis) => (
+                          <option key={apis.code} value={apis.name}>
+                            {apis.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
                   </div>
                 </div>
               </Container>
@@ -387,15 +696,67 @@ function Cover() {
                 PASSWORD
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="password">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="rtPassword">
+                {" "}
+              </MDTypography>
+            </MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-12">
+                  <MDBox mb={2}>
+                    <MDInput
+                      type={passwordShown ? "text" : "password"}
+                      label="Password"
+                      value={passwordx || ""}
+                      onKeyUp={handleOnPasswordKeys}
+                      onChange={(e) => setPassword(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
             <MDBox mb={2}>
-              <MDInput
-                type="password"
-                label="Password"
-                value={passwordx || ""}
-                onChange={(e) => setPassword(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-12">
+                    <MDInput
+                      type={passwordShown ? "text" : "password"}
+                      label="Retype Password"
+                      value={retypePasswordx || ""}
+                      onKeyUp={handleOnRTPasswordKeys}
+                      onChange={(e) => setRetypePassword(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                  <MDTypography
+                    variant="button"
+                    fontSize="60%"
+                    align="right"
+                    onClick={togglePassword}
+                    mx={0}
+                    color="info"
+                  >
+                    show password
+                  </MDTypography>
+                </div>
+              </Container>
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
