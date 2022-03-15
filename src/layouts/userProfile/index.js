@@ -9,18 +9,22 @@ import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import AllCountries from "countries";
+import NCountry from "nigeria";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
   const { bankNameCode: allbankNameCode } = BankNameAndCode();
-  const { countries: WCountries } = AllCountries();
+  const { nCountries: WCountries } = NCountry();
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const MySwal = withReactContent(Swal);
 
   const [fnamex, setFname] = useState("");
@@ -41,6 +45,7 @@ function UserProfile() {
   const [sysStatusx, setSysStatus] = useState("");
   const [createdTimex, setCreatedTime] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+  const [allStates, setAllStates] = useState([]);
 
   const [nkIDx, setNkID] = useState("");
   const [nkFnamex, setNkFname] = useState("");
@@ -103,6 +108,10 @@ function UserProfile() {
           //   setDayOfBirth(resultp[0].dayOfBirth);
           //   setMonthOfBirth(resultp[0].monthOfBirth);
           //   setYearOfBirth(resultp[0].yearOfBirth);
+          const filteredItems = AlCountry.filter(
+            (item) => item.name === resultp[0].residentialCountry
+          );
+          setAllStates(filteredItems[0].states);
           setNationality(resultp[0].nationality);
           setResidentialStreet(resultp[0].residentialStreet);
           setResidentialCity(resultp[0].residentialCity);
@@ -112,6 +121,7 @@ function UserProfile() {
           setDeleteFlag(resultp[0].deleteFlag);
           setSysStatus(resultp[0].sysStatus);
           setCreatedTime(resultp[0].createdTime);
+          console.log(resultp[0].residentialState);
 
           setStartDate(
             new Date(
@@ -142,6 +152,10 @@ function UserProfile() {
             setNKEmail(resultnk[0].email);
             setNkPhone(resultnk[0].pno);
             setNkTitle(resultnk[0].title);
+            const filteredItems = AlCountry.filter(
+              (item) => item.name === resultnk[0].residentialCountry
+            );
+            setAllStates(filteredItems[0].states);
             setNkResidentialStreet(resultnk[0].residentialStreet);
             setNkResidentialCity(resultnk[0].residentialCity);
             setNkResidentialState(resultnk[0].residentialState);
@@ -668,30 +682,319 @@ function UserProfile() {
     }
   };
 
-  const handleOnChangeCountry = (e) => {
+  const handleOnChangeBaCountry = (e) => {
     setBaCountry(e.target.value);
     console.log(baCountryx);
   };
 
-  useEffect(() => {
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
-      .then((resultma) => {
-        console.log(resultma);
-        console.log(resultma.length);
-        if (isMounted) {
-          // eslint-disable-next-line eqeqeq
-          if (resultma.length != 0) {
-            setMeBloodGroup(resultma[0].bloodGroup);
-            setMeGenotype(resultma[0].genotype);
-          }
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const handleOnChangeNKCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setNkResidentialCountry(e.target.value);
+  };
+
+  const handleOnChangeNKState = (e) => {
+    setNkResidentialState(e.target.value);
+  };
+
+  const handleOnChangeRCCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setResidentialCountry(e.target.value);
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
+  };
+
+  const handleOnChangeNationality = (e) => {
+    setNationality(e.target.value);
+    console.log(nationalityx);
+  };
+
+  const handleOnFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML =
+        "First Name - input only capital and small letters<br>";
+    }
+    if (fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "";
+    }
+    if (fnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "First Name is required<br>";
+    }
+  };
+
+  const handleOnLastKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML =
+        "Last Name - input only capital and small letters<br>";
+    }
+    if (lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "";
+    }
+    if (lnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "Last Name is required<br>";
+    }
+  };
+
+  const handleOnOtherKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML =
+        "Other Name - input only capital and small letters<br>";
+    }
+    if (onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "";
+    }
+    if (onamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "Other Name is required<br>";
+    }
+  };
+
+  const handleOnPEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (residentialStreetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnCityKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!residentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
+    }
+    if (residentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "";
+    }
+    if (residentialCityx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City is required<br>";
+    }
+  };
+
+  const handleOnNKFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!nkFnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkfirst").innerHTML =
+        "First Name - input only capital and small letters<br>";
+    }
+    if (nkFnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkfirst").innerHTML = "";
+    }
+    if (nkFnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkfirst").innerHTML = "First Name is required<br>";
+    }
+  };
+
+  const handleOnNKLastKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!nkLnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nklast").innerHTML =
+        "Last Name - input only capital and small letters<br>";
+    }
+    if (nkLnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nklast").innerHTML = "";
+    }
+    if (nkLnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nklast").innerHTML = "Last Name is required<br>";
+    }
+  };
+
+  const handleOnNKOtherKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!nkOnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkother").innerHTML =
+        "Other Name - input only capital and small letters<br>";
+    }
+    if (nkOnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkother").innerHTML = "";
+    }
+    if (nkOnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkother").innerHTML = "Other Name is required<br>";
+    }
+  };
+
+  const handleOnNKEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!nkEmailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkemail").innerHTML = "Email - input a valid email<br>";
+    }
+    if (nkEmailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkemail").innerHTML = "";
+    }
+    if (nkEmailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkemail").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnNKStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!nkResidentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkstreet").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (nkResidentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkstreet").innerHTML = "";
+    }
+    if (nkResidentialStreetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkstreet").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnNKCityKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!nkResidentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkcity").innerHTML =
+        "City - input only capital and small letters<br>";
+    }
+    if (nkResidentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkcity").innerHTML = "";
+    }
+    if (nkResidentialCityx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkcity").innerHTML = "City is required<br>";
+    }
+  };
+
+  const handleOnNKOccupationKeys = () => {
+    const vOccupation = /^[a-zA-Z ]+$/;
+    if (!nkOccupationx.match(vOccupation)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkoccupation").innerHTML =
+        "Occupation - input only capital and small letters";
+    }
+    if (nkOccupationx.match(vOccupation)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkoccupation").innerHTML = "";
+    }
+    if (nkOccupationx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("nkoccupation").innerHTML = "Occupation is required<br>";
+    }
+  };
+
+  const handleOnBAAccNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!baAcctNamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("baAccName").innerHTML =
+        "Account Name - input only capital and small letters<br>";
+    }
+    if (baAcctNamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("baAccName").innerHTML = "";
+    }
+    if (baAcctNamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("baAccName").innerHTML = "Account Name is required<br>";
+    }
+  };
+
+  const handleOnBAAccNoKeys = () => {
+    const numbers = /^[0-9A-Z]{8,}/;
+    if (!baAcctNox.match(numbers)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("baAccNo").innerHTML =
+        "Account Number - input a valid account number<br>";
+    }
+    if (baAcctNox.match(numbers)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("baAccNo").innerHTML = "";
+    }
+    if (baAcctNox.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("baAccNo").innerHTML = "Account Number is required<br>";
+    }
+  };
+
+  const handleOnMASpouseKeys = () => {
+    const numbers = /^[0-9]+$/;
+    if (!maNoOfSpousesx.match(numbers)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("maspouse").innerHTML = "Spouses - input only numbers<br>";
+    }
+    if (maNoOfSpousesx.match(numbers)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("maspouse").innerHTML = "";
+    }
+    if (maNoOfSpousesx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("maspouse").innerHTML = "Spouses - This is required<br>";
+    }
+  };
+
+  const handleOnMAChildrenKeys = () => {
+    const numbers = /^[0-9]+$/;
+    if (!maNoOfChildrenx.match(numbers)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("machildren").innerHTML = "Children - input only numbers<br>";
+    }
+    if (maNoOfChildrenx.match(numbers)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("machildren").innerHTML = "";
+    }
+    if (maNoOfChildrenx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("machildren").innerHTML = "Children - This is required<br>";
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -787,7 +1090,7 @@ function UserProfile() {
                   mx={2}
                   mt={-6}
                   p={2}
-                  mb={7}
+                  mb={1}
                   textAlign="center"
                 >
                   <MDTypography
@@ -800,6 +1103,42 @@ function UserProfile() {
                     Next Of Kin
                   </MDTypography>
                 </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="error"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={1}
+                  p={1}
+                  mb={5}
+                  textAlign="center"
+                >
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkfirst">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nklast">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkother">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkemail">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkphone">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkstreet">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkcity">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkoccupation">
+                    {" "}
+                  </MDTypography>
+                </MDBox>
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
@@ -807,6 +1146,7 @@ function UserProfile() {
                         <MDInput
                           type="text"
                           label="First Name"
+                          onKeyUp={handleOnNKFirstKeys}
                           value={nkFnamex || ""}
                           onChange={(e) => setNkFname(e.target.value)}
                           variant="standard"
@@ -818,6 +1158,7 @@ function UserProfile() {
                           type="text"
                           label="Last Name"
                           value={nkLnamex || ""}
+                          onKeyUp={handleOnNKLastKeys}
                           onChange={(e) => setNkLname(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -835,6 +1176,7 @@ function UserProfile() {
                           type="text"
                           label="Other Name"
                           value={nkOnamex || ""}
+                          onKeyUp={handleOnNKOtherKeys}
                           onChange={(e) => setNkOname(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -851,6 +1193,7 @@ function UserProfile() {
                           type="email"
                           label="Email"
                           value={nkEmailx || ""}
+                          onKeyUp={handleOnNKEmailKeys}
                           onChange={(e) => setNKEmail(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -859,26 +1202,30 @@ function UserProfile() {
                     </div>
                   </Container>
                 </MDBox>
-                <Container>
-                  <div className="row">
-                    <div className="col-sm-8">
-                      <MDBox mb={2} mx={0}>
-                        <MDInput
-                          type="number"
-                          label="Phone Number"
-                          value={nkPhonex || ""}
-                          onChange={(e) => setNkPhone(e.target.value)}
-                          variant="standard"
-                          fullWidth
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text">
+                          Phone Number
+                        </MDTypography>
+                        <PhoneInput
+                          value={nkPhonex}
+                          inputStyle={{ width: "170%" }}
+                          buttonStyle={{}}
+                          onChange={setNkPhone}
                         />
-                      </MDBox>
+                      </div>
                     </div>
-                  </div>
-                </Container>
+                  </Container>
+                </MDBox>
                 <Container>
                   <div className="row">
-                    <div className="col-sm-8">
+                    <div className="col-sm-6">
                       <MDBox mb={2}>
+                        <MDTypography variant="button" fontWeight="regular" color="text">
+                          Title
+                        </MDTypography>
                         <Form.Select
                           onChange={(e) => setNkTitle(e.target.value)}
                           value={nkTitlex || ""}
@@ -901,6 +1248,7 @@ function UserProfile() {
                           type="text"
                           label="Street"
                           value={nkResidentialStreetx || ""}
+                          onKeyUp={handleOnNKStreetKeys}
                           onChange={(e) => setNkResidentialStreet(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -911,6 +1259,7 @@ function UserProfile() {
                           type="text"
                           label="City"
                           value={nkResidentialCityx || ""}
+                          onKeyUp={handleOnNKCityKeys}
                           onChange={(e) => setNkResidentialCity(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -922,26 +1271,47 @@ function UserProfile() {
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-6">
-                        <MDInput
-                          type="text"
-                          label="State"
-                          value={nkResidentialStatex || ""}
-                          onChange={(e) => setNkResidentialState(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          Country
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={nkResidentialCountryx || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeNKCountry}
+                          >
+                            <option>--Select Country--</option>
+                            {AlCountry.map((apic) => (
+                              <option key={apic.code3} value={apic.name}>
+                                {apic.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
                       </div>
-
-                      <div className="col-sm-6">
-                        <MDInput
-                          type="text"
-                          label="Country"
-                          value={nkResidentialCountryx || ""}
-                          onChange={(e) => setNkResidentialCountry(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
+                    </div>
+                  </Container>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          State
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={nkResidentialStatex}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeNKState}
+                          >
+                            <option>--Select State--</option>
+                            {allStates.map((apis) => (
+                              <option key={apis.code} value={apis.name}>
+                                {apis.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
                       </div>
                     </div>
                   </Container>
@@ -954,6 +1324,7 @@ function UserProfile() {
                           type="email"
                           label="Occupation"
                           value={nkOccupationx || ""}
+                          onKeyUp={handleOnNKOccupationKeys}
                           onChange={(e) => setNkOccupation(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -989,7 +1360,7 @@ function UserProfile() {
                   mx={2}
                   mt={-6}
                   p={2}
-                  mb={7}
+                  mb={1}
                   textAlign="center"
                 >
                   <MDTypography
@@ -1002,24 +1373,46 @@ function UserProfile() {
                     Marital
                   </MDTypography>
                 </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="error"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={1}
+                  p={1}
+                  mb={5}
+                  textAlign="center"
+                >
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="maspouse">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="machildren">
+                    {" "}
+                  </MDTypography>
+                </MDBox>
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-6">
+                      <div className="col-sm-10">
                         <MDInput
                           type="text"
                           label="Number Of Spouses"
                           value={maNoOfSpousesx || ""}
+                          onKeyUp={handleOnMASpouseKeys}
                           onChange={(e) => setMaNoOfSpouses(e.target.value)}
                           variant="standard"
                           fullWidth
                         />
                       </div>
-                      <div className="col-sm-6">
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-10">
                         <MDInput
                           type="text"
                           label="Number Of Children"
                           value={maNoOfChildrenx || ""}
+                          onKeyUp={handleOnMAChildrenKeys}
                           onChange={(e) => setMaNoOfChildren(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1057,11 +1450,44 @@ function UserProfile() {
                   mx={2}
                   mt={-6}
                   p={2}
-                  mb={7}
+                  mb={1}
                   textAlign="center"
                 >
                   <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
                     BASIC INFO
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="error"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={1}
+                  p={1}
+                  mb={5}
+                  textAlign="center"
+                >
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="first">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="last">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="other">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+                    {" "}
                   </MDTypography>
                 </MDBox>
                 <MDBox mb={2}>
@@ -1072,6 +1498,7 @@ function UserProfile() {
                           type="text"
                           label="First Name"
                           value={fnamex || ""}
+                          onKeyUp={handleOnFirstKeys}
                           onChange={(e) => setFname(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1082,6 +1509,7 @@ function UserProfile() {
                           type="text"
                           label="Last Name"
                           value={lnamex || ""}
+                          onKeyUp={handleOnLastKeys}
                           onChange={(e) => setLname(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1098,6 +1526,7 @@ function UserProfile() {
                           type="text"
                           label="Other Name"
                           value={onamex || ""}
+                          onKeyUp={handleOnOtherKeys}
                           onChange={(e) => setOname(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1113,24 +1542,10 @@ function UserProfile() {
                         <MDInput
                           type="email"
                           label="Personal Email"
+                          disabled
                           value={emailx || ""}
+                          onKeyUp={handleOnPEmailKeys}
                           onChange={(e) => setEmail(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
-                      </div>
-                    </div>
-                  </Container>
-                </MDBox>
-                <MDBox mb={2} mx={0}>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-8">
-                        <MDInput
-                          type="number"
-                          label="Phone Number"
-                          value={phonex || ""}
-                          onChange={(e) => setPhone(e.target.value)}
                           variant="standard"
                           fullWidth
                         />
@@ -1142,22 +1557,44 @@ function UserProfile() {
                   <Container>
                     <div className="row">
                       <div className="col-sm-8">
-                        <MDInput
-                          type="text"
-                          label="Marital Status"
-                          value={maritalStatusx || ""}
-                          onChange={(e) => setMaritalStatus(e.target.value)}
-                          variant="standard"
-                          fullWidth
+                        <MDTypography variant="button" fontWeight="regular" color="text">
+                          Phone Number
+                        </MDTypography>
+                        <PhoneInput
+                          value={phonex}
+                          inputStyle={{ width: "100%" }}
+                          buttonStyle={{}}
+                          onChange={setPhone}
                         />
                       </div>
                     </div>
                   </Container>
                 </MDBox>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                        Marital Status
+                      </MDTypography>
+                      <MDBox mb={2}>
+                        <Form.Select
+                          onChange={(e) => setMaritalStatus(e.target.value)}
+                          value={maritalStatusx || ""}
+                          aria-label="Default select example"
+                        >
+                          <option>---Marital Status---</option>
+                          <option value="Single">Single</option>
+                          <option value="Married">Married</option>
+                          <option value="Divorced">Divorced</option>
+                        </Form.Select>
+                      </MDBox>
+                    </div>
+                  </div>
+                </Container>
 
                 <Container>
                   <div className="row">
-                    <div className="col-sm-8">
+                    <div className="col-sm-6">
                       <MDBox mb={0} mt={0} textAlign="left">
                         <MDTypography
                           variant="button"
@@ -1215,15 +1652,24 @@ function UserProfile() {
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-8">
-                        <MDInput
-                          type="text"
-                          label="Nationality"
-                          value={nationalityx || ""}
-                          onChange={(e) => setNationality(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
+                      <div className="col-sm-6">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          Nationality
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={nationalityx || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeNationality}
+                          >
+                            <option>--Select Country--</option>
+                            {AlCountry.map((apic) => (
+                              <option key={apic.code3} value={apic.name}>
+                                {apic.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
                       </div>
                     </div>
                   </Container>
@@ -1236,6 +1682,7 @@ function UserProfile() {
                           type="text"
                           label="Street"
                           value={residentialStreetx || ""}
+                          onKeyUp={handleOnStreetKeys}
                           onChange={(e) => setResidentialStreet(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1246,6 +1693,7 @@ function UserProfile() {
                           type="text"
                           label="City"
                           value={residentialCityx || ""}
+                          onKeyUp={handleOnCityKeys}
                           onChange={(e) => setResidentialCity(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1257,26 +1705,47 @@ function UserProfile() {
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-6">
-                        <MDInput
-                          type="text"
-                          label="State"
-                          value={residentialStatex || ""}
-                          onChange={(e) => setResidentialState(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          Country
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={residentialCountryx || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeRCCountry}
+                          >
+                            <option>--Select Country--</option>
+                            {AlCountry.map((apic) => (
+                              <option key={apic.code3} value={apic.name}>
+                                {apic.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
                       </div>
-
-                      <div className="col-sm-6">
-                        <MDInput
-                          type="text"
-                          label="Country"
-                          value={residentialCountryx || ""}
-                          onChange={(e) => setResidentialCountry(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
+                    </div>
+                  </Container>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          State
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={residentialStatex || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeRCState}
+                          >
+                            <option>--Select State--</option>
+                            {allStates.map((apis) => (
+                              <option key={apis.code} value={apis.name}>
+                                {apis.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
                       </div>
                     </div>
                   </Container>
@@ -1303,7 +1772,7 @@ function UserProfile() {
                   mx={2}
                   mt={-6}
                   p={2}
-                  mb={5}
+                  mb={1}
                   textAlign="center"
                 >
                   <MDTypography
@@ -1316,10 +1785,31 @@ function UserProfile() {
                     Bank Account
                   </MDTypography>
                 </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="error"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={1}
+                  p={1}
+                  mb={5}
+                  textAlign="center"
+                >
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="baAccName">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="baAccNo">
+                    {" "}
+                  </MDTypography>
+                </MDBox>
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-12">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          Bank
+                        </MDTypography>
                         <MDBox textAlign="right">
                           <Form.Select
                             value={baBankx || ""}
@@ -1339,12 +1829,15 @@ function UserProfile() {
                   </Container>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-12">
-                        <MDBox textAlign="right" mt={2}>
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={3}>
+                          Bank Country
+                        </MDTypography>
+                        <MDBox textAlign="right">
                           <Form.Select
                             value={baCountryx || ""}
                             aria-label="Default select example"
-                            onChange={handleOnChangeCountry}
+                            onChange={handleOnChangeBaCountry}
                           >
                             <option>--Select Country--</option>
                             {WCountries.map((apic) => (
@@ -1366,6 +1859,7 @@ function UserProfile() {
                           type="text"
                           label="Account Number"
                           value={baAcctNox || ""}
+                          onKeyUp={handleOnBAAccNoKeys}
                           onChange={(e) => setBaAcctNo(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1382,6 +1876,7 @@ function UserProfile() {
                           type="email"
                           label="Account Name"
                           value={baAcctNamex || ""}
+                          onKeyUp={handleOnBAAccNameKeys}
                           onChange={(e) => setBaAcctName(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1434,7 +1929,7 @@ function UserProfile() {
                   mx={2}
                   mt={-6}
                   p={2}
-                  mb={7}
+                  mb={1}
                   textAlign="center"
                 >
                   <MDTypography
@@ -1447,32 +1942,63 @@ function UserProfile() {
                     Medical
                   </MDTypography>
                 </MDBox>
-                <MDBox mb={2}>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-6">
-                        <MDInput
-                          type="text"
-                          label="Blood Group"
-                          value={meBloodGroupx || ""}
+                <MDBox
+                  variant="gradient"
+                  bgColor="error"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={1}
+                  p={1}
+                  mb={5}
+                  textAlign="center"
+                />
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-8">
+                      <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                        Blood Group
+                      </MDTypography>
+                      <MDBox mb={2}>
+                        <Form.Select
                           onChange={(e) => setMeBloodGroup(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
-                      </div>
-                      <div className="col-sm-6">
-                        <MDInput
-                          type="text"
-                          label="Genotype"
-                          value={meGenotypex || ""}
-                          onChange={(e) => setMeGenotype(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
-                      </div>
+                          value={meBloodGroupx || ""}
+                          aria-label="Default select example"
+                        >
+                          <option>---Blood Group---</option>
+                          <option value="A">A</option>
+                          <option value="B">B</option>
+                          <option value="AB">AB</option>
+                          <option value="O">O</option>
+                        </Form.Select>
+                      </MDBox>
                     </div>
-                  </Container>
-                </MDBox>
+                  </div>
+                </Container>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-8">
+                      <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                        Genotype
+                      </MDTypography>
+                      <MDBox mb={2}>
+                        <Form.Select
+                          onChange={(e) => setMeGenotype(e.target.value)}
+                          value={meGenotypex || ""}
+                          aria-label="Default select example"
+                        >
+                          <option>---Genotype---</option>
+                          <option value="AA">AA</option>
+                          <option value="AO">AO</option>
+                          <option value="BB">BB</option>
+                          <option value="BO">BO</option>
+                          <option value="AB">AB</option>
+                          <option value="OO">OO</option>
+                        </Form.Select>
+                      </MDBox>
+                    </div>
+                  </div>
+                </Container>
                 <div align="center">
                   <MDBox mt={4} mb={1}>
                     <MDButton

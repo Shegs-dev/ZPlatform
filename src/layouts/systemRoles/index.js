@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
+import MDTypography from "components/MDTypography";
 import systemRolesTable from "layouts/systemRoles/data/systemRolesTables";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
@@ -26,46 +27,57 @@ function SysRoles() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const regEx = /[a-zA-Z]/;
-    if (namex.matchAll(regEx)) {
-      const data11 = JSON.parse(localStorage.getItem("user1"));
-      console.log(data11);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
 
-      const orgIDs = data11.orgID;
-      console.log(orgIDs);
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
 
-      const raw = JSON.stringify({
-        orgID: orgIDs,
-        name: namex,
-        descrip: descripx,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      name: namex,
+      descrip: descripx,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
-        .then((res) => res.json())
-        .then((result) => {
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
-        })
-        .catch((error) => {
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
         });
-    } else {
-      alert("Please enter letters and numbers only.");
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
     }
   };
 
@@ -74,6 +86,36 @@ function SysRoles() {
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Add New Branch
+            </MDTypography>
+          </MDBox>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form" name="form1">
             <MDBox mb={2}>
               <Container>
@@ -84,6 +126,7 @@ function SysRoles() {
                       label="Name"
                       name="name"
                       value={namex || ""}
+                      onKepUp={handleOnNameKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth

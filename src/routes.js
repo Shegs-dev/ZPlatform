@@ -57,8 +57,8 @@ import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
-import ResetPass from "layouts/authentication/reset-password";
-import ComResetPass from "layouts/authentication/complete-resetPassword";
+import ForgotPass from "layouts/authentication/forgot-password";
+import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 
 const routes = [
@@ -194,17 +194,17 @@ const routes = [
   },
   {
     name: "Reset Password",
-    key: "resetPassword",
+    key: "forgot-password",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/resetPassword",
-    component: <ResetPass />,
+    route: "/authentication/forgot-password",
+    component: <ForgotPass />,
   },
   {
     name: "Complete Reset Password",
     key: "complete-ResetPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/complete-ResetPassword",
-    component: <ComResetPass />,
+    route: "/authentication/complete-ForgotPassword",
+    component: <ComForgotPass />,
   },
   {
     type: "collapse",
