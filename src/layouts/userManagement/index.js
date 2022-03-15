@@ -72,12 +72,15 @@ function UserManagement() {
     }
     console.log(company[0]);
     console.log(roleIDs);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDz = data11.orgID;
     const raw = JSON.stringify({
       roleID: roleIDs,
       fname: fnamex,
       email: emailx,
       lname: lNamex,
       companyName: company[0].name,
+      orgID: orgIDz,
     });
     console.log(raw);
     const requestOptions = {
@@ -86,6 +89,7 @@ function UserManagement() {
       body: raw,
       redirect: "follow",
     };
+    console.log(raw);
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/invite`, requestOptions)
       .then((res) => res.json())
       .then((result) => {

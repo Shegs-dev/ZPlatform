@@ -60,6 +60,7 @@ import ViewUser from "layouts/userManagement/viewUser";
 import ResetPass from "layouts/authentication/reset-password";
 import ComResetPass from "layouts/authentication/complete-resetPassword";
 import UserAudit from "layouts/userHistory";
+import InviteUser from "layouts/inviteUser";
 
 const routes = [
   {
@@ -191,6 +192,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "collapse",
+    name: "Invite User",
+    key: "inviteUser",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/inviteUser",
+    component: <InviteUser />,
   },
   {
     name: "Reset Password",

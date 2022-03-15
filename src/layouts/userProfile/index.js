@@ -1455,6 +1455,7 @@ function UserProfile() {
                           type="text"
                           label="Blood Group"
                           value={meBloodGroupx || ""}
+                          disabled
                           onChange={(e) => setMeBloodGroup(e.target.value)}
                           variant="standard"
                           fullWidth
@@ -1465,6 +1466,7 @@ function UserProfile() {
                           type="text"
                           label="Genotype"
                           value={meGenotypex || ""}
+                          disabled
                           onChange={(e) => setMeGenotype(e.target.value)}
                           variant="standard"
                           fullWidth
