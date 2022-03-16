@@ -18,6 +18,7 @@ import AllCountriesAndStates from "countries-states-master/countries";
 // import AllCountryCode from "countries-states-master/country-code";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+// import AHeaders from "header";
 
 function Branches() {
   const MySwal = withReactContent(Swal);
@@ -35,7 +36,7 @@ function Branches() {
   const [pnox, setPno] = useState("");
   const [allStates, setAllStates] = useState([]);
   // const [countryCodex, setCountryCode] = useState("");
-
+  // const { allHeaders: myHeaders } = AHeaders();
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -46,6 +47,8 @@ function Branches() {
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
+    const GenToken = data11.token;
+    console.log(GenToken);
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,
@@ -62,7 +65,7 @@ function Branches() {
       body: raw,
       redirect: "follow",
     };
-
+    console.log(myHeaders);
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {

@@ -57,7 +57,9 @@ function Basic() {
   const [checkedPass, setCheckedPass] = useState("");
   const [enabled, setEnabled] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
-
+  const [taaa, setTaaa] = useState("");
+  console.log(taaa);
+  console.log(enabled);
   // Password toggle handler
   const togglePassword = () => {
     // When the handler is invoked
@@ -70,6 +72,9 @@ function Basic() {
   myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
+    const ta = document.querySelector("#nameandpass");
+    setTaaa(ta.textContent);
+    console.log(ta.textContent);
     e.preventDefault();
     const raw = JSON.stringify({ username: usernamex, password: passwordx });
     const requestOptions = {
@@ -78,40 +83,47 @@ function Basic() {
       body: raw,
       redirect: "follow",
     };
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.status === "SUCCESS") {
-          console.log(result);
-          localStorage.setItem("user1", JSON.stringify(result.data));
-          let data11 = localStorage.getItem("user1");
-          data11 = JSON.parse(data11);
-          console.log(data11);
-          const orgIDs = data11.orgID;
-          console.log(orgIDs);
+    if (taaa.length === 0) {
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.status === "SUCCESS") {
+            console.log(result);
+            localStorage.setItem("user1", JSON.stringify(result.data));
+            let data11 = localStorage.getItem("user1");
+            data11 = JSON.parse(data11);
+            console.log(data11);
+            const orgIDs = data11.orgID;
+            console.log(orgIDs);
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              navigate("/dashboard", { replace: true });
+            });
+          } else {
+            MySwal.fire({
+              title: result.status,
+              type: "error",
+              text: result.message,
+            });
+          }
+        })
+        .catch((error) => {
           MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            navigate("/dashboard", { replace: true });
-          });
-        } else {
-          MySwal.fire({
-            title: result.status,
+            title: error.status,
             type: "error",
-            text: result.message,
+            text: error.message,
           });
-        }
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
         });
+    } else {
+      MySwal.fire({
+        title: "Invalid Input",
+        type: "error",
+        text: taaa,
       });
+    }
   };
 
   const handleOnUsernameKeys = () => {
@@ -153,6 +165,12 @@ function Basic() {
     }
     setEnabled(checkedUser === true && checkedPass === true);
     console.log(checkedPass);
+  };
+
+  const handleOnChangeText = () => {
+    const ta = document.querySelector("#password");
+    setTaaa(ta.textContent);
+    console.log(ta.textContent);
   };
 
   return (
@@ -201,6 +219,7 @@ function Basic() {
           p={1}
           mb={1}
           textAlign="center"
+          id="nameandpass"
         >
           <MDTypography variant="gradient" fontSize="60%" color="white" id="username">
             {" "}
@@ -268,7 +287,7 @@ function Basic() {
             <MDButton
               variant="gradient"
               onClick={handleClick}
-              disabled={!enabled}
+              onChange={handleOnChangeText}
               color="info"
               fullWidth
             >
