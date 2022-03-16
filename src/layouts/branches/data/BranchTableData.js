@@ -10,15 +10,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+// import AHeaders from "header";
 
 export default function Branchdata() {
+  // const { allHeaders: myHeaders } = AHeaders();
   // const axios = require("axios");
   const [items, setItems] = useState([]);
   // const [id, setId] = useState("");
 
   const MySwal = withReactContent(Swal);
-  // const axios = require("axios");
-
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
