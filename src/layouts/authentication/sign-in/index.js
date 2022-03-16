@@ -78,7 +78,8 @@ function Basic() {
       body: raw,
       redirect: "follow",
     };
-
+    const ta = document.querySelector("#password");
+    console.log(ta.textContent);
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
@@ -113,10 +114,6 @@ function Basic() {
         });
       });
   };
-  const ta = document.querySelector("#password");
-  const taa = ta.innerHTML;
-  console.log(ta.textContent);
-  console.log(taa);
 
   const handleOnUsernameKeys = () => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
