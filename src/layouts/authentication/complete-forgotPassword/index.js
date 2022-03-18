@@ -105,7 +105,7 @@ function ComForgotPass() {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
-        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
     }
     if (newPasswordx.match(passwordValidate)) {
       setCheckedNPass(true);
@@ -126,7 +126,7 @@ function ComForgotPass() {
       setCheckedRTNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML =
-        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
     }
     if (retypeNewPassword.match(passwordValidate)) {
       setCheckedRTNPass(true);

@@ -35,6 +35,14 @@ function Branches() {
   const [countryx, setCountry] = useState("");
   const [pnox, setPno] = useState("");
   const [allStates, setAllStates] = useState([]);
+
+  const [checkedEmail, setCheckedEmail] = useState("");
+  const [checkedStreet, setCheckedStreet] = useState("");
+  const [checkedName, setCheckedName] = useState("");
+  const [checkedCity, setCheckedCity] = useState("");
+  const [enabled, setEnabled] = useState("");
+  console.log(enabled);
+
   // const [countryCodex, setCountryCode] = useState("");
   // const { allHeaders: myHeaders } = AHeaders();
   const myHeaders = new Headers();
@@ -106,10 +114,12 @@ function Branches() {
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
+      setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
+      setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
@@ -117,15 +127,23 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   const handleOnEmailKeys = () => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     if (!emailx.match(letters)) {
+      setCheckedEmail(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email - input a valid email<br>";
     }
     if (emailx.match(letters)) {
+      setCheckedEmail(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "";
     }
@@ -133,6 +151,12 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   // const handleOnPhoneKeys = () => {
@@ -155,10 +179,12 @@ function Branches() {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[a-zA-Z0-9 .,-]+$/;
     if (!streetx.match(letters)) {
+      setCheckedStreet(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
     }
     if (streetx.match(letters)) {
+      setCheckedStreet(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "";
     }
@@ -166,15 +192,23 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Street is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   const handleOnCityKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!cityx.match(letters)) {
+      setCheckedCity(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
     }
     if (cityx.match(letters)) {
+      setCheckedCity(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "";
     }
@@ -182,6 +216,12 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "City is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   return (
@@ -354,7 +394,13 @@ function Branches() {
               </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                disabled={!enabled}
+                color="info"
+                width="50%"
+              >
                 Save
               </MDButton>
             </MDBox>

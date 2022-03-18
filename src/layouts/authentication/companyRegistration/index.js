@@ -25,7 +25,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
@@ -36,8 +36,13 @@ import React, { useState } from "react";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 function CompanyReg() {
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+
   const MySwal = withReactContent(Swal);
 
   const navigate = useNavigate();
@@ -51,7 +56,14 @@ function CompanyReg() {
   const [Cityx, setCity] = useState("");
   const [Statex, setState] = useState("");
   const [Countryx, setCountry] = useState("");
+  const [allStates, setAllStates] = useState([]);
 
+  const [checkedComEmail, setCheckedComEmail] = useState("");
+  const [checkedComStreet, setCheckedComStreet] = useState("");
+  const [checkedComName, setCheckedComName] = useState("");
+  const [checkedComCity, setCheckedComCity] = useState("");
+  const [comEnabled, setComEnabled] = useState("");
+  console.log(comEnabled);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -79,63 +91,51 @@ function CompanyReg() {
     fetch(`${process.env.REACT_APP_KUBU_URL}/company/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          // localStorage.setItem("company", JSON.stringify(result.data));
-          console.log(result.data.id);
-          console.log(user.id);
-          const data12 = localStorage.getItem("email1");
-          console.log(data12);
-          const raw1 = JSON.stringify({
-            orgID: result.data.id,
-            personalID: user.id,
-            email: localStorage.getItem("email1"),
-          });
-          const requestOptions1 = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw1,
-            redirect: "follow",
-          };
-
-          fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
-            .then((res) => res.json())
-            .then((resultx) => {
-              MySwal.fire({
-                title: resultx.status,
-                type: "success",
-                text: resultx.message,
-              }).then(() => {
-                localStorage.setItem("company", JSON.stringify(resultx.data));
-                const raw2 = JSON.stringify({
-                  orgID: result.data.id,
-                  empID: user.id,
-                  username: user.email,
-                  password: localStorage.getItem("pass1"),
-                });
-                const requestOptions2 = {
-                  method: "POST",
-                  headers: myHeaders,
-                  body: raw2,
-                  redirect: "follow",
-                };
-                fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
-                  .then((res) => res.json())
-                  .then((resulty) => {
-                    MySwal.fire({
-                      title: resulty.status,
-                      type: "success",
-                      text: resulty.message,
-                    }).then(() => {
-                      navigate("/authentication/sign-in", { replace: true });
-                    });
-                  });
-              });
-            });
+        // localStorage.setItem("company", JSON.stringify(result.data));
+        console.log(result.data.id);
+        console.log(user.id);
+        const data12 = localStorage.getItem("email1");
+        console.log(data12);
+        const raw1 = JSON.stringify({
+          orgID: result.data.id,
+          personalID: user.id,
+          email: localStorage.getItem("email1"),
         });
+        const requestOptions1 = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw1,
+          redirect: "follow",
+        };
+
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
+          .then((res) => res.json())
+          .then((resultx) => {
+            localStorage.setItem("company", JSON.stringify(resultx.data));
+            const raw2 = JSON.stringify({
+              orgID: result.data.id,
+              empID: user.id,
+              username: user.email,
+              password: localStorage.getItem("pass1"),
+            });
+            const requestOptions2 = {
+              method: "POST",
+              headers: myHeaders,
+              body: raw2,
+              redirect: "follow",
+            };
+            fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
+              .then((res) => res.json())
+              .then(() => {
+                MySwal.fire({
+                  title: result.status,
+                  type: "success",
+                  text: result.message,
+                }).then(() => {
+                  navigate("/authentication/sign-in", { replace: true });
+                });
+              });
+          });
       })
       .catch((error) => {
         MySwal.fire({
@@ -144,6 +144,114 @@ function CompanyReg() {
           text: error.message,
         });
       });
+  };
+
+  const handleOnChangeRCCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setCountry(e.target.value);
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setState(e.target.value);
+  };
+
+  const handleOnComNameKeys = () => {
+    const letters = /^[a-zA-Z0-9 ]+$/;
+    if (!namex.match(letters)) {
+      setCheckedComName(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML =
+        "Company Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      setCheckedComName(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Company Name is required<br>";
+    }
+    setComEnabled(
+      checkedComEmail === true &&
+        checkedComName === true &&
+        checkedComCity === true &&
+        checkedComStreet === true
+    );
+  };
+
+  const handleOnComEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      setCheckedComEmail(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      setCheckedComEmail(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+    setComEnabled(
+      checkedComEmail === true &&
+        checkedComName === true &&
+        checkedComCity === true &&
+        checkedComStreet === true
+    );
+  };
+
+  const handleOnStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!Streetx.match(letters)) {
+      setCheckedComStreet(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (Streetx.match(letters)) {
+      setCheckedComStreet(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (Streetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+    setComEnabled(
+      checkedComEmail === true &&
+        checkedComName === true &&
+        checkedComCity === true &&
+        checkedComStreet === true
+    );
+  };
+
+  const handleOnCityKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!Cityx.match(letters)) {
+      setCheckedComCity(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
+    }
+    if (Cityx.match(letters)) {
+      setCheckedComCity(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "";
+    }
+    if (Cityx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City is required<br>";
+    }
+    setComEnabled(
+      checkedComEmail === true &&
+        checkedComName === true &&
+        checkedComCity === true &&
+        checkedComStreet === true
+    );
   };
 
   return (
@@ -184,11 +292,30 @@ function CompanyReg() {
                 COMPANY INFO
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+                {" "}
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
               <MDInput
                 type="text"
                 label="Company Name"
                 value={namex || ""}
+                onKeyUp={handleOnComNameKeys}
                 onChange={(e) => setName(e.target.value)}
                 variant="standard"
                 fullWidth
@@ -199,20 +326,28 @@ function CompanyReg() {
                 type="email"
                 label="Email"
                 value={emailx || ""}
+                onKeyUp={handleOnComEmailKeys}
                 onChange={(e) => setEmail(e.target.value)}
                 variant="standard"
                 fullWidth
               />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput
-                type="number"
-                label="Phone Number"
-                value={pnox || ""}
-                onChange={(e) => setPno(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text">
+                      Phone Number
+                    </MDTypography>
+                    <PhoneInput
+                      value={pnox}
+                      inputStyle={{ width: "150%" }}
+                      buttonStyle={{}}
+                      onChange={setPno}
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
               <MDInput
@@ -239,6 +374,24 @@ function CompanyReg() {
                 COMPANY ADDRESS
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+                {" "}
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
               <Container>
                 <div className="row">
@@ -246,6 +399,7 @@ function CompanyReg() {
                     <MDInput
                       type="text"
                       label="Street"
+                      onKeyUp={handleOnStreetKeys}
                       value={Streetx || ""}
                       onChange={(e) => setStreet(e.target.value)}
                       variant="standard"
@@ -257,6 +411,7 @@ function CompanyReg() {
                       type="text"
                       label="City"
                       value={Cityx || ""}
+                      onKeyUp={handleOnCityKeys}
                       onChange={(e) => setCity(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -268,48 +423,51 @@ function CompanyReg() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="State"
-                      value={Statex || ""}
-                      onChange={(e) => setState(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      Country
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={Countryx || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCCountry}
+                      >
+                        <option>--Select Country--</option>
+                        {AlCountry.map((apic) => (
+                          <option key={apic.code3} value={apic.name}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
                   </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Country"
-                      value={Countryx || ""}
-                      onChange={(e) => setCountry(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
+                </div>
+              </Container>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      State
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={Statex || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCState}
+                      >
+                        <option>--Select State--</option>
+                        {allStates.map((apis) => (
+                          <option key={apis.code} value={apis.name}>
+                            {apis.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
                   </div>
                 </div>
               </Container>
             </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={0}
-              mt={0}
-              p={3}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                PASSWORD
-              </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
-            </MDBox>
-
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
               <MDTypography
@@ -332,8 +490,14 @@ function CompanyReg() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
-                sign in
+              <MDButton
+                variant="gradient"
+                disabled={!comEnabled}
+                onClick={handleClick}
+                color="info"
+                fullWidth
+              >
+                Register
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
