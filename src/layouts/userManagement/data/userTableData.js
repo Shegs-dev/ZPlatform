@@ -93,11 +93,44 @@ export default function UserData() {
     return retDate;
   };
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
+  const handlePasswordReset = (value) => {
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`)
+      .then((res) => res.json())
+      .then((resultp) => {
+        if(resultp.length > 0){
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/${resultp[0].email}`)
+            .then((res) => res.json())
+            .then((resx) => {
+              MySwal.fire({
+                title: resx.status,
+                type: "success",
+                text: resx.message,
+              }).then(() => {
+                window.location.reload();
+              });
+            })
+            .catch((error) => {
+              MySwal.fire({
+                title: error.status,
+                type: "error",
+                text: error.message,
+              });
+            });
+        }else{
+          MySwal.fire({
+            title: "NOT_FOUND",
+            type: "error",
+            text: "User Not Found",
+          });
+        }
+      });
+  };
 
-  const orgIDs = data11.orgID;
-  console.log(orgIDs);
+  // const data11 = JSON.parse(localStorage.getItem("user1"));
+  // console.log(data11);
+
+  // const orgIDs = data11.orgID;
+  // console.log(orgIDs);
 
   return {
     columns: [
@@ -130,6 +163,7 @@ export default function UserData() {
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => handleModal(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handlePasswordReset(value)}>Reset Password</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
@@ -140,7 +174,7 @@ export default function UserData() {
                 </Modal.Header>
                 <Modal.Body>
                   <Form.Select id="reasonForDelete" aria-label="Default select example">
-                    <option value="ROD">---Reason For Delete---</option>
+                    <option value="">---Reason For Delete---</option>
                     <option value="Retired">Retired</option>
                     <option value="Late">Late</option>
                     <option value="Resigned">Resigned</option>
