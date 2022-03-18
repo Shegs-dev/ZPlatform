@@ -42,6 +42,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { formatPhoneNumberIntl } from "react-phone-number-input";
 
 function Cover() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -54,7 +55,11 @@ function Cover() {
   };
   const [phonex, setPhone] = useState("");
   const [startDate, setStartDate] = useState(new Date());
-
+  const [checkedPemail, setCheckedPEmail] = useState("");
+  const [checkedPass, setCheckedPass] = useState("");
+  const [checkedFirst, setCheckedFirst] = useState("");
+  const [checkedLast, setCheckedLast] = useState("");
+  const [enabled, setEnabled] = useState("");
   const navigate = useNavigate();
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
@@ -75,6 +80,9 @@ function Cover() {
   const [passwordx, setPassword] = useState("");
   const [retypePasswordx, setRetypePassword] = useState("");
   const [allStates, setAllStates] = useState([]);
+
+  // eslint-disable-next-line no-unused-expressions
+  formatPhoneNumberIntl(phonex) === "373-425-5567";
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -117,7 +125,7 @@ function Cover() {
     localStorage.setItem("pass1", passwordx);
     const data123 = localStorage.getItem("pass1");
     console.log(data123);
-    localStorage.setItem("email1", emailx);
+    localStorage.setItem("email1", emaily);
     const data12 = localStorage.getItem("email1");
     console.log(data12);
 
@@ -173,11 +181,13 @@ function Cover() {
   const handleOnFirstKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!fnamex.match(letters)) {
+      setCheckedFirst(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML =
         "First Name - input only capital and small letters<br>";
     }
     if (fnamex.match(letters)) {
+      setCheckedFirst(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML = "";
     }
@@ -185,16 +195,24 @@ function Cover() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML = "First Name is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnLastKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!lnamex.match(letters)) {
+      setCheckedLast(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML =
         "Last Name - input only capital and small letters<br>";
     }
     if (lnamex.match(letters)) {
+      setCheckedLast(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML = "";
     }
@@ -202,6 +220,12 @@ function Cover() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML = "Last Name is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnOtherKeys = () => {
@@ -224,10 +248,12 @@ function Cover() {
   const handleOnPEmailKeys = () => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     if (!emailx.match(letters)) {
+      setCheckedPEmail(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email - input a valid email<br>";
     }
     if (emailx.match(letters)) {
+      setCheckedPEmail(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "";
     }
@@ -235,6 +261,12 @@ function Cover() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnOEmailKeys = () => {
@@ -291,16 +323,24 @@ function Cover() {
     if (!passwordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
-        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
+      setCheckedPass(false);
     }
     if (passwordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
+      setCheckedPass(true);
     }
     if (passwordx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Password is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnRTPasswordKeys = () => {
@@ -308,7 +348,7 @@ function Cover() {
     if (!retypePasswordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
-        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
     }
     if (retypePasswordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
@@ -780,7 +820,13 @@ function Cover() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
+              <MDButton
+                variant="gradient"
+                disabled={!enabled}
+                onClick={handleClick}
+                color="info"
+                fullWidth
+              >
                 Create Account
               </MDButton>
             </MDBox>
