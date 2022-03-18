@@ -11,6 +11,8 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import AllCountriesAndStates from "countries-states-master/countries";
+import PhoneInput from "react-phone-input-2";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -28,12 +30,13 @@ import withReactContent from "sweetalert2-react-content";
 function InviteUser() {
   const [phonex, setPhone] = useState("");
   // const [startDate, setStartDate] = useState(new Date());
+  const MySwal = withReactContent(Swal);
 
   const navigate = useNavigate();
 
-  const MySwal = withReactContent(Swal);
-
   const [idx, setId] = useState("");
+  const [orgIDx, setOrgID] = useState("");
+  const [roleIDx, setRoleID] = useState("");
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
@@ -49,16 +52,34 @@ function InviteUser() {
   const [deleteFlagx, setDeleteFlag] = useState("");
   const [sysStatusx, setSysStatus] = useState("");
   const [createdTimex, setCreatedTime] = useState("");
+  const [allStates, setAllStates] = useState([]);
+  const [passwordx, setPassword] = useState("");
+  const [retypePasswordx, setRetypePassword] = useState("");
+  //   const [enabled, setEnabled] = useState("");
+  const [passEnabled, setPassEnabled] = useState("");
+
   // const [personalCompanyx, setPersonalCompany] = useState([]);
   console.log(emaily);
   //   const [rolex, setRole] = useState("");
   //   console.log(rolex);
   console.log(fnamex);
   console.log(lnamex);
-  console.log(emaily);
+  console.log(idx);
+  console.log(passwordx);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+
+  const [passwordShown, setPasswordShown] = useState(false);
+
+  const togglePassword = () => {
+    // When the handler is invoked
+    // inverse the boolean state of passwordShown
+    setPasswordShown(!passwordShown);
+  };
+
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+
   /* 
   const rawx = JSON.stringify({ fname: fnamex, lname: lnamex, email: emailx });
   const requestOptionsx = {
@@ -90,7 +111,210 @@ function InviteUser() {
   //   const rolep = JSON.parse([roleu]);
   //   console.log(rolep);
 
+  const getPersonalInformation = (e) => {
+    setEmail(e.target.value);
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    const emailpersonal = e.target.value;
+    if (emailpersonal.length === 0 || !emailpersonal.match(letters)) {
+      // Email Invalid
+    } else {
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/${emailpersonal}`)
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+          console.log(result.id);
+          if (result.id !== null) {
+            setPassEnabled(false);
+            setOname(result.oname);
+            setId(result.id);
+            setPhone(result.pno);
+            setNationality(result.nationality);
+            setResidentialStreet(result.residentialStreet);
+            setResidentialCity(result.residentialCity);
+            const filteredItems = AlCountry.filter(
+              (item) => item.name === result.residentialCountry
+            );
+            setAllStates(filteredItems[0].states);
+            setResidentialState(result.residentialState);
+            setResidentialCountry(result.residentialCountry);
+            setMaritalStatus(result.maritalStatus);
+            // setPersonalCompany(result);
+            setDeleteFlag(result.deleteFlag);
+            setSysStatus(result.sysStatus);
+            setCreatedTime(result.createdTime);
+
+            setStartDate(
+              new Date(`${result.monthOfBirth}/${result.dayOfBirth}/${result.yearOfBirth}`)
+            );
+          } else {
+            setId(0);
+          }
+          //   if (result.id != null) {
+          //     setPassEnabled(false);
+          //   }
+          //   if (idx === 0) {
+          //     setPassEnabled(true);
+          //   }
+        })
+        .catch((error) => {
+          setId(0);
+          console.log(error);
+        });
+    }
+  };
+
+  const handleOnChangeNationality = (e) => {
+    setNationality(e.target.value);
+    console.log(nationalityx);
+  };
+
+  const handleOnChangeRCCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setResidentialCountry(e.target.value);
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
+  };
+
+  const handleOnFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML =
+        "First Name - input only capital and small letters<br>";
+    }
+    if (fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "";
+    }
+    if (fnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "First Name is required<br>";
+    }
+  };
+
+  const handleOnLastKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML =
+        "Last Name - input only capital and small letters<br>";
+    }
+    if (lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "";
+    }
+    if (lnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "Last Name is required<br>";
+    }
+  };
+
+  const handleOnOtherKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML =
+        "Other Name - input only capital and small letters<br>";
+    }
+    if (onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "";
+    }
+    if (onamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "Other Name is required<br>";
+    }
+  };
+
+  const handleOnPEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (residentialStreetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnCityKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (residentialStreetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnRTPasswordKeys = () => {
+    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    if (!retypePasswordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML =
+        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+    }
+    if (retypePasswordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("rtPassword").innerHTML = "";
+    }
+    if (retypePasswordx !== passwordx) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
+    }
+  };
+
+  const handleOnPasswordKeys = () => {
+    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    if (!passwordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML =
+        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+    }
+    if (passwordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML = "";
+    }
+    if (passwordx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML = "Password is required<br>";
+    }
+  };
+
   const handleClick = (e) => {
+    // const user = JSON.parse(localStorage.getItem("user"));
     let dayx = "";
     let monthx = "";
     let yearx = "";
@@ -129,11 +353,32 @@ function InviteUser() {
       body: raw,
       redirect: "follow",
     };
+    console.log(raw);
     localStorage.setItem("email1", emailx);
     const data12 = localStorage.getItem("email1");
     console.log(data12);
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
+    let endpoint = "add";
+    if (idx !== 0) {
+      endpoint = "update";
+    }
+    if (endpoint === "update") {
+      setPassword("");
+    }
+    let endpointPC = "add";
+    if (endpoint === "update") {
+      endpointPC = "add";
+    }
+    let endpointL = "add";
+    if (endpoint === "update") {
+      endpointL = `updateOrganization/${emailx}/${orgIDx}`;
+    }
+    let methodLUO = "POST";
+    if (endpointL !== "add") {
+      methodLUO = "GET";
+    }
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/${endpoint}`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         if (result.status === "SUCCESS") {
@@ -142,11 +387,59 @@ function InviteUser() {
             type: "success",
             text: result.message,
           }).then(() => {
-            localStorage.setItem("user", JSON.stringify(result.data));
-            let data1 = localStorage.getItem("user");
-            data1 = JSON.parse(data1);
-            console.log(data1);
-            navigate("/authentication/companyRegistration", { replace: true });
+            localStorage.setItem("personalInfo", JSON.stringify(result.data));
+            console.log(result.data.id);
+            console.log(orgIDx);
+            const raw1 = JSON.stringify({
+              orgID: orgIDx,
+              personalID: result.data.id,
+              email: emaily,
+              roleID: roleIDx,
+            });
+            const requestOptions1 = {
+              method: "POST",
+              headers: myHeaders,
+              body: raw1,
+              redirect: "follow",
+            };
+
+            fetch(
+              `${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`,
+              requestOptions1
+            )
+              .then((res) => res.json())
+              .then((resultx) => {
+                MySwal.fire({
+                  title: resultx.status,
+                  type: "success",
+                  text: resultx.message,
+                }).then(() => {
+                  localStorage.setItem("company", JSON.stringify(resultx.data));
+                  const raw2 = JSON.stringify({
+                    orgID: orgIDx,
+                    empID: result.data.id,
+                    username: emailx,
+                    password: passwordx,
+                  });
+                  const requestOptions2 = {
+                    method: methodLUO,
+                    headers: myHeaders,
+                    body: raw2,
+                    redirect: "follow",
+                  };
+                  fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
+                    .then((res) => res.json())
+                    .then((resulty) => {
+                      MySwal.fire({
+                        title: resulty.status,
+                        type: "success",
+                        text: resulty.message,
+                      }).then(() => {
+                        navigate("/authentication/sign-in", { replace: true });
+                      });
+                    });
+                });
+              });
           });
         } else {
           MySwal.fire({
@@ -169,51 +462,28 @@ function InviteUser() {
 } */
 
   useEffect(() => {
+    if (idx === "") {
+      setPassEnabled(true);
+    }
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const fnameu = urlParams.get("fname");
     const lnameu = urlParams.get("lname");
     const emailu = urlParams.get("email");
+    const orgIDu = urlParams.get("orgID");
+    const roleIDu = urlParams.get("roleID");
     let isMounted = true;
     if (isMounted) {
       setFname(fnameu);
       setLname(lnameu);
       setOemail(emailu);
+      setOrgID(orgIDu);
+      setRoleID(roleIDu);
     }
     return () => {
       isMounted = false;
     };
   }, []);
-
-  const getPersonalInformation = (e) => {
-    console.log(e.target.value);
-    setEmail(e.target.value);
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/${e.target.value}`)
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        if (result != null) {
-          setId(result.id);
-          setPhone(result.pno);
-          setNationality(result.nationality);
-          setResidentialStreet(result.residentialStreet);
-          setResidentialCity(result.residentialCity);
-          setResidentialState(result.residentialState);
-          setResidentialCountry(result.residentialCountry);
-          setMaritalStatus(result.maritalStatus);
-          // setPersonalCompany(result);
-          setDeleteFlag(result.deleteFlag);
-          setSysStatus(result.sysStatus);
-          setCreatedTime(result.createdTime);
-
-          setStartDate(
-            new Date(`${result.monthOfBirth}/${result.dayOfBirth}/${result.yearOfBirth}`)
-          );
-        } else {
-          setId(0);
-        }
-      });
-  };
 
   return (
     <CoverLayout image={bgImage}>
@@ -253,6 +523,33 @@ function InviteUser() {
                 BASIC INFO
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="first">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="last">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="other">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+                {" "}
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
               <Container>
                 <div className="row">
@@ -261,6 +558,7 @@ function InviteUser() {
                       type="text"
                       label="First Name"
                       value={fnamex || ""}
+                      onKeyUp={handleOnFirstKeys}
                       onChange={(e) => setFname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -271,6 +569,7 @@ function InviteUser() {
                       type="text"
                       label="Last Name"
                       value={lnamex || ""}
+                      onKeyUp={handleOnLastKeys}
                       onChange={(e) => setLname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -284,6 +583,7 @@ function InviteUser() {
                 type="text"
                 label="Other Name"
                 value={onamex || ""}
+                onKeyUp={handleOnOtherKeys}
                 onChange={(e) => setOname(e.target.value)}
                 variant="standard"
                 fullWidth
@@ -294,6 +594,7 @@ function InviteUser() {
                 type="email"
                 label="Personal Email"
                 value={emailx || ""}
+                onKeyUp={handleOnPEmailKeys}
                 onChange={getPersonalInformation}
                 variant="standard"
                 fullWidth
@@ -310,15 +611,22 @@ function InviteUser() {
                 fullWidth
               />
             </MDBox>
-            <MDBox mb={2} mx={0}>
-              <MDInput
-                type="number"
-                label="Phone Number"
-                value={phonex || ""}
-                onChange={(e) => setPhone(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text">
+                      Phone Number
+                    </MDTypography>
+                    <PhoneInput
+                      value={phonex}
+                      inputStyle={{ width: "150%" }}
+                      buttonStyle={{}}
+                      onChange={setPhone}
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mb={2}>
               <div className="col-sm-8">
@@ -329,7 +637,7 @@ function InviteUser() {
                   value={maritalStatusx || ""}
                   onChange={(e) => setMaritalStatus(e.target.value)}
                 >
-                  <option>Marital Status</option>
+                  <option>--Marital Status--</option>
                   <option value="Married">Married</option>
                   <option value="Single">Single</option>
                   <option value="Divorced">Divorced</option>
@@ -379,18 +687,29 @@ function InviteUser() {
               </div>
             </MDBox>
             <MDBox mb={2}>
-              <div className="col-sm-8">
-                <Form.Select
-                  aria-label="Default select example"
-                  width="50%"
-                  mx={34}
-                  value={nationalityx || ""}
-                  onChange={(e) => setNationality(e.target.value)}
-                  variant="standard"
-                >
-                  <option>Nationality</option>
-                </Form.Select>
-              </div>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-10">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={3}>
+                      Nationality
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={nationalityx || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeNationality}
+                      >
+                        <option>--Select Nationality--</option>
+                        {AlCountry.map((apic) => (
+                          <option key={apic.code3} value={apic.name}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox
               variant="gradient"
@@ -407,6 +726,24 @@ function InviteUser() {
                 ADDRESS
               </MDTypography>
             </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+                {" "}
+              </MDTypography>
+            </MDBox>
             <MDBox mb={2}>
               <Container>
                 <div className="row">
@@ -415,6 +752,7 @@ function InviteUser() {
                       type="text"
                       label="Street"
                       value={residentialStreetx || ""}
+                      onKeyUp={handleOnStreetKeys}
                       onChange={(e) => setResidentialStreet(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -425,6 +763,7 @@ function InviteUser() {
                       type="text"
                       label="City"
                       value={residentialCityx || ""}
+                      onKeyUp={handleOnCityKeys}
                       onChange={(e) => setResidentialCity(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -436,27 +775,126 @@ function InviteUser() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Country"
-                      value={residentialCountryx || ""}
-                      onChange={(e) => setResidentialCountry(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
+                  <div className="row">
+                    <div className="col-sm-10">
+                      <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                        Country
+                      </MDTypography>
+                      <MDBox textAlign="right">
+                        <Form.Select
+                          value={residentialCountryx || ""}
+                          aria-label="Default select example"
+                          onChange={handleOnChangeRCCountry}
+                        >
+                          <option>--Select Country--</option>
+                          {AlCountry.map((apic) => (
+                            <option key={apic.code3} value={apic.name}>
+                              {apic.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </MDBox>
+                    </div>
                   </div>
 
-                  <div className="col-sm-6">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      State
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={residentialStatex || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCState}
+                      >
+                        <option>--Select State--</option>
+                        {allStates.map((apis) => (
+                          <option key={apis.code} value={apis.name}>
+                            {apis.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
+                  </div>
+                </div>
+              </Container>
+            </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={0}
+              mt={0}
+              p={3}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+                PASSWORD
+              </MDTypography>
+            </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="password">
+                {" "}
+              </MDTypography>
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="rtPassword">
+                {" "}
+              </MDTypography>
+            </MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-12">
+                  <MDBox mb={2}>
                     <MDInput
-                      type="text"
-                      label="State"
-                      value={residentialStatex || ""}
-                      onChange={(e) => setResidentialState(e.target.value)}
+                      type={passwordShown ? "text" : "password"}
+                      label="Password"
+                      value={passwordx || ""}
+                      onKeyUp={handleOnPasswordKeys}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={!passEnabled}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-12">
+                    <MDInput
+                      type={passwordShown ? "text" : "password"}
+                      label="Retype Password"
+                      value={retypePasswordx || ""}
+                      onKeyUp={handleOnRTPasswordKeys}
+                      onChange={(e) => setRetypePassword(e.target.value)}
+                      disabled={!passEnabled}
                       variant="standard"
                       fullWidth
                     />
                   </div>
+                  <MDTypography
+                    variant="button"
+                    fontSize="60%"
+                    align="right"
+                    onClick={togglePassword}
+                    mx={0}
+                    color="info"
+                  >
+                    show password
+                  </MDTypography>
                 </div>
               </Container>
             </MDBox>

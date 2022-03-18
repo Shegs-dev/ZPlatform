@@ -57,10 +57,11 @@ import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
-import ResetPass from "layouts/authentication/reset-password";
-import ComResetPass from "layouts/authentication/complete-resetPassword";
+import ForgotPass from "layouts/authentication/forgot-password";
+import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
+import InputPassword from "layouts/inputPassword";
 
 const routes = [
   {
@@ -194,7 +195,6 @@ const routes = [
     component: <SignUp />,
   },
   {
-    type: "collapse",
     name: "Invite User",
     key: "inviteUser",
     icon: <Icon fontSize="small">assignment</Icon>,
@@ -202,18 +202,25 @@ const routes = [
     component: <InviteUser />,
   },
   {
-    name: "Reset Password",
-    key: "resetPassword",
+    name: "Input Passowrd",
+    key: "inputPassowrd",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/resetPassword",
-    component: <ResetPass />,
+    route: "/layouts/inputPassowrd",
+    component: <InputPassword />,
+  },
+  {
+    name: "Reset Password",
+    key: "forgot-password",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/forgot-password",
+    component: <ForgotPass />,
   },
   {
     name: "Complete Reset Password",
     key: "complete-ResetPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/complete-ResetPassword",
-    component: <ComResetPass />,
+    route: "/authentication/complete-ForgotPassword",
+    component: <ComForgotPass />,
   },
   {
     type: "collapse",
