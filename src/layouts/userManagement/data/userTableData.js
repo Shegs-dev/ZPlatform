@@ -97,7 +97,7 @@ export default function UserData() {
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`)
       .then((res) => res.json())
       .then((resultp) => {
-        if(resultp.length > 0){
+        if (resultp.length > 0) {
           fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/${resultp[0].email}`)
             .then((res) => res.json())
             .then((resx) => {
@@ -116,7 +116,7 @@ export default function UserData() {
                 text: error.message,
               });
             });
-        }else{
+        } else {
           MySwal.fire({
             title: "NOT_FOUND",
             type: "error",
@@ -163,7 +163,9 @@ export default function UserData() {
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => handleModal(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handlePasswordReset(value)}>Reset Password</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handlePasswordReset(value)}>
+                    Reset Password
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
