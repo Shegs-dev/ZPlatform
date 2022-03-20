@@ -9,12 +9,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import MDButton from "components/MDButton";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import AllCountries from "countries";
 import BankNameAndCode from "layouts/userProfile/bankcode";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 function ViewUser() {
   const queryString = window.location.search;
@@ -23,6 +26,7 @@ function ViewUser() {
   const idVal = JSON.parse([id]);
   const { bankNameCode: allbankNameCode } = BankNameAndCode();
   const { countries: WCountries } = AllCountries();
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
@@ -38,9 +42,23 @@ function ViewUser() {
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
   const [maritalStatusx, setMaritalStatus] = useState("");
+  const [allStates, setAllStates] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
+
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+
+  const [nkFnamex, setNkFname] = useState("");
+  const [nkLnamex, setNkLname] = useState("");
+  const [nkOnamex, setNkOname] = useState("");
+  const [nkEmailx, setNKEmail] = useState("");
+  const [nkPhonex, setNkPhone] = useState("");
+  const [nkTitlex, setNkTitle] = useState("");
+  const [nkResidentialStreetx, setNkResidentialStreet] = useState("");
+  const [nkResidentialCityx, setNkResidentialCity] = useState("");
+  const [nkResidentialStatex, setNkResidentialState] = useState("");
+  const [nkResidentialCountryx, setNkResidentialCountry] = useState("");
+  const [nkOccupationx, setNkOccupation] = useState("");
 
   const [baBankx, setBaBank] = useState("");
   const [baCountryx, setBaCountry] = useState("");
@@ -286,6 +304,49 @@ function ViewUser() {
     };
   }, []);
 
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/getForEmployee/${idVal}`)
+      .then((res) => res.json())
+      .then((resultnk) => {
+        console.log(resultnk);
+        console.log(resultnk.length);
+        if (isMounted) {
+          // eslint-disable-next-line eqeqeq
+          if (resultnk.length != 0) {
+            setNkFname(resultnk[0].fname);
+            setNkLname(resultnk[0].lname);
+            setNkOname(resultnk[0].oname);
+            setNKEmail(resultnk[0].email);
+            setNkPhone(resultnk[0].pno);
+            setNkTitle(resultnk[0].title);
+            const filteredItems = AlCountry.filter(
+              (item) => item.name === resultnk[0].residentialCountry
+            );
+            setAllStates(filteredItems[0].states);
+            setNkResidentialStreet(resultnk[0].residentialStreet);
+            setNkResidentialCity(resultnk[0].residentialCity);
+            setNkResidentialState(resultnk[0].residentialState);
+            setNkResidentialCountry(resultnk[0].residentialCountry);
+            setNkOccupation(resultnk[0].occupation);
+          }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleOnChangeNKCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setNkResidentialCountry(e.target.value);
+  };
+
+  const handleOnChangeNKState = (e) => {
+    setNkResidentialState(e.target.value);
+  };
+
   console.log(data11);
   const personalIds = data11.personalID;
 
@@ -408,21 +469,23 @@ function ViewUser() {
           <Card>
             <MDBox pt={4} pb={3} px={3}>
               <MDBox component="form" role="form">
-                <MDBox
-                  variant="gradient"
-                  bgColor="info"
-                  borderRadius="lg"
-                  coloredShadow="success"
-                  mx={25}
-                  mt={-6}
-                  p={3}
-                  mb={1}
-                  textAlign="center"
-                >
-                  <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                    BASIC INFO
-                  </MDTypography>
-                </MDBox>
+                <div>
+                  <MDBox
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="success"
+                    mx={5}
+                    mt={-5}
+                    p={1}
+                    mb={5}
+                    textAlign="center"
+                  >
+                    <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+                      BASIC INFO
+                    </MDTypography>
+                  </MDBox>
+                </div>
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
@@ -666,6 +729,240 @@ function ViewUser() {
                   mx={2}
                   mt={-6}
                   p={2}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    Next Of Kin
+                  </MDTypography>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="First Name"
+                          value={nkFnamex || ""}
+                          disabled
+                          onChange={(e) => setNkFname(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Last Name"
+                          value={nkLnamex || ""}
+                          disabled
+                          onChange={(e) => setNkLname(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="text"
+                          label="Other Name"
+                          value={nkOnamex || ""}
+                          disabled
+                          onChange={(e) => setNkOname(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="email"
+                          label="Email"
+                          value={nkEmailx || ""}
+                          disabled
+                          onChange={(e) => setNKEmail(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <div align="left">
+                          <MDTypography variant="button" fontWeight="regular" color="text">
+                            Phone Number
+                          </MDTypography>
+                        </div>
+                        <PhoneInput
+                          value={nkPhonex}
+                          disabled
+                          inputStyle={{ width: "100%" }}
+                          buttonStyle={{}}
+                          onChange={setNkPhone}
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <MDBox mb={2}>
+                        <div align="left">
+                          <MDTypography variant="button" fontWeight="regular" color="text">
+                            Title
+                          </MDTypography>
+                        </div>
+                        <Form.Select
+                          onChange={(e) => setNkTitle(e.target.value)}
+                          value={nkTitlex || ""}
+                          disabled
+                          aria-label="Default select example"
+                        >
+                          <option>---Select Title---</option>
+                          <option value="Mr">Mr</option>
+                          <option value="Mrs">Mrs</option>
+                          <option value="Miss">Miss</option>
+                        </Form.Select>
+                      </MDBox>
+                    </div>
+                  </div>
+                </Container>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="text"
+                          label="Street"
+                          value={nkResidentialStreetx || ""}
+                          disabled
+                          onChange={(e) => setNkResidentialStreet(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-4">
+                        <MDInput
+                          type="text"
+                          label="City"
+                          value={nkResidentialCityx || ""}
+                          disabled
+                          onChange={(e) => setNkResidentialCity(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <div align="left">
+                          <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
+                            Country
+                          </MDTypography>
+                        </div>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={nkResidentialCountryx || ""}
+                            disabled
+                            aria-label="Default select example"
+                            onChange={handleOnChangeNKCountry}
+                          >
+                            <option>--Select Country--</option>
+                            {AlCountry.map((apic) => (
+                              <option key={apic.code3} value={apic.name}>
+                                {apic.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <div align="left">
+                          <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                            State
+                          </MDTypography>
+                        </div>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={nkResidentialStatex}
+                            disabled
+                            aria-label="Default select example"
+                            onChange={handleOnChangeNKState}
+                          >
+                            <option>--Select State--</option>
+                            {allStates.map((apis) => (
+                              <option key={apis.code} value={apis.name}>
+                                {apis.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-8">
+                      <MDBox mb={2}>
+                        <MDInput
+                          type="email"
+                          label="Occupation"
+                          value={nkOccupationx || ""}
+                          disabled
+                          onChange={(e) => setNkOccupation(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </MDBox>
+                    </div>
+                  </div>
+                </Container>
+              </MDBox>
+            </MDBox>
+          </Card>
+          &nbsp;
+          <Card>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox component="form" role="form">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={2}
+                  mt={-6}
+                  p={2}
                   mb={5}
                   textAlign="center"
                 >
@@ -785,10 +1082,10 @@ function ViewUser() {
                   bgColor="info"
                   borderRadius="lg"
                   coloredShadow="success"
-                  mx={2}
-                  mt={-6}
-                  p={2}
-                  mb={7}
+                  mx={5}
+                  mt={-5}
+                  p={1}
+                  mb={5}
                   textAlign="center"
                 >
                   <MDTypography
@@ -853,10 +1150,10 @@ function ViewUser() {
                   bgColor="info"
                   borderRadius="lg"
                   coloredShadow="success"
-                  mx={2}
-                  mt={-6}
-                  p={2}
-                  mb={7}
+                  mx={5}
+                  mt={-5}
+                  p={1}
+                  mb={5}
                   textAlign="center"
                 >
                   <MDTypography
@@ -902,30 +1199,6 @@ function ViewUser() {
           </Card>
           &nbsp;
           <Card>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={25}
-              mt={-2}
-              p={3}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography
-                variant="h4"
-                fontWeight="medium"
-                color="white"
-                textAlign="center"
-                mt={1}
-              >
-                Next Of Kin
-              </MDTypography>
-            </MDBox>
-          </Card>
-          &nbsp;
-          <Card>
             <MDBox pt={4} pb={3} px={3}>
               <MDBox component="form" role="form">
                 <MDBox
@@ -933,10 +1206,10 @@ function ViewUser() {
                   bgColor="info"
                   borderRadius="lg"
                   coloredShadow="success"
-                  mx={25}
-                  mt={-6}
-                  p={3}
-                  mb={1}
+                  mx={5}
+                  mt={-5}
+                  p={1}
+                  mb={5}
                   textAlign="center"
                 >
                   <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
