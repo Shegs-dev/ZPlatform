@@ -4,16 +4,20 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 function CompanyProfile() {
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const MySwal = withReactContent(Swal);
 
   const [idx, setId] = useState("");
@@ -32,7 +36,7 @@ function CompanyProfile() {
   const [createdDatex, setCreatedDate] = useState("");
   const [createdByx, setCreatedBy] = useState("");
   const [deletedflagx, setDeletedflag] = useState("");
-
+  const [allStates, setAllStates] = useState([]);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -73,55 +77,6 @@ function CompanyProfile() {
   const handleClick = (e) => {
     e.preventDefault();
 
-    const letterNumber = /^[0-9a-zA-Z]+$/;
-    if (namex.length > 0 && !namex.match(letterNumber)) {
-      MySwal.fire({
-        title: "NAME_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
-    if (namex.length > 0 && !cityx.match(letterNumber)) {
-      MySwal.fire({
-        title: "CITY_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
-    if (namex.length > 0 && !statex.match(letterNumber)) {
-      MySwal.fire({
-        title: "STATE_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
-    if (namex.length > 0 && !countryx.match(letterNumber)) {
-      MySwal.fire({
-        title: "COUNTRY_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
-    if (namex.length > 0 && !pnox.match(letterNumber)) {
-      MySwal.fire({
-        title: "PHONENUMBER_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
-    if (namex.length > 0 && !descripx.match(letterNumber)) {
-      MySwal.fire({
-        title: "DESCRIPTION_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
     const raw = JSON.stringify({
       id: idx,
       name: namex,
@@ -167,6 +122,98 @@ function CompanyProfile() {
       });
   };
 
+  const handleOnChangeRCCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setCountry(e.target.value);
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setState(e.target.value);
+  };
+
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
+    }
+  };
+
+  const handleOnEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!streetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (streetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (streetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnCityKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!cityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
+    }
+    if (cityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "";
+    }
+    if (cityx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City is required<br>";
+    }
+  };
+
+  const handleOnDescripKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!descripx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("descrip").innerHTML =
+        "Description - input only capital and small letters<br>";
+    }
+    if (descripx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("descrip").innerHTML = "";
+    }
+    if (descripx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("descrip").innerHTML = "Description is required<br>";
+    }
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -187,6 +234,33 @@ function CompanyProfile() {
               CompanyProfile
             </MDTypography>
           </MDBox>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
@@ -194,8 +268,9 @@ function CompanyProfile() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name *"
+                      label="Name"
                       value={namex || ""}
+                      onKeyUp={handleOnNameKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -205,6 +280,7 @@ function CompanyProfile() {
                     <MDInput
                       type="text"
                       value={emailx || ""}
+                      onKeyUp={handleOnEmailKeys}
                       onChange={(e) => setEmail(e.target.value)}
                       label="Email"
                       variant="standard"
@@ -221,6 +297,7 @@ function CompanyProfile() {
                     <MDInput
                       type="text"
                       value={streetx || ""}
+                      onKeyUp={handleOnStreetKeys}
                       onChange={(e) => setStreet(e.target.value)}
                       label="Street"
                       variant="standard"
@@ -231,8 +308,9 @@ function CompanyProfile() {
                     <MDInput
                       type="text"
                       value={cityx || ""}
+                      onKeyUp={handleOnCityKeys}
                       onChange={(e) => setCity(e.target.value)}
-                      label="City *"
+                      label="City"
                       variant="standard"
                       fullWidth
                     />
@@ -243,25 +321,47 @@ function CompanyProfile() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={statex || ""}
-                      onChange={(e) => setState(e.target.value)}
-                      label="State *"
-                      variant="standard"
-                      fullWidth
-                    />
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      Country
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={countryx || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCCountry}
+                      >
+                        <option>--Select Country--</option>
+                        {AlCountry.map((apic) => (
+                          <option key={apic.code3} value={apic.name}>
+                            {apic.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
                   </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={countryx || ""}
-                      onChange={(e) => setCountry(e.target.value)}
-                      label="Country"
-                      variant="standard"
-                      fullWidth
-                    />
+                </div>
+              </Container>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      State
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        value={statex || ""}
+                        aria-label="Default select example"
+                        onChange={handleOnChangeRCState}
+                      >
+                        <option>--Select State--</option>
+                        {allStates.map((apis) => (
+                          <option key={apis.code} value={apis.name}>
+                            {apis.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </MDBox>
                   </div>
                 </div>
               </Container>
@@ -269,27 +369,30 @@ function CompanyProfile() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text">
+                      Phone Number
+                    </MDTypography>
+                    <PhoneInput
                       value={pnox || ""}
+                      inputStyle={{ width: "100%" }}
+                      buttonStyle={{}}
                       onChange={(e) => setPno(e.target.value)}
-                      label="Phone Number *"
-                      variant="standard"
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
                     />
                   </div>
                 </div>
               </Container>
+              <MDBox mt={2}>
+                <MDInput
+                  type="text"
+                  value={descripx || ""}
+                  onKeyUp={handleOnDescripKeys}
+                  onChange={(e) => setDescrip(e.target.value)}
+                  label="Descrip"
+                  variant="standard"
+                  fullWidth
+                />
+              </MDBox>
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">

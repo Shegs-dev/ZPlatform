@@ -8,7 +8,6 @@ import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import MDButton from "components/MDButton";
 import AllCountriesAndStates from "countries-states-master/countries";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -86,8 +85,6 @@ function ViewUser() {
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
   const [stepx, stepStepx] = useState("");
-  const [meIDx, setMeID] = useState("");
-  console.log(setMeID);
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
@@ -347,50 +344,25 @@ function ViewUser() {
     setNkResidentialState(e.target.value);
   };
 
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${idVal}`)
+      .then((res) => res.json())
+      .then((resultma) => {
+        console.log(resultma);
+        console.log(resultma.length);
+        if (isMounted) {
+          setMaNoOfSpouses(resultma[0].noOfSpouses);
+          setMaNoOfChildren(resultma[0].noOfChildren);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   console.log(data11);
   const personalIds = data11.personalID;
-
-  const handleAddME = (e) => {
-    e.preventDefault();
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      empID: personalIds,
-      bloodGroup: meBloodGroupx,
-      genotype: meGenotypex,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
-  const handleMEAddUpdate = (e) => {
-    e.preventDefault();
-    if (meIDx == null) {
-      handleAddME(e);
-    }
-  };
 
   useEffect(() => {
     let isMounted = true;
@@ -420,15 +392,12 @@ function ViewUser() {
         console.log(resultba);
         console.log(resultba.length);
         if (isMounted) {
-          // eslint-disable-next-line eqeqeq
-          if (resultba.length != 0) {
-            setBaBank(resultba[0].bank);
-            console.log(resultba[0].bank);
-            setBaCountry(resultba[0].country);
-            setBaAcctNo(resultba[0].acctNo);
-            setBaAcctName(resultba[0].acctName);
-            setBaBankCode(resultba[0].bankCode);
-          }
+          setBaBank(resultba[0].bank);
+          console.log(resultba[0].bank);
+          setBaCountry(resultba[0].country);
+          setBaAcctNo(resultba[0].acctNo);
+          setBaAcctName(resultba[0].acctName);
+          setBaBankCode(resultba[0].bankCode);
         }
       });
     return () => {
@@ -1126,18 +1095,6 @@ function ViewUser() {
                     </div>
                   </Container>
                 </MDBox>
-                <div align="center">
-                  <MDBox mt={4} mb={1}>
-                    <MDButton
-                      variant="gradient"
-                      onClick={handleMEAddUpdate}
-                      color="info"
-                      width="50%"
-                    >
-                      Save
-                    </MDButton>
-                  </MDBox>
-                </div>
               </MDBox>
             </MDBox>
           </Card>
