@@ -28,13 +28,6 @@ function RolesAndPerms() {
       setRolName(resultg[0].name);
     });
 
-  const appp = [
-    { id: "620fbc61ff9b7a5712342846", name: "Halifax" },
-    { id: "620fbc97ff9b7a5712342847", name: "zave" },
-    { id: "620fbcc1ff9b7a5712342848", name: "kubu" },
-    { id: "620fbcdfff9b7a5712342849", name: "ekoatlantic" },
-  ];
-
   const permissionsList = [];
 
   useEffect(() => {
@@ -51,7 +44,6 @@ function RolesAndPerms() {
           setServices(resultapi);
           // apiList = resultapi;
           console.log(apppi);
-          console.log(appp);
         }
       });
     return () => {

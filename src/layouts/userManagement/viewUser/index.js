@@ -54,6 +54,7 @@ function ViewUser() {
   const [companyRole, setCompanyRole] = useState([]);
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
+  const [step, setStep] = useState([]);
   // continue sha
   const [officeItems, setOfficeItem] = useState([]);
   // medical
@@ -64,7 +65,7 @@ function ViewUser() {
   const [companyx, setCompanyx] = useState("");
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
-
+  const [stepx, stepStepx] = useState("");
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
   const orgIDs = data11.orgID;
@@ -195,8 +196,41 @@ function ViewUser() {
                                           console.log(`it ${item.name}`);
                                           fCompanyRole = item;
                                           setCompanyx(fCompanyRole.id);
+
+                                          fetch(
+                                            `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${fCompanyRole.id}`
+                                          )
+                                            .then((res) => res.json())
+                                            .then((resultst) => {
+                                              if (isMounted) {
+                                                setStep(resultst);
+                                              }
+                                            });
                                         }
                                       });
+
+                                      fetch(
+                                        `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${result[0].roleID}`
+                                      )
+                                        .then((res) => res.json())
+                                        .then((resultst) => {
+                                          if (isMounted) {
+                                            setStep(resultst);
+
+                                            if (result[0].stepID != null) {
+                                              let fStep = {};
+                                              // eslint-disable-next-line array-callback-return
+                                              resultst.map((item) => {
+                                                if (item.id === result[0].stepID) {
+                                                  // eslint-disable-next-line prefer-destructuring
+                                                  console.log(`it ${item.name}`);
+                                                  fStep = item;
+                                                  stepStepx(fStep.id);
+                                                }
+                                              });
+                                            }
+                                          }
+                                        });
                                     }
                                   }
                                 }
@@ -341,6 +375,16 @@ function ViewUser() {
       console.log(baBankx);
       console.log(baBankCodex);
     }
+  };
+
+  const handleRoleSteps = (e) => {
+    setCompanyx(e.target.value);
+    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${e.target.value}`)
+      .then((res) => res.json())
+      .then((resultst) => {
+        console.log(resultst);
+        setStep(resultst);
+      });
   };
 
   return (
@@ -754,6 +798,7 @@ function ViewUser() {
                           label="Blood Group"
                           value={meBloodGroupx || ""}
                           onChange={(e) => setMeBloodGroup(e.target.value)}
+                          disabled
                           variant="standard"
                           fullWidth
                         />
@@ -764,6 +809,7 @@ function ViewUser() {
                           label="Genotype"
                           value={meGenotypex || ""}
                           onChange={(e) => setMeGenotype(e.target.value)}
+                          disabled
                           variant="standard"
                           fullWidth
                         />
@@ -893,7 +939,8 @@ function ViewUser() {
                     <MDBox mx={4} textAlign="left">
                       <Form.Select
                         value={companyx || ""}
-                        onChange={(e) => setCompanyx(e.target.value)}
+                        onChange={handleRoleSteps}
+                        // onChange={(e) => setCompanyx(e.target.value)}
                         aria-label="Default select example"
                       >
                         <option value="">Add Users To Company Roles</option>
@@ -930,6 +977,21 @@ function ViewUser() {
                         {branch.map((api) => (
                           <option key={api.id} value={api.id}>
                             {api.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      <br />
+                    </MDBox>
+                    <MDBox mx={4} textAlign="left">
+                      <Form.Select
+                        value={stepx || ""}
+                        onChange={(e) => stepStepx(e.target.value)}
+                        aria-label="Default select example"
+                      >
+                        <option value="">Add Users To Company Steps</option>
+                        {step.map((api) => (
+                          <option key={api.id} value={api.id}>
+                            {api.id}
                           </option>
                         ))}
                       </Form.Select>

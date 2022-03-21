@@ -21,6 +21,10 @@ function Steps() {
 
   const [namex, setName] = useState("");
 
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
+  console.log(enabled);
+
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -66,10 +70,12 @@ function Steps() {
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
+      setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
+      setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
@@ -77,6 +83,7 @@ function Steps() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
+    setEnabled(checkedName === true);
   };
 
   return (
@@ -84,6 +91,21 @@ function Steps() {
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Company Steps
+            </MDTypography>
+          </MDBox>
           <MDBox
             variant="gradient"
             bgColor="error"
@@ -133,6 +155,7 @@ function Steps() {
               <MDButton
                 variant="gradient"
                 onClick={handleClick}
+                disabled={!enabled}
                 color="info"
                 width="50%"
                 align="left"

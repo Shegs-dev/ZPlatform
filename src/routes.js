@@ -60,6 +60,8 @@ import ViewUser from "layouts/userManagement/viewUser";
 import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
+import InviteUser from "layouts/inviteUser";
+import InputPassword from "layouts/inputPassword";
 
 const routes = [
   {
@@ -191,6 +193,20 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    name: "Invite User",
+    key: "inviteUser",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/inviteUser",
+    component: <InviteUser />,
+  },
+  {
+    name: "Input Passowrd",
+    key: "inputPassowrd",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/layouts/inputPassowrd",
+    component: <InputPassword />,
   },
   {
     name: "Reset Password",

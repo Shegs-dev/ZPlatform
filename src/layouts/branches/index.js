@@ -18,6 +18,7 @@ import AllCountriesAndStates from "countries-states-master/countries";
 // import AllCountryCode from "countries-states-master/country-code";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+// import AHeaders from "header";
 
 function Branches() {
   const MySwal = withReactContent(Swal);
@@ -34,8 +35,16 @@ function Branches() {
   const [countryx, setCountry] = useState("");
   const [pnox, setPno] = useState("");
   const [allStates, setAllStates] = useState([]);
-  // const [countryCodex, setCountryCode] = useState("");
 
+  const [checkedEmail, setCheckedEmail] = useState("");
+  const [checkedStreet, setCheckedStreet] = useState("");
+  const [checkedName, setCheckedName] = useState("");
+  const [checkedCity, setCheckedCity] = useState("");
+  const [enabled, setEnabled] = useState("");
+  console.log(enabled);
+
+  // const [countryCodex, setCountryCode] = useState("");
+  // const { allHeaders: myHeaders } = AHeaders();
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -46,6 +55,8 @@ function Branches() {
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
+    const GenToken = data11.token;
+    console.log(GenToken);
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,
@@ -62,7 +73,7 @@ function Branches() {
       body: raw,
       redirect: "follow",
     };
-
+    console.log(myHeaders);
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
@@ -103,10 +114,12 @@ function Branches() {
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
+      setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
+      setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
@@ -114,15 +127,23 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   const handleOnEmailKeys = () => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     if (!emailx.match(letters)) {
+      setCheckedEmail(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email - input a valid email<br>";
     }
     if (emailx.match(letters)) {
+      setCheckedEmail(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "";
     }
@@ -130,6 +151,12 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   // const handleOnPhoneKeys = () => {
@@ -152,10 +179,12 @@ function Branches() {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[a-zA-Z0-9 .,-]+$/;
     if (!streetx.match(letters)) {
+      setCheckedStreet(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
     }
     if (streetx.match(letters)) {
+      setCheckedStreet(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "";
     }
@@ -163,15 +192,23 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Street is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   const handleOnCityKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!cityx.match(letters)) {
+      setCheckedCity(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
     }
     if (cityx.match(letters)) {
+      setCheckedCity(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "";
     }
@@ -179,6 +216,12 @@ function Branches() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "City is required<br>";
     }
+    setEnabled(
+      checkedEmail === true &&
+        checkedName === true &&
+        checkedCity === true &&
+        checkedStreet === true
+    );
   };
 
   return (
@@ -351,7 +394,13 @@ function Branches() {
               </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                disabled={!enabled}
+                color="info"
+                width="50%"
+              >
                 Save
               </MDButton>
             </MDBox>

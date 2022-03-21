@@ -53,9 +53,6 @@ function Basic() {
 
   const MySwal = withReactContent(Swal);
 
-  const [checkedUser, setCheckedUser] = useState("");
-  const [checkedPass, setCheckedPass] = useState("");
-  const [enabled, setEnabled] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
 
   // Password toggle handler
@@ -68,6 +65,7 @@ function Basic() {
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+  // myHeaders.append("Accept", "application/json");
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -78,12 +76,21 @@ function Basic() {
       body: raw,
       redirect: "follow",
     };
+    const ta = document.querySelector("#password");
+    console.log(ta.textContent);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const h of res.headers) {
+          console.log(h);
+        }
+        console.log("Token ", res.headers.get("token-1"));
+        localStorage.setItem("rexdex", res.headers.get("token-1"));
+        return res.json();
+      })
       .then((result) => {
         if (result.status === "SUCCESS") {
-          console.log(result);
           localStorage.setItem("user1", JSON.stringify(result.data));
           let data11 = localStorage.getItem("user1");
           data11 = JSON.parse(data11);
@@ -91,6 +98,7 @@ function Basic() {
           const orgIDs = data11.orgID;
           console.log(orgIDs);
           MySwal.fire({
+            // eslint-disable-next-line dot-notation
             title: result.status,
             type: "success",
             text: result.message,
@@ -112,47 +120,6 @@ function Basic() {
           text: error.message,
         });
       });
-  };
-
-  const handleOnUsernameKeys = () => {
-    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
-    if (!usernamex.match(letters)) {
-      setCheckedUser(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("username").innerHTML = "Email - input a valid email<br>";
-    }
-    if (usernamex.match(letters)) {
-      setCheckedUser(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("username").innerHTML = "";
-    }
-    if (usernamex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("username").innerHTML = "Email is required<br>";
-    }
-    setEnabled(checkedUser === true && checkedPass === true);
-    console.log(checkedUser);
-  };
-
-  const handleOnPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!passwordx.match(passwordValidate)) {
-      setCheckedPass(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML =
-        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
-    }
-    if (passwordx.match(passwordValidate)) {
-      setCheckedPass(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML = "";
-    }
-    if (passwordx.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML = "Password is required<br>";
-    }
-    setEnabled(checkedUser === true && checkedPass === true);
-    console.log(checkedPass);
   };
 
   return (
@@ -218,7 +185,6 @@ function Basic() {
                     <MDInput
                       type="email"
                       value={usernamex || ""}
-                      onKeyUp={handleOnUsernameKeys}
                       onChange={(e) => setUsername(e.target.value)}
                       label="Email"
                       fullWidth
@@ -234,7 +200,6 @@ function Basic() {
                     <MDInput
                       type={passwordShown ? "text" : "password"}
                       value={passwordx || ""}
-                      onKeyUp={handleOnPasswordKeys}
                       onChange={(e) => setPassword(e.target.value)}
                       label="Password"
                       fullWidth
@@ -265,13 +230,7 @@ function Basic() {
                 &nbsp;&nbsp;Remember me
               </MDTypography>
             </MDBox>
-            <MDButton
-              variant="gradient"
-              onClick={handleClick}
-              disabled={!enabled}
-              color="info"
-              fullWidth
-            >
+            <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
               sign In
             </MDButton>
             <MDBox mt={1} textAlign="center">
