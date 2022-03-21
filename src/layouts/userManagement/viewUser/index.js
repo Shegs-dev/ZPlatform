@@ -281,44 +281,6 @@ function ViewUser() {
     };
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${idVal}`)
-      .then((res) => res.json())
-      .then((resultba) => {
-        console.log(resultba);
-        console.log(resultba.length);
-        if (isMounted) {
-          setBaBank(resultba[0].bank);
-          console.log(resultba[0].bank);
-          setBaCountry(resultba[0].country);
-          setBaAcctNo(resultba[0].acctNo);
-          setBaAcctName(resultba[0].acctName);
-          setBaBankCode(resultba[0].bankCode);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${idVal}`)
-      .then((res) => res.json())
-      .then((resultma) => {
-        console.log(resultma);
-        console.log(resultma.length);
-        if (isMounted) {
-          setMaNoOfSpouses(resultma[0].noOfSpouses);
-          setMaNoOfChildren(resultma[0].noOfChildren);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   console.log(data11);
   const personalIds = data11.personalID;
 
@@ -350,12 +312,15 @@ function ViewUser() {
         console.log(resultba);
         console.log(resultba.length);
         if (isMounted) {
-          setBaBank(resultba[0].bank);
-          console.log(resultba[0].bank);
-          setBaCountry(resultba[0].country);
-          setBaAcctNo(resultba[0].acctNo);
-          setBaAcctName(resultba[0].acctName);
-          setBaBankCode(resultba[0].bankCode);
+          // eslint-disable-next-line eqeqeq
+          if (resultba.length != 0) {
+            setBaBank(resultba[0].bank);
+            console.log(resultba[0].bank);
+            setBaCountry(resultba[0].country);
+            setBaAcctNo(resultba[0].acctNo);
+            setBaAcctName(resultba[0].acctName);
+            setBaBankCode(resultba[0].bankCode);
+          }
         }
       });
     return () => {
