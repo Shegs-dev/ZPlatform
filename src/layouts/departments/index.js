@@ -25,6 +25,29 @@ function Departments() {
   myHeaders.append("Content-Type", "application/json");
 
   // eslint-disable-next-line consistent-return
+
+  // eslint-disable-next-line consistent-return
+  const handleOnFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      ("First Name - input only capital and small letters<br>");
+    }
+    if (namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      MySwal.fire({
+        title: "NAME_ERROR",
+        type: "error",
+        text: "Name is required",
+      });
+      return false;
+    }
+  };
+
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
 
@@ -94,6 +117,7 @@ function Departments() {
                       value={namex || ""}
                       className="form-control"
                       onChange={(e) => setName(e.target.value)}
+                      onKeyUp={handleOnFirstKeys}
                       variant="standard"
                       fullWidth
                     />

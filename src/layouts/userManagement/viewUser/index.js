@@ -8,7 +8,6 @@ import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -330,6 +329,7 @@ function ViewUser() {
       handleAddME(e);
     }
   };
+  console.log(handleMEAddUpdate);
 
   useEffect(() => {
     let isMounted = true;
@@ -829,18 +829,6 @@ function ViewUser() {
                     </div>
                   </Container>
                 </MDBox>
-                <div align="center">
-                  <MDBox mt={4} mb={1}>
-                    <MDButton
-                      variant="gradient"
-                      onClick={handleMEAddUpdate}
-                      color="info"
-                      width="50%"
-                    >
-                      Save
-                    </MDButton>
-                  </MDBox>
-                </div>
               </MDBox>
             </MDBox>
           </Card>
