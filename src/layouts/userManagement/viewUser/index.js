@@ -73,7 +73,6 @@ function ViewUser() {
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
   const [step, setStep] = useState([]);
-  console.log(setStep);
   // continue sha
   const [officeItems, setOfficeItem] = useState([]);
   // medical

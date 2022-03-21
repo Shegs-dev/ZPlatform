@@ -20,6 +20,10 @@ function Position() {
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
 
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
+  console.log(enabled);
+
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -60,10 +64,12 @@ function Position() {
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
+      setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
+      setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
@@ -71,22 +77,7 @@ function Position() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
-  };
-  const handleOnDescripKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!descripx.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("descrip").innerHTML =
-        "Description - input only capital and small letters<br>";
-    }
-    if (descripx.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("descrip").innerHTML = "";
-    }
-    if (descripx.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("descrip").innerHTML = "Description is required<br>";
-    }
+    setEnabled(checkedName === true);
   };
 
   return (
@@ -94,6 +85,21 @@ function Position() {
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Position
+            </MDTypography>
+          </MDBox>
           <MDBox
             variant="gradient"
             bgColor="error"
@@ -137,7 +143,6 @@ function Position() {
               <MDInput
                 type="text"
                 value={descripx || ""}
-                onKeyUp={handleOnDescripKeys}
                 onChange={(e) => setDescrip(e.target.value)}
                 label="Description"
                 variant="standard"
@@ -145,7 +150,13 @@ function Position() {
               />
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                disabled={!enabled}
+                color="info"
+                width="50%"
+              >
                 Save
               </MDButton>
             </MDBox>
