@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react";
 // import MDButton from "components/MDButton";
 import { useNavigate } from "react-router-dom";
-import { Dropdown, Button, Modal, Form } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
@@ -15,23 +15,12 @@ import withReactContent from "sweetalert2-react-content";
 export default function UserData() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
-
+  const [iteems, setIteems] = useState([]);
+  console.log(iteems);
   // const [id, setId] = useState("");
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
-
-  const [modal, setModal] = useState(false);
-  const [idVaal, setIdVaal] = useState("");
-
-  const handleClose = () => setModal(false);
-  const handleModal = (value) => {
-    if (!modal) {
-      setModal(true);
-      setIdVaal(value);
-      console.log(value);
-    }
-  };
 
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -57,27 +46,59 @@ export default function UserData() {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  const handleModalDel = () => {
-    const modalVal = document.getElementById("reasonForDelete").value;
-    console.log(modalVal);
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${idVaal}/${modalVal}`, {
-      method: "DELETE",
-    })
+  const handleDisable = (pIDVal) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/getByPersonalID/${orgIDs}/${pIDVal}`)
       .then((res) => res.json())
-      .then((resx) => {
+      .then((resultPC) => {
+        setIteems(resultPC);
         MySwal.fire({
-          title: resx.status,
-          type: "success",
-          text: resx.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
+          title: "Reason For Delete",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          html: `<div align="center"><select id="reasonForDelete" class="form-select" aria-label="Default select example" style="width:auto;">
+          <option value="">---Reason For Delete---</option>
+          <option value="Retired">Retired</option>
+          <option value="Late">Late</option>
+          <option value="Resigned">Resigned</option>
+          <option value="Sacked">Sacked</option>
+        </select></div>`,
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then((resultD) => {
+          if (resultD.isConfirmed) {
+            const modalValue = document.getElementById("reasonForDelete").value;
+            fetch(
+              `${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${resultPC.id}/${modalValue}`,
+              {
+                method: "DELETE",
+              }
+            )
+              .then((res) => res.json())
+              .then((resx) => {
+                MySwal.fire({
+                  title: resx.status,
+                  type: "success",
+                  text: resx.message,
+                }).then(() => {
+                  window.location.reload();
+                });
+              })
+              .catch((error) => {
+                MySwal.fire({
+                  title: error.status,
+                  type: "error",
+                  text: error.message,
+                });
+              });
+          }
         });
       });
   };
@@ -161,37 +182,13 @@ export default function UserData() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleModal(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handlePasswordReset(value)}>
                     Reset Password
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-            </div>
-            <div>
-              <Modal show={modal} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Reason For Delete</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form.Select id="reasonForDelete" aria-label="Default select example">
-                    <option value="">---Reason For Delete---</option>
-                    <option value="Retired">Retired</option>
-                    <option value="Late">Late</option>
-                    <option value="Resigned">Resigned</option>
-                    <option value="Sacked">Sacked</option>
-                  </Form.Select>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button variant="primary" onClick={() => handleModalDel()}>
-                    Save Changes
-                  </Button>
-                </Modal.Footer>
-              </Modal>
             </div>
           </div>
         ),

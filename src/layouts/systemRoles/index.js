@@ -21,6 +21,8 @@ function SysRoles() {
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -68,10 +70,12 @@ function SysRoles() {
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
+      setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
+      setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
@@ -79,6 +83,7 @@ function SysRoles() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
+    setEnabled(checkedName === true);
   };
 
   return (
@@ -98,7 +103,7 @@ function SysRoles() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add New Branch
+              Add System Roles
             </MDTypography>
           </MDBox>
           <MDBox
@@ -126,7 +131,7 @@ function SysRoles() {
                       label="Name"
                       name="name"
                       value={namex || ""}
-                      onKepUp={handleOnNameKeys}
+                      onKeyUp={handleOnNameKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -149,6 +154,7 @@ function SysRoles() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
+                disabled={!enabled}
                 onClick={handleClick}
                 color="info"
                 width="50%"

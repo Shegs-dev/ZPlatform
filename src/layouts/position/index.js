@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
+import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import Card from "@mui/material/Card";
 import positiontable from "layouts/position/data/positiontable";
@@ -56,18 +57,77 @@ function Position() {
         });
       });
   };
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
+    }
+  };
+  const handleOnDescripKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!descripx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("descrip").innerHTML =
+        "Description - input only capital and small letters<br>";
+    }
+    if (descripx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("descrip").innerHTML = "";
+    }
+    if (descripx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("descrip").innerHTML = "Description is required<br>";
+    }
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput
                 type="text"
                 label="Name"
                 value={namex || ""}
+                onKeyUp={handleOnNameKeys}
                 onChange={(e) => setName(e.target.value)}
                 variant="standard"
                 fullWidth
@@ -77,6 +137,7 @@ function Position() {
               <MDInput
                 type="text"
                 value={descripx || ""}
+                onKeyUp={handleOnDescripKeys}
                 onChange={(e) => setDescrip(e.target.value)}
                 label="Description"
                 variant="standard"
