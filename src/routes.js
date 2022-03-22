@@ -47,6 +47,7 @@ import Position from "layouts/position";
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
+import Status from "layouts/companystatustype";
 import Steps from "layouts/companysteps";
 import Checklists from "layouts/checklists";
 import Branches from "layouts/branches/index";
@@ -103,6 +104,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Company-Roles",
     component: <Roles />,
+  },
+  {
+    type: "collapse",
+    name: "Company Status",
+    key: "companystatus",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Company-Status",
+    component: <Status />,
   },
   {
     type: "collapse",

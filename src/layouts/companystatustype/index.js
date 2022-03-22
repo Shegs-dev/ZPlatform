@@ -3,11 +3,9 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
-import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import companySteps from "layouts/companysteps/data/companySteps";
-import { Container } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import companyStatustype from "layouts/companystatustype/data/companystatustype";
+import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -15,11 +13,12 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Steps() {
+function Status() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = companySteps();
+  const { columns: pColumns, rows: pRows } = companyStatustype();
 
   const [namex, setName] = useState("");
+  const [descripx, setDescrip] = useState("");
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
@@ -30,17 +29,12 @@ function Steps() {
 
   const handleClick = (e) => {
     e.preventDefault();
-
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
-
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      name: namex,
-    });
+    const raw = JSON.stringify({ orgID: orgIDs, name: namex, descrip: descripx });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -48,7 +42,7 @@ function Steps() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/step/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -68,7 +62,7 @@ function Steps() {
       });
   };
   const handleOnNameKeys = () => {
-    const letters = /^[a-zA-Z0-9 ]+$/;
+    const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
@@ -103,7 +97,7 @@ function Steps() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Company Steps
+              Company Status Type
             </MDTypography>
           </MDBox>
           <MDBox
@@ -135,21 +129,25 @@ function Steps() {
           </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Name"
-                      value={namex || ""}
-                      onKeyUp={handleOnNameKeys}
-                      onChange={(e) => setName(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </Container>
+              <MDInput
+                type="text"
+                label="Name"
+                value={namex || ""}
+                onKeyUp={handleOnNameKeys}
+                onChange={(e) => setName(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                value={descripx || ""}
+                onChange={(e) => setDescrip(e.target.value)}
+                label="Description"
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton
@@ -158,7 +156,6 @@ function Steps() {
                 disabled={!enabled}
                 color="info"
                 width="50%"
-                align="left"
               >
                 Save
               </MDButton>
@@ -181,4 +178,4 @@ function Steps() {
   );
 }
 
-export default Steps;
+export default Status;
