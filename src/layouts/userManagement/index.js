@@ -49,6 +49,56 @@ function UserManagement() {
     };
   }, []);
 
+  const handleOnFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML =
+        "First Name - input only capital and small letters<br>";
+    }
+    if (fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "";
+    }
+    if (fnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "First Name is required<br>";
+    }
+  };
+
+  const handleOnLastKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!lNamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML =
+        "Last Name - input only capital and small letters<br>";
+    }
+    if (lNamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "";
+    }
+    if (lNamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "Last Name is required<br>";
+    }
+  };
+
+  const handleOnPEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
@@ -147,6 +197,27 @@ function UserManagement() {
               Invite Other Users
             </MDTypography>
           </MDBox>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="first">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="last">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
@@ -156,6 +227,7 @@ function UserManagement() {
                       type="text"
                       label="First Name *"
                       value={fnamex || ""}
+                      onKeyUp={handleOnFirstKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -165,6 +237,7 @@ function UserManagement() {
                     <MDInput
                       type="text"
                       value={lNamex || ""}
+                      onKeyUp={handleOnLastKeys}
                       onChange={(e) => setLastName(e.target.value)}
                       label="Last Name *"
                       variant="standard"
@@ -181,6 +254,7 @@ function UserManagement() {
                     <MDInput
                       type="text"
                       value={emailx || ""}
+                      onKeyUp={handleOnPEmailKeys}
                       onChange={(e) => setEmail(e.target.value)}
                       label="Email *"
                       variant="standard"
