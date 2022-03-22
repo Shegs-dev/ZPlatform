@@ -7,6 +7,7 @@ import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import MDTypography from "components/MDTypography";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -21,53 +22,37 @@ function Departments() {
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
 
+  const [enabled, setEnabled] = useState("");
+  const [checkedName, setCheckedName] = useState("");
+
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   // eslint-disable-next-line consistent-return
 
   // eslint-disable-next-line consistent-return
-  const handleOnFirstKeys = () => {
+  const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
+      setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
-      ("First Name - input only capital and small letters<br>");
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
+      setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
     }
     if (namex.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      MySwal.fire({
-        title: "NAME_ERROR",
-        type: "error",
-        text: "Name is required",
-      });
-      return false;
+      document.getElementById("name").innerHTML = "Name is required<br>";
     }
+    setEnabled(checkedName === true);
   };
 
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
-
-    const letterNumber = /^[a-zA-Z]+$/;
-    if (namex.length > 0 && !namex.match(letterNumber)) {
-      MySwal.fire({
-        title: "NAME_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
-    if (descripx.length > 0 && !descripx.match(letterNumber)) {
-      MySwal.fire({
-        title: "DESCRIPTION_ERROR",
-        type: "error",
-        text: "Input Description Invalid",
-      });
-      return false;
-    }
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -105,7 +90,37 @@ function Departments() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
+        <MDBox pt={4} pb={3} px={30}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Add Departments
+            </MDTypography>
+          </MDBox>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
@@ -115,9 +130,9 @@ function Departments() {
                       type="text"
                       label="Name *"
                       value={namex || ""}
+                      onKeyUp={handleOnNameKeys}
                       className="form-control"
                       onChange={(e) => setName(e.target.value)}
-                      onKeyUp={handleOnFirstKeys}
                       variant="standard"
                       fullWidth
                     />
@@ -139,6 +154,7 @@ function Departments() {
               <MDButton
                 variant="gradient"
                 onClick={handleClick}
+                disabled={!enabled}
                 color="info"
                 width="50%"
                 align="left"
