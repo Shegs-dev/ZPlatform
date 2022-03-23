@@ -13,6 +13,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import MDTypography from "components/MDTypography";
 
 function Roles() {
   const MySwal = withReactContent(Swal);
@@ -20,9 +21,30 @@ function Roles() {
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
+
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      setCheckedName(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      setCheckedName(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
+    }
+    setEnabled(checkedName === true);
+  };
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -66,7 +88,37 @@ function Roles() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
+        <MDBox pt={4} pb={3} px={30}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Add CompanyRoles
+            </MDTypography>
+          </MDBox>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
@@ -74,8 +126,9 @@ function Roles() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name"
+                      label="Name *"
                       value={namex || ""}
+                      onKeyUp={handleOnNameKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -98,6 +151,7 @@ function Roles() {
               <MDButton
                 variant="gradient"
                 onClick={handleClick}
+                disabled={!enabled}
                 color="info"
                 width="50%"
                 align="left"

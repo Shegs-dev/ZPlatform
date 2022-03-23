@@ -37,6 +37,7 @@ function ViewUser() {
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
   const [maritalStatusx, setMaritalStatus] = useState("");
+
   const [startDate, setStartDate] = useState(new Date());
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -55,6 +56,8 @@ function ViewUser() {
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
   const [step, setStep] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [statusmap, setStatusmap] = useState([]);
   // continue sha
   const [officeItems, setOfficeItem] = useState([]);
   // medical
@@ -66,6 +69,10 @@ function ViewUser() {
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
   const [stepx, stepStepx] = useState("");
+  const [meIDx, setMeID] = useState("");
+  const [statusx, setStatusx] = useState("");
+  console.log(setMeID);
+
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
   const orgIDs = data11.orgID;
@@ -248,6 +255,83 @@ function ViewUser() {
     };
   }, []);
 
+  const personalIds = data11.personalID;
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/getByPersonalID/${orgIDs}/${idVal}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((resultp) => {
+        if (isMounted) {
+          setStatusx(resultp.statusID);
+          setStatus(resultp);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((resultp) => {
+        if (isMounted) {
+          setStatusmap(resultp);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleGetPersonalID = () => {
+    const raw = JSON.stringify({
+      id: status.id,
+      orgID: orgIDs,
+      personalID: idVal,
+      roleID: status.roleID,
+      email: status.email,
+      staffID: status.staffID,
+      statusID: statusx,
+      reasonForDelete: status.reasonForDelete,
+      deleteFlag: status.deleteFlag,
+      createdTime: status.createdTime,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    console.log(raw);
+    console.log(requestOptions);
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/update`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
   useEffect(() => {
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${idVal}`)
@@ -282,7 +366,49 @@ function ViewUser() {
   }, []);
 
   console.log(data11);
-  const personalIds = data11.personalID;
+
+  const handleAddME = (e) => {
+    e.preventDefault();
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      empID: personalIds,
+      bloodGroup: meBloodGroupx,
+      genotype: meGenotypex,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleMEAddUpdate = (e) => {
+    e.preventDefault();
+    if (meIDx == null) {
+      handleAddME(e);
+    }
+  };
+  console.log(handleMEAddUpdate);
 
   useEffect(() => {
     let isMounted = true;
@@ -963,6 +1089,50 @@ function ViewUser() {
                       <br />
                     </MDBox>
                     <Button variant="primary" onClick={handleOfficeSave}>
+                      Save Changes
+                    </Button>
+                  </Container>
+                </MDBox>
+              </MDBox>
+            </MDBox>
+          </Card>
+          &nbsp;
+          <Card>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox component="form" role="form">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={25}
+                  mt={-6}
+                  p={3}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+                    Status
+                  </MDTypography>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <MDBox mx={4} textAlign="left">
+                      <Form.Select
+                        value={statusx || ""}
+                        onChange={(e) => setStatusx(e.target.value)}
+                        aria-label="Default select example"
+                      >
+                        <option value="">Add Status Type</option>
+                        {statusmap.map((api) => (
+                          <option key={api.id} value={api.id}>
+                            {api.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      <br />
+                    </MDBox>
+                    <Button variant="primary" onClick={handleGetPersonalID}>
                       Save Changes
                     </Button>
                   </Container>
