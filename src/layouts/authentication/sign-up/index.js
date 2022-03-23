@@ -287,10 +287,10 @@ function Cover() {
 
   const handleOnStreetKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
-    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    const letters = /^[a-zA-Z0-9 ,-]+$/;
     if (!residentialStreetx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+      document.getElementById("street").innerHTML = "Street - use only [ - , ] as symbols<br>";
     }
     if (residentialStreetx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
