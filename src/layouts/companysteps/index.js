@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
+import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
@@ -20,22 +21,15 @@ function Steps() {
 
   const [namex, setName] = useState("");
 
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
+  console.log(enabled);
+
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
-
-    const letterNumber = /^[a-zA-Z]+$/;
-    if (namex.length > 0 && !namex.match(letterNumber)) {
-      MySwal.fire({
-        title: "NAME_ERROR",
-        type: "error",
-        text: "Input Name Invalid",
-      });
-      return false;
-    }
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
@@ -73,12 +67,72 @@ function Steps() {
         });
       });
   };
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z0-9 ]+$/;
+    if (!namex.match(letters)) {
+      setCheckedName(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      setCheckedName(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
+    }
+    setEnabled(checkedName === true);
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
         <MDBox pt={4} pb={3} px={3}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Company Steps
+            </MDTypography>
+          </MDBox>
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+              {" "}
+            </MDTypography>
+          </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
@@ -86,8 +140,9 @@ function Steps() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name *"
+                      label="Name"
                       value={namex || ""}
+                      onKeyUp={handleOnNameKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -100,6 +155,7 @@ function Steps() {
               <MDButton
                 variant="gradient"
                 onClick={handleClick}
+                disabled={!enabled}
                 color="info"
                 width="50%"
                 align="left"

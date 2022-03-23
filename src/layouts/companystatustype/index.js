@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import DataTable from "examples/Tables/DataTable";
-import DepartmentData from "layouts/departments/data/departmentTableData";
-import MDButton from "components/MDButton";
-import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import MDTypography from "components/MDTypography";
+import DataTable from "examples/Tables/DataTable";
+import Card from "@mui/material/Card";
+import companyStatustype from "layouts/companystatustype/data/companystatustype";
+import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -15,22 +13,54 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Departments() {
+function Status() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = DepartmentData();
+  const { columns: pColumns, rows: pRows } = companyStatustype();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
 
-  const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
+  console.log(enabled);
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  // eslint-disable-next-line consistent-return
+  const handleClick = (e) => {
+    e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
 
-  // eslint-disable-next-line consistent-return
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
+    const raw = JSON.stringify({ orgID: orgIDs, name: namex, descrip: descripx });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/add`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
@@ -50,47 +80,11 @@ function Departments() {
     setEnabled(checkedName === true);
   };
 
-  // eslint-disable-next-line consistent-return
-  const handleClick = (e) => {
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
-    const raw = JSON.stringify({ orgID: orgIDs, name: namex, descrip: descripx });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/add`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={30}>
+        <MDBox pt={4} pb={3} px={3}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -103,7 +97,7 @@ function Departments() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Departments
+              Company Status Type
             </MDTypography>
           </MDBox>
           <MDBox
@@ -120,35 +114,40 @@ function Departments() {
             <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
               {" "}
             </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+              {" "}
+            </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Name *"
-                      value={namex || ""}
-                      onKeyUp={handleOnNameKeys}
-                      className="form-control"
-                      onChange={(e) => setName(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </Container>
+              <MDInput
+                type="text"
+                label="Name"
+                value={namex || ""}
+                onKeyUp={handleOnNameKeys}
+                onChange={(e) => setName(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                value={descripx || ""}
+                onChange={(e) => setDescrip(e.target.value)}
+                label="Description"
+                variant="standard"
+                fullWidth
+              />
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton
@@ -157,7 +156,6 @@ function Departments() {
                 disabled={!enabled}
                 color="info"
                 width="50%"
-                align="left"
               >
                 Save
               </MDButton>
@@ -180,4 +178,4 @@ function Departments() {
   );
 }
 
-export default Departments;
+export default Status;
