@@ -4,7 +4,8 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import Card from "@mui/material/Card";
-import companyStatustype from "layouts/companystatustype/data/companystatustype";
+import { Container, Form } from "react-bootstrap";
+import timeOfftype from "layouts/timeofftype/data/timeofftype";
 import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -13,12 +14,13 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Status() {
+function TimeOffType() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = companyStatustype();
+  const { columns: pColumns, rows: pRows } = timeOfftype();
 
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
+  const [typex, setType] = useState("");
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
@@ -32,17 +34,23 @@ function Status() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
-    const raw = JSON.stringify({ orgID: orgIDs, name: namex, descrip: descripx });
+    const raw = JSON.stringify({
+      timeOffType: {
+        orgID: data11.orgID,
+        name: namex,
+        descrip: descripx,
+        type: typex,
+      },
+      condition: [],
+    });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/add`, requestOptions)
+    console.log(raw);
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -97,7 +105,7 @@ function Status() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Status Type
+              Time Off Type
             </MDTypography>
           </MDBox>
           <MDBox
@@ -128,27 +136,59 @@ function Status() {
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name"
-                value={namex || ""}
-                onKeyUp={handleOnNameKeys}
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                value={descripx || ""}
-                onChange={(e) => setDescrip(e.target.value)}
-                label="Description"
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-8">
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      label="Name"
+                      value={namex || ""}
+                      onKeyUp={handleOnNameKeys}
+                      onChange={(e) => setName(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
+            <Container>
+              <div className="row">
+                <div className="col-sm-8">
+                  <MDBox mb={2}>
+                    <MDInput
+                      type="text"
+                      value={descripx || ""}
+                      onChange={(e) => setDescrip(e.target.value)}
+                      label="Description"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
+            <Container>
+              <div className="row">
+                <div className="col-sm-6">
+                  <MDBox mb={2}>
+                    <MDTypography variant="button" fontWeight="regular" color="text">
+                      Title
+                    </MDTypography>
+                    <Form.Select
+                      onChange={(e) => setType(e.target.value)}
+                      value={typex || ""}
+                      aria-label="Default select example"
+                    >
+                      <option>---Select Title---</option>
+                      <option value="1">Monthly</option>
+                      <option value="2">Annually</option>
+                    </Form.Select>
+                  </MDBox>
+                </div>
+              </div>
+            </Container>
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
@@ -178,4 +218,4 @@ function Status() {
   );
 }
 
-export default Status;
+export default TimeOffType;
