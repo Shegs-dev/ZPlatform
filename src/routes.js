@@ -64,6 +64,7 @@ import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import InputPassword from "layouts/inputPassword";
+import FreeDay from "layouts/free-days";
 
 const routes = [
   {
@@ -97,6 +98,22 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
+  },
+  {
+    type: "collapse",
+    name: "Position",
+    key: "position",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/position",
+    component: <Position />,
+  },
+  {
+    type: "collapse",
+    name: "Free Days",
+    key: "free-days",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/free-days",
+    component: <FreeDay />,
   },
   {
     type: "collapse",
@@ -159,14 +176,6 @@ const routes = [
     icon: <Icon fontSize="small">edit</Icon>,
     route: "/authentication/changepassword",
     component: <ChangePassword />,
-  },
-  {
-    type: "collapse",
-    name: "Position",
-    key: "position",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/position",
-    component: <Position />,
   },
   {
     name: "User Profile",

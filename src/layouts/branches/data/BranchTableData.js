@@ -117,13 +117,21 @@ export default function Branchdata() {
 
       MySwal.fire({
         title: "Update Department",
-        html: `<input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name">
-    <input type="email" class="swal2-input" id="email" value="${emailx}" placeholder="Email">
-    <input type="text" class="swal2-input" id="street" value="${streetx}" placeholder="Street">
-    <input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City">
-    <input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State">
-    <input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country">
-    <input type="text" class="swal2-input" id="pno" value="${pnox}" placeholder="Phone Number">`,
+        html: `<table><tr><td>
+        <label for="name">Name</label></td>
+        <td><input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name"></td></tr>
+        <tr><td><label for="email">Email</label></td>
+        <td><input type="email" class="swal2-input" id="email" value="${emailx}" placeholder="Email"></td>
+        <tr><td><label for="street">Street</label></td>
+        <td><input type="text" class="swal2-input" id="street" value="${streetx}" placeholder="Street"></td>
+        <tr><td><label for="city">City</label></td>
+        <td><input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City"></td>
+        <tr><td><label for="state">State</label></td>
+        <td><input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State"></td>
+        <tr><td><label for="country">Country</label></td>
+        <td><input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country"></td>
+        <tr><td><label for="pno">Phone Number</label></td>
+        <td><input type="text" class="swal2-input" id="pno" value="${pnox}" placeholder="Phone Number"></td>`,
         confirmButtonText: "Save",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -137,10 +145,37 @@ export default function Branchdata() {
           const country = Swal.getPopup().querySelector("#country").value;
           const pno = Swal.getPopup().querySelector("#pno").value;
           const id = value;
-          if (!name) {
-            Swal.showValidationMessage(`Please enter name`);
+
+          const Number = /^[0-9]+$/;
+          const letters = /^[a-zA-Z ]+$/;
+          const streetVali = /^[a-zA-Z0-9 ,-]+$/;
+          const emailVali = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+          if (
+            (name.length > 0 && !name.match(letters)) ||
+            (email.length > 0 && !email.match(emailVali)) ||
+            (pno.length > 0 && !pno.match(Number)) ||
+            (street.length > 0 && !street.match(streetVali)) ||
+            (city.length > 0 && !city.match(letters)) ||
+            (state.length > 0 && !state.match(letters)) ||
+            (country.length > 0 && !country.match(letters))
+          ) {
+            Swal.showValidationMessage(
+              `Name - Please write a name and use only letters<br> Email - Input a valid Email<br> Phone Number - Please write a Phone Number and use only numbers<br> Street - Please write with only letters, numbers and these symbols(, -)<br> City - Please write a City and use only letters<br> State - Please write a State and use only letters<br> Country - Please write a Country and use only letters `
+            );
+          } else {
+            handleUpdate(
+              id,
+              name,
+              email,
+              street,
+              city,
+              state,
+              country,
+              pno,
+              createdTime,
+              deleteFlag
+            );
           }
-          handleUpdate(id, name, email, street, city, state, country, pno, createdTime, deleteFlag);
         },
       });
     }
