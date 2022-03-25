@@ -377,7 +377,7 @@ function CompanyProfile() {
                       value={pnox || ""}
                       inputStyle={{ width: "100%" }}
                       buttonStyle={{}}
-                      onChange={(e) => setPno(e.target.value)}
+                      onChange={setPno}
                     />
                   </div>
                 </div>

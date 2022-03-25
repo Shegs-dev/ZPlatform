@@ -54,6 +54,7 @@ import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
 import SysRoles from "layouts/systemRoles";
 import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
+import TimeOffType from "layouts/timeofftype";
 import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
@@ -107,7 +108,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Company Status",
+    name: "Status Types",
     key: "companystatus",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Company-Status",
@@ -142,6 +143,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/systemRoles",
     component: <SysRoles />,
+  },
+  {
+    type: "collapse",
+    name: "Time Off Type",
+    key: "timeofftype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Time-Off-Type",
+    component: <TimeOffType />,
   },
   {
     type: "collapse",
