@@ -4,6 +4,7 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import Card from "@mui/material/Card";
+import { Container } from "react-bootstrap";
 import positiontable from "layouts/position/data/positiontable";
 import MDButton from "components/MDButton";
 
@@ -13,7 +14,7 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-function Position() {
+function Positions() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = positiontable();
 
@@ -97,7 +98,7 @@ function Position() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Position
+              Add Positions
             </MDTypography>
           </MDBox>
           <MDBox
@@ -127,27 +128,34 @@ function Position() {
               {" "}
             </MDTypography>
           </MDBox>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" name="form1">
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name"
-                value={namex || ""}
-                onKeyUp={handleOnNameKeys}
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput
-                type="text"
-                value={descripx || ""}
-                onChange={(e) => setDescrip(e.target.value)}
-                label="Description"
-                variant="standard"
-                fullWidth
-              />
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      label="Name*"
+                      value={namex || ""}
+                      onKeyUp={handleOnNameKeys}
+                      onChange={(e) => setName(e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+
+                  <div className="col-sm-6">
+                    <MDInput
+                      type="text"
+                      value={descripx || ""}
+                      onChange={(e) => setDescrip(e.target.value)}
+                      label="Description"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div>
+                </div>
+              </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton
@@ -178,4 +186,4 @@ function Position() {
   );
 }
 
-export default Position;
+export default Positions;

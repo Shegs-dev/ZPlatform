@@ -105,7 +105,7 @@ function TimeOffType() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Time Off Type
+              Add Time-Off Type
             </MDTypography>
           </MDBox>
           <MDBox
@@ -135,28 +135,23 @@ function TimeOffType() {
               {" "}
             </MDTypography>
           </MDBox>
-          <MDBox component="form" role="form">
-            <Container>
-              <div className="row">
-                <div className="col-sm-8">
-                  <MDBox mb={2}>
+          <MDBox component="form" role="form" name="form1">
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name"
+                      label="Name*"
                       value={namex || ""}
                       onKeyUp={handleOnNameKeys}
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
-                  </MDBox>
-                </div>
-              </div>
-            </Container>
-            <Container>
-              <div className="row">
-                <div className="col-sm-8">
-                  <MDBox mb={2}>
+                  </div>
+
+                  <div className="col-sm-6">
                     <MDInput
                       type="text"
                       value={descripx || ""}
@@ -165,10 +160,10 @@ function TimeOffType() {
                       variant="standard"
                       fullWidth
                     />
-                  </MDBox>
+                  </div>
                 </div>
-              </div>
-            </Container>
+              </Container>
+            </MDBox>
             <Container>
               <div className="row">
                 <div className="col-sm-6">

@@ -40,7 +40,6 @@ function FreeDay() {
   const [freeDates, setFreeDate] = useState("");
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-
   const { columns: pColumns, rows: pRows } = FreeDaysData();
   console.log(freeDates);
 

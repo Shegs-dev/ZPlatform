@@ -63,27 +63,30 @@ export default function data() {
   const handleShow = (filteredData, value) => {
     let namex = "";
     let descripx = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
+    let createdTimex = 0;
+    let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
       descripx = "";
-      createdTime = 0;
-      deleteFlag = 0;
+      createdTimex = 0;
+      deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
       descripx = filteredItems[0].descrip;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      createdTimex = filteredItems[0].createdTime;
+      deleteFlagx = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
       title: "Update Position",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
+      html: `<table><tr><td>
+      <label for="name">Name</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
+      <tr><td><label for="descrip">Description</label></td>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -92,10 +95,12 @@ export default function data() {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
         const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
+        const letters = /^[a-zA-Z]+$/;
+        if (name.length > 0 && !name.match(letters)) {
+          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
+        } else {
+          handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
         }
-        handleUpdate(id, name, descrip, createdTime, deleteFlag);
       },
     });
   };

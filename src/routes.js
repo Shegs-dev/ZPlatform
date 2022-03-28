@@ -101,7 +101,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Position",
+    name: "Positions",
     key: "position",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
@@ -163,7 +163,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Time Off Type",
+    name: "Time-Off Type",
     key: "timeofftype",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Time-Off-Type",

@@ -65,30 +65,34 @@ export default function data() {
     let namex = "";
     let descripx = "";
     let typex = 0;
-    let createdTime = 0;
-    let deleteFlag = 0;
+    let createdTimex = 0;
+    let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
       descripx = "";
       typex = 0;
-      createdTime = 0;
-      deleteFlag = 0;
+      createdTimex = 0;
+      deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
       descripx = filteredItems[0].descrip;
       typex = filteredItems[0].type;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      createdTimex = filteredItems[0].createdTime;
+      deleteFlagx = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
       title: "Update timeofftype",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">\
-           <input type="text" class="swal2-input" id="type" value="${typex}" placeholder="Type">`,
+      html: `<table><tr><td>
+      <label for="name">Name</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
+      <tr><td><label for="descrip">Description</label></td>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>
+      <tr><td><label for="type">Type</label></td>
+      <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -98,10 +102,12 @@ export default function data() {
         const descrip = Swal.getPopup().querySelector("#descrip").value;
         const type = Swal.getPopup().querySelector("#type").value;
         const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
+        const letters = /^[a-zA-Z]+$/;
+        if (name.length > 0 && !name.match(letters)) {
+          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
+        } else {
+          handleUpdate(id, name, descrip, type, deleteFlagx, createdTimex);
         }
-        handleUpdate(id, name, descrip, type, createdTime, deleteFlag);
       },
     });
   };
