@@ -18,7 +18,7 @@ export default function data() {
   myHeaders.append("Content-Type", "application/json");
 
   // Method to handle diable
-  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
+  const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
@@ -29,6 +29,7 @@ export default function data() {
       orgID: orgIDs,
       name: namex,
       descrip: descripx,
+      type: typex,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -39,7 +40,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -63,12 +64,14 @@ export default function data() {
   const handleShow = (filteredData, value) => {
     let namex = "";
     let descripx = "";
+    let typex = 0;
     let createdTimex = 0;
     let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
       descripx = "";
+      typex = 0;
       createdTimex = 0;
       deleteFlagx = 0;
     } else {
@@ -76,17 +79,20 @@ export default function data() {
 
       namex = filteredItems[0].name;
       descripx = filteredItems[0].descrip;
+      typex = filteredItems[0].type;
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
-      title: "Update Position",
+      title: "Update timeofftype",
       html: `<table><tr><td>
       <label for="name">Name</label></td>
       <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
       <tr><td><label for="descrip">Description</label></td>
-      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>`,
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>
+      <tr><td><label for="type">Type</label></td>
+      <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -94,19 +100,20 @@ export default function data() {
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
+        const type = Swal.getPopup().querySelector("#type").value;
         const id = value;
         const letters = /^[a-zA-Z]+$/;
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
+          handleUpdate(id, name, descrip, type, deleteFlagx, createdTimex);
         }
       },
     });
   };
 
   // Method to handle diable
-  const handleDisable = (value) => {
+  const handleDisable = (id) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -117,7 +124,7 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/position/delete/${value}`, { method: "DELETE" })
+        fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/delete/${id}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -139,14 +146,13 @@ export default function data() {
     });
   };
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
+  // Method to change type
+  const changeType = (type) => {
+    if (type === 1) return "Monthly";
+    return "Annually";
   };
 
-  // Method to fetch all positions
+  // Method to fetch all timeofftype
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
@@ -154,11 +160,12 @@ export default function data() {
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/getAll/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
           setItems(result);
+          console.log(result);
         }
       });
     return () => {
@@ -172,9 +179,9 @@ export default function data() {
       { Header: "name", accessor: "name", align: "left" },
       { Header: "description", accessor: "descrip", align: "left" },
       {
-        Header: "Date Created",
-        accessor: "createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
+        Header: "type",
+        accessor: "type",
+        Cell: ({ cell: { value } }) => changeType(value),
         align: "left",
       },
       {
