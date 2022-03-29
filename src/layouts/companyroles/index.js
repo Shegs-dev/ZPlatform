@@ -101,7 +101,7 @@ function Roles() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add CompanyRoles
+              Add Company Roles
             </MDTypography>
           </MDBox>
           <MDBox

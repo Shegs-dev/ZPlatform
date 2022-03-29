@@ -9,31 +9,28 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useNavigate } from "react-router-dom";
 
-export default function ComRole() {
+export default function FreeDaysData() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
-
-  // use of navigate button
-  const navigate = useNavigate();
 
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   // Method to handle update
-  const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
+  const handleUpdate = (idx, namex, freeDatex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
+    console.log(data11);
 
     const orgIDs = data11.orgID;
+    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
       name: namex,
-      descrip: descripx,
-      deleteFlag: deleteFlagx,
-      craetedTime: createdTimex,
+      freeDate: freeDatex,
+      deletedFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",
@@ -41,8 +38,8 @@ export default function ComRole() {
       body: raw,
       redirect: "follow",
     };
-
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/update`, requestOptions)
+    console.log(freeDatex);
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/update`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         MySwal.fire({
@@ -65,46 +62,71 @@ export default function ComRole() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let descripx = "";
-    let createdTimex = 0;
-    let deleteFlagx = 0;
+    let freeDatex = "";
+    let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      descripx = "";
-      createdTimex = 0;
-      deleteFlagx = 0;
+      freeDatex = "";
+      deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      descripx = filteredItems[0].descrip;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
+      freeDatex = filteredItems[0].freeDate;
+      deleteFlag = filteredItems[0].deleteFlag;
     }
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (freeDatex != null) {
+      const sDate = new Date(freeDatex);
+      console.log(`startDate: ${freeDatex}`);
+      console.log(`sDate: ${sDate}`);
+      dayx = sDate.getDate();
+      monthx = sDate.getMonth() + 1;
+      yearx = sDate.getFullYear();
+    }
+    console.log(freeDatex);
 
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
     MySwal.fire({
-      title: "Update Company Roles",
+      title: "Update Department",
       html: `<table><tr><td>
-        <label for="name">Name</label></td>
-        <td><input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name"></td></tr>
-        <tr><td><label for="description">Description</label></td>
-        <td><input type="text" class="swal2-input" id="description" value="${descripx}" placeholder="Description"></td>`,
+             <label for="namess">Title</label></td>
+             <td><input type="text" id="namess" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
+             <tr><td><label for="dayss">Day</label></td>
+             <td><input type="text" class="swal2-input" id="dayss" value="${dayx}" placeholder="Description"></td></tr><br>
+             <tr><td><label for="monthss">Month</label></td>
+             <td><input type="text" class="swal2-input" id="monthss" value="${monthx}" placeholder="Description"></td></tr><br>
+             <tr><td><label for="yearss">Year</label></td>
+             <td><input type="text" class="swal2-input" id="yearss" value="${yearx}" placeholder="Description"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const descrip = Swal.getPopup().querySelector("#descrip").value;
+        const name = Swal.getPopup().querySelector("#namess").value;
+        const dayy = Swal.getPopup().querySelector("#dayss").value;
+        const monthy = Swal.getPopup().querySelector("#monthss").value;
+        const yearsy = Swal.getPopup().querySelector("#yearss").value;
+        const addDMY = new Date(`${monthy}/${dayy}/${yearsy}`);
+        console.log(addDMY);
+        const freeDate = addDMY.getTime();
         const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
+        const Number = /^[0-9]+$/;
+        const letters = /^[a-zA-Z]+$/;
+        if (
+          (name.length > 0 && !name.match(letters)) ||
+          (dayy.length > 0 && !dayy.match(Number)) ||
+          (monthy.length > 0 && !monthy.match(Number)) ||
+          (yearsy.length > 0 && !yearsy.match(Number))
+        ) {
+          Swal.showValidationMessage(
+            `Name - Please write a name and use only letters<br> Day - Please write a Day and use only numbers<br> Month - Please write a Month and use only numbers<br> Year - Please write a Year and use only numbers`
+          );
+        } else {
+          handleUpdate(id, name, freeDate, deleteFlag);
         }
-        handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
       },
     });
   };
@@ -121,9 +143,7 @@ export default function ComRole() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/role/delete/${value}`, {
-          method: "DELETE",
-        })
+        fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/delete/${value}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((resx) => {
             MySwal.fire({
@@ -145,16 +165,25 @@ export default function ComRole() {
     });
   };
 
-  // Method to fetch all companyroles
+  // Method to change date from timestamp
+  const changeDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    return retDate;
+  };
+
+  // Method to fetch all FreeDays
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
+    console.log(data11);
     const orgIDs = data11.orgID;
+    console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`)
       .then((res) => res.json())
       .then((result) => {
         if (isMounted) {
+          console.log(result);
           setItems(result);
         }
       });
@@ -163,10 +192,16 @@ export default function ComRole() {
     };
   }, []);
 
+  // Return table
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
-      { Header: "description", accessor: "descrip", align: "left" },
+      { Header: "Name", accessor: "name", align: "left" },
+      {
+        Header: "Free Days",
+        accessor: "freeDate",
+        Cell: ({ cell: { value } }) => changeDate(value),
+        align: "left",
+      },
       {
         Header: "actions",
         accessor: "id",
@@ -186,9 +221,6 @@ export default function ComRole() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item onClick={() => navigate(`/checklists?id=${value}`)}>
-                  View
-                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

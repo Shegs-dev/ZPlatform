@@ -20,6 +20,7 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DataTable from "examples/Tables/DataTable";
+import AHeaders from "header";
 import FreeDaysData from "./free-days-list/freeDaysList";
 
 const locales = {
@@ -50,8 +51,8 @@ function FreeDay() {
   const [newEvent, setNewEvent] = useState({ title: "", time: "" });
   const [allEvents, setAllEvents] = useState(eventList);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allHeaders: myHeaders } = AHeaders();
+
   console.log(titleNames);
   console.log(new Date(freeDates));
 
@@ -62,7 +63,11 @@ function FreeDay() {
     console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           console.log(result);
@@ -121,7 +126,11 @@ function FreeDay() {
       });
     } else {
       fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/add`, requestOptions)
-        .then((res) => res.json())
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
         .then((result) => {
           MySwal.fire({
             title: result.status,

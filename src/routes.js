@@ -64,6 +64,7 @@ import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import InputPassword from "layouts/inputPassword";
 import FreeDay from "layouts/free-days";
+import TimeOffRequests from "layouts/timeoffRequests";
 
 const routes = [
   {
@@ -211,11 +212,20 @@ const routes = [
     component: <SignUp />,
   },
   {
+    type: "collapse",
     name: "Invite User",
     key: "inviteUser",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/inviteUser",
     component: <InviteUser />,
+  },
+  {
+    type: "collapse",
+    name: "Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoffRequests",
+    component: <TimeOffRequests />,
   },
   {
     name: "Input Passowrd",
