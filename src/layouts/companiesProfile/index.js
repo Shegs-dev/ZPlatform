@@ -44,9 +44,7 @@ function CompanyProfile() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
   const orgIDs = data11.orgID;
-  console.log(orgIDs);
 
   useEffect(() => {
     const headers = miHeaders;

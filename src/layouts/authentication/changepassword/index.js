@@ -33,10 +33,9 @@ function ChangePassword() {
   const { allPHeaders: myHeaders } = PHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
 
   const emailCh = data11.email;
-  console.log(emailCh);
+  // console.log(emailCh);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -88,7 +87,6 @@ function ChangePassword() {
       document.getElementById("password").innerHTML = "Old Password is required<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedNPass);
   };
 
   const handleOnNPasswordKeys = () => {
@@ -109,7 +107,6 @@ function ChangePassword() {
       document.getElementById("npassword").innerHTML = "New Password is required<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedNPass);
   };
 
   const handleOnRTNPasswordKeys = () => {
@@ -130,7 +127,6 @@ function ChangePassword() {
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedRTNPass);
   };
 
   return (

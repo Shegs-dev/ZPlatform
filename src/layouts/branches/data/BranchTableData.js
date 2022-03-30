@@ -16,7 +16,6 @@ import GHeaders from "getHeader";
 export default function Branchdata() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  console.log(myHeaders);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
   // const [id, setId] = useState("");
@@ -37,10 +36,8 @@ export default function Branchdata() {
     deleteFlagx
   ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -238,10 +235,8 @@ export default function Branchdata() {
   // Method to fetch all Branch
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`, { headers })

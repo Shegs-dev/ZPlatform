@@ -26,7 +26,6 @@ function Branches() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = BranchData();
 
-  // const { countryCodes: AlCountryCode } = AllCountryCode();
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
   const [namex, setName] = useState("");
@@ -44,22 +43,14 @@ function Branches() {
   const [checkedCity, setCheckedCity] = useState("");
   const [enabled, setEnabled] = useState("");
   const [opened, setOpened] = useState(false);
-  console.log(enabled);
-
-  // const [countryCodex, setCountryCode] = useState("");
   const { allPHeaders: myHeaders } = PHeaders();
-  console.log(myHeaders);
 
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
-    const GenToken = data11.token;
-    console.log(GenToken);
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,
@@ -76,7 +67,6 @@ function Branches() {
       body: raw,
       redirect: "follow",
     };
-    console.log(myHeaders);
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -108,17 +98,10 @@ function Branches() {
     setAllStates(filteredItems[0].states);
     setCountry(e.target.value);
   };
-  console.log(allStates);
 
   const handleOnChangeRCState = (e) => {
     setState(e.target.value);
-    console.log(statex);
   };
-
-  // const handleOnChangeRCCCode = (e) => {
-  //   setCountryCode(e.target.value);
-  //   console.log(countryCodex);
-  // };
 
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
