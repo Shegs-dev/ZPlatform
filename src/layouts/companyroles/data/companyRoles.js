@@ -94,8 +94,11 @@ export default function ComRole() {
     console.log(orgIDs);
     MySwal.fire({
       title: "Update Company Roles",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
+      html: `<table><tr><td>
+        <label for="name">Name</label></td>
+        <td><input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name"></td></tr>
+        <tr><td><label for="description">Description</label></td>
+        <td><input type="text" class="swal2-input" id="description" value="${descripx}" placeholder="Description"></td>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

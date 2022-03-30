@@ -33,13 +33,11 @@ import Configurator from "examples/Configurator";
 // Material Dashboard 2 React themes
 import theme from "assets/theme";
 
-// Material Dashboard 2 React Dark Mode themes
-import themeDark from "assets/theme-dark";
-
 // Material Dashboard 2 React routes
 import routes from "routes";
-// eslint-disable-next-line no-unused-vars
-import { unregister } from "interceptor";
+
+// Material Dashboard 2 React Dark Mode themes
+import themeDark from "assets/theme-dark";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";

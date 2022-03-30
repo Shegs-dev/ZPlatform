@@ -54,6 +54,7 @@ import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
 import SysRoles from "layouts/systemRoles";
 import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
+import TimeOffType from "layouts/timeofftype";
 import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
@@ -64,6 +65,8 @@ import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import InputPassword from "layouts/inputPassword";
 import FreeDay from "layouts/free-days";
+
+import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 
 const routes = [
@@ -101,7 +104,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Position",
+    name: "Positions",
     key: "position",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
@@ -125,7 +128,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Company Status",
+    name: "Status Types",
     key: "companystatus",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Company-Status",
@@ -160,6 +163,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/system-Roles",
     component: <SysRoles />,
+  },
+  {
+    type: "collapse",
+    name: "Time-Off Type",
+    key: "timeofftype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Time-Off-Type",
+    component: <TimeOffType />,
   },
   {
     type: "collapse",
@@ -212,11 +223,20 @@ const routes = [
     component: <SignUp />,
   },
   {
+    type: "collapse",
     name: "Invite User",
     key: "inviteUser",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/inviteUser",
     component: <InviteUser />,
+  },
+  {
+    type: "collapse",
+    name: "Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoffRequests",
+    component: <TimeOffRequests />,
   },
   {
     name: "Input Passowrd",
