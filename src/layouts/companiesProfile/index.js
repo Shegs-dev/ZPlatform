@@ -15,6 +15,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function CompanyProfile() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
@@ -37,8 +39,9 @@ function CompanyProfile() {
   const [createdByx, setCreatedBy] = useState("");
   const [deletedflagx, setDeletedflag] = useState("");
   const [allStates, setAllStates] = useState([]);
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
@@ -46,9 +49,15 @@ function CompanyProfile() {
   console.log(orgIDs);
 
   useEffect(() => {
+    const headers = miHeaders;
+
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
         if (isMounted) {
           setId(resultp[0].id);
@@ -103,7 +112,11 @@ function CompanyProfile() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/company/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,

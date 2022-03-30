@@ -10,6 +10,8 @@ import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function ComRole() {
   const MySwal = withReactContent(Swal);
@@ -19,8 +21,8 @@ export default function ComRole() {
   // use of navigate button
   const navigate = useNavigate();
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
@@ -43,7 +45,11 @@ export default function ComRole() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/role/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -121,7 +127,11 @@ export default function ComRole() {
         fetch(`${process.env.REACT_APP_KUBU_URL}/role/delete/${value}`, {
           method: "DELETE",
         })
-          .then((res) => res.json())
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
             MySwal.fire({
               title: resx.status,
@@ -144,12 +154,17 @@ export default function ComRole() {
 
   // Method to fetch all companyroles
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           setItems(result);

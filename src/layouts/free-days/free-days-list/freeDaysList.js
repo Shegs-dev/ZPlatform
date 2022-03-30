@@ -9,14 +9,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function FreeDaysData() {
   const MySwal = withReactContent(Swal);
   // const axios = require("axios");
   const [items, setItems] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   // Method to handle update
   const handleUpdate = (idx, namex, freeDatex, deleteFlagx) => {
@@ -40,7 +42,11 @@ export default function FreeDaysData() {
     };
     console.log(freeDatex);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -144,7 +150,11 @@ export default function FreeDaysData() {
     }).then((result) => {
       if (result.isConfirmed) {
         fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/delete/${value}`, { method: "DELETE" })
-          .then((res) => res.json())
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
             MySwal.fire({
               title: resx.status,
@@ -174,13 +184,18 @@ export default function FreeDaysData() {
 
   // Method to fetch all FreeDays
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           console.log(result);

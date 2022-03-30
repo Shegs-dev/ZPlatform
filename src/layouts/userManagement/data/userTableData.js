@@ -11,6 +11,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function UserData() {
   // const axios = require("axios");
@@ -22,15 +24,26 @@ export default function UserData() {
 
   const MySwal = withReactContent(Swal);
 
+  // const axios = require("axios");
+
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+  console.log(myHeaders);
+
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           setItems(result);
@@ -41,11 +54,6 @@ export default function UserData() {
     };
   }, []);
 
-  // const axios = require("axios");
-
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleDisable = (pIDVal) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
@@ -54,7 +62,11 @@ export default function UserData() {
     console.log(orgIDs);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/getByPersonalID/${orgIDs}/${pIDVal}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultPC) => {
         setIteems(resultPC);
         MySwal.fire({
@@ -81,7 +93,11 @@ export default function UserData() {
                 method: "DELETE",
               }
             )
-              .then((res) => res.json())
+              .then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              })
               .then((resx) => {
                 MySwal.fire({
                   title: resx.status,
@@ -120,7 +136,11 @@ export default function UserData() {
       .then((resultp) => {
         if (resultp.length > 0) {
           fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/${resultp[0].email}`)
-            .then((res) => res.json())
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
             .then((resx) => {
               MySwal.fire({
                 title: resx.status,

@@ -5,6 +5,8 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import { useState, useEffect, React } from "react";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function Checkbox() {
   const [rolName, setRolName] = useState([]);
@@ -23,8 +25,8 @@ function Checkbox() {
   const id = urlParams.get("id");
   // const idVal = JSON.parse([id]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const handleOnClick = (e, apix) => {
     let isChecked = 0;
@@ -46,14 +48,22 @@ function Checkbox() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/save`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultrp) => {
         console.log(resultrp);
       });
   };
-
-  fetch(`${process.env.REACT_APP_KUBU_URL}/role/get/${id}`)
-    .then((res) => res.json())
+  const headers = miHeaders;
+  fetch(`${process.env.REACT_APP_KUBU_URL}/role/get/${id}`, { headers })
+    .then(async (res) => {
+      const aToken = res.headers.get("token-1");
+      localStorage.setItem("rexxdex", aToken);
+      return res.json();
+    })
     .then((resultg) => {
       setRolName(resultg[0].name);
     });
@@ -62,15 +72,25 @@ function Checkbox() {
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/step/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/step/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resulta) => {
         if (isMounted) {
           setPermissions(resulta);
         }
 
-        fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${id}`)
-          .then((res) => res.json())
+        fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${id}`, {
+          headers,
+        })
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resultrs) => {
             setRoleStep(resultrs);
 

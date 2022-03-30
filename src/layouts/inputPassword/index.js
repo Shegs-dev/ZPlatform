@@ -12,6 +12,7 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import PHeaders from "postHeader";
 
 function Password() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -35,8 +36,7 @@ function Password() {
 
   const MySwal = withReactContent(Swal);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -61,7 +61,11 @@ function Password() {
 
     if (passwordx === retypePasswordx) {
       fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions)
-        .then((res) => res.json())
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
         .then((result) => {
           if (result.status === "SUCCESS") {
             MySwal.fire({
@@ -151,7 +155,11 @@ function Password() {
 
   if (passwordx === retypePasswordx) {
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (result.status === "SUCCESS") {
           MySwal.fire({

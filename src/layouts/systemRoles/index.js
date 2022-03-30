@@ -14,6 +14,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
 
 function SysRoles() {
   const MySwal = withReactContent(Swal);
@@ -24,8 +25,7 @@ function SysRoles() {
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -48,7 +48,11 @@ function SysRoles() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,

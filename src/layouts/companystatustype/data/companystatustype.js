@@ -9,13 +9,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
@@ -40,7 +42,11 @@ export default function data() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/status/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -113,7 +119,11 @@ export default function data() {
     }).then((result) => {
       if (result.isConfirmed) {
         fetch(`${process.env.REACT_APP_ZAVE_URL}/status/delete/${id}`, { method: "DELETE" })
-          .then((res) => res.json())
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
             MySwal.fire({
               title: resx.status,
@@ -143,14 +153,19 @@ export default function data() {
 
   // Method to fetch all companystatus
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           setItems(result);
