@@ -23,7 +23,7 @@ import TimeOffRequests from "./time-off-requests/timeOffRequests";
 function TimeOff() {
   const [purposex, setPurpose] = useState("");
   // const [deleteFlagx, setDeleteFlag] = useState("");
-  // const [createdTimex, setCreatedTimex] = useState("");;;
+  // const [createdTimex, setCreatedTimex] = useState("");;;;
   const [adminIdx, setAdminIdx] = useState("");
   const [duty, setDutyRelieverx] = useState("");
   const [titlex, setTitilex] = useState("");
