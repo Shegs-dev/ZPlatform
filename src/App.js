@@ -1,6 +1,6 @@
 /**
 =========================================================
-* Material Dashboard 2 React - v2.0.0
+* Material Dashboard 2 React - v2.0.0 - h
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-react
