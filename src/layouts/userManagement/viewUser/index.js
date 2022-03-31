@@ -14,6 +14,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import AllCountries from "countries";
 import BankNameAndCode from "layouts/userProfile/bankcode";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function ViewUser() {
   const queryString = window.location.search;
@@ -39,8 +41,9 @@ function ViewUser() {
   const [maritalStatusx, setMaritalStatus] = useState("");
 
   const [startDate, setStartDate] = useState(new Date());
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const [baBankx, setBaBank] = useState("");
   const [baCountryx, setBaCountry] = useState("");
@@ -99,7 +102,11 @@ function ViewUser() {
     console.log(raw);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/office/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -119,34 +126,59 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultx) => {
         if (isMounted) {
           setBranch(resultx);
           console.log(resultx);
 
-          fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`)
-            .then((res) => res.json())
+          fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`, { headers })
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
             .then((resultr) => {
               if (isMounted) {
                 setCompanyRole(resultr);
 
-                fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`)
-                  .then((res) => res.json())
+                fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`, { headers })
+                  .then(async (res) => {
+                    const aToken = res.headers.get("token-1");
+                    localStorage.setItem("rexxdex", aToken);
+                    return res.json();
+                  })
                   .then((resultd) => {
                     if (isMounted) {
                       setDepartment(resultd);
 
-                      fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`)
-                        .then((res) => res.json())
+                      fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`, {
+                        headers,
+                      })
+                        .then(async (res) => {
+                          const aToken = res.headers.get("token-1");
+                          localStorage.setItem("rexxdex", aToken);
+                          return res.json();
+                        })
                         .then((resultp) => {
                           if (isMounted) {
                             setPosition(resultp);
 
-                            fetch(`${process.env.REACT_APP_ZAVE_URL}/office/getForEmployee/${id}`)
-                              .then((res) => res.json())
+                            fetch(`${process.env.REACT_APP_ZAVE_URL}/office/getForEmployee/${id}`, {
+                              headers,
+                            })
+                              .then(async (res) => {
+                                const aToken = res.headers.get("token-1");
+                                localStorage.setItem("rexxdex", aToken);
+                                return res.json();
+                              })
                               .then((result) => {
                                 if (isMounted) {
                                   console.log(result);
@@ -205,9 +237,14 @@ function ViewUser() {
                                           setCompanyx(fCompanyRole.id);
 
                                           fetch(
-                                            `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${fCompanyRole.id}`
+                                            `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${fCompanyRole.id}`,
+                                            { headers }
                                           )
-                                            .then((res) => res.json())
+                                            .then(async (res) => {
+                                              const aToken = res.headers.get("token-1");
+                                              localStorage.setItem("rexxdex", aToken);
+                                              return res.json();
+                                            })
                                             .then((resultst) => {
                                               if (isMounted) {
                                                 setStep(resultst);
@@ -217,9 +254,14 @@ function ViewUser() {
                                       });
 
                                       fetch(
-                                        `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${result[0].roleID}`
+                                        `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${result[0].roleID}`,
+                                        { headers }
                                       )
-                                        .then((res) => res.json())
+                                        .then(async (res) => {
+                                          const aToken = res.headers.get("token-1");
+                                          localStorage.setItem("rexxdex", aToken);
+                                          return res.json();
+                                        })
                                         .then((resultst) => {
                                           if (isMounted) {
                                             setStep(resultst);
@@ -258,11 +300,16 @@ function ViewUser() {
   const personalIds = data11.personalID;
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/getByPersonalID/${orgIDs}/${idVal}`, {
-      method: "GET",
+      headers,
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
         if (isMounted) {
           setStatusx(resultp.statusID);
@@ -275,11 +322,14 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
         if (isMounted) {
           setStatusmap(resultp);
@@ -313,7 +363,11 @@ function ViewUser() {
     console.log(requestOptions);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -333,9 +387,14 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${idVal}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${idVal}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
         if (isMounted) {
           setFname(resultp[0].fname);
@@ -383,7 +442,11 @@ function ViewUser() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -411,9 +474,14 @@ function ViewUser() {
   console.log(handleMEAddUpdate);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultma) => {
         console.log(resultma);
         console.log(resultma.length);
@@ -431,9 +499,14 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${id}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${id}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultba) => {
         console.log(resultba);
         console.log(resultba.length);
@@ -470,8 +543,15 @@ function ViewUser() {
 
   const handleRoleSteps = (e) => {
     setCompanyx(e.target.value);
-    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${e.target.value}`)
-      .then((res) => res.json())
+    const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${e.target.value}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultst) => {
         console.log(resultst);
         setStep(resultst);

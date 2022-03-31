@@ -3,6 +3,7 @@ import Card from "@mui/material/Card";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
+import { Container } from "react-bootstrap";
 
 import format from "date-fns/format";
 import getDay from "date-fns/getDay";
@@ -20,7 +21,9 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DataTable from "examples/Tables/DataTable";
-import AHeaders from "header";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+
 import FreeDaysData from "./free-days-list/freeDaysList";
 
 const locales = {
@@ -50,18 +53,20 @@ function FreeDay() {
   const [newEvent, setNewEvent] = useState({ title: "", time: "" });
   const [allEvents, setAllEvents] = useState(eventList);
 
-  const { allHeaders: myHeaders } = AHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   console.log(titleNames);
   console.log(new Date(freeDates));
 
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -151,7 +156,7 @@ function FreeDay() {
   console.log(allEvents);
 
   const handleOnTitleKeys = () => {
-    const letters = /^[a-zA-Z0-9 ]+$/;
+    const letters = /^[a-zA-Z0-9 -]+$/;
     if (!newEvent.title.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
@@ -207,7 +212,7 @@ function FreeDay() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add New Event
+              Add Free Day
             </MDTypography>
           </MDBox>
           <MDBox
@@ -229,7 +234,7 @@ function FreeDay() {
             </MDTypography>
           </MDBox>
           <div align="center">
-            <MDBox mt={2}>
+            <MDBox mt={2} mb={2}>
               <MDInput
                 type="text"
                 value={newEvent.title}
@@ -240,14 +245,30 @@ function FreeDay() {
                 style={{ width: "30%" }}
               />
             </MDBox>
-            <MDBox mt={2}>
-              <DatePicker
-                placeholderText="Start Date"
-                style={{ marginRight: "10px" }}
-                selected={newEvent.time}
-                onChange={(time) => setNewEvent({ ...newEvent, time })}
-              />{" "}
-            </MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-12">
+                  <div align="center">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                      mt={2}
+                    >
+                      Date
+                    </MDTypography>
+                  </div>
+                  <DatePicker
+                    placeholderText="MM/DD/YY"
+                    style={{ marginRight: "10px" }}
+                    selected={newEvent.time}
+                    onChange={(time) => setNewEvent({ ...newEvent, time })}
+                  />{" "}
+                </div>
+              </div>
+            </Container>
             <MDBox mt={2} mb={2}>
               <MDButton
                 variant="gradient"

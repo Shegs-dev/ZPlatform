@@ -117,7 +117,6 @@ function ComForgotPass() {
       document.getElementById("password").innerHTML = "Password is required<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedNPass);
   };
 
   const handleOnRTNPasswordKeys = () => {
@@ -138,7 +137,6 @@ function ComForgotPass() {
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedRTNPass);
   };
 
   return (

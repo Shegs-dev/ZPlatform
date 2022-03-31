@@ -16,14 +16,14 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DataTable from "examples/Tables/DataTable";
-import AHeaders from "header";
+import PHeaders from "postHeader";
 // import DateRangePicker from "react-dates";
 import TimeOffRequests from "./time-off-requests/timeOffRequests";
 
 function TimeOff() {
   const [purposex, setPurpose] = useState("");
   // const [deleteFlagx, setDeleteFlag] = useState("");
-  // const [createdTimex, setCreatedTimex] = useState("");
+  // const [createdTimex, setCreatedTimex] = useState("");;;;
   const [adminIdx, setAdminIdx] = useState("");
   const [duty, setDutyRelieverx] = useState("");
   const [titlex, setTitilex] = useState("");
@@ -38,11 +38,8 @@ function TimeOff() {
 
   const MySwal = withReactContent(Swal);
 
-  const { allHeaders: myHeaderss } = AHeaders();
-  console.log(myHeaderss);
+  const { allPHeaders: myHeaders } = PHeaders();
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);

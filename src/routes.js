@@ -65,8 +65,10 @@ import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import InputPassword from "layouts/inputPassword";
 import FreeDay from "layouts/free-days";
+
 import TimeOffRequests from "layouts/timeoffRequests";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
+import ForbiddenPage from "layouts/authentication/forbiddenPage";
 
 const routes = [
   {
@@ -82,7 +84,7 @@ const routes = [
     name: "User Management",
     key: "userManagement",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/userManagement",
+    route: "/user-Management",
     component: <UserManagement />,
   },
   {
@@ -160,7 +162,7 @@ const routes = [
     name: "System Roles",
     key: "systemRoles",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/systemRoles",
+    route: "/system-Roles",
     component: <SysRoles />,
   },
   {
@@ -176,7 +178,7 @@ const routes = [
     name: "Change Password",
     key: "ChangePassword",
     icon: <Icon fontSize="small">edit</Icon>,
-    route: "/authentication/changepassword",
+    route: "/authentication/change-password",
     component: <ChangePassword />,
   },
   {
@@ -204,7 +206,7 @@ const routes = [
     name: "Company Regitration",
     key: "companyRegistration",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/companyRegistration",
+    route: "/authentication/company-Registration",
     component: <CompanyReg />,
   },
   {
@@ -270,8 +272,15 @@ const routes = [
     name: "User History",
     key: "userHistory",
     icon: <Icon fontSize="small">history</Icon>,
-    route: "/userHistory",
+    route: "/user-History",
     component: <UserAudit />,
+  },
+  {
+    name: "Forbidden",
+    key: "forbiddenPage",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/forbiddenPage",
+    component: <ForbiddenPage />,
   },
 ];
 

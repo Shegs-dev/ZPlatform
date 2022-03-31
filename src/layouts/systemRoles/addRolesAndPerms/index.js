@@ -6,6 +6,8 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import "bootstrap/dist/css/bootstrap.min.css";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function RolesAndPerms() {
   const queryString = window.location.search;
@@ -19,11 +21,19 @@ function RolesAndPerms() {
   const [rolPermissions, setRolPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+  console.log(myHeaders);
+  const headers = miHeaders;
 
-  fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`)
-    .then((res) => res.json())
+  fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`, { headers })
+    .then(async (res) => {
+      const aToken = res.headers.get("token-1");
+      localStorage.setItem("rexxdex", aToken);
+      // console.log(aToken);
+      // console.log(res.headers.get("token-1"));
+      return res.json();
+    })
     .then((resultg) => {
       setRolName(resultg[0].name);
     });
@@ -32,8 +42,14 @@ function RolesAndPerms() {
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        // console.log(aToken);
+        // console.log(res.headers.get("token-1"));
+        return res.json();
+      })
       .then((resultapi) => {
         if (isMounted) {
           const jApi = JSON.stringify(resultapi);
@@ -68,14 +84,26 @@ function RolesAndPerms() {
 
   const handleOnChange = (e) => {
     const apiValue = e.target.value;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/permissions/getForService/${apiValue}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/permissions/getForService/${apiValue}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resulta) => {
         setPermissions(resulta);
         console.log(resulta);
 
-        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`)
-          .then((res) => res.json())
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`, {
+          headers,
+        })
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resultrpg) => {
             setRolPermissions(resultrpg);
             console.log(resultrpg);
@@ -145,7 +173,11 @@ function RolesAndPerms() {
     };
 
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/save`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultrp) => {
         console.log(resultrp);
       });

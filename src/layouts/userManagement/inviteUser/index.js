@@ -26,6 +26,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function InviteUser() {
   const [phonex, setPhone] = useState("");
@@ -67,8 +69,8 @@ function InviteUser() {
   console.log(idx);
   console.log(passwordx);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const [passwordShown, setPasswordShown] = useState(false);
 
@@ -112,14 +114,19 @@ function InviteUser() {
   //   console.log(rolep);
 
   const getPersonalInformation = (e) => {
+    const headers = miHeaders;
     setEmail(e.target.value);
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     const emailpersonal = e.target.value;
     if (emailpersonal.length === 0 || !emailpersonal.match(letters)) {
       // Email Invalid
     } else {
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/${emailpersonal}`)
-        .then((res) => res.json())
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/${emailpersonal}`, { headers })
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
         .then((result) => {
           console.log(result);
           console.log(result.id);
@@ -379,7 +386,11 @@ function InviteUser() {
     }
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/${endpoint}`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (result.status === "SUCCESS") {
           MySwal.fire({
@@ -407,7 +418,11 @@ function InviteUser() {
               `${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`,
               requestOptions1
             )
-              .then((res) => res.json())
+              .then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              })
               .then((resultx) => {
                 MySwal.fire({
                   title: resultx.status,
@@ -428,7 +443,11 @@ function InviteUser() {
                     redirect: "follow",
                   };
                   fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
-                    .then((res) => res.json())
+                    .then(async (res) => {
+                      const aToken = res.headers.get("token-1");
+                      localStorage.setItem("rexxdex", aToken);
+                      return res.json();
+                    })
                     .then((resulty) => {
                       MySwal.fire({
                         title: resulty.status,

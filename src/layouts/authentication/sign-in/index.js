@@ -26,6 +26,8 @@ import MuiLink from "@mui/material/Link";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Container } from "react-bootstrap";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -50,6 +52,7 @@ function Basic() {
 
   const [usernamex, setUsername] = useState("");
   const [passwordx, setPassword] = useState("");
+  const [opened, setOpened] = useState(false);
 
   const MySwal = withReactContent(Swal);
 
@@ -65,9 +68,9 @@ function Basic() {
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  // myHeaders.append("Accept", "application/json");
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const raw = JSON.stringify({ username: usernamex, password: passwordx });
     const requestOptions = {
@@ -76,27 +79,21 @@ function Basic() {
       body: raw,
       redirect: "follow",
     };
-    const ta = document.querySelector("#password");
-    console.log(ta.textContent);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
       .then(async (res) => {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const h of res.headers) {
-          console.log(h);
-        }
-        console.log("Token ", res.headers.get("token-1"));
-        localStorage.setItem("rexdex", res.headers.get("token-1"));
+        console.log(res.headers);
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex1", aToken);
+        const exemple = "example for token";
+        localStorage.setItem("exemp", exemple);
+        console.log(aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.status === "SUCCESS") {
           localStorage.setItem("user1", JSON.stringify(result.data));
-          let data11 = localStorage.getItem("user1");
-          data11 = JSON.parse(data11);
-          console.log(data11);
-          const orgIDs = data11.orgID;
-          console.log(orgIDs);
           MySwal.fire({
             // eslint-disable-next-line dot-notation
             title: result.status,
@@ -114,6 +111,7 @@ function Basic() {
         }
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -123,147 +121,152 @@ function Basic() {
   };
 
   return (
-    <BasicLayout image={bgImage}>
-      <Card>
-        <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="info"
-          mx={2}
-          mt={-3}
-          p={2}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Sign In
-          </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
+    <div>
+      <BasicLayout image={bgImage}>
+        <Card>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Sign In
+            </MDTypography>
+            <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
+              <Grid item xs={2}>
+                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+                  <FacebookIcon color="inherit" />
+                </MDTypography>
+              </Grid>
+              <Grid item xs={2}>
+                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+                  <GitHubIcon color="inherit" />
+                </MDTypography>
+              </Grid>
+              <Grid item xs={2}>
+                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+                  <GoogleIcon color="inherit" />
+                </MDTypography>
+              </Grid>
             </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid>
-        </MDBox>
+          </MDBox>
 
-        <MDBox
-          variant="gradient"
-          bgColor="error"
-          borderRadius="lg"
-          coloredShadow="success"
-          mx={3}
-          mt={1}
-          p={1}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="gradient" fontSize="60%" color="white" id="username">
-            {" "}
-          </MDTypography>
-          <MDTypography variant="gradient" fontSize="60%" color="white" id="password">
-            {" "}
-          </MDTypography>
-        </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-12">
-                    <MDInput
-                      type="email"
-                      value={usernamex || ""}
-                      onChange={(e) => setUsername(e.target.value)}
-                      label="Email"
-                      fullWidth
-                    />
+          <MDBox
+            variant="gradient"
+            bgColor="error"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={3}
+            mt={1}
+            p={1}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="username">
+              {" "}
+            </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="password">
+              {" "}
+            </MDTypography>
+          </MDBox>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox component="form" role="form">
+              <MDBox mb={2}>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <MDInput
+                        type="email"
+                        value={usernamex || ""}
+                        onChange={(e) => setUsername(e.target.value)}
+                        label="Email"
+                        fullWidth
+                      />
+                    </div>
                   </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-12">
-                    <MDInput
-                      type={passwordShown ? "text" : "password"}
-                      value={passwordx || ""}
-                      onChange={(e) => setPassword(e.target.value)}
-                      label="Password"
-                      fullWidth
-                    />
+                </Container>
+              </MDBox>
+              <MDBox mb={2}>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <MDInput
+                        type={passwordShown ? "text" : "password"}
+                        value={passwordx || ""}
+                        onChange={(e) => setPassword(e.target.value)}
+                        label="Password"
+                        fullWidth
+                      />
+                    </div>
+                    <MDTypography
+                      variant="button"
+                      fontSize="60%"
+                      align="right"
+                      onClick={togglePassword}
+                      mx={0}
+                      color="info"
+                    >
+                      show password
+                    </MDTypography>
                   </div>
+                </Container>
+              </MDBox>
+              <MDBox display="flex" alignItems="center" ml={-1}>
+                <Switch checked={rememberMe} onChange={handleSetRememberMe} />
+                <MDTypography
+                  variant="button"
+                  fontWeight="regular"
+                  color="text"
+                  onClick={handleSetRememberMe}
+                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                >
+                  &nbsp;&nbsp;Remember me
+                </MDTypography>
+              </MDBox>
+              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
+                sign In
+              </MDButton>
+              <MDBox mt={1} textAlign="center">
+                <MDTypography variant="button" color="text">
+                  Don&apos;t have an account?{" "}
                   <MDTypography
+                    component={Link}
+                    to="/authentication/sign-up"
                     variant="button"
-                    fontSize="60%"
-                    align="right"
-                    onClick={togglePassword}
-                    mx={0}
                     color="info"
+                    fontWeight="medium"
+                    textGradient
                   >
-                    show password
+                    Sign Up
                   </MDTypography>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember me
-              </MDTypography>
-            </MDBox>
-            <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
-              sign In
-            </MDButton>
-            <MDBox mt={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
+                </MDTypography>
+              </MDBox>
+              <MDBox mb={1} mt={-1} textAlign="center">
                 <MDTypography
                   component={Link}
-                  to="/authentication/sign-up"
+                  to="/authentication/forgot-password"
                   variant="button"
                   color="info"
                   fontWeight="medium"
                   textGradient
                 >
-                  Sign Up
+                  Forgot Password
                 </MDTypography>
-              </MDTypography>
-            </MDBox>
-            <MDBox mb={1} mt={-1} textAlign="center">
-              <MDTypography
-                component={Link}
-                to="/authentication/forgot-password"
-                variant="button"
-                color="info"
-                fontWeight="medium"
-                textGradient
-              >
-                Forgot Password
-              </MDTypography>
+              </MDBox>
             </MDBox>
           </MDBox>
-        </MDBox>
-      </Card>
-    </BasicLayout>
+        </Card>
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+          <CircularProgress color="info" />
+        </Backdrop>
+      </BasicLayout>
+    </div>
   );
 }
 

@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Footer from "examples/Footer";
 import MDTypography from "components/MDTypography";
+import PHeaders from "postHeader";
 
 function ChangePassword() {
   const MySwal = withReactContent(Swal);
@@ -29,14 +30,12 @@ function ChangePassword() {
     setPasswordShown(!passwordShown);
   };
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
 
   const emailCh = data11.email;
-  console.log(emailCh);
+  // console.log(emailCh);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -48,7 +47,11 @@ function ChangePassword() {
       redirect: "follow",
     };
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -84,7 +87,6 @@ function ChangePassword() {
       document.getElementById("password").innerHTML = "Old Password is required<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedNPass);
   };
 
   const handleOnNPasswordKeys = () => {
@@ -105,7 +107,6 @@ function ChangePassword() {
       document.getElementById("npassword").innerHTML = "New Password is required<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedNPass);
   };
 
   const handleOnRTNPasswordKeys = () => {
@@ -126,7 +127,6 @@ function ChangePassword() {
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
-    console.log(checkedRTNPass);
   };
 
   return (

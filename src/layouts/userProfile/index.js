@@ -19,6 +19,8 @@ import withReactContent from "sweetalert2-react-content";
 import NCountry from "nigeria";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
@@ -83,8 +85,8 @@ function UserProfile() {
   const [meDeleteFlagx, setMeDeleteFlag] = useState("");
   const [meCreatedTimex, setMeCreatedTime] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
   console.log(data11);
@@ -94,9 +96,14 @@ function UserProfile() {
   // console.log(orgIDs);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
         console.log(resultp);
         if (isMounted) {
@@ -136,9 +143,14 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultnk) => {
         console.log(resultnk);
         console.log(resultnk.length);
@@ -174,9 +186,16 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${personalIds}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultba) => {
         console.log(resultba);
         console.log(resultba.length);
@@ -203,9 +222,14 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultma) => {
         console.log(resultma);
         console.log(resultma.length);
@@ -228,9 +252,14 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultme) => {
         console.log(resultme);
         console.log(resultme.length);
@@ -294,7 +323,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -338,7 +371,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -376,7 +413,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -411,7 +452,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -446,7 +491,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -494,7 +543,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -535,7 +588,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -574,7 +631,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -613,7 +674,11 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,

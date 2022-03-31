@@ -63,7 +63,6 @@ function CompanyReg() {
   const [checkedComName, setCheckedComName] = useState("");
   const [checkedComCity, setCheckedComCity] = useState("");
   const [comEnabled, setComEnabled] = useState("");
-  console.log(comEnabled);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -92,10 +91,6 @@ function CompanyReg() {
       .then((res) => res.json())
       .then((result) => {
         // localStorage.setItem("company", JSON.stringify(result.data));
-        console.log(result.data.id);
-        console.log(user.id);
-        const data12 = localStorage.getItem("email1");
-        console.log(data12);
         const raw1 = JSON.stringify({
           orgID: result.data.id,
           personalID: user.id,
