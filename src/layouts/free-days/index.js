@@ -122,6 +122,7 @@ function FreeDay() {
       body: raw,
       redirect: "follow",
     };
+    console.log(raw);
     if (eventTime < CurTime) {
       MySwal.fire({
         title: "Invalid Date",
@@ -259,13 +260,13 @@ function FreeDay() {
                     >
                       Date
                     </MDTypography>
+                    <DatePicker
+                      placeholderText="MM/DD/YY"
+                      style={{ marginRight: "10px" }}
+                      selected={newEvent.time}
+                      onChange={(time) => setNewEvent({ ...newEvent, time })}
+                    />
                   </div>
-                  <DatePicker
-                    placeholderText="MM/DD/YY"
-                    style={{ marginRight: "10px" }}
-                    selected={newEvent.time}
-                    onChange={(time) => setNewEvent({ ...newEvent, time })}
-                  />{" "}
                 </div>
               </div>
             </Container>

@@ -89,7 +89,6 @@ function UserProfile() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
   const personalIds = data11.personalID;
   // console.log(personalIds);
   const orgIDs = data11.orgID;
@@ -105,7 +104,6 @@ function UserProfile() {
         return res.json();
       })
       .then((resultp) => {
-        console.log(resultp);
         if (isMounted) {
           setFname(resultp[0].fname);
           setLname(resultp[0].lname);
@@ -128,7 +126,6 @@ function UserProfile() {
           setDeleteFlag(resultp[0].deleteFlag);
           setSysStatus(resultp[0].sysStatus);
           setCreatedTime(resultp[0].createdTime);
-          console.log(resultp[0].residentialState);
 
           setStartDate(
             new Date(
@@ -152,8 +149,6 @@ function UserProfile() {
         return res.json();
       })
       .then((resultnk) => {
-        console.log(resultnk);
-        console.log(resultnk.length);
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultnk.length != 0) {
@@ -197,14 +192,11 @@ function UserProfile() {
         return res.json();
       })
       .then((resultba) => {
-        console.log(resultba);
-        console.log(resultba.length);
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultba.length != 0) {
             setBaID(resultba[0].id);
             setBaBank(resultba[0].bank);
-            console.log(resultba[0].bank);
             setBaCountry(resultba[0].country);
             setBaAcctNo(resultba[0].acctNo);
             setBaAcctName(resultba[0].acctName);
@@ -231,8 +223,6 @@ function UserProfile() {
         return res.json();
       })
       .then((resultma) => {
-        console.log(resultma);
-        console.log(resultma.length);
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultma.length != 0) {
@@ -261,8 +251,6 @@ function UserProfile() {
         return res.json();
       })
       .then((resultme) => {
-        console.log(resultme);
-        console.log(resultme.length);
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultme.length != 0) {
@@ -314,7 +302,6 @@ function UserProfile() {
       deleteFlag: deleteFlagx,
       createdTime: createdTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -534,7 +521,6 @@ function UserProfile() {
       deleteFlag: nkDeleteFlagx,
       createdTime: nkCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -579,7 +565,6 @@ function UserProfile() {
       deleteFlag: baDeleteFlagx,
       createdTime: baCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -622,7 +607,6 @@ function UserProfile() {
       deleteFlag: maDeleteFlagx,
       createdTime: maCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -665,7 +649,6 @@ function UserProfile() {
       deleteFlag: meDeleteFlagx,
       createdTime: meCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -735,21 +718,17 @@ function UserProfile() {
 
   const handleOnChangeBank = (e) => {
     const filteredItems = allbankNameCode.filter((item) => item.bankName === e.target.value);
-    console.log(e.target.value);
     if (e.target.value === "1") {
       setBaBank("");
       setBaBankCode("");
     } else {
       setBaBank(e.target.value);
       setBaBankCode(filteredItems[0].cbnCode);
-      console.log(baBankx);
-      console.log(baBankCodex);
     }
   };
 
   const handleOnChangeBaCountry = (e) => {
     setBaCountry(e.target.value);
-    console.log(baCountryx);
   };
 
   const handleOnChangeNKCountry = (e) => {
@@ -774,7 +753,6 @@ function UserProfile() {
 
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
-    console.log(nationalityx);
   };
 
   const handleOnFirstKeys = () => {

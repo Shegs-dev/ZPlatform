@@ -17,8 +17,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DataTable from "examples/Tables/DataTable";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 // import DateRangePicker from "react-dates";
-import TimeOffRequests from "./time-off-requests/timeOffRequests";
+import TimeOffRequestData from "layouts/timeoffRequests/timeOffRequestTable/timeOffRequests";
 
 function TimeOff() {
   const [purposex, setPurpose] = useState("");
@@ -34,21 +35,28 @@ function TimeOff() {
 
   const [user, setUser] = useState([]);
 
-  const { columns: pColumns, rows: pRows } = TimeOffRequests();
+  const { columns: pColumns, rows: pRows } = TimeOffRequestData();
 
   const MySwal = withReactContent(Swal);
 
   const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    const headers = miHeaders;
+
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           setUser(result);

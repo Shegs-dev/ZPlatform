@@ -9,6 +9,7 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Form, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import DataTable from "examples/Tables/DataTable";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -34,6 +35,8 @@ function UserAudit() {
 
   const [user, setUser] = useState([]);
   const [userIDx, setUserIDx] = useState("");
+
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -82,6 +85,15 @@ function UserAudit() {
         return res.json();
       })
       .then((resultapi) => {
+        if (resultapi.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Unauthorized Access") {
+          navigate("/authentication/sign-in");
+        }
         if (isMounted) {
           const jApi = JSON.stringify(resultapi);
           const apppi = JSON.parse(jApi);
@@ -118,6 +130,15 @@ function UserAudit() {
         return res.json();
       })
       .then((resulta) => {
+        if (resulta.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Unauthorized Access") {
+          navigate("/authentication/sign-in");
+        }
         setPermissions(resulta);
         console.log(resulta);
       })
@@ -143,8 +164,6 @@ function UserAudit() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
-    const personalIds = data11.id;
-    console.log(personalIds);
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     const auditConSDate = new Date(auditSDate).getTime();
@@ -172,6 +191,15 @@ function UserAudit() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/sign-in");
+        }
         setItems(result);
         console.log(result);
       })
@@ -292,7 +320,7 @@ function UserAudit() {
                       onChange={(e) => setUserIDx(e.target.value)}
                       aria-label="Default select example"
                     >
-                      <option value="">Select Duty Reliever</option>
+                      <option value="">--Select User--</option>
                       {user.map((api) => (
                         <option key={api.personal.id} value={api.personal.id}>
                           {api.personal.fname} {api.personal.lname}

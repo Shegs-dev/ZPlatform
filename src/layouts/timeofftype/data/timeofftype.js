@@ -9,13 +9,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
@@ -41,7 +43,11 @@ export default function data() {
     };
 
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -145,23 +151,30 @@ export default function data() {
       }
     });
   };
-
   // Method to change type
   const changeType = (type) => {
-    if (type === 1) return "Monthly";
+    if (type === 1) {
+      return "Monthly";
+    }
     return "Annually";
   };
 
   // Method to fetch all timeofftype
   useEffect(() => {
+    const headers = miHeaders;
+
     const data11 = JSON.parse(localStorage.getItem("user1"));
     console.log(data11);
 
     const orgIDs = data11.orgID;
     console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/getAll/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/getAll/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (isMounted) {
           setItems(result);
@@ -191,7 +204,7 @@ export default function data() {
           <div
             style={{
               width: "100%",
-              backgroundColor: "#dadada",
+              backgroundColor: "#f5f5f5",
               borderRadius: "2px",
             }}
           >

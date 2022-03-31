@@ -61,13 +61,9 @@ function InviteUser() {
   const [passEnabled, setPassEnabled] = useState("");
 
   // const [personalCompanyx, setPersonalCompany] = useState([]);
-  console.log(emaily);
+
   //   const [rolex, setRole] = useState("");
   //   console.log(rolex);
-  console.log(fnamex);
-  console.log(lnamex);
-  console.log(idx);
-  console.log(passwordx);
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -128,8 +124,6 @@ function InviteUser() {
           return res.json();
         })
         .then((result) => {
-          console.log(result);
-          console.log(result.id);
           if (result.id !== null) {
             setPassEnabled(false);
             setOname(result.oname);
@@ -172,7 +166,6 @@ function InviteUser() {
 
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
-    console.log(nationalityx);
   };
 
   const handleOnChangeRCCountry = (e) => {
@@ -327,7 +320,6 @@ function InviteUser() {
     let yearx = "";
     if (startDate != null) {
       const sDate = startDate.getTime();
-      console.log(`startDate: ${startDate}`);
       console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
