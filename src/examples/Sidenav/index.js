@@ -51,9 +51,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const navigate = useNavigate();
 
   const handleLogOut = () => {
-    const logout = localStorage.clear();
+    localStorage.clear();
     navigate("/authentication/sign-in", { replace: true });
-    console.log(logout);
   };
 
   const [controller, dispatch] = useMaterialUIController();

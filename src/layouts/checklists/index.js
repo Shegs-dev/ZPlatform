@@ -92,7 +92,9 @@ function Checkbox() {
             return res.json();
           })
           .then((resultrs) => {
-            setRoleStep(resultrs);
+            if (isMounted) {
+              setRoleStep(resultrs);
+            }
 
             // eslint-disable-next-line array-callback-return
             resulta.map((permission) => {
@@ -117,9 +119,9 @@ function Checkbox() {
 
               permissionsList.push(pObj);
             });
-            console.log(roleStep);
             setVPermissions(permissionsList);
             console.log(permissions);
+            console.log(roleStep);
           });
       });
     return () => {

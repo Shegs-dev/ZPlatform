@@ -79,8 +79,6 @@ function Basic() {
       body: raw,
       redirect: "follow",
     };
-    const ta = document.querySelector("#password");
-    console.log(ta.textContent);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
       .then(async (res) => {
@@ -90,20 +88,12 @@ function Basic() {
         const exemple = "example for token";
         localStorage.setItem("exemp", exemple);
         console.log(aToken);
-        console.log(localStorage.getItem("rexxdex1"));
-        console.log(localStorage.getItem("exemp"));
-        console.log(res.headers.get("token-1"));
         return res.json();
       })
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
           localStorage.setItem("user1", JSON.stringify(result.data));
-          let data11 = localStorage.getItem("user1");
-          data11 = JSON.parse(data11);
-          console.log(data11);
-          const orgIDs = data11.orgID;
-          console.log(orgIDs);
           MySwal.fire({
             // eslint-disable-next-line dot-notation
             title: result.status,
