@@ -67,6 +67,7 @@ import InputPassword from "layouts/inputPassword";
 import FreeDay from "layouts/free-days";
 
 import TimeOffRequests from "layouts/timeoffRequests";
+import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 
 const routes = [
@@ -253,10 +254,17 @@ const routes = [
     component: <ForgotPass />,
   },
   {
+    name: "Add Details To Time Off Type",
+    key: "adddetailtotimeofftype",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeofftype/addDetailsToTimeOffType",
+    component: <AddTimeOffType />,
+  },
+  {
     name: "Complete Reset Password",
     key: "complete-ResetPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/complete-ForgotPassword",
+    route: "/timeoffRequests/addDetailsToTimeOffType",
     component: <ComForgotPass />,
   },
   {

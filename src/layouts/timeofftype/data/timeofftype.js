@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
@@ -18,6 +19,8 @@ export default function data() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+
+  const navigate = useNavigate();
 
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
@@ -186,6 +189,10 @@ export default function data() {
     };
   }, []);
 
+  const handleAddToTimeOff = (value) => {
+    navigate(`/timeofftype/addDetailsToTimeOffType?id=${value}`);
+  };
+
   // Return table
   return {
     columns: [
@@ -216,6 +223,7 @@ export default function data() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleAddToTimeOff(value)}>Add Details</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
