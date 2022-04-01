@@ -169,14 +169,14 @@ function TimeOffType() {
                 <div className="col-sm-6">
                   <MDBox mb={2}>
                     <MDTypography variant="button" fontWeight="regular" color="text">
-                      Title
+                      Type
                     </MDTypography>
                     <Form.Select
                       onChange={(e) => setType(e.target.value)}
                       value={typex || ""}
                       aria-label="Default select example"
                     >
-                      <option>---Select Title---</option>
+                      <option>---Select Type---</option>
                       <option value="1">Monthly</option>
                       <option value="2">Annually</option>
                     </Form.Select>
