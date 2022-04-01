@@ -97,10 +97,6 @@ export default function ComRole() {
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
     MySwal.fire({
       title: "Update Company Roles",
       html: `<table><tr><td>

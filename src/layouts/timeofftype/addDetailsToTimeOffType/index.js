@@ -19,27 +19,21 @@ function AddTimeOffType() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = AddDetailsData();
 
-  // const [malex, setMalex] = useState("");
-  // const [femalex, setFemalex] = useState("");
-
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
 
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
-  const [enabled, setEnabled] = useState("");
-  console.log(setEnabled);
 
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  const orgIDs = data11.orgID;
-
   useEffect(() => {
     const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`, { headers })
       .then(async (res) => {
@@ -78,7 +72,6 @@ function AddTimeOffType() {
               }
               if (isMounted) {
                 setBranch(resultx);
-                console.log(resultx);
               }
             });
         }
@@ -104,7 +97,6 @@ function AddTimeOffType() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/add$`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -189,13 +181,7 @@ function AddTimeOffType() {
             <br />
           </MDBox>
           <MDBox mt={4} mb={1}>
-            <MDButton
-              variant="gradient"
-              onClick={handleClick}
-              disabled={!enabled}
-              color="info"
-              width="50%"
-            >
+            <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
               Save
             </MDButton>
           </MDBox>

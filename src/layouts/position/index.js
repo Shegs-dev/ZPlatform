@@ -25,7 +25,6 @@ function Positions() {
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
 
   const navigate = useNavigate();
 
@@ -34,10 +33,8 @@ function Positions() {
   const handleClick = (e) => {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({ orgID: orgIDs, name: namex, descrip: descripx });
     const requestOptions = {
       method: "POST",

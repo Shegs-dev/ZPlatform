@@ -25,10 +25,8 @@ export default function data() {
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -190,10 +188,8 @@ export default function data() {
     const headers = miHeaders;
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/getAll/${orgIDs}`, { headers })
       .then(async (res) => {
@@ -213,7 +209,6 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

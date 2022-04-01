@@ -8,11 +8,6 @@ export default function AddDetailsData() {
 
   const navigate = useNavigate();
 
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  const values = JSON.parse([id]);
-
   const handleShow = (value) => {
     console.log(value);
   };
@@ -28,8 +23,10 @@ export default function AddDetailsData() {
   };
 
   useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const values = JSON.parse([id]);
 
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/getByIds/${values}`)

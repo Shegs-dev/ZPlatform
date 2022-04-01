@@ -25,8 +25,8 @@ export default function data() {
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
 
+    const orgIDs = data11.orgID;
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -132,7 +132,6 @@ export default function data() {
           method: "DELETE",
           headers: miHeaders,
         };
-        console.log(requestOptions);
         fetch(`${process.env.REACT_APP_ZAVE_URL}/status/delete/${id}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");

@@ -80,7 +80,6 @@ function FreeDay() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(result);
           // eslint-disable-next-line array-callback-return
           result.map((item) => {
             setTitleName(item.name);

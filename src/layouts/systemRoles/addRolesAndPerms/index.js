@@ -11,11 +11,6 @@ import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
 function RolesAndPerms() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  const idVal = JSON.parse([id]);
-
   const [rolName, setRolName] = useState("");
   const [services, setServices] = useState([]);
   const [permissions, setPermissions] = useState([]);
@@ -26,16 +21,18 @@ function RolesAndPerms() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  const headers = miHeaders;
 
   useEffect(() => {
+    const headers = miHeaders;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        // console.log(aToken);
-        // console.log(res.headers.get("token-1"));
         return res.json();
       })
       .then((resultg) => {
@@ -60,13 +57,12 @@ function RolesAndPerms() {
   const permissionsList = [];
 
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        // console.log(aToken);
-        // console.log(res.headers.get("token-1"));
         return res.json();
       })
       .then((resultapi) => {
@@ -80,13 +76,7 @@ function RolesAndPerms() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          const jApi = JSON.stringify(resultapi);
-          const apppi = JSON.parse(jApi);
-          let apiList = [];
-          apiList = apppi;
-          console.log(apiList);
           setServices(resultapi);
-          // apiList = resultapi;
         }
       });
     return () => {
@@ -94,22 +84,13 @@ function RolesAndPerms() {
     };
   }, []);
 
-  /* const checkPermission = (value) => {
-    console.log(`Value${value}`);
-    let checks = false;
-    rolPermissions.map((rolPermi) => {
-      console.log(`Val${rolPermi.permissionCall}`);
-      if (rolPermi.permissionCall === value) {
-        if (rolPermi.isCheck === 1) {
-          checks = true;
-          return checks;
-        }
-      }
-      return checks;
-    });
-  }; */
-
   const handleOnChange = (e) => {
+    const headers = miHeaders;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     const apiValue = e.target.value;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/permissions/getForService/${apiValue}`, {
       headers,
@@ -130,7 +111,6 @@ function RolesAndPerms() {
           navigate("/authentication/forbiddenPage");
         }
         setPermissions(resulta);
-        console.log(resulta);
 
         fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`, {
           headers,
@@ -152,8 +132,6 @@ function RolesAndPerms() {
             }
             setRolPermissions(resultrpg);
 
-            console.log(permissions);
-            console.log(rolPermissions);
             // eslint-disable-next-line array-callback-return
             resulta.map((permission) => {
               let check = false;
@@ -181,11 +159,19 @@ function RolesAndPerms() {
             });
 
             setVPermissions(permissionsList);
+            console.log(vPermissions);
+            console.log(permissions);
+            console.log(rolPermissions);
           });
       });
   };
 
   const handleOnClick = (e, apix) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     let isChecked = 0;
     const checks = e.target.checked;
     if (checks) {
@@ -225,7 +211,6 @@ function RolesAndPerms() {
         if (resultrp.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
-        console.log(resultrp);
       });
   };
 
@@ -306,20 +291,3 @@ function RolesAndPerms() {
 }
 
 export default RolesAndPerms;
-
-/* <Form.Select aria-label="Default select example">
-          <option>--Select Permission--</option>
-          {permissions.map((api) => (
-            <option key={api.id} value={api.displayName}>
-              {api.displayName}
-            </option>
-          ))}
-        </Form.Select> 
-        
-                <Form.Check
-                  type="checkbox"
-                  id={api.id}
-                  checked={api.isCheck}
-                  label={api.id}
-                  onClick={() => handleOnClick(api)}
-                /> */

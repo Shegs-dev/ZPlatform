@@ -24,8 +24,6 @@ import { useNavigate } from "react-router-dom";
 
 function TimeOff() {
   const [purposex, setPurpose] = useState("");
-  // const [deleteFlagx, setDeleteFlag] = useState("");
-  // const [createdTimex, setCreatedTimex] = useState("");;;;
   const [adminIdx, setAdminIdx] = useState("");
   const [duty, setDutyRelieverx] = useState("");
   const [titlex, setTitilex] = useState("");
@@ -49,10 +47,8 @@ function TimeOff() {
     const headers = miHeaders;
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
       .then(async (res) => {
@@ -84,17 +80,12 @@ function TimeOff() {
     const endCDate = new Date(endDate).getTime();
     const resumptionCDate = new Date(resumptionDate).getTime();
     const CurTime = new Date().getTime();
-    console.log(CurTime);
-    // setAllEvents([...allEvents, newEvent]);
 
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
     const personalIds = data11.personalID;
-    // const datestarting = newEvent.startingdate;
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
 
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -173,93 +164,7 @@ function TimeOff() {
           });
         });
     }
-
-    console.log(raw);
   };
-
-  //   const handleOnChangeGetallUsers = (e) => {
-  //     setDutyRelieverx(e.target.value);
-  //     setAdminIdx(e.target.value);
-  //   };
-
-  //   const handleOnDaysRequested = () => {
-  //     const letters = /^[0-9 ]+$/;
-  //     if (!newEvent.daysrequested.match(letters)) {
-  //       setCheckedName(false);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("requested").innerHTML = " - Input only numbers<br>";
-  //     }
-  //     if (newEvent.daysrequested.match(letters)) {
-  //       setCheckedName(true);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("requested").innerHTML = "";
-  //     }
-  //     if (newEvent.daysrequested.length === 0) {
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("requested").innerHTML = "This Field is required<br>";
-  //     }
-  //     setEnabled(checkedName === true);
-  //   };
-
-  //   const handleOnEnding = () => {
-  //     const letters = /^[a-zA-Z0-9 ]+$/;
-  //     if (!newEvent.endingdate.match(letters)) {
-  //       setCheckedName(false);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("ending").innerHTML =
-  //         " - Input only capital, small letters and numbers<br>";
-  //     }
-  //     if (newEvent.endingdate.match(letters)) {
-  //       setCheckedName(true);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("ending").innerHTML = "";
-  //     }
-  //     if (newEvent.endingdate.length === 0) {
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("ending").innerHTML = "This Field is required<br>";
-  //     }
-  //     setEnabled(checkedName === true);
-  //   };
-
-  //   const handleOnResuming = () => {
-  //     const letters = /^[a-zA-Z0-9 ]+$/;
-  //     if (!newEvent.resumptiondate.match(letters)) {
-  //       setCheckedName(false);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("resuming").innerHTML =
-  //         " - Input only capital, small letters and numbers<br>";
-  //     }
-  //     if (newEvent.resumptiondate.match(letters)) {
-  //       setCheckedName(true);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("resuming").innerHTML = "";
-  //     }
-  //     if (newEvent.resumptiondate.length === 0) {
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("resuming").innerHTML = "Resumption Date is required<br>";
-  //     }
-  //     setEnabled(checkedName === true);
-  //   };
-
-  //   const handleOnPurpose = () => {
-  //     const letters = /^[a-zA-Z0-9 ]+$/;
-  //     if (!newEvent.purpose.match(letters)) {
-  //       setCheckedName(false);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("purpose").innerHTML =
-  //         " - Input only capital, small letters and numbers<br>";
-  //     }
-  //     if (newEvent.purpose.match(letters)) {
-  //       setCheckedName(true);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("purpose").innerHTML = "";
-  //     }
-  //     if (newEvent.purpose.length === 0) {
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("purpose").innerHTML = "Purpose is required<br>";
-  //     }
-  //     setEnabled(checkedName === true);
-  //   };
 
   return (
     <DashboardLayout>
