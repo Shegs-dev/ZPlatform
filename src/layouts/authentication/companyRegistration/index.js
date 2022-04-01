@@ -64,10 +64,10 @@ function CompanyReg() {
   const [checkedComCity, setCheckedComCity] = useState("");
   const [comEnabled, setComEnabled] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleClick = (e) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     const user = JSON.parse(localStorage.getItem("user"));
     e.preventDefault();
     const raw = JSON.stringify({

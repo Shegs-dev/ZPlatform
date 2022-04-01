@@ -62,7 +62,6 @@ function FreeDay() {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
-
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`, { headers })
       .then(async (res) => {
