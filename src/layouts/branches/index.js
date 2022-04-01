@@ -21,12 +21,14 @@ import "react-phone-input-2/lib/style.css";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function Branches() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = BranchData();
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+  const navigate = useNavigate();
 
   const [namex, setName] = useState("");
   const [emailx, setEmail] = useState("");
@@ -74,6 +76,15 @@ function Branches() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         setOpened(false);
         MySwal.fire({
           title: result.status,

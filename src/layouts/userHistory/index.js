@@ -54,10 +54,8 @@ function UserAudit() {
 
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
+
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
       .then(async (res) => {
@@ -66,6 +64,15 @@ function UserAudit() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setUser(result);
         }
@@ -92,7 +99,7 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (resultapi.message === "Unauthorized Access") {
-          navigate("/authentication/sign-in");
+          navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
           const jApi = JSON.stringify(resultapi);
@@ -102,7 +109,6 @@ function UserAudit() {
           console.log(apiList);
           setServices(resultapi);
           // apiList = resultapi;
-          console.log(apppi);
         }
       })
       .catch((error) => {
@@ -137,10 +143,18 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (resulta.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (resulta.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Unauthorized Access") {
           navigate("/authentication/sign-in");
         }
         setPermissions(resulta);
-        console.log(resulta);
       })
       .catch((error) => {
         MySwal.fire({
@@ -157,23 +171,17 @@ function UserAudit() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(auditServ);
-    console.log(auditPerm);
-    console.log(auditSDate);
-    console.log(auditEDate);
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
+
     const auditConSDate = new Date(auditSDate).getTime();
     const auditConEDate = new Date(auditEDate).getTime();
-    console.log(auditConSDate);
-    console.log(auditConEDate);
+
     const raw = JSON.stringify({
       userID: userIDx,
       orgID: orgIDs,
       service: auditServ,
+      actionCall: auditPerm,
       startTime: auditConSDate,
       endTime: auditConEDate,
     });
@@ -183,7 +191,6 @@ function UserAudit() {
       body: raw,
       redirect: "follow",
     };
-    console.log(myHeaders);
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/audit/getFilter`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -198,7 +205,7 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (result.message === "Unauthorized Access") {
-          navigate("/authentication/sign-in");
+          navigate("/authentication/forbiddenPage");
         }
         setItems(result);
         console.log(result);

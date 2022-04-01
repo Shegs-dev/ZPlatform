@@ -20,6 +20,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 // import DateRangePicker from "react-dates";
 import TimeOffRequestData from "layouts/timeoffRequests/timeOffRequestTable/timeOffRequests";
+import { useNavigate } from "react-router-dom";
 
 function TimeOff() {
   const [purposex, setPurpose] = useState("");
@@ -38,6 +39,8 @@ function TimeOff() {
   const { columns: pColumns, rows: pRows } = TimeOffRequestData();
 
   const MySwal = withReactContent(Swal);
+
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -58,6 +61,15 @@ function TimeOff() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setUser(result);
         }
@@ -136,6 +148,15 @@ function TimeOff() {
           return res.json();
         })
         .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
           MySwal.fire({
             title: result.status,
             type: "success",

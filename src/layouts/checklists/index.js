@@ -7,12 +7,15 @@ import MDTypography from "components/MDTypography";
 import { useState, useEffect, React } from "react";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 function Checkbox() {
   const [rolName, setRolName] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
   const [roleStep, setRoleStep] = useState([]);
+
+  const navigate = useNavigate();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -54,6 +57,15 @@ function Checkbox() {
         return res.json();
       })
       .then((resultrp) => {
+        if (resultrp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultrp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultrp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         console.log(resultrp);
       });
   };
@@ -65,6 +77,15 @@ function Checkbox() {
       return res.json();
     })
     .then((resultg) => {
+      if (resultg.message === "Expired Access") {
+        navigate("/authentication/sign-in");
+      }
+      if (resultg.message === "Token Does Not Exist") {
+        navigate("/authentication/sign-in");
+      }
+      if (resultg.message === "Unauthorized Access") {
+        navigate("/authentication/forbiddenPage");
+      }
       setRolName(resultg[0].name);
     });
 
@@ -79,6 +100,15 @@ function Checkbox() {
         return res.json();
       })
       .then((resulta) => {
+        if (resulta.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setPermissions(resulta);
         }
@@ -92,6 +122,15 @@ function Checkbox() {
             return res.json();
           })
           .then((resultrs) => {
+            if (resultrs.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resultrs.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resultrs.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             if (isMounted) {
               setRoleStep(resultrs);
             }
