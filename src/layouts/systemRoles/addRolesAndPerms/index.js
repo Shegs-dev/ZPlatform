@@ -8,6 +8,7 @@ import MDTypography from "components/MDTypography";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 function RolesAndPerms() {
   const [rolName, setRolName] = useState("");
@@ -16,18 +17,17 @@ function RolesAndPerms() {
   const [rolPermissions, setRolPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
 
+  const navigate = useNavigate();
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  const headers = miHeaders;
-
-  const permissionsList = [];
 
   useEffect(() => {
+    const headers = miHeaders;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
     const idVal = JSON.parse([id]);
-
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`, { headers })
       .then(async (res) => {
@@ -36,6 +36,15 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resultg) => {
+        if (resultg.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultg.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultg.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setRolName(resultg[0].name);
         }
@@ -45,7 +54,10 @@ function RolesAndPerms() {
     };
   }, []);
 
+  const permissionsList = [];
+
   useEffect(() => {
+    const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
       .then(async (res) => {
@@ -54,6 +66,15 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resultapi) => {
+        if (resultapi.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setServices(resultapi);
         }
@@ -64,6 +85,7 @@ function RolesAndPerms() {
   }, []);
 
   const handleOnChange = (e) => {
+    const headers = miHeaders;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
@@ -79,6 +101,15 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resulta) => {
+        if (resulta.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         setPermissions(resulta);
 
         fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`, {
@@ -90,7 +121,17 @@ function RolesAndPerms() {
             return res.json();
           })
           .then((resultrpg) => {
+            if (resultrpg.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resultrpg.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resultrpg.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             setRolPermissions(resultrpg);
+
             // eslint-disable-next-line array-callback-return
             resulta.map((permission) => {
               let check = false;
@@ -137,8 +178,8 @@ function RolesAndPerms() {
       isChecked = 1;
     }
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
     const orgIDs = data11.orgID;
+
     const permCall = apix.actionCall;
 
     const raw = JSON.stringify({
@@ -161,7 +202,15 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resultrp) => {
-        console.log(resultrp);
+        if (resultrp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultrp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultrp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
       });
   };
 
@@ -194,7 +243,7 @@ function RolesAndPerms() {
               color="secondary"
               mt={0}
             >
-              Select Permissions
+              Select A Service
             </MDTypography>
             <MDBox mx={34} textAlign="right">
               <Form.Select aria-label="Default select example" onChange={handleOnChange}>

@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
@@ -18,6 +19,8 @@ export default function data() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+
+  const navigate = useNavigate();
 
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
@@ -46,6 +49,15 @@ export default function data() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -116,13 +128,26 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_ZAVE_URL}/status/delete/${id}`, { method: "DELETE" })
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/status/delete/${id}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
             return res.json();
           })
           .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             MySwal.fire({
               title: resx.status,
               type: "success",
@@ -152,14 +177,26 @@ export default function data() {
   // Method to fetch all companystatus
   useEffect(() => {
     const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}z`, { headers })
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }

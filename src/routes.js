@@ -215,7 +215,6 @@ const routes = [
     component: <SignUp />,
   },
   {
-    type: "collapse",
     name: "Invite User",
     key: "inviteUser",
     icon: <Icon fontSize="small">assignment</Icon>,
@@ -260,6 +259,7 @@ const routes = [
     component: <UserAudit />,
   },
   {
+    type: "collapse",
     name: "Forbidden",
     key: "forbiddenPage",
     icon: <Icon fontSize="small">assignment</Icon>,

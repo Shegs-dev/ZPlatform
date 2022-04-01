@@ -23,6 +23,7 @@ import withReactContent from "sweetalert2-react-content";
 import DataTable from "examples/Tables/DataTable";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 import FreeDaysData from "./free-days-list/freeDaysList";
 
@@ -41,20 +42,21 @@ const localizers = dateFnsLocalizer({
 function FreeDay() {
   const eventList = [];
   const [titleNames, setTitleName] = useState("");
-  const [freeDates, setFreeDate] = useState("");
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
   const { columns: pColumns, rows: pRows } = FreeDaysData();
-  console.log(freeDates);
-  console.log(titleNames);
 
   const MySwal = withReactContent(Swal);
 
   const [newEvent, setNewEvent] = useState({ title: "", time: "" });
   const [allEvents, setAllEvents] = useState(eventList);
 
+  const navigate = useNavigate();
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+
+  console.log(titleNames);
 
   useEffect(() => {
     const headers = miHeaders;
@@ -68,11 +70,19 @@ function FreeDay() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line array-callback-return
           result.map((item) => {
             setTitleName(item.name);
-            setFreeDate(item.freeDate);
             const fdy = {
               title: item.name,
               time: new Date(item.freeDate),
@@ -87,14 +97,15 @@ function FreeDay() {
   }, []);
 
   const handleAddEvent = (e) => {
-    const eventTime = new Date(newEvent.time).getTime();
+    const end = new Date(newEvent.time);
+    end.setHours(23, 59, 59, 999);
+    const eventTime = end.getTime();
     const eventName = newEvent.title;
     const CurTime = new Date().getTime();
     setAllEvents([...allEvents, newEvent]);
 
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
     const orgIDs = data11.orgID;
 
     const raw = JSON.stringify([
@@ -124,6 +135,15 @@ function FreeDay() {
           return res.json();
         })
         .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
           MySwal.fire({
             title: result.status,
             type: "success",

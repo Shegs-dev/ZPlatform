@@ -6,7 +6,7 @@ function GHeaders() {
   }
   return {
     allGHeaders: {
-      Authorization: "Bearer my-token",
+      "Content-Type": "application/json",
       "Token-1": GeneToken,
     },
   };

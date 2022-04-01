@@ -24,7 +24,6 @@ import withReactContent from "sweetalert2-react-content";
 
 function UserAudit() {
   const MySwal = withReactContent(Swal);
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
   const [services, setServices] = useState([]);
   const [permissions, setPermissions] = useState([]);
@@ -50,8 +49,8 @@ function UserAudit() {
 
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
     const orgIDs = data11.orgID;
+
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
       .then(async (res) => {
@@ -60,6 +59,15 @@ function UserAudit() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setUser(result);
         }
@@ -86,7 +94,7 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (resultapi.message === "Unauthorized Access") {
-          navigate("/authentication/sign-in");
+          navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
           setServices(resultapi);
@@ -124,6 +132,15 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (resulta.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (resulta.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Unauthorized Access") {
           navigate("/authentication/sign-in");
         }
         setPermissions(resulta);
@@ -146,13 +163,13 @@ function UserAudit() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    console.log(auditPerm);
     const auditConSDate = new Date(auditSDate).getTime();
     const auditConEDate = new Date(auditEDate).getTime();
     const raw = JSON.stringify({
       userID: userIDx,
       orgID: orgIDs,
       service: auditServ,
+      actionCall: auditPerm,
       startTime: auditConSDate,
       endTime: auditConEDate,
     });
@@ -176,7 +193,7 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (result.message === "Unauthorized Access") {
-          navigate("/authentication/sign-in");
+          navigate("/authentication/forbiddenPage");
         }
         setItems(result);
       })

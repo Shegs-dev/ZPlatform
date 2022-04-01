@@ -14,6 +14,7 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function Positions() {
   const MySwal = withReactContent(Swal);
@@ -24,6 +25,8 @@ function Positions() {
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
+
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
 
@@ -47,6 +50,15 @@ function Positions() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

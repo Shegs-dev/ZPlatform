@@ -1,9 +1,12 @@
 import { Dropdown } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Icon from "@mui/material/Icon";
+import { useNavigate } from "react-router-dom";
 
 export default function AddDetailsData() {
   const [items, setItems] = useState([]);
+
+  const navigate = useNavigate();
 
   const handleShow = (value) => {
     console.log(value);
@@ -29,6 +32,15 @@ export default function AddDetailsData() {
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/getByIds/${values}`)
       .then((res) => res.json())
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }

@@ -11,6 +11,9 @@ import Swal from "sweetalert2";
 import AddDetailsData from "layouts/timeofftype/addDetailsToTimeOffType/adddetailstable";
 import DataTable from "examples/Tables/DataTable";
 import Footer from "examples/Footer";
+import { useNavigate } from "react-router-dom";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function AddTimeOffType() {
   const MySwal = withReactContent(Swal);
@@ -22,19 +25,51 @@ function AddTimeOffType() {
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
 
+  const navigate = useNavigate();
+
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/position/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setPosition(resultp);
 
-          fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`)
-            .then((res) => res.json())
+          fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`, { headers })
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
             .then((resultx) => {
+              if (resultx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resultx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resultx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
               if (isMounted) {
                 setBranch(resultx);
               }
@@ -47,9 +82,6 @@ function AddTimeOffType() {
   }, []);
 
   const handleClick = (e) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
     e.preventDefault();
 
     const raw = JSON.stringify({
@@ -66,8 +98,21 @@ function AddTimeOffType() {
       redirect: "follow",
     };
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/add$`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

@@ -15,9 +15,7 @@ import withReactContent from "sweetalert2-react-content";
 import GHeaders from "getHeader";
 
 export default function UserData() {
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
-  // const [iteems, setIteems] = useState([]);
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
@@ -26,7 +24,6 @@ export default function UserData() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
-    // console.log(iteems);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -39,6 +36,15 @@ export default function UserData() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }
@@ -60,7 +66,15 @@ export default function UserData() {
         return res.json();
       })
       .then((resultPC) => {
-        // setIteems(resultPC);
+        if (resultPC.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultPC.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultPC.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: "Reason For Delete",
           text: "You won't be able to revert this!",
@@ -79,11 +93,13 @@ export default function UserData() {
         }).then((resultD) => {
           if (resultD.isConfirmed) {
             const modalValue = document.getElementById("reasonForDelete").value;
+            const requestOptions = {
+              method: "DELETE",
+              headers: miHeaders,
+            };
             fetch(
               `${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${resultPC.id}/${modalValue}`,
-              {
-                method: "DELETE",
-              }
+              requestOptions
             )
               .then(async (res) => {
                 const aToken = res.headers.get("token-1");
@@ -91,6 +107,15 @@ export default function UserData() {
                 return res.json();
               })
               .then((resx) => {
+                if (resx.message === "Expired Access") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx.message === "Token Does Not Exist") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx.message === "Unauthorized Access") {
+                  navigate("/authentication/forbiddenPage");
+                }
                 MySwal.fire({
                   title: resx.status,
                   type: "success",
@@ -134,6 +159,15 @@ export default function UserData() {
               return res.json();
             })
             .then((resx) => {
+              if (resx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
               MySwal.fire({
                 title: resx.status,
                 type: "success",

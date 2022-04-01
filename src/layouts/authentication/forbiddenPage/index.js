@@ -1,17 +1,16 @@
 import MDBox from "components/MDBox";
+import Forbidden403 from "assets/images/Forbidden403.png";
+import CoverLayout from "../components/CoverLayout";
 
 function ForbiddenPage() {
   return (
-    <MDBox>
-      <div className="forbid1">
-        <img src="forbiddenPage/Forbidden403.png" alt="Unauthorized Access..." />
-      </div>
-      <div id="root">
-        <div className="loading">
-          <img src="loader1.gif" alt="Loading..." />
+    <CoverLayout>
+      <MDBox>
+        <div className="forbid1">
+          <img src={Forbidden403} alt="Unauthorized Access" />
         </div>
-      </div>
-    </MDBox>
+      </MDBox>
+    </CoverLayout>
   );
 }
 
