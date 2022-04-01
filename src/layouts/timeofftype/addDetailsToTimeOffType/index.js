@@ -11,19 +11,25 @@ import Swal from "sweetalert2";
 import AddDetailsData from "layouts/timeofftype/addDetailsToTimeOffType/adddetailstable";
 import DataTable from "examples/Tables/DataTable";
 import Footer from "examples/Footer";
+import GHeaders from "getHeader";
+import { Container } from "@mui/material";
 
 function AddTimeOffType() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = AddDetailsData();
+
+  const { allGHeaders: miHeaders } = GHeaders();
 
   // const [malex, setMalex] = useState("");
   // const [femalex, setFemalex] = useState("");
 
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
+  const [statusmap, setStatusmap] = useState([]);
 
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
+  const [statusx, setStatusx] = useState("");
   const [enabled, setEnabled] = useState("");
   console.log(setEnabled);
 
@@ -49,6 +55,24 @@ function AddTimeOffType() {
                 console.log(resultx);
               }
             });
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  useEffect(() => {
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resultp) => {
+        if (isMounted) {
+          setStatusmap(resultp);
         }
       });
     return () => {
@@ -113,6 +137,22 @@ function AddTimeOffType() {
               Add Detail
             </MDTypography>
           </MDBox>
+          <Container>
+            <div className="row">
+              <div className="col-sm-6">
+                <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                  Gender
+                </MDTypography>
+                <MDBox mb={2}>
+                  <Form.Select>
+                    <option>---Gender---</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </Form.Select>
+                </MDBox>
+              </div>
+            </div>
+          </Container>
           <MDBox mx={4} textAlign="left">
             <Form.Select
               value={positx || ""}
@@ -136,6 +176,21 @@ function AddTimeOffType() {
             >
               <option value="">Add Details To Company Branch</option>
               {branch.map((api) => (
+                <option key={api.id} value={api.id}>
+                  {api.name}
+                </option>
+              ))}
+            </Form.Select>
+            <br />
+          </MDBox>
+          <MDBox mx={4} textAlign="left">
+            <Form.Select
+              value={statusx || ""}
+              onChange={(e) => setStatusx(e.target.value)}
+              aria-label="Default select example"
+            >
+              <option value="">Add Details to Status Type</option>
+              {statusmap.map((api) => (
                 <option key={api.id} value={api.id}>
                   {api.name}
                 </option>
