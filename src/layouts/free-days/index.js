@@ -46,8 +46,8 @@ function FreeDay() {
   const [enabled, setEnabled] = useState("");
   const { columns: pColumns, rows: pRows } = FreeDaysData();
   console.log(freeDates);
+  console.log(titleNames);
 
-  console.log(eventList);
   const MySwal = withReactContent(Swal);
 
   const [newEvent, setNewEvent] = useState({ title: "", time: "" });
@@ -56,15 +56,10 @@ function FreeDay() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  console.log(titleNames);
-  console.log(new Date(freeDates));
-
   useEffect(() => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`, { headers })
       .then(async (res) => {
@@ -96,18 +91,12 @@ function FreeDay() {
     const eventTime = new Date(newEvent.time).getTime();
     const eventName = newEvent.title;
     const CurTime = new Date().getTime();
-    console.log(CurTime);
     setAllEvents([...allEvents, newEvent]);
-    console.log(eventTime);
-    console.log(eventName);
-    console.log(newEvent.time);
 
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
 
     const raw = JSON.stringify([
       {
@@ -154,7 +143,6 @@ function FreeDay() {
         });
     }
   };
-  console.log(allEvents);
 
   const handleOnTitleKeys = () => {
     const letters = /^[a-zA-Z0-9 -]+$/;

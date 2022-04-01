@@ -66,12 +66,12 @@ function Basic() {
   };
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
 
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({ username: usernamex, password: passwordx });
     const requestOptions = {
       method: "POST",

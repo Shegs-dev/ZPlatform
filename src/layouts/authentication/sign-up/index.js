@@ -42,7 +42,6 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { formatPhoneNumberIntl } from "react-phone-number-input";
 
 function Cover() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -81,13 +80,10 @@ function Cover() {
   const [retypePasswordx, setRetypePassword] = useState("");
   const [allStates, setAllStates] = useState([]);
 
-  // eslint-disable-next-line no-unused-expressions
-  formatPhoneNumberIntl(phonex) === "373-425-5567";
-
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleClick = (e) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     let dayx = "";
     let monthx = "";
     let yearx = "";

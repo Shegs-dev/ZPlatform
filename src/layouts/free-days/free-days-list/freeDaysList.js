@@ -23,10 +23,8 @@ export default function FreeDaysData() {
   // Method to handle update
   const handleUpdate = (idx, namex, freeDatex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -87,13 +85,10 @@ export default function FreeDaysData() {
     let yearx = "";
     if (freeDatex != null) {
       const sDate = new Date(freeDatex);
-      console.log(`startDate: ${freeDatex}`);
-      console.log(`sDate: ${sDate}`);
       dayx = sDate.getDate();
       monthx = sDate.getMonth() + 1;
       yearx = sDate.getFullYear();
     }
-    console.log(freeDatex);
 
     MySwal.fire({
       title: "Update Department",
@@ -116,7 +111,6 @@ export default function FreeDaysData() {
         const monthy = Swal.getPopup().querySelector("#monthss").value;
         const yearsy = Swal.getPopup().querySelector("#yearss").value;
         const addDMY = new Date(`${monthy}/${dayy}/${yearsy}`);
-        console.log(addDMY);
         const freeDate = addDMY.getTime();
         const id = value;
         const Number = /^[0-9]+$/;
@@ -186,9 +180,7 @@ export default function FreeDaysData() {
   useEffect(() => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`, { headers })
       .then(async (res) => {

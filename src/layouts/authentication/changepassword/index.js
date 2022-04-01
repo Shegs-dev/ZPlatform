@@ -32,12 +32,10 @@ function ChangePassword() {
 
   const { allPHeaders: myHeaders } = PHeaders();
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-
-  const emailCh = data11.email;
-
   const handleClick = (e) => {
     e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const emailCh = data11.email;
     const raw = JSON.stringify({ username: emailCh, password: passwordx, npassword: npasswordx });
     const requestOptions = {
       method: "POST",

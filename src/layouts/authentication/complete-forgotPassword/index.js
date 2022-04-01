@@ -42,11 +42,6 @@ function ComForgotPass() {
     setPasswordShown(!passwordShown);
   };
 
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const email = urlParams.get("email");
-  const emailValue = email;
-
   const [newPasswordx, setNewPassword] = useState("");
   const [retypeNewPassword, setRetypeNewPassword] = useState("");
   const MySwal = withReactContent(Swal);
@@ -55,11 +50,15 @@ function ComForgotPass() {
   const [checkedRTNPass, setCheckedRTNPass] = useState("");
   const [enabled, setEnabled] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleClick = (e) => {
     e.preventDefault();
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const email = urlParams.get("email");
+    const emailValue = email;
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({
       username: emailValue,
       npassword: newPasswordx,
