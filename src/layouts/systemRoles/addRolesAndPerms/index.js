@@ -10,11 +10,6 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 
 function RolesAndPerms() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  const idVal = JSON.parse([id]);
-
   const [rolName, setRolName] = useState("");
   const [services, setServices] = useState([]);
   const [permissions, setPermissions] = useState([]);
@@ -23,43 +18,26 @@ function RolesAndPerms() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  console.log(myHeaders);
   const headers = miHeaders;
-
-  fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`, { headers })
-    .then(async (res) => {
-      const aToken = res.headers.get("token-1");
-      localStorage.setItem("rexxdex", aToken);
-      // console.log(aToken);
-      // console.log(res.headers.get("token-1"));
-      return res.json();
-    })
-    .then((resultg) => {
-      setRolName(resultg[0].name);
-    });
 
   const permissionsList = [];
 
   useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        // console.log(aToken);
-        // console.log(res.headers.get("token-1"));
         return res.json();
       })
-      .then((resultapi) => {
+      .then((resultg) => {
         if (isMounted) {
-          const jApi = JSON.stringify(resultapi);
-          const apppi = JSON.parse(jApi);
-          let apiList = [];
-          apiList = apppi;
-          console.log(apiList);
-          setServices(resultapi);
-          // apiList = resultapi;
-          console.log(apppi);
+          setRolName(resultg[0].name);
         }
       });
     return () => {
@@ -67,22 +45,30 @@ function RolesAndPerms() {
     };
   }, []);
 
-  /* const checkPermission = (value) => {
-    console.log(`Value${value}`);
-    let checks = false;
-    rolPermissions.map((rolPermi) => {
-      console.log(`Val${rolPermi.permissionCall}`);
-      if (rolPermi.permissionCall === value) {
-        if (rolPermi.isCheck === 1) {
-          checks = true;
-          return checks;
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resultapi) => {
+        if (isMounted) {
+          setServices(resultapi);
         }
-      }
-      return checks;
-    });
-  }; */
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOnChange = (e) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     const apiValue = e.target.value;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/permissions/getForService/${apiValue}`, {
       headers,
@@ -94,7 +80,6 @@ function RolesAndPerms() {
       })
       .then((resulta) => {
         setPermissions(resulta);
-        console.log(resulta);
 
         fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`, {
           headers,
@@ -106,10 +91,6 @@ function RolesAndPerms() {
           })
           .then((resultrpg) => {
             setRolPermissions(resultrpg);
-            console.log(resultrpg);
-
-            console.log(permissions);
-            console.log(rolPermissions);
             // eslint-disable-next-line array-callback-return
             resulta.map((permission) => {
               let check = false;
@@ -136,27 +117,28 @@ function RolesAndPerms() {
               permissionsList.push(pObj);
             });
 
-            console.log(permissionsList);
             setVPermissions(permissionsList);
             console.log(vPermissions);
+            console.log(permissions);
+            console.log(rolPermissions);
           });
       });
   };
 
   const handleOnClick = (e, apix) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     let isChecked = 0;
     const checks = e.target.checked;
-    console.log(checks);
     if (checks) {
       isChecked = 1;
     }
-    console.log(isChecked);
-    console.log(apix);
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const permCall = apix.actionCall;
 
     const raw = JSON.stringify({
@@ -181,7 +163,6 @@ function RolesAndPerms() {
       .then((resultrp) => {
         console.log(resultrp);
       });
-    console.log(apix.actionCall);
   };
 
   return (
@@ -261,20 +242,3 @@ function RolesAndPerms() {
 }
 
 export default RolesAndPerms;
-
-/* <Form.Select aria-label="Default select example">
-          <option>--Select Permission--</option>
-          {permissions.map((api) => (
-            <option key={api.id} value={api.displayName}>
-              {api.displayName}
-            </option>
-          ))}
-        </Form.Select> 
-        
-                <Form.Check
-                  type="checkbox"
-                  id={api.id}
-                  checked={api.isCheck}
-                  label={api.id}
-                  onClick={() => handleOnClick(api)}
-                /> */

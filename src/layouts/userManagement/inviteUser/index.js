@@ -31,7 +31,6 @@ import GHeaders from "getHeader";
 
 function InviteUser() {
   const [phonex, setPhone] = useState("");
-  // const [startDate, setStartDate] = useState(new Date());
   const MySwal = withReactContent(Swal);
 
   const navigate = useNavigate();
@@ -57,13 +56,7 @@ function InviteUser() {
   const [allStates, setAllStates] = useState([]);
   const [passwordx, setPassword] = useState("");
   const [retypePasswordx, setRetypePassword] = useState("");
-  //   const [enabled, setEnabled] = useState("");
   const [passEnabled, setPassEnabled] = useState("");
-
-  // const [personalCompanyx, setPersonalCompany] = useState([]);
-
-  //   const [rolex, setRole] = useState("");
-  //   console.log(rolex);
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -77,37 +70,6 @@ function InviteUser() {
   };
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
-
-  /* 
-  const rawx = JSON.stringify({ fname: fnamex, lname: lnamex, email: emailx });
-  const requestOptionsx = {
-    method: "POST",
-    headers: myHeaders,
-    body: rawx,
-    redirect: "follow",
-  };
-  console.log(requestOptionsx);
-*/
-
-  //   const queryString = window.location.search;
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const fnameu = urlParams.get("fname");
-  //   setFname(fnameu);
-  //   const lnameu = urlParams.get("lname");
-  //   setLname(lnameu);
-  //   const emailu = urlParams.get("email");
-  //   setOemail(emailu);
-  //   const roleu = urlParams.get("role");
-  //   setRole(roleu);
-  //   const fnamep = JSON.parse([fnameu]);
-  //   setFname(fnamep);
-  //   console.log(fnamep);
-  //   const lnamep = JSON.parse([lnameu]);
-  //   console.log(lnamep);
-  //   const emailp = JSON.parse([emailu]);
-  //   console.log(emailp);
-  //   const rolep = JSON.parse([roleu]);
-  //   console.log(rolep);
 
   const getPersonalInformation = (e) => {
     const headers = miHeaders;
@@ -139,7 +101,6 @@ function InviteUser() {
             setResidentialState(result.residentialState);
             setResidentialCountry(result.residentialCountry);
             setMaritalStatus(result.maritalStatus);
-            // setPersonalCompany(result);
             setDeleteFlag(result.deleteFlag);
             setSysStatus(result.sysStatus);
             setCreatedTime(result.createdTime);
@@ -150,12 +111,6 @@ function InviteUser() {
           } else {
             setId(0);
           }
-          //   if (result.id != null) {
-          //     setPassEnabled(false);
-          //   }
-          //   if (idx === 0) {
-          //     setPassEnabled(true);
-          //   }
         })
         .catch((error) => {
           setId(0);
@@ -314,13 +269,11 @@ function InviteUser() {
   };
 
   const handleClick = (e) => {
-    // const user = JSON.parse(localStorage.getItem("user"));
     let dayx = "";
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
       const sDate = startDate.getTime();
-      console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -352,10 +305,7 @@ function InviteUser() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     localStorage.setItem("email1", emailx);
-    const data12 = localStorage.getItem("email1");
-    console.log(data12);
 
     let endpoint = "add";
     if (idx !== 0) {
@@ -391,8 +341,6 @@ function InviteUser() {
             text: result.message,
           }).then(() => {
             localStorage.setItem("personalInfo", JSON.stringify(result.data));
-            console.log(result.data.id);
-            console.log(orgIDx);
             const raw1 = JSON.stringify({
               orgID: orgIDx,
               personalID: result.data.id,
@@ -468,10 +416,7 @@ function InviteUser() {
         });
       });
   };
-
-  /* return <Select options={options} value={value} onChange={changeHandler} />
-} */
-
+  
   useEffect(() => {
     if (idx === "") {
       setPassEnabled(true);

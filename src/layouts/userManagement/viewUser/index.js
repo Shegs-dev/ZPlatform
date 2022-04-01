@@ -18,10 +18,6 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 
 function ViewUser() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  const idVal = JSON.parse([id]);
   const { bankNameCode: allbankNameCode } = BankNameAndCode();
   const { countries: WCountries } = AllCountries();
 
@@ -30,9 +26,6 @@ function ViewUser() {
   const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
   const [phonex, setPhone] = useState("");
-  //   const [dayOfBirthx, setDayOfBirth] = useState("");
-  //   const [monthOfBirthx, setMonthOfBirth] = useState("");
-  //   const [yearOfBirthx, setYearOfBirth] = useState("");
   const [nationalityx, setNationality] = useState("");
   const [residentialStreetx, setResidentialStreet] = useState("");
   const [residentialCityx, setResidentialCity] = useState("");
@@ -61,8 +54,6 @@ function ViewUser() {
   const [step, setStep] = useState([]);
   const [status, setStatus] = useState([]);
   const [statusmap, setStatusmap] = useState([]);
-  // continue sha
-  const [officeItems, setOfficeItem] = useState([]);
   // medical
   const [meBloodGroupx, setMeBloodGroup] = useState("");
   const [meGenotypex, setMeGenotype] = useState("");
@@ -72,19 +63,17 @@ function ViewUser() {
   const [positx, setPositx] = useState("");
   const [branx, setBranx] = useState("");
   const [stepx, stepStepx] = useState("");
-  const [meIDx, setMeID] = useState("");
   const [statusx, setStatusx] = useState("");
-  console.log(setMeID);
-
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
-  const orgIDs = data11.orgID;
-  console.log(orgIDs);
 
   const MySwal = withReactContent(Swal);
 
   // save changes
   const handleOfficeSave = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
     const raw = JSON.stringify({
       orgID: orgIDs,
       empID: id,
@@ -99,7 +88,6 @@ function ViewUser() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/office/update`, requestOptions)
       .then(async (res) => {
@@ -126,6 +114,11 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`, { headers })
@@ -137,7 +130,6 @@ function ViewUser() {
       .then((resultx) => {
         if (isMounted) {
           setBranch(resultx);
-          console.log(resultx);
 
           fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`, { headers })
             .then(async (res) => {
@@ -181,10 +173,6 @@ function ViewUser() {
                               })
                               .then((result) => {
                                 if (isMounted) {
-                                  console.log(result);
-                                  setOfficeItem(result);
-                                  console.log(officeItems);
-
                                   // Setting Branch
                                   if (result.length > 0) {
                                     if (result[0].branchID != null) {
@@ -193,7 +181,6 @@ function ViewUser() {
                                       resultx.map((item) => {
                                         if (item.id === result[0].branchID) {
                                           // eslint-disable-next-line prefer-destructuring
-                                          console.log(`it ${item.name}`);
                                           fBranch = item;
                                           setBranx(fBranch.id);
                                         }
@@ -206,7 +193,6 @@ function ViewUser() {
                                       resultd.map((item) => {
                                         if (item.id === result[0].deptID) {
                                           // eslint-disable-next-line prefer-destructuring
-                                          console.log(`it ${item.name}`);
                                           fDepartment = item;
                                           setDepartx(fDepartment.id);
                                         }
@@ -219,7 +205,6 @@ function ViewUser() {
                                       resultp.map((item) => {
                                         if (item.id === result[0].positionID) {
                                           // eslint-disable-next-line prefer-destructuring
-                                          console.log(`it ${item.name}`);
                                           fPosition = item;
                                           setPositx(fPosition.id);
                                         }
@@ -232,7 +217,6 @@ function ViewUser() {
                                       resultr.map((item) => {
                                         if (item.id === result[0].roleID) {
                                           // eslint-disable-next-line prefer-destructuring
-                                          console.log(`it ${item.name}`);
                                           fCompanyRole = item;
                                           setCompanyx(fCompanyRole.id);
 
@@ -272,7 +256,6 @@ function ViewUser() {
                                               resultst.map((item) => {
                                                 if (item.id === result[0].stepID) {
                                                   // eslint-disable-next-line prefer-destructuring
-                                                  console.log(`it ${item.name}`);
                                                   fStep = item;
                                                   stepStepx(fStep.id);
                                                 }
@@ -297,9 +280,13 @@ function ViewUser() {
     };
   }, []);
 
-  const personalIds = data11.personalID;
-
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/getByPersonalID/${orgIDs}/${idVal}`, {
@@ -322,6 +309,8 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, { headers })
@@ -341,6 +330,12 @@ function ViewUser() {
   }, []);
 
   const handleGetPersonalID = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
     const raw = JSON.stringify({
       id: status.id,
       orgID: orgIDs,
@@ -359,8 +354,6 @@ function ViewUser() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
-    console.log(requestOptions);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/update`, requestOptions)
       .then(async (res) => {
@@ -387,6 +380,10 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${idVal}`, { headers })
@@ -402,9 +399,6 @@ function ViewUser() {
           setOname(resultp[0].oname);
           setEmail(resultp[0].email);
           setPhone(resultp[0].pno);
-          //   setDayOfBirth(resultp[0].dayOfBirth);
-          //   setMonthOfBirth(resultp[0].monthOfBirth);
-          //   setYearOfBirth(resultp[0].yearOfBirth);
           setNationality(resultp[0].nationality);
           setResidentialStreet(resultp[0].residentialStreet);
           setResidentialCity(resultp[0].residentialCity);
@@ -424,56 +418,9 @@ function ViewUser() {
     };
   }, []);
 
-  console.log(data11);
-
-  const handleAddME = (e) => {
-    e.preventDefault();
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      empID: personalIds,
-      bloodGroup: meBloodGroupx,
-      genotype: meGenotypex,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
-  const handleMEAddUpdate = (e) => {
-    e.preventDefault();
-    if (meIDx == null) {
-      handleAddME(e);
-    }
-  };
-  console.log(handleMEAddUpdate);
-
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`, { headers })
@@ -483,8 +430,6 @@ function ViewUser() {
         return res.json();
       })
       .then((resultma) => {
-        console.log(resultma);
-        console.log(resultma.length);
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultma.length != 0) {
@@ -499,6 +444,9 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${id}`, { headers })
@@ -508,13 +456,10 @@ function ViewUser() {
         return res.json();
       })
       .then((resultba) => {
-        console.log(resultba);
-        console.log(resultba.length);
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultba.length != 0) {
             setBaBank(resultba[0].bank);
-            console.log(resultba[0].bank);
             setBaCountry(resultba[0].country);
             setBaAcctNo(resultba[0].acctNo);
             setBaAcctName(resultba[0].acctName);
@@ -529,19 +474,18 @@ function ViewUser() {
 
   const handleOnChangeBank = (e) => {
     const filteredItems = allbankNameCode.filter((item) => item.bankName === e.target.value);
-    console.log(e.target.value);
     if (e.target.value === "1") {
       setBaBank("");
       setBaBankCode("");
     } else {
       setBaBank(e.target.value);
       setBaBankCode(filteredItems[0].cbnCode);
-      console.log(baBankx);
-      console.log(baBankCodex);
     }
   };
 
   const handleRoleSteps = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
     setCompanyx(e.target.value);
     const headers = miHeaders;
     fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${e.target.value}`, {
@@ -553,7 +497,6 @@ function ViewUser() {
         return res.json();
       })
       .then((resultst) => {
-        console.log(resultst);
         setStep(resultst);
       });
   };

@@ -11,26 +11,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import PHeaders from "postHeader";
+// import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 
 export default function UserData() {
   // const axios = require("axios");
   const [items, setItems] = useState([]);
-  const [iteems, setIteems] = useState([]);
-  console.log(iteems);
-  // const [id, setId] = useState("");
+  // const [iteems, setIteems] = useState([]);
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
 
-  // const axios = require("axios");
-
-  const { allPHeaders: myHeaders } = PHeaders();
+  // const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  console.log(myHeaders);
 
   useEffect(() => {
+    // console.log(iteems);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -64,7 +60,7 @@ export default function UserData() {
         return res.json();
       })
       .then((resultPC) => {
-        setIteems(resultPC);
+        // setIteems(resultPC);
         MySwal.fire({
           title: "Reason For Delete",
           text: "You won't be able to revert this!",
@@ -162,12 +158,6 @@ export default function UserData() {
         }
       });
   };
-
-  // const data11 = JSON.parse(localStorage.getItem("user1"));
-  // console.log(data11);
-
-  // const orgIDs = data11.orgID;
-  // console.log(orgIDs);
 
   return {
     columns: [

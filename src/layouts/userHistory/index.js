@@ -41,8 +41,6 @@ function UserAudit() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  console.log(myHeaders);
-
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -50,14 +48,10 @@ function UserAudit() {
     return retDate;
   };
 
-  const pRows = items;
-
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
       .then(async (res) => {
@@ -95,14 +89,7 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         if (isMounted) {
-          const jApi = JSON.stringify(resultapi);
-          const apppi = JSON.parse(jApi);
-          let apiList = [];
-          apiList = apppi;
-          console.log(apiList);
           setServices(resultapi);
-          // apiList = resultapi;
-          console.log(apppi);
         }
       })
       .catch((error) => {
@@ -140,7 +127,6 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         setPermissions(resulta);
-        console.log(resulta);
       })
       .catch((error) => {
         MySwal.fire({
@@ -157,19 +143,12 @@ function UserAudit() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(auditServ);
-    console.log(auditPerm);
-    console.log(auditSDate);
-    console.log(auditEDate);
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
+    console.log(auditPerm);
     const auditConSDate = new Date(auditSDate).getTime();
     const auditConEDate = new Date(auditEDate).getTime();
-    console.log(auditConSDate);
-    console.log(auditConEDate);
     const raw = JSON.stringify({
       userID: userIDx,
       orgID: orgIDs,
@@ -183,7 +162,6 @@ function UserAudit() {
       body: raw,
       redirect: "follow",
     };
-    console.log(myHeaders);
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/audit/getFilter`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -201,7 +179,6 @@ function UserAudit() {
           navigate("/authentication/sign-in");
         }
         setItems(result);
-        console.log(result);
       })
       .catch((error) => {
         MySwal.fire({
@@ -386,7 +363,7 @@ function UserAudit() {
       </Card>
       <MDBox>
         <DataTable
-          table={{ columns: pColumns, rows: pRows }}
+          table={{ columns: pColumns, rows: items }}
           isSorted
           entriesPerPage
           showTotalEntries

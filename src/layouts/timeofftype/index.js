@@ -25,14 +25,12 @@ function TimeOffType() {
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
 
   const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const raw = JSON.stringify({
       timeOffType: {
@@ -49,7 +47,6 @@ function TimeOffType() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");

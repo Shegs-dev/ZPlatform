@@ -47,7 +47,6 @@ function UserManagement() {
       })
       .then((result) => {
         if (isMounted) {
-          console.log(result);
           setCompany(result);
         }
       });
@@ -127,8 +126,6 @@ function UserManagement() {
       });
       return false;
     }
-    console.log(company[0]);
-    console.log(roleIDs);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDz = data11.orgID;
     const raw = JSON.stringify({
@@ -139,14 +136,12 @@ function UserManagement() {
       companyName: company[0].name,
       orgID: orgIDz,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/invite`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -173,9 +168,7 @@ function UserManagement() {
   useEffect(() => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`, { headers })
       .then(async (res) => {

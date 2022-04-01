@@ -19,16 +19,11 @@ export default function TimeOffRequestData() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
-
-  const personalIds = data11.personalID;
-  console.log(personalIds);
-
-  const orgIDs = data11.orgID;
-  console.log(orgIDs);
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -157,6 +152,8 @@ export default function TimeOffRequestData() {
 
   // Method to change type
   const changeType = (status) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
     if (filteredItems[0].approverID !== 0) {
       return "Decision Made";
@@ -169,6 +166,8 @@ export default function TimeOffRequestData() {
   };
 
   const changeCol = (status) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
     if (filteredItems[0].approverID !== 0) {
       return "#FAFA33";
@@ -182,6 +181,9 @@ export default function TimeOffRequestData() {
 
   // Method to fetch all timeofftype
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(
@@ -196,7 +198,6 @@ export default function TimeOffRequestData() {
       .then((result) => {
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

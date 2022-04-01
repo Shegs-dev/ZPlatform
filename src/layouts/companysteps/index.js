@@ -24,7 +24,6 @@ function Steps() {
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
 
   const { allPHeaders: myHeaders } = PHeaders();
 
@@ -32,10 +31,8 @@ function Steps() {
     e.preventDefault();
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
 
     const raw = JSON.stringify({
       orgID: orgIDs,

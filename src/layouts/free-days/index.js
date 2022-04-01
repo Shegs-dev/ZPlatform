@@ -69,7 +69,6 @@ function FreeDay() {
       })
       .then((result) => {
         if (isMounted) {
-          console.log(result);
           // eslint-disable-next-line array-callback-return
           result.map((item) => {
             setTitleName(item.name);
@@ -111,7 +110,6 @@ function FreeDay() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     if (eventTime < CurTime) {
       MySwal.fire({
         title: "Invalid Date",
