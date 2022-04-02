@@ -10,6 +10,8 @@ import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function ComRole() {
   const MySwal = withReactContent(Swal);
@@ -19,8 +21,8 @@ export default function ComRole() {
   // use of navigate button
   const navigate = useNavigate();
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
@@ -43,8 +45,21 @@ export default function ComRole() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/role/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -82,14 +97,13 @@ export default function ComRole() {
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    console.log(orgIDs);
     MySwal.fire({
       title: "Update Company Roles",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
+      html: `<table><tr><td>
+        <label for="name">Name</label></td>
+        <td><input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name"></td></tr>
+        <tr><td><label for="description">Description</label></td>
+        <td><input type="text" class="swal2-input" id="description" value="${descripx}" placeholder="Description"></td>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -118,11 +132,27 @@ export default function ComRole() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/role/delete/${value}`, {
+        const requestOptions = {
           method: "DELETE",
-        })
-          .then((res) => res.json())
+          headers: miHeaders,
+        };
+
+        fetch(`${process.env.REACT_APP_KUBU_URL}/role/delete/${value}`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             MySwal.fire({
               title: resx.status,
               type: "success",
@@ -144,13 +174,27 @@ export default function ComRole() {
 
   // Method to fetch all companyroles
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/role/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }

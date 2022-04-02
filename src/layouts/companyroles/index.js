@@ -14,6 +14,8 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import MDTypography from "components/MDTypography";
+import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function Roles() {
   const MySwal = withReactContent(Swal);
@@ -24,8 +26,9 @@ function Roles() {
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const navigate = useNavigate();
+
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
@@ -65,8 +68,21 @@ function Roles() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/role/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -101,7 +117,7 @@ function Roles() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add CompanyRoles
+              Add Company Roles
             </MDTypography>
           </MDBox>
           <MDBox

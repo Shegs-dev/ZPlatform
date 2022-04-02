@@ -35,11 +35,11 @@ function ForgotPass() {
   const [emailx, setEmail] = useState("");
   const MySwal = withReactContent(Swal);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleClick = (e) => {
     e.preventDefault();
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     const requestOptions = {
       method: "GET",
       headers: myHeaders,

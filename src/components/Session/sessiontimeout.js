@@ -12,7 +12,7 @@ setInterval(updateTimer, 1000);
 
 function updateTimer() {
   duration--;
-  if (duration < 0) {
+  if (duration < 1) {
     window.location = "authentication/sign-in";
   } else {
     timer.innerText = duration;

@@ -13,24 +13,26 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-export default function data() {
+export default function TimeOffRequestData() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
+
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const navigate = useNavigate();
-
   // Method to handle diable
-  const handleUpdate = (idx, namex, createdTimex, deleteFlagx) => {
+  const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
     const orgIDs = data11.orgID;
+
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
       name: namex,
+      descrip: descripx,
+      type: typex,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -41,7 +43,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/step/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -77,42 +79,57 @@ export default function data() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
+    let descripx = "";
+    let typex = 0;
+    let createdTimex = 0;
+    let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      createdTime = 0;
-      deleteFlag = 0;
+      descripx = "";
+      typex = 0;
+      createdTimex = 0;
+      deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      descripx = filteredItems[0].descrip;
+      typex = filteredItems[0].type;
+      createdTimex = filteredItems[0].createdTime;
+      deleteFlagx = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
-      title: "Update Position",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-`,
+      title: "Update timeofftype",
+      html: `<table><tr><td>
+      <label for="name">Name</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
+      <tr><td><label for="descrip">Description</label></td>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>
+      <tr><td><label for="type">Type</label></td>
+      <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
+        const descrip = Swal.getPopup().querySelector("#descrip").value;
+        const type = Swal.getPopup().querySelector("#type").value;
         const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
+        const letters = /^[a-zA-Z]+$/;
+        if (name.length > 0 && !name.match(letters)) {
+          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
+        } else {
+          handleUpdate(id, name, descrip, type, deleteFlagx, createdTimex);
         }
-        handleUpdate(id, name, createdTime, deleteFlag);
       },
     });
   };
 
   // Method to handle diable
-  const handleDisable = (value) => {
+  const handleDisable = (id) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -123,12 +140,13 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/step/delete/${value}`, { method: "DELETE" })
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
-          })
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/delete/${id}`, requestOptions)
+          .then((res) => res.json())
           .then((resx) => {
             if (resx.message === "Expired Access") {
               navigate("/authentication/sign-in");
@@ -158,21 +176,46 @@ export default function data() {
     });
   };
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
+  // Method to change type
+  const changeType = (status) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const filteredItems = items.filter((item) => item.id === status);
+    if (filteredItems[0].approverID !== 0) {
+      return "Decision Made";
+      // eslint-disable-next-line no-else-return
+    } else if (filteredItems[0].empID !== personalIds) {
+      return "Requires Attention";
+    } else {
+      return "Created";
+    }
   };
 
-  // Method to fetch all companysteps
-  useEffect(() => {
-    const headers = miHeaders;
+  const changeCol = (status) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const filteredItems = items.filter((item) => item.id === status);
+    if (filteredItems[0].approverID !== 0) {
+      return "#FAFA33";
+      // eslint-disable-next-line no-else-return
+    } else if (filteredItems[0].empID !== personalIds) {
+      return "#FF0000";
+    } else {
+      return "#0096FF";
+    }
+  };
 
+  // Method to fetch all timeofftype
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/step/gets/${orgIDs}`, { headers })
+    fetch(
+      `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/getAllForEmp/${orgIDs}/${personalIds}`,
+      { headers }
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -197,24 +240,47 @@ export default function data() {
     };
   }, []);
 
+  const changeDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    return retDate;
+  };
+
   // Return table
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
+      { Header: "ID", accessor: "empID", align: "left" },
+      { Header: "Days Requested", accessor: "noOfDaysRequested", align: "left" },
+      { Header: "Days Approved", accessor: "noOfDaysApproved", align: "left" },
       {
-        Header: "Date Created",
-        accessor: "createdTime",
+        Header: "Start Date",
+        accessor: "startDate",
         Cell: ({ cell: { value } }) => changeDate(value),
         align: "left",
       },
       {
-        Header: "actions",
+        Header: "End Date",
+        accessor: "endDate",
+        Cell: ({ cell: { value } }) => changeDate(value),
+        align: "left",
+      },
+      { Header: "Purpose", accessor: "purpose", align: "left" },
+      {
+        Header: "Status",
         accessor: "id",
+        Cell: ({ cell: { value } }) => (
+          <p style={{ color: changeCol(value) }}>{changeType(value)}</p>
+        ),
+        align: "left",
+      },
+      {
+        Header: "actions",
+        accessor: "empSetupID",
         Cell: ({ cell: { value } }) => (
           <div
             style={{
               width: "100%",
-              backgroundColor: "#dadada",
+              backgroundColor: "#f5f5f5",
               borderRadius: "2px",
             }}
           >

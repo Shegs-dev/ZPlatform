@@ -9,21 +9,24 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 export default function data() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+
+  const navigate = useNavigate();
 
   // Method to handle diable
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -40,8 +43,21 @@ export default function data() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/status/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -63,30 +79,27 @@ export default function data() {
   const handleShow = (filteredData, value) => {
     let namex = "";
     let descripx = "";
-    let createdTimex = 0;
-    let deleteFlagx = 0;
+    let createdTime = 0;
+    let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
       descripx = "";
-      createdTimex = 0;
-      deleteFlagx = 0;
+      createdTime = 0;
+      deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
       descripx = filteredItems[0].descrip;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
+      createdTime = filteredItems[0].createdTime;
+      deleteFlag = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
       title: "Update Status",
-      html: `<table><tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
-      <tr><td><label for="descrip">Description</label></td>
-      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>`,
+      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
+           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -95,12 +108,10 @@ export default function data() {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
         const id = value;
-        const letters = /^[a-zA-Z]+$/;
-        if (name.length > 0 && !name.match(letters)) {
-          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
-        } else {
-          handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
+        if (!name) {
+          Swal.showValidationMessage(`Please enter name`);
         }
+        handleUpdate(id, name, descrip, createdTime, deleteFlag);
       },
     });
   };
@@ -117,9 +128,26 @@ export default function data() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_ZAVE_URL}/status/delete/${id}`, { method: "DELETE" })
-          .then((res) => res.json())
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/status/delete/${id}`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             MySwal.fire({
               title: resx.status,
               type: "success",
@@ -148,18 +176,29 @@ export default function data() {
 
   // Method to fetch all companystatus
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
+
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/status/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

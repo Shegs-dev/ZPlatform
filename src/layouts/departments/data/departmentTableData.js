@@ -1,7 +1,3 @@
-/* eslint-disable react/prop-types */
-
-// @mui material components
-
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
@@ -9,22 +5,23 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 export default function DepartmentData() {
   const MySwal = withReactContent(Swal);
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
+  const navigate = useNavigate();
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -41,8 +38,21 @@ export default function DepartmentData() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/department/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -113,9 +123,27 @@ export default function DepartmentData() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/department/delete/${value}`, { method: "DELETE" })
-          .then((res) => res.json())
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(`${process.env.REACT_APP_KUBU_URL}/department/delete/${value}`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             MySwal.fire({
               title: resx.status,
               type: "success",
@@ -145,15 +173,27 @@ export default function DepartmentData() {
   // Method to fetch all departments
   // env.environments
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }
@@ -177,6 +217,7 @@ export default function DepartmentData() {
       {
         Header: "actions",
         accessor: "id",
+        // eslint-disable-next-line react/prop-types
         Cell: ({ cell: { value } }) => (
           <div
             style={{

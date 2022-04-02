@@ -19,6 +19,9 @@ import withReactContent from "sweetalert2-react-content";
 import NCountry from "nigeria";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
@@ -32,9 +35,6 @@ function UserProfile() {
   const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
   const [phonex, setPhone] = useState("");
-  //   const [dayOfBirthx, setDayOfBirth] = useState("");
-  //   const [monthOfBirthx, setMonthOfBirth] = useState("");
-  //   const [yearOfBirthx, setYearOfBirth]e = useState("");
   const [nationalityx, setNationality] = useState("");
   const [residentialStreetx, setResidentialStreet] = useState("");
   const [residentialCityx, setResidentialCity] = useState("");
@@ -83,22 +83,32 @@ function UserProfile() {
   const [meDeleteFlagx, setMeDeleteFlag] = useState("");
   const [meCreatedTimex, setMeCreatedTime] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const navigate = useNavigate();
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
-  const personalIds = data11.personalID;
-  // console.log(personalIds);
-  const orgIDs = data11.orgID;
-  // console.log(orgIDs);
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
-        console.log(resultp);
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setFname(resultp[0].fname);
           setLname(resultp[0].lname);
@@ -121,7 +131,6 @@ function UserProfile() {
           setDeleteFlag(resultp[0].deleteFlag);
           setSysStatus(resultp[0].sysStatus);
           setCreatedTime(resultp[0].createdTime);
-          console.log(resultp[0].residentialState);
 
           setStartDate(
             new Date(
@@ -136,12 +145,26 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultnk) => {
-        console.log(resultnk);
-        console.log(resultnk.length);
+        if (resultnk.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultnk.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultnk.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultnk.length != 0) {
@@ -174,18 +197,33 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${personalIds}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultba) => {
-        console.log(resultba);
-        console.log(resultba.length);
+        if (resultba.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultba.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultba.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultba.length != 0) {
             setBaID(resultba[0].id);
             setBaBank(resultba[0].bank);
-            console.log(resultba[0].bank);
             setBaCountry(resultba[0].country);
             setBaAcctNo(resultba[0].acctNo);
             setBaAcctName(resultba[0].acctName);
@@ -203,12 +241,26 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultma) => {
-        console.log(resultma);
-        console.log(resultma.length);
+        if (resultma.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultma.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultma.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultma.length != 0) {
@@ -228,12 +280,26 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultme) => {
-        console.log(resultme);
-        console.log(resultme.length);
+        if (resultme.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultme.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultme.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultme.length != 0) {
@@ -253,13 +319,12 @@ function UserProfile() {
   }, []);
 
   const handleUpdate = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     let dayx = "";
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
-      const sDate = startDate.getTime();
-      console.log(`startDate: ${startDate}`);
-      console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -285,7 +350,6 @@ function UserProfile() {
       deleteFlag: deleteFlagx,
       createdTime: createdTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -294,8 +358,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -314,6 +391,9 @@ function UserProfile() {
   };
 
   const handleAddNOK = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -338,8 +418,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -358,6 +451,9 @@ function UserProfile() {
   };
 
   const handleAddBA = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -376,8 +472,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -396,6 +505,9 @@ function UserProfile() {
   };
 
   const handleAddMA = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -411,8 +523,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -431,6 +556,9 @@ function UserProfile() {
   };
 
   const handleAddME = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -446,8 +574,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -466,6 +607,9 @@ function UserProfile() {
   };
 
   const handleNKUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: nkIDx,
@@ -485,7 +629,6 @@ function UserProfile() {
       deleteFlag: nkDeleteFlagx,
       createdTime: nkCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -494,8 +637,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -513,6 +669,9 @@ function UserProfile() {
       });
   };
   const handleBAUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: baIDx,
@@ -526,7 +685,6 @@ function UserProfile() {
       deleteFlag: baDeleteFlagx,
       createdTime: baCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -535,8 +693,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -555,6 +726,9 @@ function UserProfile() {
   };
 
   const handleMAUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: maIDx,
@@ -565,7 +739,6 @@ function UserProfile() {
       deleteFlag: maDeleteFlagx,
       createdTime: maCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -574,8 +747,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -594,6 +780,9 @@ function UserProfile() {
   };
 
   const handleMEUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: meIDx,
@@ -604,7 +793,6 @@ function UserProfile() {
       deleteFlag: meDeleteFlagx,
       createdTime: meCreatedTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -613,8 +801,21 @@ function UserProfile() {
     };
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -670,21 +871,17 @@ function UserProfile() {
 
   const handleOnChangeBank = (e) => {
     const filteredItems = allbankNameCode.filter((item) => item.bankName === e.target.value);
-    console.log(e.target.value);
     if (e.target.value === "1") {
       setBaBank("");
       setBaBankCode("");
     } else {
       setBaBank(e.target.value);
       setBaBankCode(filteredItems[0].cbnCode);
-      console.log(baBankx);
-      console.log(baBankCodex);
     }
   };
 
   const handleOnChangeBaCountry = (e) => {
     setBaCountry(e.target.value);
-    console.log(baCountryx);
   };
 
   const handleOnChangeNKCountry = (e) => {
@@ -709,7 +906,6 @@ function UserProfile() {
 
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
-    console.log(nationalityx);
   };
 
   const handleOnFirstKeys = () => {

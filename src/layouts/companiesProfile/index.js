@@ -15,6 +15,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 function CompanyProfile() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
@@ -37,19 +40,34 @@ function CompanyProfile() {
   const [createdByx, setCreatedBy] = useState("");
   const [deletedflagx, setDeletedflag] = useState("");
   const [allStates, setAllStates] = useState([]);
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  console.log(data11);
-  const orgIDs = data11.orgID;
-  console.log(orgIDs);
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const headers = miHeaders;
+
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setId(resultp[0].id);
           setName(resultp[0].name);
@@ -103,8 +121,21 @@ function CompanyProfile() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/company/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

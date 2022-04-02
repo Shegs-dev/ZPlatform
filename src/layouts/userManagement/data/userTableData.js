@@ -11,27 +11,40 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+// import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function UserData() {
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
-  const [iteems, setIteems] = useState([]);
-  console.log(iteems);
-  // const [id, setId] = useState("");
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
 
+  // const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }
@@ -41,22 +54,27 @@ export default function UserData() {
     };
   }, []);
 
-  // const axios = require("axios");
-
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleDisable = (pIDVal) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/getByPersonalID/${orgIDs}/${pIDVal}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultPC) => {
-        setIteems(resultPC);
+        if (resultPC.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultPC.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultPC.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: "Reason For Delete",
           text: "You won't be able to revert this!",
@@ -75,14 +93,29 @@ export default function UserData() {
         }).then((resultD) => {
           if (resultD.isConfirmed) {
             const modalValue = document.getElementById("reasonForDelete").value;
+            const requestOptions = {
+              method: "DELETE",
+              headers: miHeaders,
+            };
             fetch(
               `${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${resultPC.id}/${modalValue}`,
-              {
-                method: "DELETE",
-              }
+              requestOptions
             )
-              .then((res) => res.json())
+              .then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              })
               .then((resx) => {
+                if (resx.message === "Expired Access") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx.message === "Token Does Not Exist") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx.message === "Unauthorized Access") {
+                  navigate("/authentication/forbiddenPage");
+                }
                 MySwal.fire({
                   title: resx.status,
                   type: "success",
@@ -120,8 +153,21 @@ export default function UserData() {
       .then((resultp) => {
         if (resultp.length > 0) {
           fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/${resultp[0].email}`)
-            .then((res) => res.json())
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
             .then((resx) => {
+              if (resx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
               MySwal.fire({
                 title: resx.status,
                 type: "success",
@@ -146,12 +192,6 @@ export default function UserData() {
         }
       });
   };
-
-  // const data11 = JSON.parse(localStorage.getItem("user1"));
-  // console.log(data11);
-
-  // const orgIDs = data11.orgID;
-  // console.log(orgIDs);
 
   return {
     columns: [

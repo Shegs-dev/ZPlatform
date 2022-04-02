@@ -13,6 +13,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function TimeOffType() {
   const MySwal = withReactContent(Swal);
@@ -24,15 +26,14 @@ function TimeOffType() {
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const navigate = useNavigate();
+
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const raw = JSON.stringify({
       timeOffType: {
@@ -49,10 +50,22 @@ function TimeOffType() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

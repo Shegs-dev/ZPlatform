@@ -10,17 +10,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-// import AHeaders from "header";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 export default function Branchdata() {
-  // const { allHeaders: myHeaders } = AHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
   // const axios = require("axios");
   const [items, setItems] = useState([]);
   // const [id, setId] = useState("");
+  const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
 
   // Method to handle update
   const handleUpdate = (
@@ -36,10 +38,8 @@ export default function Branchdata() {
     deleteFlagx
   ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
@@ -61,8 +61,21 @@ export default function Branchdata() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/update`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -193,9 +206,27 @@ export default function Branchdata() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${process.env.REACT_APP_KUBU_URL}/branch/delete/${val}`, { method: "DELETE" })
-          .then((res) => res.json())
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(`${process.env.REACT_APP_KUBU_URL}/branch/delete/${val}`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             MySwal.fire({
               title: resx.status,
               type: "success",
@@ -229,14 +260,26 @@ export default function Branchdata() {
   // Method to fetch all Branch
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }

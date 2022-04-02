@@ -18,14 +18,17 @@ import AllCountriesAndStates from "countries-states-master/countries";
 // import AllCountryCode from "countries-states-master/country-code";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-// import AHeaders from "header";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function Branches() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = BranchData();
 
-  // const { countryCodes: AlCountryCode } = AllCountryCode();
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+  const navigate = useNavigate();
 
   const [namex, setName] = useState("");
   const [emailx, setEmail] = useState("");
@@ -41,22 +44,15 @@ function Branches() {
   const [checkedName, setCheckedName] = useState("");
   const [checkedCity, setCheckedCity] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
-
-  // const [countryCodex, setCountryCode] = useState("");
-  // const { allHeaders: myHeaders } = AHeaders();
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const [opened, setOpened] = useState(false);
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
-    const GenToken = data11.token;
-    console.log(GenToken);
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,
@@ -73,10 +69,23 @@ function Branches() {
       body: raw,
       redirect: "follow",
     };
-    console.log(myHeaders);
     fetch(`${process.env.REACT_APP_KUBU_URL}/branch/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -86,6 +95,7 @@ function Branches() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -99,17 +109,10 @@ function Branches() {
     setAllStates(filteredItems[0].states);
     setCountry(e.target.value);
   };
-  console.log(allStates);
 
   const handleOnChangeRCState = (e) => {
     setState(e.target.value);
-    console.log(statex);
   };
-
-  // const handleOnChangeRCCCode = (e) => {
-  //   setCountryCode(e.target.value);
-  //   console.log(countryCodex);
-  // };
 
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
@@ -158,22 +161,6 @@ function Branches() {
         checkedStreet === true
     );
   };
-
-  // const handleOnPhoneKeys = () => {
-  //   const numbers = /^[0-9 +-]+$/;
-  //   if (!pnox.match(numbers)) {
-  //     // eslint-disable-next-line no-unused-expressions
-  //     document.getElementById("phone").innerHTML = "Phone Number - input a valid phone number<br>";
-  //   }
-  //   if (pnox.match(numbers)) {
-  //     // eslint-disable-next-line no-unused-expressions
-  //     document.getElementById("phone").innerHTML = "";
-  //   }
-  //   if (pnox.length === 0) {
-  //     // eslint-disable-next-line no-unused-expressions
-  //     document.getElementById("phone").innerHTML = "Phone number is required<br>";
-  //   }
-  // };
 
   const handleOnStreetKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
@@ -385,7 +372,7 @@ function Branches() {
                     </MDTypography>
                     <PhoneInput
                       value={pnox}
-                      inputStyle={{ width: "170%" }}
+                      inputStyle={{ width: "100%" }}
                       buttonStyle={{}}
                       onChange={setPno}
                     />
@@ -418,6 +405,9 @@ function Branches() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

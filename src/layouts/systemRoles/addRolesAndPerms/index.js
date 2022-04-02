@@ -6,44 +6,47 @@ import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import "bootstrap/dist/css/bootstrap.min.css";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 function RolesAndPerms() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  const idVal = JSON.parse([id]);
-
   const [rolName, setRolName] = useState("");
   const [services, setServices] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [rolPermissions, setRolPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const navigate = useNavigate();
 
-  fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`)
-    .then((res) => res.json())
-    .then((resultg) => {
-      setRolName(resultg[0].name);
-    });
-
-  const permissionsList = [];
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    const headers = miHeaders;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`)
-      .then((res) => res.json())
-      .then((resultapi) => {
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/get/${idVal}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resultg) => {
+        if (resultg.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultg.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultg.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
-          const jApi = JSON.stringify(resultapi);
-          const apppi = JSON.parse(jApi);
-          let apiList = [];
-          apiList = apppi;
-          console.log(apiList);
-          setServices(resultapi);
-          // apiList = resultapi;
-          console.log(apppi);
+          setRolName(resultg[0].name);
         }
       });
     return () => {
@@ -51,37 +54,84 @@ function RolesAndPerms() {
     };
   }, []);
 
-  /* const checkPermission = (value) => {
-    console.log(`Value${value}`);
-    let checks = false;
-    rolPermissions.map((rolPermi) => {
-      console.log(`Val${rolPermi.permissionCall}`);
-      if (rolPermi.permissionCall === value) {
-        if (rolPermi.isCheck === 1) {
-          checks = true;
-          return checks;
+  const permissionsList = [];
+
+  useEffect(() => {
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resultapi) => {
+        if (resultapi.message === "Expired Access") {
+          navigate("/authentication/sign-in");
         }
-      }
-      return checks;
-    });
-  }; */
+        if (resultapi.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          setServices(resultapi);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOnChange = (e) => {
+    const headers = miHeaders;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     const apiValue = e.target.value;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/permissions/getForService/${apiValue}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/permissions/getForService/${apiValue}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resulta) => {
+        if (resulta.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resulta.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         setPermissions(resulta);
-        console.log(resulta);
 
-        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`)
-          .then((res) => res.json())
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/getbyroleid/${idVal}`, {
+          headers,
+        })
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resultrpg) => {
+            if (resultrpg.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resultrpg.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resultrpg.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
             setRolPermissions(resultrpg);
-            console.log(resultrpg);
 
-            console.log(permissions);
-            console.log(rolPermissions);
             // eslint-disable-next-line array-callback-return
             resulta.map((permission) => {
               let check = false;
@@ -108,27 +158,28 @@ function RolesAndPerms() {
               permissionsList.push(pObj);
             });
 
-            console.log(permissionsList);
             setVPermissions(permissionsList);
             console.log(vPermissions);
+            console.log(permissions);
+            console.log(rolPermissions);
           });
       });
   };
 
   const handleOnClick = (e, apix) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     let isChecked = 0;
     const checks = e.target.checked;
-    console.log(checks);
     if (checks) {
       isChecked = 1;
     }
-    console.log(isChecked);
-    console.log(apix);
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
-
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
+
     const permCall = apix.actionCall;
 
     const raw = JSON.stringify({
@@ -145,11 +196,22 @@ function RolesAndPerms() {
     };
 
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/rolespermissions/save`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultrp) => {
-        console.log(resultrp);
+        if (resultrp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultrp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultrp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
       });
-    console.log(apix.actionCall);
   };
 
   return (
@@ -181,7 +243,7 @@ function RolesAndPerms() {
               color="secondary"
               mt={0}
             >
-              Select Permissions
+              Select A Service
             </MDTypography>
             <MDBox mx={34} textAlign="right">
               <Form.Select aria-label="Default select example" onChange={handleOnChange}>
@@ -229,20 +291,3 @@ function RolesAndPerms() {
 }
 
 export default RolesAndPerms;
-
-/* <Form.Select aria-label="Default select example">
-          <option>--Select Permission--</option>
-          {permissions.map((api) => (
-            <option key={api.id} value={api.displayName}>
-              {api.displayName}
-            </option>
-          ))}
-        </Form.Select> 
-        
-                <Form.Check
-                  type="checkbox"
-                  id={api.id}
-                  checked={api.isCheck}
-                  label={api.id}
-                  onClick={() => handleOnClick(api)}
-                /> */

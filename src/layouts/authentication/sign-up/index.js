@@ -42,7 +42,6 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { formatPhoneNumberIntl } from "react-phone-number-input";
 
 function Cover() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -81,20 +80,14 @@ function Cover() {
   const [retypePasswordx, setRetypePassword] = useState("");
   const [allStates, setAllStates] = useState([]);
 
-  // eslint-disable-next-line no-unused-expressions
-  formatPhoneNumberIntl(phonex) === "373-425-5567";
-
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
   const handleClick = (e) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     let dayx = "";
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
-      const sDate = startDate.getTime();
-      console.log(`startDate: ${startDate}`);
-      console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -123,11 +116,7 @@ function Cover() {
       redirect: "follow",
     };
     localStorage.setItem("pass1", passwordx);
-    const data123 = localStorage.getItem("pass1");
-    console.log(data123);
     localStorage.setItem("email1", emaily);
-    const data12 = localStorage.getItem("email1");
-    console.log(data12);
 
     if (passwordx === retypePasswordx) {
       fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
@@ -140,9 +129,6 @@ function Cover() {
               text: result.message,
             }).then(() => {
               localStorage.setItem("user", JSON.stringify(result.data));
-              let data1 = localStorage.getItem("user");
-              data1 = JSON.parse(data1);
-              console.log(data1);
               navigate("/authentication/companyRegistration", { replace: true });
             });
           } else {
@@ -175,7 +161,6 @@ function Cover() {
 
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
-    console.log(nationalityx);
   };
 
   const handleOnFirstKeys = () => {

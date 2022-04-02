@@ -14,6 +14,8 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function Steps() {
   const MySwal = withReactContent(Swal);
@@ -21,21 +23,19 @@ function Steps() {
 
   const [namex, setName] = useState("");
 
+  const navigate = useNavigate();
+
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
     e.preventDefault();
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
 
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -49,8 +49,21 @@ function Steps() {
     };
 
     fetch(`${process.env.REACT_APP_KUBU_URL}/step/add`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

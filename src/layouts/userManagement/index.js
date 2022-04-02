@@ -14,6 +14,9 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 import UserData from "./data/userTableData";
 
 function UserManagement() {
@@ -25,22 +28,37 @@ function UserManagement() {
   const [lNamex, setLastName] = useState("");
   const [roleIDs, setRoleID] = useState("");
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const navigate = useNavigate();
+
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const [items, setItems] = useState([]);
   const [company, setCompany] = useState([]);
 
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDz = data11.orgID;
     // const idVal = JSON.parse([orgIDz]);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDz}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_KUBU_URL}/company/get/${orgIDz}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
-          console.log(result);
           setCompany(result);
         }
       });
@@ -120,8 +138,6 @@ function UserManagement() {
       });
       return false;
     }
-    console.log(company[0]);
-    console.log(roleIDs);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDz = data11.orgID;
     const raw = JSON.stringify({
@@ -132,16 +148,18 @@ function UserManagement() {
       companyName: company[0].name,
       orgID: orgIDz,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/invite`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         MySwal.fire({
           title: result.status,
@@ -160,14 +178,26 @@ function UserManagement() {
       });
   };
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }

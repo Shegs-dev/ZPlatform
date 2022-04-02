@@ -26,6 +26,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 function InviteUser() {
   const [phonex, setPhone] = useState("");
@@ -58,17 +60,8 @@ function InviteUser() {
   //   const [enabled, setEnabled] = useState("");
   const [passEnabled, setPassEnabled] = useState("");
 
-  // const [personalCompanyx, setPersonalCompany] = useState([]);
-  console.log(emaily);
-  //   const [rolex, setRole] = useState("");
-  //   console.log(rolex);
-  console.log(fnamex);
-  console.log(lnamex);
-  console.log(idx);
-  console.log(passwordx);
-
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   const [passwordShown, setPasswordShown] = useState(false);
 
@@ -80,49 +73,21 @@ function InviteUser() {
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
-  /* 
-  const rawx = JSON.stringify({ fname: fnamex, lname: lnamex, email: emailx });
-  const requestOptionsx = {
-    method: "POST",
-    headers: myHeaders,
-    body: rawx,
-    redirect: "follow",
-  };
-  console.log(requestOptionsx);
-*/
-
-  //   const queryString = window.location.search;
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const fnameu = urlParams.get("fname");
-  //   setFname(fnameu);
-  //   const lnameu = urlParams.get("lname");
-  //   setLname(lnameu);
-  //   const emailu = urlParams.get("email");
-  //   setOemail(emailu);
-  //   const roleu = urlParams.get("role");
-  //   setRole(roleu);
-  //   const fnamep = JSON.parse([fnameu]);
-  //   setFname(fnamep);
-  //   console.log(fnamep);
-  //   const lnamep = JSON.parse([lnameu]);
-  //   console.log(lnamep);
-  //   const emailp = JSON.parse([emailu]);
-  //   console.log(emailp);
-  //   const rolep = JSON.parse([roleu]);
-  //   console.log(rolep);
-
   const getPersonalInformation = (e) => {
+    const headers = miHeaders;
     setEmail(e.target.value);
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     const emailpersonal = e.target.value;
     if (emailpersonal.length === 0 || !emailpersonal.match(letters)) {
       // Email Invalid
     } else {
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/${emailpersonal}`)
-        .then((res) => res.json())
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/${emailpersonal}`, { headers })
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
         .then((result) => {
-          console.log(result);
-          console.log(result.id);
           if (result.id !== null) {
             setPassEnabled(false);
             setOname(result.oname);
@@ -138,7 +103,6 @@ function InviteUser() {
             setResidentialState(result.residentialState);
             setResidentialCountry(result.residentialCountry);
             setMaritalStatus(result.maritalStatus);
-            // setPersonalCompany(result);
             setDeleteFlag(result.deleteFlag);
             setSysStatus(result.sysStatus);
             setCreatedTime(result.createdTime);
@@ -149,12 +113,6 @@ function InviteUser() {
           } else {
             setId(0);
           }
-          //   if (result.id != null) {
-          //     setPassEnabled(false);
-          //   }
-          //   if (idx === 0) {
-          //     setPassEnabled(true);
-          //   }
         })
         .catch((error) => {
           setId(0);
@@ -165,7 +123,6 @@ function InviteUser() {
 
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
-    console.log(nationalityx);
   };
 
   const handleOnChangeRCCountry = (e) => {
@@ -319,9 +276,6 @@ function InviteUser() {
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
-      const sDate = startDate.getTime();
-      console.log(`startDate: ${startDate}`);
-      console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -353,10 +307,7 @@ function InviteUser() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     localStorage.setItem("email1", emailx);
-    const data12 = localStorage.getItem("email1");
-    console.log(data12);
 
     let endpoint = "add";
     if (idx !== 0) {
@@ -379,7 +330,11 @@ function InviteUser() {
     }
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/${endpoint}`, requestOptions)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (result.status === "SUCCESS") {
           MySwal.fire({
@@ -388,8 +343,6 @@ function InviteUser() {
             text: result.message,
           }).then(() => {
             localStorage.setItem("personalInfo", JSON.stringify(result.data));
-            console.log(result.data.id);
-            console.log(orgIDx);
             const raw1 = JSON.stringify({
               orgID: orgIDx,
               personalID: result.data.id,
@@ -407,7 +360,11 @@ function InviteUser() {
               `${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`,
               requestOptions1
             )
-              .then((res) => res.json())
+              .then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              })
               .then((resultx) => {
                 MySwal.fire({
                   title: resultx.status,
@@ -428,7 +385,11 @@ function InviteUser() {
                     redirect: "follow",
                   };
                   fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
-                    .then((res) => res.json())
+                    .then(async (res) => {
+                      const aToken = res.headers.get("token-1");
+                      localStorage.setItem("rexxdex", aToken);
+                      return res.json();
+                    })
                     .then((resulty) => {
                       MySwal.fire({
                         title: resulty.status,
