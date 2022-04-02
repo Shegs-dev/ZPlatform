@@ -259,7 +259,6 @@ const routes = [
     component: <UserAudit />,
   },
   {
-    type: "collapse",
     name: "Forbidden",
     key: "forbiddenPage",
     icon: <Icon fontSize="small">assignment</Icon>,
