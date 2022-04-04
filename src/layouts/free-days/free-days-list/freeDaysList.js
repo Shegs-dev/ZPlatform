@@ -41,7 +41,6 @@ export default function FreeDaysData() {
       body: raw,
       redirect: "follow",
     };
-    console.log(freeDatex);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -225,7 +224,6 @@ export default function FreeDaysData() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(result);
           setItems(result);
         }
       });

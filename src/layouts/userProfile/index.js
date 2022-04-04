@@ -35,9 +35,6 @@ function UserProfile() {
   const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
   const [phonex, setPhone] = useState("");
-  //   const [dayOfBirthx, setDayOfBirth] = useState("");
-  //   const [monthOfBirthx, setMonthOfBirth] = useState("");
-  //   const [yearOfBirthx, setYearOfBirth]e = useState("");
   const [nationalityx, setNationality] = useState("");
   const [residentialStreetx, setResidentialStreet] = useState("");
   const [residentialCityx, setResidentialCity] = useState("");
@@ -91,13 +88,9 @@ function UserProfile() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-  const personalIds = data11.personalID;
-  // console.log(personalIds);
-  const orgIDs = data11.orgID;
-  // console.log(orgIDs);
-
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${personalIds}`, { headers })
@@ -152,6 +145,8 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/nextofkin/getForEmployee/${personalIds}`, { headers })
@@ -202,6 +197,8 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/getForEmployee/${personalIds}`, {
@@ -244,6 +241,8 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/marital/getForEmployee/${personalIds}`, { headers })
@@ -281,6 +280,8 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/medical/getForEmployee/${personalIds}`, { headers })
@@ -318,13 +319,12 @@ function UserProfile() {
   }, []);
 
   const handleUpdate = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
     let dayx = "";
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
-      const sDate = startDate.getTime();
-      console.log(`startDate: ${startDate}`);
-      console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -391,6 +391,9 @@ function UserProfile() {
   };
 
   const handleAddNOK = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -448,6 +451,9 @@ function UserProfile() {
   };
 
   const handleAddBA = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -499,6 +505,9 @@ function UserProfile() {
   };
 
   const handleAddMA = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -547,6 +556,9 @@ function UserProfile() {
   };
 
   const handleAddME = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -595,6 +607,9 @@ function UserProfile() {
   };
 
   const handleNKUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: nkIDx,
@@ -654,6 +669,9 @@ function UserProfile() {
       });
   };
   const handleBAUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: baIDx,
@@ -708,6 +726,9 @@ function UserProfile() {
   };
 
   const handleMAUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: maIDx,
@@ -759,6 +780,9 @@ function UserProfile() {
   };
 
   const handleMEUpdate = (e) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+    const orgIDs = data11.orgID;
     e.preventDefault();
     const raw = JSON.stringify({
       id: meIDx,

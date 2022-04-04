@@ -162,22 +162,6 @@ function Branches() {
     );
   };
 
-  // const handleOnPhoneKeys = () => {
-  //   const numbers = /^[0-9 +-]+$/;
-  //   if (!pnox.match(numbers)) {
-  //     // eslint-disable-next-line no-unused-expressions
-  //     document.getElementById("phone").innerHTML = "Phone Number - input a valid phone number<br>";
-  //   }
-  //   if (pnox.match(numbers)) {
-  //     // eslint-disable-next-line no-unused-expressions
-  //     document.getElementById("phone").innerHTML = "";
-  //   }
-  //   if (pnox.length === 0) {
-  //     // eslint-disable-next-line no-unused-expressions
-  //     document.getElementById("phone").innerHTML = "Phone number is required<br>";
-  //   }
-  // };
-
   const handleOnStreetKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[a-zA-Z0-9 .,-]+$/;

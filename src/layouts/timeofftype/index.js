@@ -26,7 +26,6 @@ function TimeOffType() {
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
-  console.log(enabled);
 
   const navigate = useNavigate();
 
@@ -35,7 +34,6 @@ function TimeOffType() {
   const handleClick = (e) => {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const raw = JSON.stringify({
       timeOffType: {
@@ -52,7 +50,6 @@ function TimeOffType() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -185,14 +182,14 @@ function TimeOffType() {
                 <div className="col-sm-6">
                   <MDBox mb={2}>
                     <MDTypography variant="button" fontWeight="regular" color="text">
-                      Title
+                      Type
                     </MDTypography>
                     <Form.Select
                       onChange={(e) => setType(e.target.value)}
                       value={typex || ""}
                       aria-label="Default select example"
                     >
-                      <option>---Select Title---</option>
+                      <option>---Select Type---</option>
                       <option value="1">Monthly</option>
                       <option value="2">Annually</option>
                     </Form.Select>

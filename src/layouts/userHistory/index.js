@@ -24,7 +24,6 @@ import withReactContent from "sweetalert2-react-content";
 
 function UserAudit() {
   const MySwal = withReactContent(Swal);
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
   const [services, setServices] = useState([]);
   const [permissions, setPermissions] = useState([]);
@@ -41,16 +40,12 @@ function UserAudit() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  console.log(myHeaders);
-
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
   };
-
-  const pRows = items;
 
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -102,13 +97,7 @@ function UserAudit() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          const jApi = JSON.stringify(resultapi);
-          const apppi = JSON.parse(jApi);
-          let apiList = [];
-          apiList = apppi;
-          console.log(apiList);
           setServices(resultapi);
-          // apiList = resultapi;
         }
       })
       .catch((error) => {
@@ -172,11 +161,10 @@ function UserAudit() {
   const handleClick = (e) => {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
 
+    const orgIDs = data11.orgID;
     const auditConSDate = new Date(auditSDate).getTime();
     const auditConEDate = new Date(auditEDate).getTime();
-
     const raw = JSON.stringify({
       userID: userIDx,
       orgID: orgIDs,
@@ -208,7 +196,6 @@ function UserAudit() {
           navigate("/authentication/forbiddenPage");
         }
         setItems(result);
-        console.log(result);
       })
       .catch((error) => {
         MySwal.fire({
@@ -393,7 +380,7 @@ function UserAudit() {
       </Card>
       <MDBox>
         <DataTable
-          table={{ columns: pColumns, rows: pRows }}
+          table={{ columns: pColumns, rows: items }}
           isSorted
           entriesPerPage
           showTotalEntries

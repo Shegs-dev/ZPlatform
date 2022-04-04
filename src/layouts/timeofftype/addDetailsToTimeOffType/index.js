@@ -20,9 +20,6 @@ function AddTimeOffType() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = AddDetailsData();
 
-  // const [malex, setMalex] = useState("");
-  // const [femalex, setFemalex] = useState("");
-
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
   const [statusmap, setStatusmap] = useState([]);

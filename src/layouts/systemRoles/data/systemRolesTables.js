@@ -26,10 +26,8 @@ export default function SysRole() {
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
 
     const raw = JSON.stringify({
       id: idx,
@@ -39,7 +37,6 @@ export default function SysRole() {
       deleteFlag: deleteFlagx,
       createdTime: createdTimex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -185,9 +182,7 @@ export default function SysRole() {
   useEffect(() => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log(data11);
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`, { headers })
       .then(async (res) => {

@@ -60,15 +60,6 @@ function InviteUser() {
   //   const [enabled, setEnabled] = useState("");
   const [passEnabled, setPassEnabled] = useState("");
 
-  // const [personalCompanyx, setPersonalCompany] = useState([]);
-  console.log(emaily);
-  //   const [rolex, setRole] = useState("");
-  //   console.log(rolex);
-  console.log(fnamex);
-  console.log(lnamex);
-  console.log(idx);
-  console.log(passwordx);
-
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
@@ -81,37 +72,6 @@ function InviteUser() {
   };
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
-
-  /* 
-  const rawx = JSON.stringify({ fname: fnamex, lname: lnamex, email: emailx });
-  const requestOptionsx = {
-    method: "POST",
-    headers: myHeaders,
-    body: rawx,
-    redirect: "follow",
-  };
-  console.log(requestOptionsx);
-*/
-
-  //   const queryString = window.location.search;
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const fnameu = urlParams.get("fname");
-  //   setFname(fnameu);
-  //   const lnameu = urlParams.get("lname");
-  //   setLname(lnameu);
-  //   const emailu = urlParams.get("email");
-  //   setOemail(emailu);
-  //   const roleu = urlParams.get("role");
-  //   setRole(roleu);
-  //   const fnamep = JSON.parse([fnameu]);
-  //   setFname(fnamep);
-  //   console.log(fnamep);
-  //   const lnamep = JSON.parse([lnameu]);
-  //   console.log(lnamep);
-  //   const emailp = JSON.parse([emailu]);
-  //   console.log(emailp);
-  //   const rolep = JSON.parse([roleu]);
-  //   console.log(rolep);
 
   const getPersonalInformation = (e) => {
     const headers = miHeaders;
@@ -128,8 +88,6 @@ function InviteUser() {
           return res.json();
         })
         .then((result) => {
-          console.log(result);
-          console.log(result.id);
           if (result.id !== null) {
             setPassEnabled(false);
             setOname(result.oname);
@@ -145,7 +103,6 @@ function InviteUser() {
             setResidentialState(result.residentialState);
             setResidentialCountry(result.residentialCountry);
             setMaritalStatus(result.maritalStatus);
-            // setPersonalCompany(result);
             setDeleteFlag(result.deleteFlag);
             setSysStatus(result.sysStatus);
             setCreatedTime(result.createdTime);
@@ -156,12 +113,6 @@ function InviteUser() {
           } else {
             setId(0);
           }
-          //   if (result.id != null) {
-          //     setPassEnabled(false);
-          //   }
-          //   if (idx === 0) {
-          //     setPassEnabled(true);
-          //   }
         })
         .catch((error) => {
           setId(0);
@@ -172,7 +123,6 @@ function InviteUser() {
 
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
-    console.log(nationalityx);
   };
 
   const handleOnChangeRCCountry = (e) => {
@@ -326,9 +276,6 @@ function InviteUser() {
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
-      const sDate = startDate.getTime();
-      console.log(`startDate: ${startDate}`);
-      console.log(`sDate: ${sDate}`);
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -360,10 +307,7 @@ function InviteUser() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     localStorage.setItem("email1", emailx);
-    const data12 = localStorage.getItem("email1");
-    console.log(data12);
 
     let endpoint = "add";
     if (idx !== 0) {
@@ -399,8 +343,6 @@ function InviteUser() {
             text: result.message,
           }).then(() => {
             localStorage.setItem("personalInfo", JSON.stringify(result.data));
-            console.log(result.data.id);
-            console.log(orgIDx);
             const raw1 = JSON.stringify({
               orgID: orgIDx,
               personalID: result.data.id,

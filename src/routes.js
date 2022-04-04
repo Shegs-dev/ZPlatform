@@ -49,7 +49,6 @@ import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
 import Status from "layouts/companystatustype";
 import Steps from "layouts/companysteps";
-import Checklists from "layouts/checklists";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
 import SysRoles from "layouts/systemRoles";
@@ -63,7 +62,6 @@ import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
-import InputPassword from "layouts/inputPassword";
 import FreeDay from "layouts/free-days";
 
 import TimeOffRequests from "layouts/timeoffRequests";
@@ -151,13 +149,6 @@ const routes = [
     component: <RolesAndPerms />,
   },
   {
-    name: "Checklists",
-    key: "checklists",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/checklists",
-    component: <Checklists />,
-  },
-  {
     type: "collapse",
     name: "System Roles",
     key: "systemRoles",
@@ -239,13 +230,6 @@ const routes = [
     component: <TimeOffRequests />,
   },
   {
-    name: "Input Passowrd",
-    key: "inputPassowrd",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/layouts/inputPassowrd",
-    component: <InputPassword />,
-  },
-  {
     name: "Reset Password",
     key: "forgot-password",
     icon: <Icon fontSize="small">assignment</Icon>,
@@ -275,7 +259,6 @@ const routes = [
     component: <UserAudit />,
   },
   {
-    type: "collapse",
     name: "Forbidden",
     key: "forbiddenPage",
     icon: <Icon fontSize="small">assignment</Icon>,
