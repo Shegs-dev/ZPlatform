@@ -21,6 +21,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
@@ -85,6 +86,8 @@ function UserProfile() {
   const [meDeleteFlagx, setMeDeleteFlag] = useState("");
   const [meCreatedTimex, setMeCreatedTime] = useState("");
 
+  const navigate = useNavigate();
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
@@ -104,6 +107,15 @@ function UserProfile() {
         return res.json();
       })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setFname(resultp[0].fname);
           setLname(resultp[0].lname);
@@ -149,6 +161,15 @@ function UserProfile() {
         return res.json();
       })
       .then((resultnk) => {
+        if (resultnk.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultnk.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultnk.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultnk.length != 0) {
@@ -192,6 +213,15 @@ function UserProfile() {
         return res.json();
       })
       .then((resultba) => {
+        if (resultba.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultba.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultba.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultba.length != 0) {
@@ -223,6 +253,15 @@ function UserProfile() {
         return res.json();
       })
       .then((resultma) => {
+        if (resultma.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultma.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultma.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultma.length != 0) {
@@ -251,6 +290,15 @@ function UserProfile() {
         return res.json();
       })
       .then((resultme) => {
+        if (resultme.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultme.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultme.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
           if (resultme.length != 0) {
@@ -316,6 +364,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -364,6 +421,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -406,6 +472,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -445,6 +520,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -484,6 +568,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -535,6 +628,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -579,6 +681,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -621,6 +732,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -663,6 +783,15 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

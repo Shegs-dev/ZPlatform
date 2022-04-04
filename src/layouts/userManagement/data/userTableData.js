@@ -43,6 +43,15 @@ export default function UserData() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setItems(result);
         }
@@ -64,6 +73,15 @@ export default function UserData() {
         return res.json();
       })
       .then((resultPC) => {
+        if (resultPC.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultPC.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultPC.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         setIteems(resultPC);
         MySwal.fire({
           title: "Reason For Delete",
@@ -83,11 +101,13 @@ export default function UserData() {
         }).then((resultD) => {
           if (resultD.isConfirmed) {
             const modalValue = document.getElementById("reasonForDelete").value;
+            const requestOptions = {
+              method: "DELETE",
+              headers: miHeaders,
+            };
             fetch(
               `${process.env.REACT_APP_ZAVE_URL}/personalcompany/delete/${resultPC.id}/${modalValue}`,
-              {
-                method: "DELETE",
-              }
+              requestOptions
             )
               .then(async (res) => {
                 const aToken = res.headers.get("token-1");
@@ -95,6 +115,15 @@ export default function UserData() {
                 return res.json();
               })
               .then((resx) => {
+                if (resx.message === "Expired Access") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx.message === "Token Does Not Exist") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx.message === "Unauthorized Access") {
+                  navigate("/authentication/forbiddenPage");
+                }
                 MySwal.fire({
                   title: resx.status,
                   type: "success",
@@ -138,6 +167,15 @@ export default function UserData() {
               return res.json();
             })
             .then((resx) => {
+              if (resx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
               MySwal.fire({
                 title: resx.status,
                 type: "success",

@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import MDTypography from "components/MDTypography";
 import PHeaders from "postHeader";
+import { useNavigate } from "react-router-dom";
 
 function Roles() {
   const MySwal = withReactContent(Swal);
@@ -24,6 +25,8 @@ function Roles() {
   const [descripx, setDescrip] = useState("");
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
+
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
 
@@ -71,6 +74,15 @@ function Roles() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",

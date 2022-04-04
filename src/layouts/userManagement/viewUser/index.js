@@ -16,6 +16,7 @@ import AllCountries from "countries";
 import BankNameAndCode from "layouts/userProfile/bankcode";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
 function ViewUser() {
   const queryString = window.location.search;
@@ -41,6 +42,8 @@ function ViewUser() {
   const [maritalStatusx, setMaritalStatus] = useState("");
 
   const [startDate, setStartDate] = useState(new Date());
+
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -108,6 +111,15 @@ function ViewUser() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -135,6 +147,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultx) => {
+        if (resultx.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultx.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultx.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setBranch(resultx);
           console.log(resultx);
@@ -146,6 +167,15 @@ function ViewUser() {
               return res.json();
             })
             .then((resultr) => {
+              if (resultr.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resultr.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resultr.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
               if (isMounted) {
                 setCompanyRole(resultr);
 
@@ -156,6 +186,15 @@ function ViewUser() {
                     return res.json();
                   })
                   .then((resultd) => {
+                    if (resultd.message === "Expired Access") {
+                      navigate("/authentication/sign-in");
+                    }
+                    if (resultd.message === "Token Does Not Exist") {
+                      navigate("/authentication/sign-in");
+                    }
+                    if (resultd.message === "Unauthorized Access") {
+                      navigate("/authentication/forbiddenPage");
+                    }
                     if (isMounted) {
                       setDepartment(resultd);
 
@@ -168,6 +207,15 @@ function ViewUser() {
                           return res.json();
                         })
                         .then((resultp) => {
+                          if (resultp.message === "Expired Access") {
+                            navigate("/authentication/sign-in");
+                          }
+                          if (resultp.message === "Token Does Not Exist") {
+                            navigate("/authentication/sign-in");
+                          }
+                          if (resultp.message === "Unauthorized Access") {
+                            navigate("/authentication/forbiddenPage");
+                          }
                           if (isMounted) {
                             setPosition(resultp);
 
@@ -180,6 +228,15 @@ function ViewUser() {
                                 return res.json();
                               })
                               .then((result) => {
+                                if (result.message === "Expired Access") {
+                                  navigate("/authentication/sign-in");
+                                }
+                                if (result.message === "Token Does Not Exist") {
+                                  navigate("/authentication/sign-in");
+                                }
+                                if (result.message === "Unauthorized Access") {
+                                  navigate("/authentication/forbiddenPage");
+                                }
                                 if (isMounted) {
                                   console.log(result);
                                   setOfficeItem(result);
@@ -246,6 +303,15 @@ function ViewUser() {
                                               return res.json();
                                             })
                                             .then((resultst) => {
+                                              if (resultst.message === "Expired Access") {
+                                                navigate("/authentication/sign-in");
+                                              }
+                                              if (resultst.message === "Token Does Not Exist") {
+                                                navigate("/authentication/sign-in");
+                                              }
+                                              if (resultst.message === "Unauthorized Access") {
+                                                navigate("/authentication/forbiddenPage");
+                                              }
                                               if (isMounted) {
                                                 setStep(resultst);
                                               }
@@ -263,6 +329,15 @@ function ViewUser() {
                                           return res.json();
                                         })
                                         .then((resultst) => {
+                                          if (resultst.message === "Expired Access") {
+                                            navigate("/authentication/sign-in");
+                                          }
+                                          if (resultst.message === "Token Does Not Exist") {
+                                            navigate("/authentication/sign-in");
+                                          }
+                                          if (resultst.message === "Unauthorized Access") {
+                                            navigate("/authentication/forbiddenPage");
+                                          }
                                           if (isMounted) {
                                             setStep(resultst);
 
@@ -311,6 +386,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setStatusx(resultp.statusID);
           setStatus(resultp);
@@ -331,6 +415,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setStatusmap(resultp);
         }
@@ -369,6 +462,15 @@ function ViewUser() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -396,6 +498,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (isMounted) {
           setFname(resultp[0].fname);
           setLname(resultp[0].lname);
@@ -448,6 +559,15 @@ function ViewUser() {
         return res.json();
       })
       .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -483,6 +603,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultma) => {
+        if (resultma.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultma.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultma.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         console.log(resultma);
         console.log(resultma.length);
         if (isMounted) {
@@ -508,6 +637,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultba) => {
+        if (resultba.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultba.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultba.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         console.log(resultba);
         console.log(resultba.length);
         if (isMounted) {
@@ -553,6 +691,15 @@ function ViewUser() {
         return res.json();
       })
       .then((resultst) => {
+        if (resultst.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultst.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultst.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         console.log(resultst);
         setStep(resultst);
       });
