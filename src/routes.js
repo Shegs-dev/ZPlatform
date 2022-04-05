@@ -65,8 +65,8 @@ import InviteUser from "layouts/inviteUser";
 import FreeDay from "layouts/free-days";
 
 import TimeOffRequests from "layouts/timeoffRequests";
-import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
+import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 
 const routes = [
   {
