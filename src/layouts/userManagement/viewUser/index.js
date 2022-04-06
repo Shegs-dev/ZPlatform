@@ -1223,42 +1223,6 @@ function ViewUser() {
                     Next Of Kin
                   </MDTypography>
                 </MDBox>
-                <MDBox
-                  variant="gradient"
-                  bgColor="error"
-                  borderRadius="lg"
-                  coloredShadow="success"
-                  mx={3}
-                  mt={1}
-                  p={1}
-                  mb={5}
-                  textAlign="center"
-                >
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkfirst">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nklast">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkother">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkemail">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkphone">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkstreet">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkcity">
-                    {" "}
-                  </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="nkoccupation">
-                    {" "}
-                  </MDTypography>
-                </MDBox>
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
