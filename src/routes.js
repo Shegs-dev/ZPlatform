@@ -67,6 +67,7 @@ import FreeDay from "layouts/free-days";
 import TimeOffRequests from "layouts/timeoffRequests";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 
 const routes = [
   {
@@ -190,8 +191,15 @@ const routes = [
     name: "User Info",
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/userManagement/viewUser",
+    route: "/user-Management/view-User",
     component: <ViewUser />,
+  },
+  {
+    name: "User Info",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "user-Management/user-Time-Off-Type",
+    component: <UserTOT />,
   },
   {
     name: "Company Regitration",
