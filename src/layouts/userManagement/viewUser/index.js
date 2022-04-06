@@ -86,7 +86,7 @@ function ViewUser() {
 
   const MySwal = withReactContent(Swal);
 
-  // save changes
+  // save all changes
   const handleOfficeSave = () => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
