@@ -44,6 +44,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
@@ -135,6 +136,7 @@ function Basic() {
             mb={1}
             textAlign="center"
           >
+            <MDBox component="img" src={plutospaceImg} alt="PlutoSpace" width="15rem" />
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
               Sign In
             </MDTypography>

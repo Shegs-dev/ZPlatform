@@ -48,11 +48,12 @@ function UserAudit() {
   };
 
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
 
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);

@@ -273,7 +273,6 @@ function InviteUser() {
     let monthx = "";
     let yearx = "";
     if (startDate != null) {
-      const sDate = startDate.getTime();
       dayx = startDate.getDate();
       monthx = startDate.getMonth() + 1;
       yearx = startDate.getFullYear();
@@ -416,7 +415,7 @@ function InviteUser() {
         });
       });
   };
-  
+
   useEffect(() => {
     if (idx === "") {
       setPassEnabled(true);

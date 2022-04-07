@@ -137,7 +137,10 @@ export default function UserData() {
   };
 
   const handleView = (value) => {
-    navigate(`/userManagement/viewUser?id=${value}`);
+    navigate(`/user-Management/view-User?id=${value}`);
+  };
+  const handleAddTOT = (value) => {
+    navigate(`/user-Management/user-Time-Off-Type?id=${value}`);
   };
 
   // Method to change date from timestamp
@@ -223,6 +226,9 @@ export default function UserData() {
 
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleAddTOT(value)}>
+                    Add Time-Off Type
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handlePasswordReset(value)}>
                     Reset Password
