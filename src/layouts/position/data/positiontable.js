@@ -111,7 +111,7 @@ export default function data() {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
         const id = value;
-        const letters = /^[a-zA-Z]+$/;
+        const letters = /^[a-zA-Z ]+$/;
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {

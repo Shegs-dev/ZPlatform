@@ -234,7 +234,7 @@ const routes = [
     name: "Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests",
+    route: "/time-Off-Requests",
     component: <TimeOffRequests />,
   },
   {
@@ -252,10 +252,10 @@ const routes = [
     component: <AddTimeOffType />,
   },
   {
-    name: "Complete Reset Password",
-    key: "complete-ResetPassword",
+    name: "Complete Forgot Password",
+    key: "complete-forgotPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/addDetailsToTimeOffType",
+    route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,
   },
   {

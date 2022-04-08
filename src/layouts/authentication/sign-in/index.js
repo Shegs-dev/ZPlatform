@@ -20,7 +20,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
 import Swal from "sweetalert2";
@@ -47,8 +46,6 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
 function Basic() {
-  const [rememberMe, setRememberMe] = useState(false);
-
   const navigate = useNavigate();
 
   const [usernamex, setUsername] = useState("");
@@ -65,8 +62,6 @@ function Basic() {
     // inverse the boolean state of passwordShown
     setPasswordShown(!passwordShown);
   };
-
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const handleClick = (e) => {
     setOpened(true);
@@ -216,18 +211,6 @@ function Basic() {
                     </MDTypography>
                   </div>
                 </Container>
-              </MDBox>
-              <MDBox display="flex" alignItems="center" ml={-1}>
-                <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-                <MDTypography
-                  variant="button"
-                  fontWeight="regular"
-                  color="text"
-                  onClick={handleSetRememberMe}
-                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-                >
-                  &nbsp;&nbsp;Remember me
-                </MDTypography>
               </MDBox>
               <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
                 sign In

@@ -118,7 +118,7 @@ export default function TimeOffRequestData() {
         const descrip = Swal.getPopup().querySelector("#descrip").value;
         const type = Swal.getPopup().querySelector("#type").value;
         const id = value;
-        const letters = /^[a-zA-Z]+$/;
+        const letters = /^[a-zA-Z ]+$/;
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {

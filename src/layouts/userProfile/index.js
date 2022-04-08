@@ -2162,10 +2162,14 @@ function UserProfile() {
                           aria-label="Default select example"
                         >
                           <option>---Blood Group---</option>
-                          <option value="A">A</option>
-                          <option value="B">B</option>
-                          <option value="AB">AB</option>
-                          <option value="O">O</option>
+                          <option value="A+">A+</option>
+                          <option value="A-">A-</option>
+                          <option value="B+">B+</option>
+                          <option value="B-">B-</option>
+                          <option value="AB+">AB+</option>
+                          <option value="AB-">AB-</option>
+                          <option value="O+">O+</option>
+                          <option value="O-">O-</option>
                         </Form.Select>
                       </MDBox>
                     </div>
@@ -2185,11 +2189,9 @@ function UserProfile() {
                         >
                           <option>---Genotype---</option>
                           <option value="AA">AA</option>
-                          <option value="AO">AO</option>
-                          <option value="BB">BB</option>
-                          <option value="BO">BO</option>
-                          <option value="AB">AB</option>
-                          <option value="OO">OO</option>
+                          <option value="AS">AS</option>
+                          <option value="AC">AC</option>
+                          <option value="SS">SS</option>
                         </Form.Select>
                       </MDBox>
                     </div>

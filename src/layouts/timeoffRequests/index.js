@@ -262,6 +262,10 @@ function TimeOff() {
                         placeholderText="Start Date"
                         style={{ marginRight: "10px" }}
                         selected={startDate}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
                         onChange={(start) => setStartDate(start)}
                       />
                     </MDBox>
@@ -271,6 +275,10 @@ function TimeOff() {
                       <DatePicker
                         placeholderText="End Date"
                         selected={endDate}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
                         onChange={(end) => setEndDate(end)}
                       />
                     </MDBox>
@@ -287,6 +295,10 @@ function TimeOff() {
                         placeholderText="Resumption Date"
                         style={{ marginRight: "10px" }}
                         selected={resumptionDate}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
                         onChange={(resumptiondate) => setresumptionDate(resumptiondate)}
                       />{" "}
                     </MDBox>
