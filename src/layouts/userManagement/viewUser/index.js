@@ -1360,6 +1360,7 @@ function ViewUser() {
                         </MDTypography>
                         <MDBox textAlign="right">
                           <Form.Select
+                            disabled
                             value={nkResidentialCountryx || ""}
                             aria-label="Default select example"
                             onChange={handleOnChangeNKCountry}
@@ -1384,6 +1385,7 @@ function ViewUser() {
                         <MDBox textAlign="right">
                           <Form.Select
                             value={nkResidentialStatex}
+                            disabled
                             aria-label="Default select example"
                             onChange={handleOnChangeNKState}
                           >

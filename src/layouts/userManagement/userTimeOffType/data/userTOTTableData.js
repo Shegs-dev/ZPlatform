@@ -108,13 +108,6 @@ export default function UserTOTdata() {
         if (isMounted) {
           console.log(result);
           setItems(result);
-          // const setupItems = [];
-          // // eslint-disable-next-line array-callback-return
-          // result.map((item) => {
-          //   setupItems.push(item.setup);
-          // });
-          // setItems(setupItems);
-          // console.log(setupItems);
         }
       });
     return () => {

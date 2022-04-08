@@ -270,6 +270,10 @@ function FreeDay() {
                       placeholderText="MM/DD/YY"
                       style={{ marginRight: "10px" }}
                       selected={newEvent.time}
+                      peekNextMonth
+                      showMonthDropdown
+                      showYearDropdown
+                      dropdownMode="select"
                       onChange={(time) => setNewEvent({ ...newEvent, time })}
                     />
                   </div>

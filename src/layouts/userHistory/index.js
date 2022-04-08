@@ -276,6 +276,10 @@ function UserAudit() {
                           placeholderText="MM/DD/YY"
                           style={{ marginRight: "10px" }}
                           selected={auditSDate}
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
                           onChange={(time) => setAuditSDate(time)}
                         />{" "}
                       </MDBox>{" "}
@@ -296,6 +300,10 @@ function UserAudit() {
                           style={{ marginRight: "10px" }}
                           selected={auditEDate}
                           onChange={(time) => setAuditEDate(time)}
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
                         />{" "}
                       </MDBox>
                     </div>
