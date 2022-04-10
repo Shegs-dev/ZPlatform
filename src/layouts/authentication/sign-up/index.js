@@ -33,6 +33,7 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
 import React, { useState } from "react";
 
@@ -129,7 +130,7 @@ function Cover() {
               text: result.message,
             }).then(() => {
               localStorage.setItem("user", JSON.stringify(result.data));
-              navigate("/authentication/companyRegistration", { replace: true });
+              navigate("/authentication/company-Registration", { replace: true });
             });
           } else {
             MySwal.fire({
@@ -359,10 +360,8 @@ function Cover() {
           mb={1}
           textAlign="center"
         >
-          <MDTypography variant="h2" fontWeight="medium" color="white" mt={1}>
-            PlutoSpace
-          </MDTypography>
-          <MDTypography display="block" variant="button" color="white" my={1}>
+          <MDBox component="img" src={plutospaceImg} alt="PlutoSpace" width="10rem" />
+          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Create an Account
           </MDTypography>
         </MDBox>
@@ -510,6 +509,9 @@ function Cover() {
               <div className="row">
                 <div className="col-sm-8">
                   <MDBox mb={2}>
+                    <MDTypography variant="button" fontWeight="regular" color="text">
+                      Marital Status
+                    </MDTypography>
                     <Form.Select
                       onChange={(e) => setMaritalStatus(e.target.value)}
                       value={maritalStatusx || ""}

@@ -19,8 +19,8 @@ import DataTable from "examples/Tables/DataTable";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 // import DateRangePicker from "react-dates";
-import TimeOffRequestData from "layouts/timeoffRequests/timeOffRequestTable/timeOffRequests";
 import { useNavigate } from "react-router-dom";
+import TimeOffRequestData from "layouts/timeoffRequests/timeOffRequestTable/timeOffRequests";
 
 function TimeOff() {
   const [purposex, setPurpose] = useState("");
@@ -33,7 +33,9 @@ function TimeOff() {
   const [resumptionDate, setresumptionDate] = useState("");
 
   const [user, setUser] = useState([]);
-
+  const [empSetup, setEmpSetup] = useState([]);
+  const [empSetupIdx, setEmpSetupId] = useState("");
+  console.log(empSetupIdx);
   const { columns: pColumns, rows: pRows } = TimeOffRequestData();
 
   const MySwal = withReactContent(Swal);
@@ -75,6 +77,41 @@ function TimeOff() {
     };
   }, []);
 
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    console.log(orgIDs);
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeoffsetup/getAll/${orgIDs}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          console.log(result);
+          setEmpSetup(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleAddEvent = (e) => {
     const startCDate = new Date(startDate).getTime();
     const endCDate = new Date(endDate).getTime();
@@ -86,11 +123,11 @@ function TimeOff() {
     const personalIds = data11.personalID;
 
     const orgIDs = data11.orgID;
-
+    let eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
       empID: personalIds,
-      empSetupID: 0,
+      empSetupID: empSetupIdx,
       noOfDaysRequested: daysx,
       startDate: startCDate,
       endDate: endCDate,
@@ -105,6 +142,7 @@ function TimeOff() {
       body: raw,
       redirect: "follow",
     };
+    console.log(requestOptions);
     let check = 0;
     if (startCDate < CurTime) {
       check = 1;
@@ -130,7 +168,6 @@ function TimeOff() {
         text: "Please Enter A Date From The Future",
       });
     }
-
     if (check === 0) {
       fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/add`, requestOptions)
         .then(async (res) => {
@@ -139,6 +176,8 @@ function TimeOff() {
           return res.json();
         })
         .then((result) => {
+          eTOTId = result;
+
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");
           }
@@ -152,9 +191,45 @@ function TimeOff() {
             title: result.status,
             type: "success",
             text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          })
+            .then(() => {
+              const ids = data11.id;
+              const raw2 = JSON.stringify({
+                orgID: orgIDs,
+                employeeTimeOffTransactionID: eTOTId.data.id,
+                currentHolderID: ids,
+              });
+              const requestOptions2 = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw2,
+                redirect: "follow",
+              };
+              fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeoffjourney/add`, requestOptions2)
+                .then(async (res) => {
+                  const aToken = res.headers.get("token-1");
+                  localStorage.setItem("rexxdex", aToken);
+                  return res.json();
+                })
+                .then((resultx) => {
+                  if (resultx.message === "Expired Access") {
+                    navigate("/authentication/sign-in");
+                  }
+                  if (resultx.message === "Token Does Not Exist") {
+                    navigate("/authentication/sign-in");
+                  }
+                  if (resultx.message === "Unauthorized Access") {
+                    navigate("/authentication/forbiddenPage");
+                  }
+                });
+            })
+            .catch((error) => {
+              console.log({
+                title: error.status,
+                type: "error",
+                text: error.message,
+              });
+            });
         })
         .catch((error) => {
           MySwal.fire({
@@ -262,6 +337,10 @@ function TimeOff() {
                         placeholderText="Start Date"
                         style={{ marginRight: "10px" }}
                         selected={startDate}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
                         onChange={(start) => setStartDate(start)}
                       />
                     </MDBox>
@@ -271,6 +350,10 @@ function TimeOff() {
                       <DatePicker
                         placeholderText="End Date"
                         selected={endDate}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
                         onChange={(end) => setEndDate(end)}
                       />
                     </MDBox>
@@ -287,8 +370,28 @@ function TimeOff() {
                         placeholderText="Resumption Date"
                         style={{ marginRight: "10px" }}
                         selected={resumptionDate}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
                         onChange={(resumptiondate) => setresumptionDate(resumptiondate)}
                       />{" "}
+                    </MDBox>
+                  </div>
+                  <div className="col-sm-6">
+                    <MDBox mt={2}>
+                      <Form.Select
+                        onChange={(e) => setEmpSetupId(e.target.value)}
+                        aria-label="Default select example"
+                      >
+                        <option value="">Select Timeoff Category</option>
+                        {empSetup.map((api) => (
+                          <option key={api.setup.id} value={api.setup.id}>
+                            {api.timeOffTypeCondition.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      <br />
                     </MDBox>
                   </div>
                 </div>

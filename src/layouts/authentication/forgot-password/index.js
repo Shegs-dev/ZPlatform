@@ -40,13 +40,17 @@ function ForgotPass() {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
+    const raw = JSON.stringify({
+      username: emailx,
+    });
     const requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: myHeaders,
+      body: raw,
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/forgotpassword/${emailx}`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/forgotPassword`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         if (result.status === "SUCCESS") {
