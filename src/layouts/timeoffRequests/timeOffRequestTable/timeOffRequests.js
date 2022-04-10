@@ -148,6 +148,10 @@ export default function TimeOffRequestData() {
       adminx = filteredItems[0].adminID;
       reasonx = filteredItems[0].reasonForDisapproval;
     }
+    console.log(daysx);
+    console.log(value);
+    console.log(startx);
+    console.log(endx);
 
     MySwal.fire({
       title: "Update timeofftype",
@@ -261,6 +265,7 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
+    console.log(status);
     if (filteredItems[0].approverID !== 0) {
       return "Decision Made";
       // eslint-disable-next-line no-else-return
@@ -314,6 +319,7 @@ export default function TimeOffRequestData() {
         if (isMounted) {
           setItems(result);
         }
+        console.log(result);
       });
     return () => {
       isMounted = false;
@@ -347,15 +353,15 @@ export default function TimeOffRequestData() {
       { Header: "Purpose", accessor: "purpose", align: "left" },
       {
         Header: "Status",
-        accessor: "id",
-        Cell: ({ cell: { value } }) => (
-          <p style={{ color: changeCol(value) }}>{changeType(value)}</p>
+        accessor: "empSetupID",
+        Cell: ({ cell: { row } }) => (
+          <p style={{ color: changeCol(row.original.id) }}>{changeType(row.original.id)}</p>
         ),
         align: "left",
       },
       {
         Header: "actions",
-        accessor: "empSetupID",
+        accessor: "id",
         Cell: ({ cell: { value } }) => (
           <div
             style={{
