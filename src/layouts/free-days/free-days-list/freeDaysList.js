@@ -125,7 +125,7 @@ export default function FreeDaysData() {
         const freeDate = addDMY.getTime();
         const id = value;
         const Number = /^[0-9]+$/;
-        const letters = /^[a-zA-Z]+$/;
+        const letters = /^[a-zA-Z ]+$/;
         if (
           (name.length > 0 && !name.match(letters)) ||
           (dayy.length > 0 && !dayy.match(Number)) ||

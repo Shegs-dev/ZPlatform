@@ -176,7 +176,7 @@ export default function TimeOffRequestData() {
         const letters = /^[a-zA-Z]+$/;
         const numbers = /^[0-9]+$/;
         if (
-          (noOfDaysRequested.length > 0 && !noOfDaysRequested.match(letters)) ||
+          (noOfDaysRequested.length > 0 && !noOfDaysRequested.match(numbers)) ||
           (startDate.length > 0 && !startDate.match(numbers)) ||
           (end.length > 0 && !end.match(numbers)) ||
           (dutyreliever.length > 0 && !dutyreliever.match(letters)) ||

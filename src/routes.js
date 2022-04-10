@@ -67,6 +67,7 @@ import Checklists from "layouts/checklists";
 
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 
 const routes = [
@@ -198,8 +199,15 @@ const routes = [
     name: "User Info",
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/userManagement/viewUser",
+    route: "/user-Management/view-User",
     component: <ViewUser />,
+  },
+  {
+    name: "User Info",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "user-Management/user-Time-Off-Type",
+    component: <UserTOT />,
   },
   {
     name: "Company Regitration",
@@ -234,7 +242,7 @@ const routes = [
     name: "Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests",
+    route: "/time-Off-Requests",
     component: <TimeOffRequests />,
   },
   {
@@ -252,10 +260,10 @@ const routes = [
     component: <AddTimeOffType />,
   },
   {
-    name: "Complete Reset Password",
-    key: "complete-ResetPassword",
+    name: "Complete Forgot Password",
+    key: "complete-forgotPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/addDetailsToTimeOffType",
+    route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,
   },
   {

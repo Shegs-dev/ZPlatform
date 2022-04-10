@@ -20,7 +20,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
 import Swal from "sweetalert2";
@@ -44,10 +43,9 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
 function Basic() {
-  const [rememberMe, setRememberMe] = useState(false);
-
   const navigate = useNavigate();
 
   const [usernamex, setUsername] = useState("");
@@ -65,8 +63,6 @@ function Basic() {
     setPasswordShown(!passwordShown);
   };
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
-
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
@@ -82,12 +78,10 @@ function Basic() {
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
       .then(async (res) => {
-        console.log(res.headers);
+        // console.log(res.headers);
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex1", aToken);
-        const exemple = "example for token";
-        localStorage.setItem("exemp", exemple);
-        console.log(aToken);
+        // console.log(aToken);
         return res.json();
       })
       .then((result) => {
@@ -135,6 +129,7 @@ function Basic() {
             mb={1}
             textAlign="center"
           >
+            <MDBox component="img" src={plutospaceImg} alt="PlutoSpace" width="15rem" />
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
               Sign In
             </MDTypography>
@@ -216,18 +211,6 @@ function Basic() {
                     </MDTypography>
                   </div>
                 </Container>
-              </MDBox>
-              <MDBox display="flex" alignItems="center" ml={-1}>
-                <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-                <MDTypography
-                  variant="button"
-                  fontWeight="regular"
-                  color="text"
-                  onClick={handleSetRememberMe}
-                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-                >
-                  &nbsp;&nbsp;Remember me
-                </MDTypography>
               </MDBox>
               <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
                 sign In
