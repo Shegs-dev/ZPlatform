@@ -63,6 +63,7 @@ import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import FreeDay from "layouts/free-days";
+import Checklists from "layouts/checklists";
 
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
@@ -155,6 +156,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/system-Roles",
     component: <SysRoles />,
+  },
+  {
+    name: "Checklists",
+    key: "checklists",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/checklists",
+    component: <Checklists />,
   },
   {
     type: "collapse",

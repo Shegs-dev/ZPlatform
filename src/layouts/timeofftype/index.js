@@ -190,7 +190,7 @@ function TimeOffType() {
                       aria-label="Default select example"
                     >
                       <option>---Select Type---</option>
-                      <option value="1">Monthly</option>
+                      {/* <option value="1">Monthly</option> */}
                       <option value="2">Annually</option>
                     </Form.Select>
                   </MDBox>
