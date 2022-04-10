@@ -106,9 +106,10 @@ export default function data() {
       <label for="name">Name</label></td>
       <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
       <tr><td><label for="descrip">Description</label></td>
-      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr>
       <tr><td><label for="type">Type</label></td>
-      <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"></td></tr></table>`,
+              <td><input type="text" class="swal2-input" id="Annually" value="Annually" disabled placeholder="Type">
+      </td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -116,9 +117,9 @@ export default function data() {
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const type = Swal.getPopup().querySelector("#type").value;
+        const type = typex;
         const id = value;
-        const letters = /^[a-zA-Z]+$/;
+        const letters = /^[a-zA-Z ]+$/;
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
