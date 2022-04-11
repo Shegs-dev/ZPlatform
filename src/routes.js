@@ -91,7 +91,7 @@ const routes = [
     name: "User TimeOff Type",
     key: "userTimeOffType",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/userManagement/user-TimeOff-Type",
+    route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
   },
   {
