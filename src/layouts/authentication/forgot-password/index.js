@@ -16,6 +16,7 @@ Coded by www.creative-tim.com
 // @mui material components
 import { useState } from "react";
 import Card from "@mui/material/Card";
+import { useNavigate } from "react-router-dom";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -32,6 +33,8 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 function ForgotPass() {
+  const navigate = useNavigate();
+
   const [emailx, setEmail] = useState("");
   const MySwal = withReactContent(Swal);
 
@@ -59,7 +62,7 @@ function ForgotPass() {
             type: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            navigate("/authentication/sign-in", { replace: true });
           });
         } else {
           MySwal.fire({

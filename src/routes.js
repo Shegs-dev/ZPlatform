@@ -67,8 +67,8 @@ import Checklists from "layouts/checklists";
 
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
-import UserTOT from "layouts/userManagement/userTimeOffType";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 
 const routes = [
   {
@@ -86,6 +86,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    name: "User TimeOff Type",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-TimeOff-Type",
+    component: <UserTOT />,
   },
   {
     type: "collapse",
@@ -199,15 +206,8 @@ const routes = [
     name: "User Info",
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/user-Management/view-User",
+    route: "/userManagement/viewUser",
     component: <ViewUser />,
-  },
-  {
-    name: "User Info",
-    key: "userTimeOffType",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "user-Management/user-Time-Off-Type",
-    component: <UserTOT />,
   },
   {
     name: "Company Regitration",
@@ -242,7 +242,7 @@ const routes = [
     name: "Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-Off-Requests",
+    route: "/timeoffRequests",
     component: <TimeOffRequests />,
   },
   {
@@ -256,12 +256,12 @@ const routes = [
     name: "Add Details To Time Off Type",
     key: "adddetailtotimeofftype",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeofftype/addDetailsToTimeOffType",
+    route: "/timeofftype/add-Details-To-Time-Off-Type",
     component: <AddTimeOffType />,
   },
   {
-    name: "Complete Forgot Password",
-    key: "complete-forgotPassword",
+    name: "Complete Reset Password",
+    key: "complete-ResetPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,

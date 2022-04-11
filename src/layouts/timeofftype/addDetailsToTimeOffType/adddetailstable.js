@@ -235,14 +235,14 @@ export default function AddDetailsData() {
 
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
+      { Header: "category", accessor: "name", align: "left" },
       {
         Header: "type",
         accessor: "type",
         Cell: ({ cell: { value } }) => changeCol(value),
         align: "left",
       },
-      { Header: "value", accessor: "value", align: "left" },
+      { Header: "Number Of Days", accessor: "value", align: "left" },
       {
         Header: "actions",
         accessor: "id",

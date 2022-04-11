@@ -101,7 +101,7 @@ export default function data() {
     }
 
     MySwal.fire({
-      title: "Update timeofftype",
+      title: "Update Time off-type",
       html: `<table><tr><td>
       <label for="name">Name</label></td>
       <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
@@ -219,7 +219,7 @@ export default function data() {
 
   const handleAddToTimeOff = (value) => {
     console.log(value);
-    navigate(`/timeofftype/addDetailsToTimeOffType?id=${value}`);
+    navigate(`/timeofftype/add-Details-To-Time-Off-Type?id=${value}`);
   };
 
   // Method to handle diable
