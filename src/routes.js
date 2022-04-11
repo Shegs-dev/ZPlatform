@@ -255,7 +255,7 @@ const routes = [
     name: "Complete Reset Password",
     key: "complete-ResetPassword",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/addDetailsToTimeOffType",
+    route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,
   },
   {
