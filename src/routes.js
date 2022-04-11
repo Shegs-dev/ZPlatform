@@ -68,6 +68,7 @@ import Checklists from "layouts/checklists";
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 
 const routes = [
   {
@@ -85,6 +86,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    name: "User TimeOff Type",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/userManagement/user-TimeOff-Type",
+    component: <UserTOT />,
   },
   {
     type: "collapse",
