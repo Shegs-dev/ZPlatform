@@ -23,18 +23,43 @@ export default function TimeOffRequestData() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   // Method to handle diable
-  const handleUpdate = (idx, namex, descripx, typex, createdTimex, deleteFlagx) => {
+  const handleUpdate = (
+    idx,
+    empSetupIdx,
+    daysx,
+    daysapprovex,
+    startx,
+    endx,
+    resumex,
+    dutyrelieverx,
+    createdx,
+    purposex,
+    deletex,
+    approvex,
+    adminx,
+    reasonx
+  ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
+    const personalIds = data11.personalID;
 
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
-      name: namex,
-      descrip: descripx,
-      type: typex,
-      createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      empID: personalIds,
+      empSetupID: empSetupIdx,
+      noOfDaysRequested: daysx,
+      noOfDaysApproved: daysapprovex,
+      startDate: startx,
+      endDate: endx,
+      resumptionDate: resumex,
+      dutyRelieverID: dutyrelieverx,
+      createdDate: createdx,
+      purpose: purposex,
+      deleteFlag: deletex,
+      approverID: approvex,
+      adminID: adminx,
+      reasonForDisapproval: reasonx,
     });
     const requestOptions = {
       method: "POST",
@@ -43,7 +68,7 @@ export default function TimeOffRequestData() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -78,51 +103,107 @@ export default function TimeOffRequestData() {
 
   // Method to filter departments
   const handleShow = (filteredData, value) => {
-    let namex = "";
-    let descripx = "";
-    let typex = 0;
-    let createdTimex = 0;
-    let deleteFlagx = 0;
+    let empSetupIdx = "";
+    let daysx = "";
+    let daysapprovex = "";
+    let startx = "";
+    let endx = "";
+    let resumex = "";
+    let dutyrelieverx = "";
+    let createdx = "";
+    let purposex = "";
+    let deletex = "";
+    let approvex = "";
+    let adminx = "";
+    let reasonx = "";
     // Avoid filter for empty string
     if (!value) {
-      namex = "";
-      descripx = "";
-      typex = 0;
-      createdTimex = 0;
-      deleteFlagx = 0;
+      empSetupIdx = "";
+      daysx = "";
+      daysapprovex = "";
+      startx = "";
+      endx = "";
+      resumex = "";
+      dutyrelieverx = "";
+      createdx = "";
+      purposex = "";
+      deletex = "";
+      approvex = "";
+      adminx = "";
+      reasonx = "";
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
-      namex = filteredItems[0].name;
-      descripx = filteredItems[0].descrip;
-      typex = filteredItems[0].type;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
+      empSetupIdx = filteredItems[0].empSetupID;
+      daysx = filteredItems[0].noOfDaysRequested;
+      daysapprovex = filteredItems[0].noOfDaysApproved;
+      startx = filteredItems[0].startDate;
+      endx = filteredItems[0].endDate;
+      resumex = filteredItems[0].resumptionDate;
+      dutyrelieverx = filteredItems[0].dutyRelieverID;
+      createdx = filteredItems[0].createdDate;
+      purposex = filteredItems[0].purpose;
+      deletex = filteredItems[0].deleteFlag;
+      approvex = filteredItems[0].approverID;
+      adminx = filteredItems[0].adminID;
+      reasonx = filteredItems[0].reasonForDisapproval;
     }
+    console.log(daysx);
+    console.log(value);
+    console.log(startx);
+    console.log(endx);
 
     MySwal.fire({
       title: "Update timeofftype",
       html: `<table><tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
-      <tr><td><label for="descrip">Description</label></td>
-      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>
-      <tr><td><label for="type">Type</label></td>
-      <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"></td></tr></table>`,
+      <label for="days">Number of Days Requested</label></td>
+      <td><input type="text" id="days" value="${daysx}" class="swal2-input" placeholder="Number of Days Requested"></td></tr><br>
+      <tr><td><label for="starting">Start Date</label></td>
+      <td><input type="text" class="swal2-input" id="starting" value="${startx}" placeholder="Start Date"></td></tr>
+      <tr><td><label for="end">End Date</label></td>
+      <td><input type="text" class="swal2-input" id="end" value="${endx}" placeholder="End Date"></td></tr>
+      <tr><td><label for="dutyreliever">Duty Reliever</label></td>
+      <td><input type="text" class="swal2-input" id="dutyreliever" value="${dutyrelieverx}" placeholder="Duty Reliever"></td></tr>
+      <tr><td><label for="purpose">Purpose</label></td>
+      <td><input type="text" class="swal2-input" id="purpose" value="${purposex}" placeholder="Purpose"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const type = Swal.getPopup().querySelector("#type").value;
+        const noOfDaysRequested = Swal.getPopup().querySelector("#days").value;
+        const startDate = Swal.getPopup().querySelector("#starting").value;
+        const end = Swal.getPopup().querySelector("#end").value;
+        const dutyreliever = Swal.getPopup().querySelector("#dutyreliever").value;
+        const purpose = Swal.getPopup().querySelector("#purpose").value;
         const id = value;
-        const letters = /^[a-zA-Z ]+$/;
-        if (name.length > 0 && !name.match(letters)) {
-          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
+        const letters = /^[a-zA-Z]+$/;
+        const numbers = /^[0-9]+$/;
+        if (
+          (noOfDaysRequested.length > 0 && !noOfDaysRequested.match(numbers)) ||
+          (startDate.length > 0 && !startDate.match(numbers)) ||
+          (end.length > 0 && !end.match(numbers)) ||
+          (dutyreliever.length > 0 && !dutyreliever.match(letters)) ||
+          (purpose.length > 0 && !purpose.match(letters))
+        ) {
+          Swal.showValidationMessage(`Days Requested - Please choose a day and use only numbers`);
         } else {
-          handleUpdate(id, name, descrip, type, deleteFlagx, createdTimex);
+          handleUpdate(
+            id,
+            empSetupIdx,
+            noOfDaysRequested,
+            daysapprovex,
+            startDate,
+            end,
+            resumex,
+            dutyreliever,
+            createdx,
+            purpose,
+            deletex,
+            approvex,
+            adminx,
+            reasonx
+          );
         }
       },
     });
@@ -145,7 +226,10 @@ export default function TimeOffRequestData() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/delete/${id}`, requestOptions)
+        fetch(
+          `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/delete/${id}`,
+          requestOptions
+        )
           .then((res) => res.json())
           .then((resx) => {
             if (resx.message === "Expired Access") {
@@ -181,6 +265,7 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
+    console.log(status);
     if (filteredItems[0].approverID !== 0) {
       return "Decision Made";
       // eslint-disable-next-line no-else-return
@@ -234,6 +319,7 @@ export default function TimeOffRequestData() {
         if (isMounted) {
           setItems(result);
         }
+        console.log(result);
       });
     return () => {
       isMounted = false;
@@ -267,15 +353,15 @@ export default function TimeOffRequestData() {
       { Header: "Purpose", accessor: "purpose", align: "left" },
       {
         Header: "Status",
-        accessor: "id",
-        Cell: ({ cell: { value } }) => (
-          <p style={{ color: changeCol(value) }}>{changeType(value)}</p>
+        accessor: "empSetupID",
+        Cell: ({ cell: { row } }) => (
+          <p style={{ color: changeCol(row.original.id) }}>{changeType(row.original.id)}</p>
         ),
         align: "left",
       },
       {
         Header: "actions",
-        accessor: "empSetupID",
+        accessor: "id",
         Cell: ({ cell: { value } }) => (
           <div
             style={{

@@ -26,18 +26,21 @@ function AddTimeOffType() {
   const [department, setDepartment] = useState([]);
   const [companyRole, setCompanyRole] = useState([]);
 
-  const [positx, setPositx] = useState("");
   const [numofdaysx, setNumofdaysx] = useState("0");
-  const [positionx, setPositionx] = useState("0");
-  const [statustx, setStatustx] = useState("0");
-  const [branchx, setBranchx] = useState("0");
-  const [departx, setDepartx] = useState("0");
-  const [companyxt, setCompanyxt] = useState("0");
-  const [branx, setBranx] = useState("");
-  const [genderx, setGender] = useState("");
-  const [statusx, setStatusx] = useState("");
-  const [departxt, setDepartxt] = useState("");
-  const [companyx, setCompanyx] = useState("");
+  const [allTOTGVal, setAllTOTGVal] = useState("");
+  const [allTOTGs, setAllTOTGs] = useState([]);
+  const [typeValue, setTypeValue] = useState("");
+
+  const genderx = [
+    {
+      id: "1",
+      name: "Male",
+    },
+    {
+      id: "2",
+      name: "Female",
+    },
+  ];
   // const [numofdays, setNumofdays] = useState("");
   // const [enabled, setEnabled] = useState("");
   // const [checkedNumbers, setCheckedNumbers] = useState("");
@@ -49,6 +52,31 @@ function AddTimeOffType() {
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
   const orgIDs = data11.orgID;
+
+  console.log(allTOTGs);
+  console.log(position);
+  console.log(branch);
+  console.log(department);
+  const handleonChangeTimeOffTime = (e) => {
+    setTypeValue(e.target.value);
+    const idTOT = e.target.value;
+    if (idTOT === "1") {
+      setAllTOTGs(genderx);
+    } else if (idTOT === "2") {
+      setAllTOTGs(position);
+    } else if (idTOT === "3") {
+      setAllTOTGs(branch);
+    } else if (idTOT === "4") {
+      setAllTOTGs(statusmap);
+    } else if (idTOT === "5") {
+      setAllTOTGs(department);
+    } else if (idTOT === "6") {
+      setAllTOTGs(companyRole);
+    }
+    console.log(allTOTGs);
+    console.log(idTOT);
+    console.log(idTOT);
+  };
 
   useEffect(() => {
     const headers = miHeaders;
@@ -160,83 +188,29 @@ function AddTimeOffType() {
     };
   }, []);
 
-  const handleClick = (e, valueType) => {
-    console.log(valueType);
+  const handleClick = (e) => {
+    console.log(typeValue);
     e.preventDefault();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
     const ids = JSON.parse([id]);
 
-    let allRaw = {};
-
-    const raw1 = JSON.stringify({
+    const raw = JSON.stringify({
       orgID: orgIDs,
       timeOffTypeID: ids,
-      type: valueType,
-      name: genderx,
+      type: typeValue,
+      name: allTOTGVal,
       value: numofdaysx,
     });
 
-    const raw2 = JSON.stringify({
-      orgID: orgIDs,
-      timeOffTypeID: ids,
-      type: valueType,
-      name: positx,
-      value: positionx,
-    });
-
-    const raw3 = JSON.stringify({
-      orgID: orgIDs,
-      timeOffTypeID: ids,
-      type: valueType,
-      name: branx,
-      value: branchx,
-    });
-
-    const raw4 = JSON.stringify({
-      orgID: orgIDs,
-      timeOffTypeID: ids,
-      type: valueType,
-      name: statusx,
-      value: statustx,
-    });
-
-    const raw5 = JSON.stringify({
-      orgID: orgIDs,
-      timeOffTypeID: ids,
-      type: valueType,
-      name: departxt,
-      value: departx,
-    });
-
-    const raw6 = JSON.stringify({
-      orgID: orgIDs,
-      timeOffTypeID: ids,
-      type: valueType,
-      name: companyx,
-      value: companyxt,
-    });
-    if (valueType === 1) {
-      allRaw = raw1;
-    } else if (valueType === 2) {
-      allRaw = raw2;
-    } else if (valueType === 3) {
-      allRaw = raw3;
-    } else if (valueType === 4) {
-      allRaw = raw4;
-    } else if (valueType === 5) {
-      allRaw = raw5;
-    } else if (valueType === 6) {
-      allRaw = raw6;
-    }
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: allRaw,
+      body: raw,
       redirect: "follow",
     };
-    console.log(allRaw);
+    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -257,6 +231,8 @@ function AddTimeOffType() {
           title: result.status,
           type: "success",
           text: result.message,
+        }).then(() => {
+          window.location.reload();
         });
       })
       .catch((error) => {
@@ -294,12 +270,42 @@ function AddTimeOffType() {
           <Container>
             <div className="row">
               <div className="col-sm-6">
-                <MDBox mb={2} mx={4} textAlign="left">
-                  <Form.Select value={genderx || ""} onChange={(e) => setGender(e.target.value)}>
-                    <option>---Select Gender---</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                <MDBox mb={2}>
+                  <MDTypography variant="button" fontWeight="regular" color="text">
+                    Type
+                  </MDTypography>
+                  <Form.Select
+                    onChange={handleonChangeTimeOffTime}
+                    aria-label="Default select example"
+                  >
+                    <option>---Select TimeOff Type---</option>
+                    <option value="1">Gender Based</option>
+                    <option value="2">Position Based</option>
+                    <option value="3">Branch Based</option>
+                    <option value="4">Status Based</option>
+                    <option value="5">Department Based</option>
+                    <option value="6">Company Status Based</option>
                   </Form.Select>
+                </MDBox>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-sm-6">
+                <MDBox mx={4} textAlign="left">
+                  <Form.Select
+                    value={allTOTGVal || ""}
+                    onChange={(e) => setAllTOTGVal(e.target.value)}
+                    aria-label="Default select example"
+                  >
+                    <option value="">---Select Category---</option>
+                    {allTOTGs.map((api) => (
+                      <option key={api.id} value={api.name}>
+                        {api.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <br />
                 </MDBox>
               </div>
               <div className="col-sm-6">
@@ -315,7 +321,7 @@ function AddTimeOffType() {
               <MDBox mt={4} mb={1}>
                 <MDButton
                   variant="gradient"
-                  onClick={(e) => handleClick(e, 1)}
+                  onClick={(e) => handleClick(e)}
                   color="info"
                   width="50%"
                 >
@@ -326,225 +332,6 @@ function AddTimeOffType() {
           </Container>
         </Card>
         &nbsp;
-        <Card>
-          <Container>
-            <div className="row">
-              <div className="col-sm-6">
-                <MDBox mx={4} textAlign="left">
-                  <Form.Select
-                    value={positx || ""}
-                    onChange={(e) => setPositx(e.target.value)}
-                    aria-label="Default select example"
-                  >
-                    <option value="">---Select Position---</option>
-                    {position.map((api) => (
-                      <option key={api.id} value={api.name}>
-                        {api.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <br />
-                </MDBox>
-              </div>
-              <div className="col-sm-6">
-                <MDInput
-                  type="text"
-                  value={positionx || ""}
-                  onChange={(e) => setPositionx(e.target.value)}
-                  label="Number Of Days"
-                  variant="standard"
-                  fullWidth
-                />
-              </div>
-              <MDBox mt={4} mb={1}>
-                <MDButton
-                  variant="gradient"
-                  onClick={(e) => handleClick(e, 2)}
-                  color="info"
-                  width="50%"
-                >
-                  Save
-                </MDButton>
-              </MDBox>
-            </div>
-          </Container>
-        </Card>
-        &nbsp;
-        <Card>
-          <Container>
-            <div className="row">
-              <div className="col-sm-6">
-                <MDBox mx={4} textAlign="left">
-                  <Form.Select
-                    value={branx || ""}
-                    onChange={(e) => setBranx(e.target.value)}
-                    aria-label="Default select example"
-                  >
-                    <option value="">---Select Branch---</option>
-                    {branch.map((api) => (
-                      <option key={api.id} value={api.name}>
-                        {api.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <br />
-                </MDBox>
-              </div>
-              <div className="col-sm-6">
-                <MDInput
-                  type="text"
-                  value={branchx || ""}
-                  onChange={(e) => setBranchx(e.target.value)}
-                  label="Number Of Days"
-                  variant="standard"
-                  fullWidth
-                />
-              </div>
-              <MDBox mt={4} mb={1}>
-                <MDButton
-                  variant="gradient"
-                  onClick={(e) => handleClick(e, 3)}
-                  color="info"
-                  width="50%"
-                >
-                  Save
-                </MDButton>
-              </MDBox>
-            </div>
-          </Container>
-        </Card>
-        &nbsp;
-        <Card>
-          <Container>
-            <div className="row">
-              <div className="col-sm-6">
-                <MDBox mx={4} textAlign="left">
-                  <Form.Select
-                    value={statusx || ""}
-                    onChange={(e) => setStatusx(e.target.value)}
-                    aria-label="Default select example"
-                  >
-                    <option value="">---Select Status---</option>
-                    {statusmap.map((api) => (
-                      <option key={api.id} value={api.name}>
-                        {api.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <br />
-                </MDBox>
-              </div>
-              <div className="col-sm-6">
-                <MDInput
-                  type="text"
-                  value={statustx || ""}
-                  onChange={(e) => setStatustx(e.target.value)}
-                  label="Number Of Days"
-                  variant="standard"
-                  fullWidth
-                />
-              </div>
-              <MDBox mt={4} mb={1}>
-                <MDButton
-                  variant="gradient"
-                  onClick={(e) => handleClick(e, 4)}
-                  color="info"
-                  width="50%"
-                >
-                  Save
-                </MDButton>
-              </MDBox>
-            </div>
-          </Container>
-        </Card>
-        &nbsp;
-        <Card>
-          <Container>
-            <div className="row">
-              <div className="col-sm-6">
-                <MDBox mx={4} textAlign="left">
-                  <Form.Select
-                    value={departxt || ""}
-                    onChange={(e) => setDepartxt(e.target.value)}
-                    aria-label="Default select example"
-                  >
-                    <option value="">---Select Department---</option>
-                    {department.map((api) => (
-                      <option key={api.id} value={api.name}>
-                        {api.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <br />
-                </MDBox>
-              </div>
-              <div className="col-sm-6">
-                <MDInput
-                  type="text"
-                  value={departx || ""}
-                  onChange={(e) => setDepartx(e.target.value)}
-                  label="Number Of Days"
-                  variant="standard"
-                  fullWidth
-                />
-              </div>
-              <MDBox mt={4} mb={1}>
-                <MDButton
-                  variant="gradient"
-                  onClick={(e) => handleClick(e, 5)}
-                  color="info"
-                  width="50%"
-                >
-                  Save
-                </MDButton>
-              </MDBox>
-            </div>
-          </Container>
-        </Card>
-        &nbsp;
-        <Card>
-          <Container>
-            <div className="row">
-              <div className="col-sm-6">
-                <MDBox mx={4} textAlign="left">
-                  <Form.Select
-                    value={companyx || ""}
-                    onChange={(e) => setCompanyx(e.target.value)}
-                    aria-label="Default select example"
-                  >
-                    <option value="">---Select Company Role---</option>
-                    {companyRole.map((api) => (
-                      <option key={api.id} value={api.name}>
-                        {api.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <br />
-                </MDBox>
-              </div>
-              <div className="col-sm-6">
-                <MDInput
-                  type="text"
-                  value={companyxt || ""}
-                  onChange={(e) => setCompanyxt(e.target.value)}
-                  label="Number Of Days"
-                  variant="standard"
-                  fullWidth
-                />
-              </div>
-              <MDBox mt={4} mb={1}>
-                <MDButton
-                  variant="gradient"
-                  onClick={(e) => handleClick(e, 6)}
-                  color="info"
-                  width="50%"
-                >
-                  Save
-                </MDButton>
-              </MDBox>
-            </div>
-          </Container>
-        </Card>
         {/* <MDBox mt={4} mb={1}>
             <MDButton
               variant="gradient"
