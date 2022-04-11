@@ -265,7 +265,6 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    console.log(status);
     if (filteredItems[0].approverID !== 0) {
       return "Decision Made";
       // eslint-disable-next-line no-else-return
@@ -319,7 +318,6 @@ export default function TimeOffRequestData() {
         if (isMounted) {
           setItems(result);
         }
-        console.log(result);
       });
     return () => {
       isMounted = false;
