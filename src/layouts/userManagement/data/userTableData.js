@@ -140,7 +140,7 @@ export default function UserData() {
     navigate(`/user-Management/view-User?id=${value}`);
   };
   const handleAddTOT = (value) => {
-    navigate(`/user-Management/user-Time-Off-Type?id=${value}`);
+    navigate(`/user-Management/user-TimeOff-Type?id=${value}`);
   };
 
   // Method to change date from timestamp
