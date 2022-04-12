@@ -7,12 +7,16 @@ import MDTypography from "components/MDTypography";
 import { useState, useEffect, React } from "react";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Checkbox() {
   const [rolName, setRolName] = useState([]);
   const [permissions, setPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
   const [roleStep, setRoleStep] = useState([]);
+
+  const [opened, setOpened] = useState(false);
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -33,6 +37,8 @@ function Checkbox() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const handleOnClick = (e, apix) => {
+    setOpened(true);
+
     let isChecked = 0;
     const checks = e.target.checked;
     if (checks) {
@@ -59,6 +65,7 @@ function Checkbox() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -72,6 +79,8 @@ function Checkbox() {
   };
 
   useEffect(() => {
+    setOpened(true);
+
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_KUBU_URL}/role/get/${id}`, { headers })
@@ -81,6 +90,7 @@ function Checkbox() {
         return res.json();
       })
       .then((resultg) => {
+        setOpened(false);
         if (resultg.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -100,6 +110,8 @@ function Checkbox() {
   });
 
   useEffect(() => {
+    setOpened(true);
+
     const permissionsList = [];
     const headers = miHeaders;
     let isMounted = true;
@@ -132,6 +144,7 @@ function Checkbox() {
             return res.json();
           })
           .then((resultrs) => {
+            setOpened(false);
             if (resultrs.message === "Expired Access") {
               navigate("/authentication/sign-in");
             }
@@ -226,6 +239,9 @@ function Checkbox() {
           </Form>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

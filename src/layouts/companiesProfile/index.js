@@ -18,6 +18,8 @@ import "react-phone-input-2/lib/style.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function CompanyProfile() {
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
@@ -44,9 +46,12 @@ function CompanyProfile() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
+  const [opened, setOpened] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
@@ -59,6 +64,7 @@ function CompanyProfile() {
         return res.json();
       })
       .then((resultp) => {
+        setOpened(false);
         if (resultp.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -93,6 +99,8 @@ function CompanyProfile() {
   }, []);
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
+    setOpened(true);
+
     e.preventDefault();
 
     const raw = JSON.stringify({
@@ -127,6 +135,7 @@ function CompanyProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -145,6 +154,7 @@ function CompanyProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -434,6 +444,9 @@ function CompanyProfile() {
         </MDBox>
       </Card>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

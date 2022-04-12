@@ -8,6 +8,8 @@ import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { Select } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -28,6 +30,7 @@ function UserManagement() {
   const [lNamex, setLastName] = useState("");
   const [roleIDs, setRoleID] = useState("");
 
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
@@ -37,6 +40,7 @@ function UserManagement() {
   const [company, setCompany] = useState([]);
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDz = data11.orgID;
@@ -49,6 +53,7 @@ function UserManagement() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -119,6 +124,7 @@ function UserManagement() {
 
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
 
     const letterNumber = /^[0-9a-zA-Z]+$/;
@@ -161,6 +167,7 @@ function UserManagement() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -178,6 +185,7 @@ function UserManagement() {
       });
   };
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -189,6 +197,7 @@ function UserManagement() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -328,6 +337,9 @@ function UserManagement() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

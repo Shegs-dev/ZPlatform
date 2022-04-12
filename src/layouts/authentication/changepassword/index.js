@@ -4,6 +4,8 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -24,6 +26,8 @@ function ChangePassword() {
   const [enabled, setEnabled] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
 
+  const [opened, setOpened] = useState(false);
+
   // Password toggle handler
   const togglePassword = () => {
     // When the handler is invoked
@@ -36,6 +40,7 @@ function ChangePassword() {
   const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const emailCh = data11.email;
@@ -53,6 +58,7 @@ function ChangePassword() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -71,6 +77,7 @@ function ChangePassword() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -256,6 +263,9 @@ function ChangePassword() {
         </MDBox>
       </Card>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

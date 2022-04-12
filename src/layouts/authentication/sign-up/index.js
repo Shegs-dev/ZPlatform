@@ -34,6 +34,8 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 import plutospaceImg from "assets/images/PlutoSpaceImg.png";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import React, { useState } from "react";
 
@@ -81,7 +83,10 @@ function Cover() {
   const [retypePasswordx, setRetypePassword] = useState("");
   const [allStates, setAllStates] = useState([]);
 
+  const [opened, setOpened] = useState(false);
+
   const handleClick = (e) => {
+    setOpened(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -123,6 +128,7 @@ function Cover() {
       fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
         .then((res) => res.json())
         .then((result) => {
+          setOpened(false);
           if (result.status === "SUCCESS") {
             MySwal.fire({
               title: result.status,
@@ -141,6 +147,7 @@ function Cover() {
           }
         })
         .catch((error) => {
+          setOpened(false);
           MySwal.fire({
             title: error.status,
             type: "error",
@@ -835,6 +842,9 @@ function Cover() {
           </MDBox>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </CoverLayout>
   );
 }

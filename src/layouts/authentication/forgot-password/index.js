@@ -25,6 +25,8 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -35,10 +37,13 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 function ForgotPass() {
   const navigate = useNavigate();
 
+  const [opened, setOpened] = useState(false);
+
   const [emailx, setEmail] = useState("");
   const MySwal = withReactContent(Swal);
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -56,6 +61,7 @@ function ForgotPass() {
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/forgotPassword`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
+        setOpened(false);
         if (result.status === "SUCCESS") {
           MySwal.fire({
             title: result.status,
@@ -73,6 +79,7 @@ function ForgotPass() {
         }
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -122,6 +129,9 @@ function ForgotPass() {
           </MDBox>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </CoverLayout>
   );
 }

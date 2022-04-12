@@ -7,6 +7,8 @@ import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import positiontable from "layouts/position/data/positiontable";
 import MDButton from "components/MDButton";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -26,11 +28,13 @@ function Positions() {
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
 
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -50,6 +54,7 @@ function Positions() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -68,6 +73,7 @@ function Positions() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -195,6 +201,9 @@ function Positions() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

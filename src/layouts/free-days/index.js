@@ -14,6 +14,8 @@ import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -51,6 +53,7 @@ function FreeDay() {
   const [newEvent, setNewEvent] = useState({ title: "", time: "" });
   const [allEvents, setAllEvents] = useState(eventList);
 
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
@@ -59,6 +62,7 @@ function FreeDay() {
   console.log(titleNames);
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -70,6 +74,7 @@ function FreeDay() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -97,6 +102,7 @@ function FreeDay() {
   }, []);
 
   const handleAddEvent = (e) => {
+    setOpened(true);
     const end = new Date(newEvent.time);
     end.setHours(23, 59, 59, 999);
     const eventTime = end.getTime();
@@ -135,6 +141,7 @@ function FreeDay() {
           return res.json();
         })
         .then((result) => {
+          setOpened(false);
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");
           }
@@ -153,6 +160,7 @@ function FreeDay() {
           });
         })
         .catch((error) => {
+          setOpened(false);
           MySwal.fire({
             title: error.status,
             type: "error",
@@ -331,6 +339,9 @@ function FreeDay() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }
