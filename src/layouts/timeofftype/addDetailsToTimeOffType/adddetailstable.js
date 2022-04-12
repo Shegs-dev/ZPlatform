@@ -102,9 +102,9 @@ export default function AddDetailsData() {
     MySwal.fire({
       title: "Update Details",
       html: `<table><tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
-      <tr><td><label for="value">Value</label></td>
+      <label for="name">Category</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name" disabled></td></tr><br>
+      <tr><td><label for="value">Number Of Days</label></td>
       <td><input type="text" class="swal2-input" id="value" value="${valuex}" placeholder="Value"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,

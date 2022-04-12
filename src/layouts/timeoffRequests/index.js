@@ -27,7 +27,6 @@ function TimeOff() {
   const [adminIdx, setAdminIdx] = useState("");
   const [duty, setDutyRelieverx] = useState("");
   const [titlex, setTitilex] = useState("");
-  const [daysx, setDaysx] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [resumptionDate, setresumptionDate] = useState("");
@@ -35,7 +34,6 @@ function TimeOff() {
   const [user, setUser] = useState([]);
   const [empSetup, setEmpSetup] = useState([]);
   const [empSetupIdx, setEmpSetupId] = useState("");
-  console.log(empSetupIdx);
   const { columns: pColumns, rows: pRows } = TimeOffRequestData();
 
   const MySwal = withReactContent(Swal);
@@ -103,7 +101,6 @@ function TimeOff() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(result);
           setEmpSetup(result);
         }
       });
@@ -122,13 +119,17 @@ function TimeOff() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
 
+    const startDateandendDate = endCDate - startCDate;
+    const varx = 24 * 60 * 60 * 1000;
+    const numofdays = Math.ceil(startDateandendDate / varx);
+
     const orgIDs = data11.orgID;
     let eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
       empID: personalIds,
       empSetupID: empSetupIdx,
-      noOfDaysRequested: daysx,
+      noOfDaysRequested: numofdays,
       startDate: startCDate,
       endDate: endCDate,
       resumptionDate: resumptionCDate,
@@ -168,6 +169,17 @@ function TimeOff() {
         text: "Please Enter A Date From The Future",
       });
     }
+    // const endCDate - startCDate 24 * 60 * 60 * 1000
+    // const startDateandendDates = endCDate - startCDate;
+    // if (startDateandendDate) {
+    //   // eslint-disable-next-line no-unused-expressions
+    //     for (var i = 24; i * 60 * 60 * 1000;) {
+    //       startDateandendDate/
+    //     }
+
+    // }
+
+    // console.log(startDateandendDate);
     if (check === 0) {
       fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/add`, requestOptions)
         .then(async (res) => {
@@ -302,24 +314,6 @@ function TimeOff() {
                         value={titlex || ""}
                         onChange={(e) => setTitilex(e.target.value)}
                         label="Title"
-                        variant="standard"
-                        style={{ width: "100%" }}
-                      />
-                    </MDBox>
-                  </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mb={3}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDBox mt={2}>
-                      <MDInput
-                        type="text"
-                        value={daysx || ""}
-                        onChange={(e) => setDaysx(e.target.value)}
-                        label="Number Of Days Requested"
                         variant="standard"
                         style={{ width: "100%" }}
                       />
