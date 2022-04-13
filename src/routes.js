@@ -69,6 +69,7 @@ import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
+import Birthdays from "layouts/birthdays/data/birthdays";
 
 const routes = [
   {
@@ -86,6 +87,14 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "See Todays Birthday",
+    key: "birthdays",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/birthdays",
+    component: <Birthdays />,
   },
   {
     name: "User TimeOff Type",

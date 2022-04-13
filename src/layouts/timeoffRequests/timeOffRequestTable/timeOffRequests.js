@@ -148,16 +148,10 @@ export default function TimeOffRequestData() {
       adminx = filteredItems[0].adminID;
       reasonx = filteredItems[0].reasonForDisapproval;
     }
-    console.log(daysx);
-    console.log(value);
-    console.log(startx);
-    console.log(endx);
 
     MySwal.fire({
       title: "Update timeofftype",
       html: `<table><tr><td>
-      <label for="days">Number of Days Requested</label></td>
-      <td><input type="text" id="days" value="${daysx}" class="swal2-input" placeholder="Number of Days Requested"></td></tr><br>
       <tr><td><label for="starting">Start Date</label></td>
       <td><input type="text" class="swal2-input" id="starting" value="${startx}" placeholder="Start Date"></td></tr>
       <tr><td><label for="end">End Date</label></td>
@@ -171,7 +165,6 @@ export default function TimeOffRequestData() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
-        const noOfDaysRequested = Swal.getPopup().querySelector("#days").value;
         const startDate = Swal.getPopup().querySelector("#starting").value;
         const end = Swal.getPopup().querySelector("#end").value;
         const dutyreliever = Swal.getPopup().querySelector("#dutyreliever").value;
@@ -180,7 +173,6 @@ export default function TimeOffRequestData() {
         const letters = /^[a-zA-Z]+$/;
         const numbers = /^[0-9]+$/;
         if (
-          (noOfDaysRequested.length > 0 && !noOfDaysRequested.match(numbers)) ||
           (startDate.length > 0 && !startDate.match(numbers)) ||
           (end.length > 0 && !end.match(numbers)) ||
           (dutyreliever.length > 0 && !dutyreliever.match(letters)) ||
@@ -191,7 +183,7 @@ export default function TimeOffRequestData() {
           handleUpdate(
             id,
             empSetupIdx,
-            noOfDaysRequested,
+            daysx,
             daysapprovex,
             startDate,
             end,
