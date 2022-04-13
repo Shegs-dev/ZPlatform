@@ -148,9 +148,13 @@ export default function TimeOffRequestData() {
       adminx = filteredItems[0].adminID;
       reasonx = filteredItems[0].reasonForDisapproval;
     }
+    const sDate = new Date(startx);
+    startx = sDate.getDate();
+    const eDate = new Date(endx);
+    endx = eDate.getDate();
 
     MySwal.fire({
-      title: "Update timeofftype",
+      title: "Update Timeoff Type",
       html: `<table><tr><td>
       <tr><td><label for="starting">Start Date</label></td>
       <td><input type="text" class="swal2-input" id="starting" value="${startx}" placeholder="Start Date"></td></tr>
