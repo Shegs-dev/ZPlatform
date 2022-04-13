@@ -9,6 +9,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function RolesAndPerms() {
   const [rolName, setRolName] = useState("");
@@ -17,12 +19,14 @@ function RolesAndPerms() {
   const [rolPermissions, setRolPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
 
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -36,6 +40,7 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resultg) => {
+        setOpened(false);
         if (resultg.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -57,6 +62,7 @@ function RolesAndPerms() {
   const permissionsList = [];
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
@@ -66,6 +72,7 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resultapi) => {
+        setOpened(false);
         if (resultapi.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -85,6 +92,7 @@ function RolesAndPerms() {
   }, []);
 
   const handleOnChange = (e) => {
+    setOpened(true);
     const headers = miHeaders;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -121,6 +129,7 @@ function RolesAndPerms() {
             return res.json();
           })
           .then((resultrpg) => {
+            setOpened(false);
             if (resultrpg.message === "Expired Access") {
               navigate("/authentication/sign-in");
             }
@@ -167,6 +176,7 @@ function RolesAndPerms() {
   };
 
   const handleOnClick = (e, apix) => {
+    setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
@@ -202,6 +212,7 @@ function RolesAndPerms() {
         return res.json();
       })
       .then((resultrp) => {
+        setOpened(false);
         if (resultrp.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -286,6 +297,9 @@ function RolesAndPerms() {
           </Form>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

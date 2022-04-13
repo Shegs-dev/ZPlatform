@@ -21,6 +21,8 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function UserAudit() {
   const MySwal = withReactContent(Swal);
@@ -35,6 +37,7 @@ function UserAudit() {
   const [user, setUser] = useState([]);
   const [userIDx, setUserIDx] = useState("");
 
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
@@ -48,6 +51,7 @@ function UserAudit() {
   };
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -60,6 +64,7 @@ function UserAudit() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -79,6 +84,7 @@ function UserAudit() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/services/gets`, { headers })
@@ -88,6 +94,7 @@ function UserAudit() {
         return res.json();
       })
       .then((resultapi) => {
+        setOpened(false);
         if (resultapi.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -102,6 +109,7 @@ function UserAudit() {
         }
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -114,6 +122,7 @@ function UserAudit() {
   }, []);
 
   const handleOnChange = (e) => {
+    setOpened(true);
     const headers = miHeaders;
     const apiValue = e.target.value;
     setAuditServ(e.target.value);
@@ -126,6 +135,7 @@ function UserAudit() {
         return res.json();
       })
       .then((resulta) => {
+        setOpened(false);
         if (resulta.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -135,18 +145,10 @@ function UserAudit() {
         if (resulta.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
-        if (resulta.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-        }
-        if (resulta.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-        }
-        if (resulta.message === "Unauthorized Access") {
-          navigate("/authentication/sign-in");
-        }
         setPermissions(resulta);
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -160,6 +162,7 @@ function UserAudit() {
   };
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -187,6 +190,7 @@ function UserAudit() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -199,6 +203,7 @@ function UserAudit() {
         setItems(result);
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -398,6 +403,9 @@ function UserAudit() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

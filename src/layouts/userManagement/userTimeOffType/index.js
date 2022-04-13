@@ -329,6 +329,9 @@ function UserTOT() {
         </MDBox>
       </Card>
       <MDBox pt={3}>
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+          <CircularProgress color="info" />
+        </Backdrop>
         <DataTable
           table={{ columns: pColumns, rows: pRows }}
           isSorted

@@ -16,6 +16,8 @@ import PhoneInput from "react-phone-input-2";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
@@ -59,6 +61,8 @@ function InviteUser() {
   const [retypePasswordx, setRetypePassword] = useState("");
   //   const [enabled, setEnabled] = useState("");
   const [passEnabled, setPassEnabled] = useState("");
+
+  const [opened, setOpened] = useState(false);
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
@@ -271,6 +275,7 @@ function InviteUser() {
   };
 
   const handleClick = (e) => {
+    setOpened(true);
     // const user = JSON.parse(localStorage.getItem("user"));
     let dayx = "";
     let monthx = "";
@@ -390,11 +395,12 @@ function InviteUser() {
                       localStorage.setItem("rexxdex", aToken);
                       return res.json();
                     })
-                    .then((resulty) => {
+                    .then(() => {
+                      setOpened(false);
                       MySwal.fire({
-                        title: resulty.status,
+                        title: result.status,
                         type: "success",
-                        text: resulty.message,
+                        text: result.message,
                       }).then(() => {
                         navigate("/authentication/sign-in", { replace: true });
                       });
@@ -903,6 +909,9 @@ function InviteUser() {
           </MDBox>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </CoverLayout>
   );
 }

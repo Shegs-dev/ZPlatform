@@ -215,7 +215,7 @@ const routes = [
     name: "User Info",
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/userManagement/viewUser",
+    route: "/user-Management/view-User",
     component: <ViewUser />,
   },
   {

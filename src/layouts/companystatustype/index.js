@@ -15,6 +15,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import { useNavigate } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Status() {
   const MySwal = withReactContent(Swal);
@@ -26,11 +28,14 @@ function Status() {
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
 
+  const [opened, setOpened] = useState(false);
+
   const { allPHeaders: myHeaders } = PHeaders();
 
   const navigate = useNavigate();
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -50,6 +55,7 @@ function Status() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -68,6 +74,7 @@ function Status() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -195,6 +202,9 @@ function Status() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }
