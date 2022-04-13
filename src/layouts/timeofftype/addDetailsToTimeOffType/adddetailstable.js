@@ -94,10 +94,6 @@ export default function AddDetailsData() {
       valuex = filteredItems[0].value;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
-    console.log(value);
-    console.log(namex);
-    console.log(typex);
-    console.log(valuex);
 
     MySwal.fire({
       title: "Update Details",

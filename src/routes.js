@@ -251,7 +251,7 @@ const routes = [
     name: "Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests",
+    route: "/time-off-Requests",
     component: <TimeOffRequests />,
   },
   {
