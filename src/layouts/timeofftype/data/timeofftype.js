@@ -218,7 +218,6 @@ export default function data() {
   }, []);
 
   const handleAddToTimeOff = (value) => {
-    console.log(value);
     navigate(`/timeofftype/add-Details-To-Time-Off-Type?id=${value}`);
   };
 

@@ -326,6 +326,10 @@ export default function TimeOffRequestData() {
     return retDate;
   };
 
+  const handleJourney = (value) => {
+    navigate(`/timeofftype/add-Details-To-Time-Off-Type?id=${value}`);
+  };
+
   // Return table
   return {
     columns: [
@@ -372,6 +376,9 @@ export default function TimeOffRequestData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleJourney(value)}>
+                  Time Off Request Journey
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

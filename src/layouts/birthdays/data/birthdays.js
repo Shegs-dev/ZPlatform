@@ -57,6 +57,8 @@ function Birthdays() {
         }
         if (result.length === 0) {
           document.getElementById("number").innerHTML = "No Birthdays for this Day<br>";
+        } else {
+          document.getElementById("number").innerHTML = "";
         }
         setItems(result);
       })
@@ -68,7 +70,6 @@ function Birthdays() {
         });
       });
   };
-  console.log();
 
   const bcolumns = [
     { Header: "ID", accessor: "personal.id", align: "left" },
@@ -263,18 +264,18 @@ function Birthdays() {
                       onChange={(e) => setMonthx(e.target.value)}
                     >
                       <option>---Month---</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
+                      <option value="1">January</option>
+                      <option value="2">February</option>
+                      <option value="3">March</option>
+                      <option value="4">April</option>
+                      <option value="5">May</option>
+                      <option value="6">June</option>
+                      <option value="7">July</option>
+                      <option value="8">August</option>
+                      <option value="9">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
                     </Form.Select>
                   </MDBox>
                 </div>
