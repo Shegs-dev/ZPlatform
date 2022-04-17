@@ -149,6 +149,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   <Icon sx={iconsStyle}>corporate_fare</Icon>
                 </IconButton>
               </Link>
+              <Link to="/payment">
+                <IconButton sx={navbarIconButton} size="small" disableRipple>
+                  <Icon sx={iconsStyle}>savings</Icon>
+                </IconButton>
+              </Link>
               <IconButton
                 size="small"
                 disableRipple

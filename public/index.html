@@ -63,6 +63,7 @@ Software.
         height: 400px;
       }
     </style>
+
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -77,6 +78,62 @@ Software.
       href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
       rel="stylesheet"
     />
+    <!-- <script type="text/javascript" src="https://sdk.monnify.com/plugin/monnify.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      var duration = 1; // duration in minutes
+
+      setInterval(updateTimer, 300000);
+
+      function updateTimer() {
+        duration--;
+        if (duration < 1) {
+          Swal.fire({
+            title: "Timeout",
+            text: "you have been logged out",
+            icon: "error",
+          });
+          setTimeout(redirectLog, 5000);
+        }
+      }
+      function redirectLog() {
+        window.location = "authentication/sign-in";
+      }
+      window.addEventListener("mousemove", resetTimer);
+
+      function resetTimer() {
+        duration = 2;
+      }
+      // $(document).ready(function () {
+      //   document.getElementById("root").addEventListener("mousemove", function (event) {
+      //     myFunction(event);
+      //   });
+
+      //   function controlLogout() {
+      //     alert("i am here");
+      //   }
+      //   var timerTime = 5000;
+      //   function myFunction(e) {
+      //     timerTime = timerTime + 10;
+      //     console.log(timerTime);
+      //   }
+      //   setTimeout(controlLogout, timerTime);
+      // });
+      // function myFunction(e) {
+      //   timerTime = timerTime + 10;
+      //   console.log(timerTime);
+      // }
+
+      // setInterval(updateTimer, 5000);
+      // clearTimeout(timer);
+      // var timer = setTimeout(updateTimer, timerTime);
+      // function updateTimer() {
+      //   alert("BYEEEEEEE");
+      //   window.location = "authentication/sign-in";
+      // }
+    </script>
   </head>
 
   <body>

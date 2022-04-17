@@ -53,6 +53,7 @@ function Branches() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
+    console.log(data11);
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,

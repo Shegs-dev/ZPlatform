@@ -103,7 +103,12 @@ export default function App() {
 
       return null;
     });
-
+  /*  useEffect(() => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://sdk.monnify.com/plugin/monnify.js";
+    div.appendChild(script);
+  }, []);   */
   const configsButton = (
     <MDBox
       display="flex"

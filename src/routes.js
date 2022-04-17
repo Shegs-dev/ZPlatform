@@ -69,6 +69,7 @@ import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
+import PaymentHis from "layouts/paymentHistory";
 
 const routes = [
   {
@@ -265,6 +266,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,
+  },
+  {
+    name: "Payment",
+    key: "paymentHistory",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/payment",
+    component: <PaymentHis />,
   },
   {
     type: "collapse",
