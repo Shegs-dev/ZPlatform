@@ -70,6 +70,7 @@ import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
 import PaymentHis from "layouts/paymentHistory";
+import Birthdays from "layouts/birthdays/data/birthdays";
 
 const routes = [
   {
@@ -87,6 +88,14 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "See Todays Birthday",
+    key: "birthdays",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/birthdays",
+    component: <Birthdays />,
   },
   {
     name: "User TimeOff Type",
@@ -243,7 +252,7 @@ const routes = [
     name: "Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests",
+    route: "/time-off-Requests",
     component: <TimeOffRequests />,
   },
   {

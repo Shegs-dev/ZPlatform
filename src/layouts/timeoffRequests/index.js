@@ -325,8 +325,17 @@ function TimeOff() {
             <MDBox>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Start Date
+                      </MDTypography>
                       <DatePicker
                         placeholderText="Start Date"
                         style={{ marginRight: "10px" }}
@@ -339,8 +348,18 @@ function TimeOff() {
                       />
                     </MDBox>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-2" />
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        End Date
+                      </MDTypography>
                       <DatePicker
                         placeholderText="End Date"
                         selected={endDate}
@@ -358,8 +377,17 @@ function TimeOff() {
             <MDBox>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Resumption Date
+                      </MDTypography>
                       <DatePicker
                         placeholderText="Resumption Date"
                         style={{ marginRight: "10px" }}
@@ -372,8 +400,18 @@ function TimeOff() {
                       />{" "}
                     </MDBox>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-2" />
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Time Off Category
+                      </MDTypography>
                       <Form.Select
                         onChange={(e) => setEmpSetupId(e.target.value)}
                         aria-label="Default select example"
@@ -396,6 +434,15 @@ function TimeOff() {
                 <div className="row">
                   <div className="col-sm-6">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Duty Reliever
+                      </MDTypography>
                       <Form.Select
                         value={duty}
                         onChange={(e) => setDutyRelieverx(e.target.value)}
@@ -413,6 +460,15 @@ function TimeOff() {
                   </div>
                   <div className="col-sm-6">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Select Admin
+                      </MDTypography>
                       <Form.Select
                         value={adminIdx || ""}
                         onChange={(e) => setAdminIdx(e.target.value)}
