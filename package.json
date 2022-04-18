@@ -67,7 +67,6 @@
     "yup": "0.32.9"
   },
   "scripts": {
-    "preinstall": "npx force-resolutions",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

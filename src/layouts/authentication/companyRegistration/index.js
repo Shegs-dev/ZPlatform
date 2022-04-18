@@ -92,7 +92,6 @@ function CompanyReg() {
         }
         if (isMounted) {
           setConfigPrice(result.value);
-          console.log(result.value);
         }
       });
     return () => {
