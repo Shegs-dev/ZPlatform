@@ -6,7 +6,7 @@ import React, { useState } from "react";
 // }
 
 var timer = document.getElementById("timer");
-var duration = 10; // duration in seconds
+var duration = 2; // duration in minutes
 
 setInterval(updateTimer, 1000);
 
@@ -22,5 +22,5 @@ function updateTimer() {
 window.addEventListener("mousemove", resetTimer);
 
 function resetTimer() {
-  duration = 10;
+  duration = 2;
 }

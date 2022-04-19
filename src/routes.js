@@ -48,6 +48,8 @@ import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
 import Status from "layouts/companystatustype";
+import Announcement from "layouts/announcement";
+import AnnouncementType from "layouts/announcementtype";
 import Steps from "layouts/companysteps";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
@@ -69,6 +71,7 @@ import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
+// import UserAddSalary from "layouts/userManagement/addUserSalaryToUserManagement";
 
 const routes = [
   {
@@ -96,12 +99,35 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Announcement",
+    key: "announcement",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Announcement",
+    component: <Announcement />,
+  },
+  {
+    type: "collapse",
+    name: "Announcement Type",
+    key: "announcementtype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Announcement-Type",
+    component: <AnnouncementType />,
+  },
+  {
+    type: "collapse",
     name: "Branches",
     key: "branches",
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/branches",
     component: <Branches />,
   },
+  // {
+  //   name: "User Add Salary",
+  //   key: "UserAddSalary",
+  //   icon: <Icon fontSize="small">receipt_long</Icon>,
+  //   route: "/useManagement/addUserSalary",
+  //   component: <UserAddSalary />,
+  // },
   {
     type: "collapse",
     name: "Departments",
