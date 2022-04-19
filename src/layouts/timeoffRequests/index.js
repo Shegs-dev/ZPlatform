@@ -79,7 +79,6 @@ function TimeOff() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeoffsetup/getAll/${orgIDs}`, {
@@ -143,7 +142,6 @@ function TimeOff() {
       body: raw,
       redirect: "follow",
     };
-    console.log(requestOptions);
     let check = 0;
     if (startCDate < CurTime) {
       check = 1;
