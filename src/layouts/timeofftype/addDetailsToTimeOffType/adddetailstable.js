@@ -157,6 +157,7 @@ export default function AddDetailsData() {
             if (resx.message === "Unauthorized Access") {
               navigate("/authentication/forbiddenPage");
             }
+            console.log(values);
             MySwal.fire({
               title: resx.status,
               type: "success",
