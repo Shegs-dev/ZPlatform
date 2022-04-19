@@ -31,6 +31,9 @@ function AddTimeOffType() {
   const [allTOTGs, setAllTOTGs] = useState([]);
   const [typeValue, setTypeValue] = useState("");
 
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
+
   const genderx = [
     {
       id: "1",
@@ -53,10 +56,6 @@ function AddTimeOffType() {
   const data11 = JSON.parse(localStorage.getItem("user1"));
   const orgIDs = data11.orgID;
 
-  console.log(allTOTGs);
-  console.log(position);
-  console.log(branch);
-  console.log(department);
   const handleonChangeTimeOffTime = (e) => {
     setTypeValue(e.target.value);
     const idTOT = e.target.value;
@@ -73,9 +72,6 @@ function AddTimeOffType() {
     } else if (idTOT === "6") {
       setAllTOTGs(companyRole);
     }
-    console.log(allTOTGs);
-    console.log(idTOT);
-    console.log(idTOT);
   };
 
   useEffect(() => {
@@ -118,7 +114,6 @@ function AddTimeOffType() {
               }
               if (isMounted) {
                 setBranch(resultx);
-                console.log(resultx);
 
                 fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`, { headers })
                   .then(async (res) => {
@@ -189,7 +184,6 @@ function AddTimeOffType() {
   }, []);
 
   const handleClick = (e) => {
-    console.log(typeValue);
     e.preventDefault();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -210,7 +204,6 @@ function AddTimeOffType() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -244,6 +237,25 @@ function AddTimeOffType() {
       });
   };
 
+  const handleOnNumofdayskeysKeys = () => {
+    const letters = /^[0-9 ]+$/;
+    if (!numofdaysx.match(letters)) {
+      setCheckedName(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("numofdays").innerHTML = "Name - input only numbers<br>";
+    }
+    if (numofdaysx.match(letters)) {
+      setCheckedName(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("numofdays").innerHTML = "";
+    }
+    if (numofdaysx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("numofdays").innerHTML = "Number Of Days is required<br>";
+    }
+    setEnabled(checkedName === true);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -263,6 +275,21 @@ function AddTimeOffType() {
             Add Detail
           </MDTypography>
           <MDTypography variant="gradient" fontSize="60%" color="white" id="numbers">
+            {" "}
+          </MDTypography>
+        </MDBox>
+        <MDBox
+          variant="gradient"
+          bgColor="error"
+          borderRadius="lg"
+          coloredShadow="success"
+          mx={3}
+          mt={1}
+          p={1}
+          mb={1}
+          textAlign="center"
+        >
+          <MDTypography variant="gradient" fontSize="60%" color="white" id="numofdays">
             {" "}
           </MDTypography>
         </MDBox>
@@ -292,7 +319,10 @@ function AddTimeOffType() {
 
             <div className="row">
               <div className="col-sm-6">
-                <MDBox mx={4} textAlign="left">
+                <MDBox mb={2}>
+                  <MDTypography variant="button" fontWeight="regular" color="text">
+                    Category
+                  </MDTypography>
                   <Form.Select
                     value={allTOTGVal || ""}
                     onChange={(e) => setAllTOTGVal(e.target.value)}
@@ -313,6 +343,7 @@ function AddTimeOffType() {
                   type="text"
                   value={numofdaysx || ""}
                   onChange={(e) => setNumofdaysx(e.target.value)}
+                  onKeyUp={handleOnNumofdayskeysKeys}
                   label="Number Of Days"
                   variant="standard"
                   fullWidth
@@ -322,6 +353,7 @@ function AddTimeOffType() {
                 <MDButton
                   variant="gradient"
                   onClick={(e) => handleClick(e)}
+                  disabled={!enabled}
                   color="info"
                   width="50%"
                 >

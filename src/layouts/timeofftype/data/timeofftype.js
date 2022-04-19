@@ -219,7 +219,7 @@ export default function data() {
 
   const handleAddToTimeOff = (value) => {
     console.log(value);
-    navigate(`/timeofftype/addDetailsToTimeOffType?id=${value}`);
+    navigate(`/timeofftype/add-Details-To-Time-Off-Type?id=${value}`);
   };
 
   // Method to handle diable

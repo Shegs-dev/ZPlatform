@@ -71,7 +71,8 @@ import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
-// import UserAddSalary from "layouts/userManagement/addUserSalaryToUserManagement";
+import PaymentHis from "layouts/paymentHistory";
+import Birthdays from "layouts/birthdays/data/birthdays";
 
 const routes = [
   {
@@ -89,6 +90,22 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "See Todays Birthday",
+    key: "birthdays",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/birthdays",
+    component: <Birthdays />,
+  },
+  {
+    type: "collapse",
+    name: "Time-Off Type",
+    key: "timeofftype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Time-Off-Type",
+    component: <TimeOffType />,
   },
   {
     name: "User TimeOff Type",
@@ -114,6 +131,13 @@ const routes = [
     component: <AnnouncementType />,
   },
   {
+    name: "Free Days",
+    key: "free-days",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/free-days",
+    component: <FreeDay />,
+  },
+  {
     type: "collapse",
     name: "Branches",
     key: "branches",
@@ -121,13 +145,6 @@ const routes = [
     route: "/branches",
     component: <Branches />,
   },
-  // {
-  //   name: "User Add Salary",
-  //   key: "UserAddSalary",
-  //   icon: <Icon fontSize="small">receipt_long</Icon>,
-  //   route: "/useManagement/addUserSalary",
-  //   component: <UserAddSalary />,
-  // },
   {
     type: "collapse",
     name: "Departments",
@@ -143,14 +160,6 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
     component: <Position />,
-  },
-  {
-    type: "collapse",
-    name: "Free Days",
-    key: "free-days",
-    icon: <Icon fontSize="small">today</Icon>,
-    route: "/free-days",
-    component: <FreeDay />,
   },
   {
     type: "collapse",
@@ -200,14 +209,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Time-Off Type",
-    key: "timeofftype",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Time-Off-Type",
-    component: <TimeOffType />,
-  },
-  {
-    type: "collapse",
     name: "Change Password",
     key: "ChangePassword",
     icon: <Icon fontSize="small">edit</Icon>,
@@ -232,7 +233,7 @@ const routes = [
     name: "User Info",
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/userManagement/viewUser",
+    route: "/user-Management/view-User",
     component: <ViewUser />,
   },
   {
@@ -268,7 +269,7 @@ const routes = [
     name: "Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests",
+    route: "/time-off-Requests",
     component: <TimeOffRequests />,
   },
   {
@@ -291,6 +292,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,
+  },
+  {
+    name: "Payment",
+    key: "paymentHistory",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/payment",
+    component: <PaymentHis />,
   },
   {
     type: "collapse",

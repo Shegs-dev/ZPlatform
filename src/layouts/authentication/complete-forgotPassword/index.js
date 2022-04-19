@@ -26,6 +26,8 @@ import MDButton from "components/MDButton";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Container } from "react-bootstrap";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
@@ -38,6 +40,7 @@ function ComForgotPass() {
 
   const [passwordShown, setPasswordShown] = useState(false);
 
+  const [opened, setOpened] = useState(false);
   // Password toggle handler
   const togglePassword = () => {
     // When the handler is invoked
@@ -55,6 +58,7 @@ function ComForgotPass() {
 
   const handleClick = (e) => {
     e.preventDefault();
+    setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const email = urlParams.get("email");
@@ -76,6 +80,7 @@ function ComForgotPass() {
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/completeforgotpassword`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
+        setOpened(false);
         if (result.status === "SUCCESS") {
           MySwal.fire({
             title: result.status,
@@ -93,6 +98,7 @@ function ComForgotPass() {
         }
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -237,6 +243,9 @@ function ComForgotPass() {
           </MDBox>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </CoverLayout>
   );
 }

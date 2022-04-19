@@ -22,6 +22,8 @@ import "react-phone-input-2/lib/style.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
@@ -83,12 +85,15 @@ function UserProfile() {
   const [meDeleteFlagx, setMeDeleteFlag] = useState("");
   const [meCreatedTimex, setMeCreatedTime] = useState("");
 
+  const [opened, setOpened] = useState(false);
+
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -100,6 +105,7 @@ function UserProfile() {
         return res.json();
       })
       .then((resultp) => {
+        setOpened(false);
         if (resultp.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -145,6 +151,7 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -156,6 +163,7 @@ function UserProfile() {
         return res.json();
       })
       .then((resultnk) => {
+        setOpened(false);
         if (resultnk.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -197,6 +205,7 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -210,6 +219,7 @@ function UserProfile() {
         return res.json();
       })
       .then((resultba) => {
+        setOpened(false);
         if (resultba.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -241,6 +251,7 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -252,6 +263,7 @@ function UserProfile() {
         return res.json();
       })
       .then((resultma) => {
+        setOpened(false);
         if (resultma.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -280,6 +292,7 @@ function UserProfile() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -291,6 +304,7 @@ function UserProfile() {
         return res.json();
       })
       .then((resultme) => {
+        setOpened(false);
         if (resultme.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -319,6 +333,7 @@ function UserProfile() {
   }, []);
 
   const handleUpdate = () => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     let dayx = "";
@@ -364,6 +379,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -382,6 +398,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -391,6 +408,7 @@ function UserProfile() {
   };
 
   const handleAddNOK = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -424,6 +442,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -442,6 +461,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -451,6 +471,7 @@ function UserProfile() {
   };
 
   const handleAddBA = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -478,6 +499,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -496,6 +518,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -505,6 +528,7 @@ function UserProfile() {
   };
 
   const handleAddMA = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -529,6 +553,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -547,6 +572,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -556,6 +582,7 @@ function UserProfile() {
   };
 
   const handleAddME = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -580,6 +607,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -598,6 +626,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -607,6 +636,7 @@ function UserProfile() {
   };
 
   const handleNKUpdate = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -643,6 +673,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -661,6 +692,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -669,6 +701,7 @@ function UserProfile() {
       });
   };
   const handleBAUpdate = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -699,6 +732,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -726,6 +760,7 @@ function UserProfile() {
   };
 
   const handleMAUpdate = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -753,6 +788,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -771,6 +807,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -780,6 +817,7 @@ function UserProfile() {
   };
 
   const handleMEUpdate = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -807,6 +845,7 @@ function UserProfile() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -825,6 +864,7 @@ function UserProfile() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -2215,6 +2255,9 @@ function UserProfile() {
         </div>
       </div>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

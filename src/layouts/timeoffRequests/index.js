@@ -27,7 +27,6 @@ function TimeOff() {
   const [adminIdx, setAdminIdx] = useState("");
   const [duty, setDutyRelieverx] = useState("");
   const [titlex, setTitilex] = useState("");
-  const [daysx, setDaysx] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [resumptionDate, setresumptionDate] = useState("");
@@ -35,7 +34,6 @@ function TimeOff() {
   const [user, setUser] = useState([]);
   const [empSetup, setEmpSetup] = useState([]);
   const [empSetupIdx, setEmpSetupId] = useState("");
-  console.log(empSetupIdx);
   const { columns: pColumns, rows: pRows } = TimeOffRequestData();
 
   const MySwal = withReactContent(Swal);
@@ -81,7 +79,6 @@ function TimeOff() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeoffsetup/getAll/${orgIDs}`, {
@@ -103,7 +100,6 @@ function TimeOff() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(result);
           setEmpSetup(result);
         }
       });
@@ -122,13 +118,17 @@ function TimeOff() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
 
+    const startDateandendDate = endCDate - startCDate;
+    const varx = 24 * 60 * 60 * 1000;
+    const numofdays = Math.ceil(startDateandendDate / varx);
+
     const orgIDs = data11.orgID;
     let eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
       empID: personalIds,
       empSetupID: empSetupIdx,
-      noOfDaysRequested: daysx,
+      noOfDaysRequested: numofdays,
       startDate: startCDate,
       endDate: endCDate,
       resumptionDate: resumptionCDate,
@@ -142,7 +142,6 @@ function TimeOff() {
       body: raw,
       redirect: "follow",
     };
-    console.log(requestOptions);
     let check = 0;
     if (startCDate < CurTime) {
       check = 1;
@@ -168,6 +167,17 @@ function TimeOff() {
         text: "Please Enter A Date From The Future",
       });
     }
+    // const endCDate - startCDate 24 * 60 * 60 * 1000
+    // const startDateandendDates = endCDate - startCDate;
+    // if (startDateandendDate) {
+    //   // eslint-disable-next-line no-unused-expressions
+    //     for (var i = 24; i * 60 * 60 * 1000;) {
+    //       startDateandendDate/
+    //     }
+
+    // }
+
+    // console.log(startDateandendDate);
     if (check === 0) {
       fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/add`, requestOptions)
         .then(async (res) => {
@@ -310,29 +320,20 @@ function TimeOff() {
                 </div>
               </Container>
             </MDBox>
-            <MDBox mb={3}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDBox mt={2}>
-                      <MDInput
-                        type="text"
-                        value={daysx || ""}
-                        onChange={(e) => setDaysx(e.target.value)}
-                        label="Number Of Days Requested"
-                        variant="standard"
-                        style={{ width: "100%" }}
-                      />
-                    </MDBox>
-                  </div>
-                </div>
-              </Container>
-            </MDBox>
             <MDBox>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Start Date
+                      </MDTypography>
                       <DatePicker
                         placeholderText="Start Date"
                         style={{ marginRight: "10px" }}
@@ -345,8 +346,18 @@ function TimeOff() {
                       />
                     </MDBox>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-2" />
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        End Date
+                      </MDTypography>
                       <DatePicker
                         placeholderText="End Date"
                         selected={endDate}
@@ -364,8 +375,17 @@ function TimeOff() {
             <MDBox>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Resumption Date
+                      </MDTypography>
                       <DatePicker
                         placeholderText="Resumption Date"
                         style={{ marginRight: "10px" }}
@@ -378,8 +398,18 @@ function TimeOff() {
                       />{" "}
                     </MDBox>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-2" />
+                  <div className="col-sm-5">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Time Off Category
+                      </MDTypography>
                       <Form.Select
                         onChange={(e) => setEmpSetupId(e.target.value)}
                         aria-label="Default select example"
@@ -402,6 +432,15 @@ function TimeOff() {
                 <div className="row">
                   <div className="col-sm-6">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Duty Reliever
+                      </MDTypography>
                       <Form.Select
                         value={duty}
                         onChange={(e) => setDutyRelieverx(e.target.value)}
@@ -419,6 +458,15 @@ function TimeOff() {
                   </div>
                   <div className="col-sm-6">
                     <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="left"
+                        color="text"
+                      >
+                        Select Admin
+                      </MDTypography>
                       <Form.Select
                         value={adminIdx || ""}
                         onChange={(e) => setAdminIdx(e.target.value)}

@@ -65,7 +65,6 @@ function UserTOT() {
         }
         if (isMounted) {
           setallTOT(result);
-          console.log(result);
         }
       });
     return () => {
@@ -93,7 +92,6 @@ function UserTOT() {
         },
       ],
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -201,7 +199,6 @@ function UserTOT() {
           navigate("/authentication/forbiddenPage");
         }
         setPrevNODs(result[0].value);
-        console.log(result[0].value);
       });
   };
 
@@ -329,6 +326,9 @@ function UserTOT() {
         </MDBox>
       </Card>
       <MDBox pt={3}>
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+          <CircularProgress color="info" />
+        </Backdrop>
         <DataTable
           table={{ columns: pColumns, rows: pRows }}
           isSorted

@@ -8,6 +8,8 @@ import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -84,10 +86,13 @@ function ViewUser() {
   const [stepx, stepStepx] = useState("");
   const [statusx, setStatusx] = useState("");
 
+  const [opened, setOpened] = useState(false);
+
   const MySwal = withReactContent(Swal);
 
   // save all changes
   const handleOfficeSave = () => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
@@ -115,6 +120,7 @@ function ViewUser() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -133,6 +139,7 @@ function ViewUser() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -142,6 +149,7 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
@@ -236,6 +244,7 @@ function ViewUser() {
                                 return res.json();
                               })
                               .then((result) => {
+                                setOpened(false);
                                 if (result.message === "Expired Access") {
                                   navigate("/authentication/sign-in");
                                 }
@@ -372,6 +381,7 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
@@ -389,6 +399,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultp) => {
+        setOpened(false);
         if (resultp.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -409,6 +420,7 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
@@ -420,6 +432,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultp) => {
+        setOpened(false);
         if (resultp.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -439,6 +452,7 @@ function ViewUser() {
   }, []);
 
   const handleGetPersonalID = () => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
@@ -471,6 +485,7 @@ function ViewUser() {
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -489,6 +504,7 @@ function ViewUser() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -498,6 +514,7 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
@@ -511,6 +528,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultp) => {
+        setOpened(false);
         if (resultp.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -546,6 +564,7 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -557,6 +576,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultma) => {
+        setOpened(false);
         if (resultma.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -580,6 +600,7 @@ function ViewUser() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
@@ -591,6 +612,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultnk) => {
+        setOpened(false);
         if (resultnk.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -634,6 +656,7 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
@@ -646,6 +669,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultba) => {
+        setOpened(false);
         if (resultba.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -683,6 +707,7 @@ function ViewUser() {
   };
 
   const handleRoleSteps = (e) => {
+    setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     setCompanyx(e.target.value);
@@ -696,6 +721,7 @@ function ViewUser() {
         return res.json();
       })
       .then((resultst) => {
+        setOpened(false);
         if (resultst.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -1573,6 +1599,9 @@ function ViewUser() {
         </div>
       </div>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }

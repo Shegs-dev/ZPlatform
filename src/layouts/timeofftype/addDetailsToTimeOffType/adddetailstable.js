@@ -40,7 +40,6 @@ export default function AddDetailsData() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
 
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/update`, requestOptions)
       .then(async (res) => {
@@ -94,17 +93,13 @@ export default function AddDetailsData() {
       valuex = filteredItems[0].value;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
-    console.log(value);
-    console.log(namex);
-    console.log(typex);
-    console.log(valuex);
 
     MySwal.fire({
       title: "Update Details",
       html: `<table><tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
-      <tr><td><label for="value">Value</label></td>
+      <label for="name">Category</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name" disabled></td></tr><br>
+      <tr><td><label for="value">Number Of Days</label></td>
       <td><input type="text" class="swal2-input" id="value" value="${valuex}" placeholder="Value"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
@@ -211,8 +206,6 @@ export default function AddDetailsData() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result.length);
-        console.log(result[0]);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }

@@ -28,11 +28,13 @@ import MDButton from "components/MDButton";
 import { Container, Form } from "react-bootstrap";
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -57,6 +59,7 @@ function CompanyReg() {
   const [Statex, setState] = useState("");
   const [Countryx, setCountry] = useState("");
   const [allStates, setAllStates] = useState([]);
+  const [configPrice, setConfigPrice] = useState("");
 
   const [checkedComEmail, setCheckedComEmail] = useState("");
   const [checkedComStreet, setCheckedComStreet] = useState("");
@@ -64,7 +67,40 @@ function CompanyReg() {
   const [checkedComCity, setCheckedComCity] = useState("");
   const [comEnabled, setComEnabled] = useState("");
 
+  const [opened, setOpened] = useState(false);
+
+  useEffect(() => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_KUBU_URL}/configuration/gets`, { myHeaders })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          setConfigPrice(result.value);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleClick = (e) => {
+    setOpened(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -122,17 +158,54 @@ function CompanyReg() {
             fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
               .then((res) => res.json())
               .then(() => {
+                setOpened(false);
                 MySwal.fire({
                   title: result.status,
                   type: "success",
                   text: result.message,
                 }).then(() => {
-                  navigate("/authentication/sign-in", { replace: true });
+                  const raw4 = JSON.stringify({
+                    orgID: result.data.id,
+                    paidAmount: configPrice,
+                    bonusAmount: 0,
+                    totalAmount: configPrice,
+                  });
+                  const requestOptions4 = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw4,
+                    redirect: "follow",
+                  };
+                  fetch(
+                    `${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`,
+                    requestOptions4
+                  )
+                    .then(async (res) => {
+                      const aToken = res.headers.get("token-1");
+                      localStorage.setItem("rexxdex", aToken);
+                      return res.json();
+                    })
+                    .then((resultp) => {
+                      MySwal.fire({
+                        title: resultp.status,
+                        type: "success",
+                        text: resultp.message,
+                      });
+                    });
                 });
               });
           });
       })
+      .then((result) => {
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        });
+        navigate("/authentication/sign-in", { replace: true });
+      })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -513,6 +586,9 @@ function CompanyReg() {
           </MDBox>
         </MDBox>
       </Card>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </CoverLayout>
   );
 }

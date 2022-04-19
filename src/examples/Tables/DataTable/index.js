@@ -34,6 +34,8 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDPagination from "components/MDPagination";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Material Dashboard 2 React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
@@ -54,6 +56,8 @@ function DataTable({
     : ["5", "10", "15", "20", "25"];
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
+
+  const [opened, setOpened] = useState(true);
 
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },
@@ -145,6 +149,19 @@ function DataTable({
     entriesEnd = pageSize * (pageIndex + 1);
   }
 
+  const closeLoader = () => {
+    setOpened(false);
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      setTimeout(closeLoader, 3000);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
       {entriesPerPage || canSearch ? (
@@ -183,6 +200,9 @@ function DataTable({
           )}
         </MDBox>
       ) : null}
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
       <Table {...getTableProps()}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup) => (
