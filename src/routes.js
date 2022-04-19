@@ -69,6 +69,7 @@ import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
+import PaymentHis from "layouts/paymentHistory";
 import Birthdays from "layouts/birthdays/data/birthdays";
 import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
@@ -99,11 +100,27 @@ const routes = [
     component: <Birthdays />,
   },
   {
+    type: "collapse",
+    name: "Time-Off Type",
+    key: "timeofftype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Time-Off-Type",
+    component: <TimeOffType />,
+  },
+  {
     name: "User TimeOff Type",
     key: "userTimeOffType",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
+  },
+  {
+    type: "collapse",
+    name: "Free Days",
+    key: "free-days",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/free-days",
+    component: <FreeDay />,
   },
   {
     type: "collapse",
@@ -128,14 +145,6 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
     component: <Position />,
-  },
-  {
-    type: "collapse",
-    name: "Free Days",
-    key: "free-days",
-    icon: <Icon fontSize="small">today</Icon>,
-    route: "/free-days",
-    component: <FreeDay />,
   },
   {
     type: "collapse",
@@ -182,14 +191,6 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/checklists",
     component: <Checklists />,
-  },
-  {
-    type: "collapse",
-    name: "Time-Off Type",
-    key: "timeofftype",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Time-Off-Type",
-    component: <TimeOffType />,
   },
   {
     type: "collapse",
@@ -290,6 +291,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "authentication/complete-forgot-Password",
     component: <ComForgotPass />,
+  },
+  {
+    name: "Payment",
+    key: "paymentHistory",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/payment",
+    component: <PaymentHis />,
   },
   {
     type: "collapse",

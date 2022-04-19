@@ -15,9 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function UserTOTdata() {
   const { allGHeaders: miHeaders } = GHeaders();
-  // const axios = require("axios");
   const [items, setItems] = useState([]);
-  // const [id, setId] = useState("");
   const navigate = useNavigate();
 
   const MySwal = withReactContent(Swal);
@@ -86,7 +84,6 @@ export default function UserTOTdata() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    console.log(orgIDs);
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeoffsetup/getAll/${orgIDs}`, { headers })
@@ -106,7 +103,6 @@ export default function UserTOTdata() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(result);
           setItems(result);
         }
       });

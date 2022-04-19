@@ -56,10 +56,6 @@ function AddTimeOffType() {
   const data11 = JSON.parse(localStorage.getItem("user1"));
   const orgIDs = data11.orgID;
 
-  console.log(allTOTGs);
-  console.log(position);
-  console.log(branch);
-  console.log(department);
   const handleonChangeTimeOffTime = (e) => {
     setTypeValue(e.target.value);
     const idTOT = e.target.value;
@@ -76,9 +72,6 @@ function AddTimeOffType() {
     } else if (idTOT === "6") {
       setAllTOTGs(companyRole);
     }
-    console.log(allTOTGs);
-    console.log(idTOT);
-    console.log(idTOT);
   };
 
   useEffect(() => {
@@ -121,7 +114,6 @@ function AddTimeOffType() {
               }
               if (isMounted) {
                 setBranch(resultx);
-                console.log(resultx);
 
                 fetch(`${process.env.REACT_APP_KUBU_URL}/department/gets/${orgIDs}`, { headers })
                   .then(async (res) => {
@@ -192,7 +184,6 @@ function AddTimeOffType() {
   }, []);
 
   const handleClick = (e) => {
-    console.log(typeValue);
     e.preventDefault();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -213,7 +204,6 @@ function AddTimeOffType() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");

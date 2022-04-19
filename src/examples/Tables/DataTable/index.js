@@ -57,7 +57,7 @@ function DataTable({
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
 
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(true);
 
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0 } },
@@ -148,17 +148,6 @@ function DataTable({
   } else {
     entriesEnd = pageSize * (pageIndex + 1);
   }
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      if (page.length === 0) {
-        setOpened(true);
-      }
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const closeLoader = () => {
     setOpened(false);

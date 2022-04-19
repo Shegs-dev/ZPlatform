@@ -65,7 +65,6 @@ function UserTOT() {
         }
         if (isMounted) {
           setallTOT(result);
-          console.log(result);
         }
       });
     return () => {
@@ -93,7 +92,6 @@ function UserTOT() {
         },
       ],
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -201,7 +199,6 @@ function UserTOT() {
           navigate("/authentication/forbiddenPage");
         }
         setPrevNODs(result[0].value);
-        console.log(result[0].value);
       });
   };
 

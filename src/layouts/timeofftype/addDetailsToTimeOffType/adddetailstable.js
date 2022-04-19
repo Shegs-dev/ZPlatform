@@ -40,7 +40,6 @@ export default function AddDetailsData() {
       body: raw,
       redirect: "follow",
     };
-    console.log(raw);
 
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/update`, requestOptions)
       .then(async (res) => {
@@ -208,8 +207,6 @@ export default function AddDetailsData() {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result.length);
-        console.log(result[0]);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
