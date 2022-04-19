@@ -203,6 +203,9 @@ function TimeOff() {
             text: result.message,
           })
             .then(() => {
+              window.location.reload();
+            })
+            .then(() => {
               const ids = data11.id;
               const raw2 = JSON.stringify({
                 orgID: orgIDs,

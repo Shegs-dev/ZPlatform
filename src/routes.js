@@ -73,6 +73,8 @@ import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
 import PaymentHis from "layouts/paymentHistory";
 import Birthdays from "layouts/birthdays/data/birthdays";
+import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
+import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 
 const routes = [
   {
@@ -93,7 +95,7 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "See Todays Birthday",
+    name: "Birthdays",
     key: "birthdays",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/birthdays",
@@ -271,6 +273,20 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    name: "Time Off Requests Journey",
+    key: "timeOffRequestjourney",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoffRequests/timeOffRequestJourney",
+    component: <TimeOffRequestJourney />,
+  },
+  {
+    name: "Time Off Requests Journey",
+    key: "timeOffRequestjourney",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoffRequests/forwardTimeOffRequests",
+    component: <ForwardTimeOff />,
   },
   {
     name: "Reset Password",
