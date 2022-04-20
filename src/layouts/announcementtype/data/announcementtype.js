@@ -1,37 +1,39 @@
-import { Dropdown } from "react-bootstrap";
+/* eslint-disable react/prop-types */
+
+// @mui material components
+
+// Soft UI Dashboard React components
 import { useEffect, useState } from "react";
+import { Dropdown } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
-import { useNavigate } from "react-router-dom";
-import GHeaders from "getHeader";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+import { useNavigate } from "react-router-dom";
 
-export default function AddDetailsData() {
+export default function data() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
-
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  const ids = JSON.parse([id]);
-
-  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const handleUpdate = (idx, namex, valuex, typex, deleteFlagx) => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
+  const navigate = useNavigate();
 
+  // Method to handle diable
+  const handleUpdate = (idx, namex, colorcodex, descripx, createdTimex, deleteFlagx) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
-      timeOffTypeID: ids,
-      type: typex,
       name: namex,
-      value: valuex,
+      colorcode: colorcodex,
+      descrip: descripx,
+      createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
     const requestOptions = {
@@ -41,7 +43,7 @@ export default function AddDetailsData() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/details/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -74,58 +76,57 @@ export default function AddDetailsData() {
       });
   };
 
+  // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let typex = "";
-    let valuex = "";
+    let colorcodex = "";
+    let descripx = "";
+    let createdTimex = 0;
     let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      typex = "";
-      valuex = "";
+      colorcodex = "";
+      descripx = "";
+      createdTimex = 0;
       deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      typex = filteredItems[0].type;
-      valuex = filteredItems[0].value;
+      colorcodex = filteredItems[0].colorcode;
+      descripx = filteredItems[0].descrip;
+      createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
-      title: "Update Details",
+      title: "Update Announcement Type",
       html: `<table><tr><td>
-      <label for="name">Category</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name" disabled></td></tr><br>
-      <tr><td><label for="value">Number Of Days</label></td>
-      <td><input type="text" class="swal2-input" id="value" value="${valuex}" placeholder="Value"></td></tr></table>`,
+      <label for="name">Name</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
+      <tr><td><label for="descrip">Description</label></td>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
-        const valuev = Swal.getPopup().querySelector("#value").value;
-        const idDet = value;
-        const letters = /^[a-zA-Z]+$/;
-        const numbers = /^[0-9]+$/;
-        if (
-          (name.length > 0 && !name.match(letters)) ||
-          (valuev.length > 0 && !valuev.match(numbers))
-        ) {
-          Swal.showValidationMessage(
-            `Name - Please write a name and use only letters<br> Value - Please write a type and only use letters<br> Value - Please write a value and only use numbers`
-          );
+        const descrip = Swal.getPopup().querySelector("#descrip").value;
+        const id = value;
+        const letters = /^[a-zA-Z ]+$/;
+        if (name.length > 0 && !name.match(letters)) {
+          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(idDet, name, valuev, typex, deleteFlagx);
+          handleUpdate(id, name, colorcodex, descrip, deleteFlagx, createdTimex);
         }
       },
     });
   };
 
-  const handleDisable = (values) => {
+  // Method to handle diable
+  const handleDisable = (value) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -142,10 +143,14 @@ export default function AddDetailsData() {
         };
 
         fetch(
-          `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/delete/${values}`,
+          `${process.env.REACT_APP_SHASHA_URL}/announcementtype/delete/${value}`,
           requestOptions
         )
-          .then((res) => res.json())
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
           .then((resx) => {
             if (resx.message === "Expired Access") {
               navigate("/authentication/sign-in");
@@ -156,7 +161,6 @@ export default function AddDetailsData() {
             if (resx.message === "Unauthorized Access") {
               navigate("/authentication/forbiddenPage");
             }
-            console.log(values);
             MySwal.fire({
               title: resx.status,
               type: "success",
@@ -176,36 +180,28 @@ export default function AddDetailsData() {
     });
   };
 
-  const changeCol = (status) => {
-    if (status === 1) {
-      return "Gender";
-      // eslint-disable-next-line no-else-return
-    } else if (status === 2) {
-      return "Position";
-    } else if (status === 3) {
-      return "Branch";
-    } else if (status === 4) {
-      return "Status";
-    } else if (status === 5) {
-      return "Department";
-    } else {
-      return "Company Role";
-    }
+  // Method to change date from timestamp
+  const changeDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    return retDate;
   };
 
+  // Method to fetch all announcementtype
   useEffect(() => {
-    // const queryString = window.location.search;
-    // const urlParams = new URLSearchParams(queryString);
-    // const id = urlParams.get("id");
-    const values = JSON.parse([id]);
-
     const headers = miHeaders;
-    let isMounted = true;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
 
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/getByIds/${values}`, {
-      headers,
-    })
-      .then((res) => res.json())
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    console.log(headers);
+    // console.log()
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
@@ -217,9 +213,7 @@ export default function AddDetailsData() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          if (result.length > 0) {
-            setItems(result[0].conditions);
-          }
+          setItems(result);
         }
       });
     return () => {
@@ -227,20 +221,20 @@ export default function AddDetailsData() {
     };
   }, []);
 
+  // Return table
   return {
     columns: [
-      { Header: "category", accessor: "name", align: "left" },
+      { Header: "name", accessor: "name", align: "left" },
+      { Header: "description", accessor: "descrip", align: "left" },
       {
-        Header: "type",
-        accessor: "type",
-        Cell: ({ cell: { value } }) => changeCol(value),
+        Header: "Date Created",
+        accessor: "createdTime",
+        Cell: ({ cell: { value } }) => changeDate(value),
         align: "left",
       },
-      { Header: "Number Of Days", accessor: "value", align: "left" },
       {
         Header: "actions",
         accessor: "id",
-        // eslint-disable-next-line react/prop-types
         Cell: ({ cell: { value } }) => (
           <div
             style={{

@@ -261,7 +261,10 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    if (filteredItems[0].approverID !== 0) {
+    if (
+      filteredItems[0].reasonForDisapproval !== null &&
+      filteredItems[0].reasonForDisapproval !== ""
+    ) {
       return "Decision Made";
       // eslint-disable-next-line no-else-return
     } else if (filteredItems[0].empID !== personalIds) {
@@ -275,7 +278,10 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    if (filteredItems[0].approverID !== 0) {
+    if (
+      filteredItems[0].reasonForDisapproval !== null &&
+      filteredItems[0].reasonForDisapproval !== ""
+    ) {
       return "#FAFA33";
       // eslint-disable-next-line no-else-return
     } else if (filteredItems[0].empID !== personalIds) {
@@ -326,9 +332,20 @@ export default function TimeOffRequestData() {
     return retDate;
   };
 
-  const handleJourney = (value) => {
-    navigate(`/timeofftype/add-Details-To-Time-Off-Type?id=${value}`);
-  };
+  // const eTOTId = {};
+  // const raw2 = JSON.stringify({
+  //   employeeTimeOffTransactionID: eTOTId.data.id,
+  // });
+  // console.log(raw2);
+  // const data11 = JSON.parse(localStorage.getItem("user1"));
+
+  // const => employeeTimeOffTransactionID;
+
+  // let eTOTId = employeeTimeOffTransactionID;
+
+  // const handleJourney = (eTOTId) => {
+  //   navigate(`/timeoffRequests/timeOffRequestJourney?id=${eTOTId}`);
+  // };
 
   // Return table
   return {
@@ -376,8 +393,15 @@ export default function TimeOffRequestData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleJourney(value)}>
+                <Dropdown.Item
+                  onClick={() => navigate(`/timeoffRequests/timeOffRequestJourney?id=${value}`)}
+                >
                   Time Off Request Journey
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => navigate(`/timeoffRequests/forwardTimeOffRequests?id=${value}`)}
+                >
+                  Forward Time Off Request
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
