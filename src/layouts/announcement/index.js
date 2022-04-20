@@ -73,11 +73,13 @@ function Announcement() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
+    const personalIDs = data11.id;
     const raw = JSON.stringify({
       orgID: orgIDs,
       title: titlex,
       message: messagex,
-      annoucementTypeID: annoucementTypeIDx,
+      announcementTypeID: annoucementTypeIDx,
+      createdBy: personalIDs,
     });
     const requestOptions = {
       method: "POST",
@@ -128,17 +130,17 @@ function Announcement() {
     if (!titlex.match(letters)) {
       setCheckedTitle(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("Title").innerHTML =
+      document.getElementById("title").innerHTML =
         "Title - input only capital and small letters<br>";
     }
     if (titlex.match(letters)) {
       setCheckedTitle(true);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("Title").innerHTML = "";
+      document.getElementById("title").innerHTML = "";
     }
     if (titlex.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("Title").innerHTML = "Title is required<br>";
+      document.getElementById("title").innerHTML = "Title is required<br>";
     }
     setEnabled(checkedTitle === true);
   };
@@ -174,19 +176,7 @@ function Announcement() {
             mb={1}
             textAlign="center"
           >
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
-              {" "}
-            </MDTypography>
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
-              {" "}
-            </MDTypography>
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
-              {" "}
-            </MDTypography>
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
-              {" "}
-            </MDTypography>
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="title">
               {" "}
             </MDTypography>
           </MDBox>

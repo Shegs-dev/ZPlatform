@@ -23,7 +23,15 @@ export default function data() {
   const navigate = useNavigate();
 
   // Method to handle diable
-  const handleUpdate = (idx, titlex, messagex, annoucementTypeIDx, createdTimex, deleteFlagx) => {
+  const handleUpdate = (
+    idx,
+    titlex,
+    messagex,
+    announcementTypeIDx,
+    createdByx,
+    createdTimex,
+    deleteFlagx
+  ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
@@ -32,10 +40,12 @@ export default function data() {
       title: titlex,
       message: messagex,
       orgID: orgIDs,
-      annoucementTypeID: annoucementTypeIDx,
+      announcementTypeID: announcementTypeIDx,
+      createdBy: createdByx,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -80,24 +90,27 @@ export default function data() {
   const handleShow = (filteredData, value) => {
     let titlex = "";
     let messagex = "";
-    let annoucementTypeIDx = "";
+    let announcementTypeIDx = "";
+    let createdByx = 0;
     let createdTimex = 0;
     let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       titlex = "";
       messagex = "";
-      annoucementTypeIDx = "";
+      announcementTypeIDx = "";
+      createdByx = 0;
       createdTimex = 0;
       deleteFlagx = 0;
     } else {
-      const filteredItems = filteredData.filter((item) => item.id === value);
-
-      titlex = filteredItems[0].title;
-      messagex = filteredItems[0].message;
-      annoucementTypeIDx = filteredItems[0].annoucementTypeID;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
+      const filteredItems = filteredData.filter((item) => item.announcement.id === value);
+      console.log(filteredItems);
+      titlex = filteredItems[0].announcement.title;
+      messagex = filteredItems[0].announcement.message;
+      announcementTypeIDx = filteredItems[0].announcement.announcementTypeID;
+      createdByx = filteredItems[0].announcement.createdBy;
+      createdTimex = filteredItems[0].announcement.createdTime;
+      deleteFlagx = filteredItems[0].announcement.deleteFlag;
     }
 
     MySwal.fire({
@@ -119,7 +132,15 @@ export default function data() {
         if (titlex.length > 0 && !titlex.match(letters)) {
           Swal.showValidationMessage(`Title - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, title, message, annoucementTypeIDx, deleteFlagx, createdTimex);
+          handleUpdate(
+            id,
+            title,
+            message,
+            announcementTypeIDx,
+            createdByx,
+            createdTimex,
+            deleteFlagx
+          );
         }
       },
     });
@@ -209,6 +230,7 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
+          console.log(result[0].announcement);
         }
       });
     return () => {
@@ -219,18 +241,18 @@ export default function data() {
   // Return table
   return {
     columns: [
-      { Header: "title", accessor: "title", align: "left" },
-      { Header: "message", accessor: "messaage", align: "left" },
-      { Header: "annoucementTypeID", accessor: "annoucementTypeID", align: "left" },
+      { Header: "title", accessor: "announcement.title", align: "left" },
+      { Header: "message", accessor: "announcement.message", align: "left" },
+      { Header: "name", accessor: "announcementType.name", align: "left" },
       {
         Header: "Date Created",
-        accessor: "createdTime",
+        accessor: "announcement.createdTime",
         Cell: ({ cell: { value } }) => changeDate(value),
         align: "left",
       },
       {
         Header: "actions",
-        accessor: "id",
+        accessor: "announcement.id",
         Cell: ({ cell: { value } }) => (
           <div
             style={{
