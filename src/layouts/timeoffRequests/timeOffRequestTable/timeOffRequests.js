@@ -350,7 +350,9 @@ export default function TimeOffRequestData() {
   // Return table
   return {
     columns: [
-      { Header: "ID", accessor: "empID", align: "left" },
+      { Header: "Employee's Name", accessor: "empName", align: "left" },
+      { Header: "Duty Reliever's Name", accessor: "dutyRelieverName", align: "left" },
+      { Header: "Approver's Name", accessor: "approverName", align: "left" },
       { Header: "Days Requested", accessor: "noOfDaysRequested", align: "left" },
       { Header: "Days Approved", accessor: "noOfDaysApproved", align: "left" },
       {
@@ -370,7 +372,12 @@ export default function TimeOffRequestData() {
         Header: "Status",
         accessor: "empSetupID",
         Cell: ({ cell: { row } }) => (
-          <p style={{ color: changeCol(row.original.id) }}>{changeType(row.original.id)}</p>
+          <span
+            className="badge badge-pill"
+            style={{ backgroundColor: changeCol(row.original.id) }}
+          >
+            {changeType(row.original.id)}
+          </span>
         ),
         align: "left",
       },

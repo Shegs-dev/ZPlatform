@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // react-router-dom components
 import { Link, useNavigate } from "react-router-dom";
@@ -63,6 +63,11 @@ function Basic() {
     setPasswordShown(!passwordShown);
   };
 
+  useEffect(() => {
+    localStorage.removeItem("rexxdex");
+    localStorage.removeItem("user1");
+  }, []);
+
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
@@ -81,13 +86,14 @@ function Basic() {
         // console.log(res.headers);
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex1", aToken);
-        // console.log(aToken);
+        console.log(aToken);
         return res.json();
       })
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
           localStorage.setItem("user1", JSON.stringify(result.data));
+          localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
           MySwal.fire({
             // eslint-disable-next-line dot-notation
             title: result.status,

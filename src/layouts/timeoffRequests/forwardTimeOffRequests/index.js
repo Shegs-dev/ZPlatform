@@ -35,13 +35,17 @@ function ForwardTimeOff() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    const ids = data11.id;
+    // const ids = data11.id;
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const currentholderID = urlParams.get("id");
 
     // const eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
       employeeTimeOffTransactionID: currentHolder,
-      currentHolderID: ids,
+      currentHolderID: currentholderID,
     });
     const requestOptions = {
       method: "POST",
@@ -303,7 +307,6 @@ function ForwardTimeOff() {
         }
         if (isMounted) {
           setEmployeeRecord(result);
-          console.log(result);
         }
       });
     return () => {
