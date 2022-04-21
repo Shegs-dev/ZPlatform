@@ -55,6 +55,17 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     navigate("/authentication/sign-in", { replace: true });
   };
 
+  const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+  // eslint-disable-next-line prefer-template
+  const userFullName = userOData.personal.fname + " " + userOData.personal.lname;
+
+  let userRoleID = "";
+  if (userOData.role === null) {
+    userRoleID = "Admin";
+  } else {
+    userRoleID = userOData.role.name;
+  }
+
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
   const location = useLocation();
@@ -169,6 +180,14 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         </MDBox>
         <MDBox component={NavLink} to="/" display="flex" alignItems="center">
           {brand && <MDBox component="img" src={bgImage} alt="Brand" width="10rem" />}
+        </MDBox>
+        <br />
+        <MDBox variant="gradient" bgColor="secondary" borderRadius="lg" coloredShadow="success">
+          <MDTypography variant="h6" color="white" fontFamily="Helvetica" fontSize="80%">
+            {userFullName}
+            <br />
+            {userRoleID}
+          </MDTypography>
         </MDBox>
       </MDBox>
       <Divider

@@ -48,6 +48,8 @@ import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
 import Roles from "layouts/companyroles";
 import Status from "layouts/companystatustype";
+import Announcement from "layouts/announcement";
+import AnnouncementType from "layouts/announcementtype";
 import Steps from "layouts/companysteps";
 import Branches from "layouts/branches/index";
 import CompanyReg from "layouts/authentication/companyRegistration";
@@ -70,6 +72,7 @@ import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import UserTOT from "layouts/userManagement/userTimeOffType";
 import PaymentHis from "layouts/paymentHistory";
+
 import Birthdays from "layouts/birthdays/data/birthdays";
 import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
@@ -117,6 +120,21 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Announcement",
+    key: "announcement",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Announcement",
+    component: <Announcement />,
+  },
+  {
+    type: "collapse",
+    name: "Announcement Type",
+    key: "announcementtype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Announcement-Type",
+    component: <AnnouncementType />,
+  },
+  {
     name: "Free Days",
     key: "free-days",
     icon: <Icon fontSize="small">today</Icon>,

@@ -26,7 +26,6 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-
 import { MonnifyConsumer } from "react-monnify";
 
 function PaymentHis() {
@@ -82,6 +81,7 @@ function PaymentHis() {
         return res.json();
       })
       .then((resultapi) => {
+        console.log(resultapi);
         setOpened(false);
         if (resultapi.message === "Expired Access") {
           navigate("/authentication/sign-in");
@@ -93,7 +93,11 @@ function PaymentHis() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          setComBalance(resultapi.balance);
+          if (resultapi.length === 0) {
+            setComBalance(0);
+          } else {
+            setComBalance(resultapi.balance);
+          }
         }
       })
       .catch((error) => {
@@ -313,19 +317,14 @@ function PaymentHis() {
             redirect: "follow",
           };
           if (mBonusAmount !== 0) {
-            fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`, requestOptions1)
-              .then(async (res) => {
-                const aToken = res.headers.get("token-1");
-                localStorage.setItem("rexxdex", aToken);
-                return res.json();
-              })
-              .then((resultx) => {
-                MySwal.fire({
-                  title: resultx.status,
-                  type: "success",
-                  text: resultx.message,
-                });
-              });
+            fetch(
+              `${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`,
+              requestOptions1
+            ).then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            });
           }
           MySwal.fire({
             title: result.status,
@@ -601,16 +600,16 @@ function PaymentHis() {
               </MDBox>
               <MDBox
                 variant="gradient"
-                bgColor="info"
+                bgColor="white"
                 borderRadius="lg"
                 coloredShadow="success"
-                mx={10}
+                mx={3}
                 mt={2}
-                p={5}
+                p={6}
                 mb={1}
                 textAlign="left"
               >
-                <MDTypography variant="h1" fontWeight="medium" color="white" textAlign="center">
+                <MDTypography variant="h1" fontWeight="medium" color="info" textAlign="center">
                   {concaBalance}
                 </MDTypography>
               </MDBox>

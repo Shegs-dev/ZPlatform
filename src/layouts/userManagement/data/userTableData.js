@@ -196,6 +196,10 @@ export default function UserData() {
       });
   };
 
+  const handleAddsalary = (value) => {
+    navigate(`/useManagement/addUserSalary`(value));
+  };
+
   return {
     columns: [
       { Header: "First Name", accessor: "personal.fname", align: "left" },
@@ -232,6 +236,9 @@ export default function UserData() {
                   <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handlePasswordReset(value)}>
                     Reset Password
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleAddsalary(value)}>
+                    Add User Salary
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
