@@ -73,7 +73,7 @@ function Announcement() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    const personalIDs = data11.id;
+    const personalIDs = data11.personalID;
     const raw = JSON.stringify({
       orgID: orgIDs,
       title: titlex,
