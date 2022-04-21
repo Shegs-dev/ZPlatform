@@ -128,6 +128,14 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Matters Arising",
+    key: "mattersarising",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/mattersArising",
+    component: <MattersArising />,
+  },
+  {
+    type: "collapse",
     name: "Announcement Type",
     key: "announcementtype",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -156,14 +164,6 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
-  },
-  {
-    type: "collapse",
-    name: "Matters Arising",
-    key: "mattersarising",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/mattersArising",
-    component: <MattersArising />,
   },
   {
     type: "collapse",

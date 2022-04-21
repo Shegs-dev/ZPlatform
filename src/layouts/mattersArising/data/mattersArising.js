@@ -18,10 +18,11 @@ export default function MattersArisingTable() {
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const userOtherDets = JSON.parse(localStorage.getItem("userOtherDets"));
     let isMounted = true;
     const orgIDs = data11.orgID;
     const headers = miHeaders;
-    if (data11.otherDetailsDTO.role.id !== null) {
+    if (data11.roleID !== "0") {
       const personalIds = data11.personalID;
       fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/getForEmp/${orgIDs}/${personalIds}`, {
         headers,
@@ -127,7 +128,7 @@ export default function MattersArisingTable() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, close it!",
     }).then((result) => {
       if (result.isConfirmed) {
         const requestOptions = {
@@ -135,7 +136,7 @@ export default function MattersArisingTable() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/delete/${id}`, requestOptions)
+        fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/close/${id}`, requestOptions)
           .then((res) => res.json())
           .then((resx) => {
             if (resx.message === "Expired Access") {
@@ -166,11 +167,62 @@ export default function MattersArisingTable() {
     });
   };
 
+  const changeStatus = (value) => {
+    if (value === 0) {
+      return "OPEN";
+    }
+    return "CLOSED";
+  };
+
+  const changeStatusCol = (value) => {
+    if (value === 0) {
+      return "#0000ff";
+    }
+    return "#ff0000";
+  };
+
+  const changeLevelCol = (value) => {
+    if (value === "Low") {
+      return "#0000ff";
+    }
+    if (value === "Medium") {
+      return "#00ff00";
+    }
+    if (value === "HIGH") {
+      return "#ffd700";
+    }
+    return "#ff0000";
+  };
+
   return {
     columns: [
-      { Header: "ID", accessor: "empID", align: "left" },
-      { Header: "Days Requested", accessor: "noOfDaysRequested", align: "left" },
-      { Header: "Days Approved", accessor: "noOfDaysApproved", align: "left" },
+      { Header: "Title", accessor: "title", align: "left" },
+      { Header: "Message", accessor: "message", align: "left" },
+      { Header: "Raised By", accessor: "raisedByName", align: "left" },
+      { Header: "Raised To", accessor: "raisedToName", align: "left" },
+      {
+        Header: "Level",
+        accessor: "level",
+        // eslint-disable-next-line react/prop-types
+        Cell: ({ cell: { value } }) => (
+          <span className="badge badge-pill" style={{ backgroundColor: changeLevelCol(value) }}>
+            {value}
+          </span>
+        ),
+        align: "left",
+      },
+      { Header: "Created Time", accessor: "createdTime", align: "left" },
+      {
+        Header: "Status",
+        accessor: "status",
+        // eslint-disable-next-line react/prop-types
+        Cell: ({ cell: { value } }) => (
+          <span className="badge badge-pill" style={{ backgroundColor: changeStatusCol(value) }}>
+            {changeStatus(value)}
+          </span>
+        ),
+        align: "left",
+      },
       {
         Header: "actions",
         accessor: "id",

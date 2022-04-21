@@ -38,7 +38,6 @@ export default function TimeOffRequestJourney() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

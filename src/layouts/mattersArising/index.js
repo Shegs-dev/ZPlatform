@@ -39,10 +39,8 @@ function MattersArising() {
   const handleClick = (e) => {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    console.log("here");
     const orgIDs = data11.orgID;
-    const ids = data11.id;
-    console.log("here1");
+    const ids = data11.personalID;
 
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -56,23 +54,19 @@ function MattersArising() {
       //   escalationTime: 0,
       //   reasonForEscalation: "string",
     });
-    console.log("here2");
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-    console.log("here4");
     fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/add`, requestOptions)
       .then(async (res) => {
-        console.log(res);
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        console.log("here6");
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
