@@ -73,6 +73,7 @@ import PaymentHis from "layouts/paymentHistory";
 import Birthdays from "layouts/birthdays/data/birthdays";
 import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
+import MattersArising from "layouts/mattersArising";
 
 const routes = [
   {
@@ -137,6 +138,14 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
+  },
+  {
+    type: "collapse",
+    name: "Matters Arising",
+    key: "mattersarising",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/mattersArising",
+    component: <MattersArising />,
   },
   {
     type: "collapse",
