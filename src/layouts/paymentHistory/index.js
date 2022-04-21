@@ -36,7 +36,7 @@ function PaymentHis() {
   const [descripx, setDescripx] = useState("");
   const [currencyx, setCurrency] = useState("NGN");
   const [amountx, setAmountx] = useState(0);
-  const [comBalance, setComBalance] = useState("");
+  const [comBalance, setComBalance] = useState(0);
   const [pnox, setPno] = useState("");
   const [bonusCheck, setBonusCheck] = useState([]);
   const [referenceSKey, setReferenceSKey] = useState();
@@ -63,8 +63,23 @@ function PaymentHis() {
     const retDate = date.toDateString();
     return retDate;
   };
-  const bonusStatus = "0";
-  const concaBalance = `NGN ${+" " + comBalance}`;
+  const bonusStatus = "1";
+  function commify(n) {
+    const parts = n.toString().split(".");
+    const numberPart = parts[0];
+    const decimalPart = parts[1];
+    const thousands = /\B(?=(\d{3})+(?!\d))/g;
+    // eslint-disable-next-line prefer-template
+    return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
+  }
+
+  // const numberFormatter = Intl.NumberFormat("en-US");
+  // const formatted = numberFormatter.format(comBalance);
+  // console.log(formatted);
+  console.log(comBalance);
+
+  const concaBalance = `NGN ${commify(comBalance)}`;
+
   useEffect(() => {
     setOpened(true);
 
@@ -81,7 +96,6 @@ function PaymentHis() {
         return res.json();
       })
       .then((resultapi) => {
-        console.log(resultapi);
         setOpened(false);
         if (resultapi.message === "Expired Access") {
           navigate("/authentication/sign-in");
@@ -140,6 +154,7 @@ function PaymentHis() {
         }
         if (isMounted) {
           setBonusCheck(resultapi);
+          console.log(resultapi);
         }
       })
       .catch((error) => {

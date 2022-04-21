@@ -94,8 +94,6 @@ function Basic() {
         if (result.status === "SUCCESS") {
           localStorage.setItem("user1", JSON.stringify(result.data));
           localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
-          console.log(result.data);
-          console.log(result);
           MySwal.fire({
             // eslint-disable-next-line dot-notation
             title: result.status,
