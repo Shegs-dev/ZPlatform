@@ -28,7 +28,6 @@ export default function MattersArisingTable() {
       data11.roleID !== "null" &&
       data11.roleID !== null
     ) {
-      console.log(data11.roleID);
       const personalIds = data11.personalID;
       fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/getForEmp/${orgIDs}/${personalIds}`, {
         headers,

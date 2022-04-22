@@ -136,6 +136,14 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests",
+    component: <TimeOffRequests />,
+  },
+  {
+    type: "collapse",
     name: "Announcement Type",
     key: "announcementtype",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -275,14 +283,6 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/inviteUser",
     component: <InviteUser />,
-  },
-  {
-    type: "collapse",
-    name: "Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests",
-    component: <TimeOffRequests />,
   },
   {
     name: "Time Off Requests Journey",
