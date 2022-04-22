@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 export default function TimeOffRequestJourney() {
   const [items, setItems] = useState([]);
 
+  // const [newEvent, setNewEvent] = useState({ title: "", time: "" });
+
   // const { columns: pColumns, rows: pRows } = ForwardTimeOffRequests();
 
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ export default function TimeOffRequestJourney() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
+          console.log(result);
           setItems(result);
         }
       });
@@ -45,13 +48,28 @@ export default function TimeOffRequestJourney() {
     };
   }, []);
 
+  const changeTime = (timestamp) => {
+    const time = new Date(timestamp);
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const seconds = time.getSeconds();
+    const retTime = time.toDateString(); // .getTime
+    // eslint-disable-next-line prefer-template
+    const retHMS = hours + ":" + minutes + ":" + seconds;
+    // eslint-disable-next-line prefer-template
+    return retTime + " " + retHMS;
+  };
+
   return {
     columns: [
-      { Header: "ID", accessor: "personal.id", align: "left" },
-      { Header: "Name", accessor: "personal.fname", align: "left" },
-      { Header: "Phone Number", accessor: "personal.pno", align: "left" },
-      { Header: "Country", accessor: "personal.residentialCountry", align: "left" },
-      { Header: "Marital status", accessor: "personal.maritalStatus", align: "left" },
+      { Header: "Current Holder Name", accessor: "currentHolderName", align: "left" },
+      // { Header: "Created Time", accessor: "createdTime", align: "left" },
+      {
+        Header: "Created Time",
+        accessor: "createdTime",
+        Cell: ({ cell: { value } }) => changeTime(value),
+        align: "left",
+      },
     ],
 
     rows: items,

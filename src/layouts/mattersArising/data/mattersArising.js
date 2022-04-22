@@ -22,7 +22,13 @@ export default function MattersArisingTable() {
     let isMounted = true;
     const orgIDs = data11.orgID;
     const headers = miHeaders;
-    if (data11.roleID !== "0") {
+    if (
+      data11.roleID !== "0" &&
+      data11.roleID !== "" &&
+      data11.roleID !== "null" &&
+      data11.roleID !== null
+    ) {
+      console.log(data11.roleID);
       const personalIds = data11.personalID;
       fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/getForEmp/${orgIDs}/${personalIds}`, {
         headers,
