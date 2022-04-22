@@ -76,7 +76,6 @@ function PaymentHis() {
   // const numberFormatter = Intl.NumberFormat("en-US");
   // const formatted = numberFormatter.format(comBalance);
   // console.log(formatted);
-  console.log(comBalance);
 
   const concaBalance = `NGN ${commify(comBalance)}`;
 
@@ -154,7 +153,6 @@ function PaymentHis() {
         }
         if (isMounted) {
           setBonusCheck(resultapi);
-          console.log(resultapi);
         }
       })
       .catch((error) => {
