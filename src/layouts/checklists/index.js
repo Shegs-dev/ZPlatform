@@ -9,8 +9,13 @@ import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import PHeaders from "postHeader";
 
 function Checkbox() {
+  const MySwal = withReactContent(Swal);
+
   const [rolName, setRolName] = useState("");
   const [permissions, setPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
@@ -31,8 +36,7 @@ function Checkbox() {
   const id = urlParams.get("id");
   // const idVal = JSON.parse([id]);
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const { allGHeaders: miHeaders } = GHeaders();
 
@@ -57,8 +61,8 @@ function Checkbox() {
       redirect: "follow",
     };
 
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/save`, requestOptions, { headers })
+    // const headers = miHeaders;
+    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/save`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -78,6 +82,20 @@ function Checkbox() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
       });
   };
 
