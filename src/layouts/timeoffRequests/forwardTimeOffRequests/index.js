@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 function ForwardTimeOff() {
   const [currentHolder, setCurrentHolder] = useState("");
-  const [employeeRecord, setEmployeeRecord] = useState({});
+  const [employeeRecord, setEmployeeRecord] = useState([]);
 
   const [user, setUser] = useState([]);
   // const { columns: pColumns, rows: pRows } = ForwardTimeOffRequests();
@@ -63,12 +63,15 @@ function ForwardTimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
 
         MySwal.fire({
@@ -79,22 +82,22 @@ function ForwardTimeOff() {
           // const personalIds = data11.personalID;
 
           const raw2 = JSON.stringify({
-            id: employeeRecord.id,
-            orgID: employeeRecord.orgID,
-            empID: employeeRecord.empID,
-            empSetupID: employeeRecord.empSetupID,
-            noOfDaysRequested: employeeRecord.noOfDaysRequested,
-            noOfDaysApproved: employeeRecord.noOfDaysApproved,
-            startDate: employeeRecord.startDate,
-            endDate: employeeRecord.endDate,
-            resumptionDate: employeeRecord.resumptionDate,
-            dutyRelieverID: employeeRecord.dutyRelieverID,
-            createdDate: employeeRecord.createdDate,
-            purpose: employeeRecord.purpose,
-            deleteFlag: employeeRecord.deleteFlag,
+            id: employeeRecord[0].id,
+            orgID: employeeRecord[0].orgID,
+            empID: employeeRecord[0].empID,
+            empSetupID: employeeRecord[0].empSetupID,
+            noOfDaysRequested: employeeRecord[0].noOfDaysRequested,
+            noOfDaysApproved: employeeRecord[0].noOfDaysApproved,
+            startDate: employeeRecord[0].startDate,
+            endDate: employeeRecord[0].endDate,
+            resumptionDate: employeeRecord[0].resumptionDate,
+            dutyRelieverID: employeeRecord[0].dutyRelieverID,
+            createdDate: employeeRecord[0].createdDate,
+            purpose: employeeRecord[0].purpose,
+            deleteFlag: employeeRecord[0].deleteFlag,
             approverID: currentHolder,
-            adminID: employeeRecord.adminID,
-            reasonForDisapproval: employeeRecord.reasonForDisapproval,
+            adminID: employeeRecord[0].adminID,
+            reasonForDisapproval: employeeRecord[0].reasonForDisapproval,
           });
           const requestOptions2 = {
             method: "POST",
@@ -260,12 +263,15 @@ function ForwardTimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setUser(result);
@@ -298,12 +304,15 @@ function ForwardTimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setEmployeeRecord(result);

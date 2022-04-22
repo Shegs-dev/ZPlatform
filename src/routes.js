@@ -131,7 +131,7 @@ const routes = [
     name: "Matters Arising",
     key: "mattersarising",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/mattersArising",
+    route: "/matters-Arising",
     component: <MattersArising />,
   },
   {

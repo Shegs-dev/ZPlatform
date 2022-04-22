@@ -76,7 +76,6 @@ function PaymentHis() {
   // const numberFormatter = Intl.NumberFormat("en-US");
   // const formatted = numberFormatter.format(comBalance);
   // console.log(formatted);
-  console.log(comBalance);
 
   const concaBalance = `NGN ${commify(comBalance)}`;
 
@@ -154,7 +153,6 @@ function PaymentHis() {
         }
         if (isMounted) {
           setBonusCheck(resultapi);
-          console.log(resultapi);
         }
       })
       .catch((error) => {
@@ -490,12 +488,15 @@ function PaymentHis() {
         setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         setItems(result);
       })
