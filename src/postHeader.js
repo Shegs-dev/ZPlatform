@@ -1,7 +1,8 @@
 function PHeaders() {
   const GenToken = localStorage.getItem("rexxdex1");
   const apiiToken = localStorage.getItem("rexxdex");
-  if (apiiToken !== "null") {
+
+  if (apiiToken !== "null" && apiiToken !== null) {
     localStorage.setItem("rexxdex1", apiiToken);
   }
   return {

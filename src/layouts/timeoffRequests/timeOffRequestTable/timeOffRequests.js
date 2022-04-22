@@ -77,12 +77,15 @@ export default function TimeOffRequestData() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         MySwal.fire({
           title: result.status,
@@ -261,7 +264,10 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    if (filteredItems[0].approverID !== 0) {
+    if (
+      filteredItems[0].reasonForDisapproval !== null &&
+      filteredItems[0].reasonForDisapproval !== ""
+    ) {
       return "Decision Made";
       // eslint-disable-next-line no-else-return
     } else if (filteredItems[0].empID !== personalIds) {
@@ -275,7 +281,10 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    if (filteredItems[0].approverID !== 0) {
+    if (
+      filteredItems[0].reasonForDisapproval !== null &&
+      filteredItems[0].reasonForDisapproval !== ""
+    ) {
       return "#FAFA33";
       // eslint-disable-next-line no-else-return
     } else if (filteredItems[0].empID !== personalIds) {
@@ -304,12 +313,15 @@ export default function TimeOffRequestData() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setItems(result);
@@ -326,14 +338,27 @@ export default function TimeOffRequestData() {
     return retDate;
   };
 
-  const handleJourney = (value) => {
-    navigate(`/timeofftype/add-Details-To-Time-Off-Type?id=${value}`);
-  };
+  // const eTOTId = {};
+  // const raw2 = JSON.stringify({
+  //   employeeTimeOffTransactionID: eTOTId.data.id,
+  // });
+  // console.log(raw2);
+  // const data11 = JSON.parse(localStorage.getItem("user1"));
+
+  // const => employeeTimeOffTransactionID;
+
+  // let eTOTId = employeeTimeOffTransactionID;
+
+  // const handleJourney = (eTOTId) => {
+  //   navigate(`/timeoffRequests/timeOffRequestJourney?id=${eTOTId}`);
+  // };
 
   // Return table
   return {
     columns: [
-      { Header: "ID", accessor: "empID", align: "left" },
+      { Header: "Employee's Name", accessor: "empName", align: "left" },
+      { Header: "Duty Reliever's Name", accessor: "dutyRelieverName", align: "left" },
+      { Header: "Approver's Name", accessor: "approverName", align: "left" },
       { Header: "Days Requested", accessor: "noOfDaysRequested", align: "left" },
       { Header: "Days Approved", accessor: "noOfDaysApproved", align: "left" },
       {
@@ -353,7 +378,12 @@ export default function TimeOffRequestData() {
         Header: "Status",
         accessor: "empSetupID",
         Cell: ({ cell: { row } }) => (
-          <p style={{ color: changeCol(row.original.id) }}>{changeType(row.original.id)}</p>
+          <span
+            className="badge badge-pill"
+            style={{ backgroundColor: changeCol(row.original.id) }}
+          >
+            {changeType(row.original.id)}
+          </span>
         ),
         align: "left",
       },
@@ -376,8 +406,15 @@ export default function TimeOffRequestData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleJourney(value)}>
+                <Dropdown.Item
+                  onClick={() => navigate(`/timeoffRequests/timeOffRequestJourney?id=${value}`)}
+                >
                   Time Off Request Journey
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => navigate(`/timeoffRequests/forwardTimeOffRequests?id=${value}`)}
+                >
+                  Forward Time Off Request
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

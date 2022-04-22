@@ -59,12 +59,15 @@ function TimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setUser(result);
@@ -92,12 +95,15 @@ function TimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setEmpSetup(result);
@@ -123,6 +129,7 @@ function TimeOff() {
     const numofdays = Math.ceil(startDateandendDate / varx);
 
     const orgIDs = data11.orgID;
+    const currentholderID = data11.personalID;
     let eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
@@ -203,11 +210,14 @@ function TimeOff() {
             text: result.message,
           })
             .then(() => {
-              const ids = data11.id;
+              window.location.reload();
+            })
+            .then(() => {
+              // const ids = data11.id;
               const raw2 = JSON.stringify({
                 orgID: orgIDs,
                 employeeTimeOffTransactionID: eTOTId.data.id,
-                currentHolderID: ids,
+                currentHolderID: currentholderID,
               });
               const requestOptions2 = {
                 method: "POST",
