@@ -325,7 +325,6 @@ export default function TimeOffRequestData() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {
