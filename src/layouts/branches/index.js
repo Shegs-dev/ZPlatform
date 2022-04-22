@@ -78,12 +78,15 @@ function Branches() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         setOpened(false);
         MySwal.fire({
@@ -115,7 +118,7 @@ function Branches() {
   };
 
   const handleOnNameKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
+    const letters = /^[a-zA-Z0-9 ]+$/;
     if (!namex.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
@@ -372,6 +375,7 @@ function Branches() {
                     </MDTypography>
                     <PhoneInput
                       value={pnox}
+                      countryCode={+234}
                       inputStyle={{ width: "100%" }}
                       buttonStyle={{}}
                       onChange={setPno}

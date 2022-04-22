@@ -11,7 +11,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function Checkbox() {
-  const [rolName, setRolName] = useState([]);
+  const [rolName, setRolName] = useState("");
   const [permissions, setPermissions] = useState([]);
   const [vPermissions, setVPermissions] = useState([]);
   const [roleStep, setRoleStep] = useState([]);
@@ -68,18 +68,21 @@ function Checkbox() {
         setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
       });
   };
 
   useEffect(() => {
-    setOpened(true);
+    // setOpened(true);
 
     const headers = miHeaders;
     let isMounted = true;
@@ -90,7 +93,7 @@ function Checkbox() {
         return res.json();
       })
       .then((resultg) => {
-        setOpened(false);
+        // setOpened(false);
         if (resultg.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -101,7 +104,7 @@ function Checkbox() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          setRolName(resultg);
+          setRolName(resultg[0].name);
         }
       });
     return () => {
@@ -110,7 +113,7 @@ function Checkbox() {
   });
 
   useEffect(() => {
-    setOpened(true);
+    // setOpened(true);
 
     const permissionsList = [];
     const headers = miHeaders;
@@ -144,7 +147,7 @@ function Checkbox() {
             return res.json();
           })
           .then((resultrs) => {
-            setOpened(false);
+            // setOpened(false);
             if (resultrs.message === "Expired Access") {
               navigate("/authentication/sign-in");
             }

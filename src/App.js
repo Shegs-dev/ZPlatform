@@ -35,7 +35,6 @@ import theme from "assets/theme";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
-
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
 

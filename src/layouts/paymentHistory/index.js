@@ -36,7 +36,7 @@ function PaymentHis() {
   const [descripx, setDescripx] = useState("");
   const [currencyx, setCurrency] = useState("NGN");
   const [amountx, setAmountx] = useState(0);
-  const [comBalance, setComBalance] = useState("");
+  const [comBalance, setComBalance] = useState(0);
   const [pnox, setPno] = useState("");
   const [bonusCheck, setBonusCheck] = useState([]);
   const [referenceSKey, setReferenceSKey] = useState();
@@ -63,8 +63,22 @@ function PaymentHis() {
     const retDate = date.toDateString();
     return retDate;
   };
-  const bonusStatus = "0";
-  const concaBalance = `NGN ${+" " + comBalance}`;
+  const bonusStatus = "1";
+  function commify(n) {
+    const parts = n.toString().split(".");
+    const numberPart = parts[0];
+    const decimalPart = parts[1];
+    const thousands = /\B(?=(\d{3})+(?!\d))/g;
+    // eslint-disable-next-line prefer-template
+    return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
+  }
+
+  // const numberFormatter = Intl.NumberFormat("en-US");
+  // const formatted = numberFormatter.format(comBalance);
+  // console.log(formatted);
+
+  const concaBalance = `NGN ${commify(comBalance)}`;
+
   useEffect(() => {
     setOpened(true);
 
@@ -92,7 +106,11 @@ function PaymentHis() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          setComBalance(resultapi.balance);
+          if (resultapi.length === 0) {
+            setComBalance(0);
+          } else {
+            setComBalance(resultapi.balance);
+          }
         }
       })
       .catch((error) => {
@@ -312,19 +330,14 @@ function PaymentHis() {
             redirect: "follow",
           };
           if (mBonusAmount !== 0) {
-            fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`, requestOptions1)
-              .then(async (res) => {
-                const aToken = res.headers.get("token-1");
-                localStorage.setItem("rexxdex", aToken);
-                return res.json();
-              })
-              .then((resultx) => {
-                MySwal.fire({
-                  title: resultx.status,
-                  type: "success",
-                  text: resultx.message,
-                });
-              });
+            fetch(
+              `${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`,
+              requestOptions1
+            ).then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            });
           }
           MySwal.fire({
             title: result.status,
@@ -475,12 +488,15 @@ function PaymentHis() {
         setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         setItems(result);
       })
@@ -600,16 +616,16 @@ function PaymentHis() {
               </MDBox>
               <MDBox
                 variant="gradient"
-                bgColor="info"
+                bgColor="white"
                 borderRadius="lg"
                 coloredShadow="success"
-                mx={10}
+                mx={3}
                 mt={2}
-                p={5}
+                p={6}
                 mb={1}
                 textAlign="left"
               >
-                <MDTypography variant="h1" fontWeight="medium" color="white" textAlign="center">
+                <MDTypography variant="h1" fontWeight="medium" color="info" textAlign="center">
                   {concaBalance}
                 </MDTypography>
               </MDBox>
