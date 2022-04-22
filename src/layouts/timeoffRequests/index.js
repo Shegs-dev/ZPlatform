@@ -59,12 +59,15 @@ function TimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setUser(result);
@@ -92,12 +95,15 @@ function TimeOff() {
       .then((result) => {
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
+          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
+          window.location.reload();
         }
         if (isMounted) {
           setEmpSetup(result);
