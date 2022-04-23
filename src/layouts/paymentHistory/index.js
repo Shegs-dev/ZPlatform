@@ -587,11 +587,11 @@ function PaymentHis() {
   };
 
   const handleOnCityKeys = () => {
-    const letters = /^[0-9]+$/;
+    const letters = /^[-+]?[0-9]+.[0-9]+$/;
     if (!amountx.match(letters)) {
       setCheckedCity(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "Amount - input only numbers<br>";
+      document.getElementById("city").innerHTML = "Amount - input a valid Amount<br>";
     }
     if (amountx.match(letters)) {
       setCheckedCity(true);
