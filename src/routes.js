@@ -78,6 +78,8 @@ import Birthdays from "layouts/birthdays/data/birthdays";
 import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
+import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
+import RenewSub from "layouts/authentication/renewSubscription";
 
 const routes = [
   {
@@ -132,8 +134,16 @@ const routes = [
     name: "Matters Arising",
     key: "mattersarising",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/mattersArising",
+    route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    type: "collapse",
+    name: "Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests",
+    component: <TimeOffRequests />,
   },
   {
     type: "collapse",
@@ -279,19 +289,25 @@ const routes = [
     component: <SignUp />,
   },
   {
+    name: "Log In",
+    key: "renewLogin",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/renew-Login",
+    component: <RenewLog />,
+  },
+  {
+    name: "Renew Subscription",
+    key: "renewSubscription",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/renew-Subscription",
+    component: <RenewSub />,
+  },
+  {
     name: "Invite User",
     key: "inviteUser",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/inviteUser",
     component: <InviteUser />,
-  },
-  {
-    type: "collapse",
-    name: "Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests",
-    component: <TimeOffRequests />,
   },
   {
     name: "Time Off Requests Journey",

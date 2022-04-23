@@ -301,32 +301,65 @@ export default function TimeOffRequestData() {
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(
-      `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/getAllForEmp/${orgIDs}/${personalIds}`,
-      { headers }
-    )
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
+    if (
+      data11.roleID !== "0" &&
+      data11.roleID !== "" &&
+      data11.roleID !== "null" &&
+      data11.roleID !== null
+    ) {
+      fetch(
+        `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/getAllForEmp/${orgIDs}/${personalIds}`,
+        { headers }
+      )
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          if (isMounted) {
+            setItems(result);
+          }
+        });
+    } else {
+      fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/getAll/${orgIDs}`, {
+        headers,
       })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        if (isMounted) {
-          setItems(result);
-        }
-      });
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((resultx) => {
+          if (resultx.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (resultx.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (resultx.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          if (isMounted) {
+            setItems(resultx);
+          }
+        });
+    }
     return () => {
       isMounted = false;
     };
