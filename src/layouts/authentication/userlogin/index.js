@@ -77,6 +77,7 @@ function userlogin() {
           type: "success",
           text: result.message,
         }).then(() => {
+          navigate("/dashboard", { replace: true });
           window.location.reload();
         });
       })
@@ -91,18 +92,13 @@ function userlogin() {
   };
   const handleOnPasswordKeys = () => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!passwordx.match(passwordValidate)) {
-      setCheckedNPass(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML =
-        "Old Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
-    }
     if (passwordx.match(passwordValidate)) {
       setCheckedNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
     }
     if (passwordx.length === 0) {
+      setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Old Password is required<br>";
     }
@@ -131,20 +127,15 @@ function userlogin() {
 
   const handleOnRTNPasswordKeys = () => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!retypepasswordx.match(passwordValidate)) {
+    if (retypepasswordx !== npasswordx) {
       setCheckedRTNPass(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML =
-        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
+      document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     if (retypepasswordx.match(passwordValidate)) {
       setCheckedRTNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "";
-    }
-    if (retypepasswordx !== npasswordx) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
@@ -159,7 +150,7 @@ function userlogin() {
               bgColor="info"
               borderRadius="lg"
               coloredShadow="info"
-              mx={2}
+              mx={-1}
               mt={-3}
               p={2}
               mb={1}
@@ -174,7 +165,7 @@ function userlogin() {
               bgColor="error"
               borderRadius="lg"
               coloredShadow="success"
-              mx={3}
+              mx={0}
               mt={1}
               p={1}
               mb={1}

@@ -95,13 +95,18 @@ function Basic() {
           localStorage.setItem("user1", JSON.stringify(result.data));
           localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
           console.log(result.data);
+          console.log(result);
           MySwal.fire({
             // eslint-disable-next-line dot-notation
             title: result.status,
             type: "success",
             text: result.message,
           }).then(() => {
-            navigate("/dashboard", { replace: true });
+            if (result.otherDetailsDTO.autopass === 0) {
+              navigate("/authentication/userlogin", { replace: true });
+            } else {
+              navigate("/dashboard", { replace: true });
+            }
           });
         } else {
           MySwal.fire({
