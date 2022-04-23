@@ -41,6 +41,7 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 import ChangePassword from "layouts/authentication/changepassword";
+import Userlogin from "layouts/authentication/userlogin";
 import Position from "layouts/position";
 
 // @mui icons
@@ -236,6 +237,14 @@ const routes = [
     icon: <Icon fontSize="small">edit</Icon>,
     route: "/authentication/change-password",
     component: <ChangePassword />,
+  },
+  {
+    type: "collapse",
+    name: "user login",
+    key: "userlogin",
+    icon: <Icon fontSize="small">edit</Icon>,
+    route: "/authentication/userlogin",
+    component: <Userlogin />,
   },
   {
     name: "User Profile",

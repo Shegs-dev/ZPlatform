@@ -99,7 +99,11 @@ function Basic() {
             type: "success",
             text: result.message,
           }).then(() => {
-            navigate("/dashboard", { replace: true });
+            if (result.otherDetailsDTO.autopass === 0) {
+              navigate("/authentication/userlogin", { replace: true });
+            } else {
+              navigate("/dashboard", { replace: true });
+            }
           });
         } else {
           MySwal.fire({
