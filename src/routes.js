@@ -133,8 +133,16 @@ const routes = [
     name: "Matters Arising",
     key: "mattersarising",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/mattersArising",
+    route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    type: "collapse",
+    name: "Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests",
+    component: <TimeOffRequests />,
   },
   {
     type: "collapse",
@@ -291,14 +299,6 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/inviteUser",
     component: <InviteUser />,
-  },
-  {
-    type: "collapse",
-    name: "Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests",
-    component: <TimeOffRequests />,
   },
   {
     name: "Time Off Requests Journey",
