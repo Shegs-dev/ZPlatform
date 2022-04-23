@@ -11,15 +11,15 @@ import MDInput from "components/MDInput";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import DataTable from "examples/Tables/DataTable";
 import "bootstrap/dist/css/bootstrap.min.css";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+// Authentication layout components
+import BasicLayout from "layouts/authentication/components/BasicLayout";
+
+// Images
+import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import Footer from "examples/Footer";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import Swal from "sweetalert2";
@@ -28,7 +28,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { MonnifyConsumer } from "react-monnify";
 
-function PaymentHis() {
+function RenewSub() {
   const MySwal = withReactContent(Swal);
 
   const [namex, setName] = useState("");
@@ -36,7 +36,6 @@ function PaymentHis() {
   const [descripx, setDescripx] = useState("");
   const [currencyx, setCurrency] = useState("NGN");
   const [amountx, setAmountx] = useState(0);
-  const [comBalance, setComBalance] = useState(0);
   const [pnox, setPno] = useState("");
   const [bonusCheck, setBonusCheck] = useState([]);
   const [referenceSKey, setReferenceSKey] = useState();
@@ -47,93 +46,13 @@ function PaymentHis() {
   const [checkedCity, setCheckedCity] = useState("");
   const [enabled, setEnabled] = useState("");
 
-  const [items, setItems] = useState([]);
-  const [auditSDate, setAuditSDate] = useState("");
-  const [auditEDate, setAuditEDate] = useState("");
-
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
   const bonusStatus = "1";
-  // eslint-disable-next-line consistent-return
-  function commify(n) {
-    let parts = 0;
-    if (comBalance > 0) {
-      parts = n.toString().split(".");
-    }
-    const numberPart = parts[0];
-    const decimalPart = parts[1];
-    const thousands = /\B(?=(\d{3})+(?!\d))/g;
-    if (comBalance > 0) {
-      // eslint-disable-next-line prefer-template
-      return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
-      // eslint-disable-next-line no-else-return
-    } else {
-      return 0;
-    }
-  }
-
-  // const numberFormatter = Intl.NumberFormat("en-US");
-  // const formatted = numberFormatter.format(comBalance);
-  // console.log(formatted);
-
-  const concaBalance = `NGN ${commify(comBalance)}`;
-
-  useEffect(() => {
-    setOpened(true);
-
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
-    const headers = miHeaders;
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/getBalance/${orgIDs}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((resultapi) => {
-        setOpened(false);
-        if (resultapi.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-        }
-        if (resultapi.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-        }
-        if (resultapi.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-        }
-        if (isMounted) {
-          if (resultapi.length === 0) {
-            setComBalance(0);
-          } else {
-            setComBalance(resultapi.balance);
-          }
-        }
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     setReferenceSKey(`${Math.floor(Math.random() * 1000000000 + 1)}`);
@@ -161,11 +80,7 @@ function PaymentHis() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          if (resultapi.message === "Your Organization Has Not Made Any Payment") {
-            setBonusCheck([]);
-          } else {
-            setBonusCheck(resultapi);
-          }
+          setBonusCheck(resultapi);
         }
       })
       .catch((error) => {
@@ -279,33 +194,28 @@ function PaymentHis() {
       let mBonusAmount = 0;
       // eslint-disable-next-line radix
       const amountCOn = parseInt(amountx);
-      if (bonusCheck.length === 0) {
-        mBonusAmount = 0;
-        allPayandBonus = amountCOn;
-      } else {
-        // eslint-disable-next-line array-callback-return
-        bonusCheck.map((checkBonus) => {
-          if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else {
-            mBonusAmount = 0;
-            allPayandBonus = amountCOn;
-          }
-          // check = false;
-        });
-      }
+      // eslint-disable-next-line array-callback-return
+      bonusCheck.map((checkBonus) => {
+        if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
+          mBonusAmount = checkBonus.bonusAmount;
+          setBonusSetID(checkBonus.id);
+          allPayandBonus = checkBonus.bonusAmount + amountCOn;
+        } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
+          mBonusAmount = checkBonus.bonusAmount;
+          setBonusSetID(checkBonus.id);
+          allPayandBonus = checkBonus.bonusAmount + amountCOn;
+        } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
+          mBonusAmount = checkBonus.bonusAmount;
+          setBonusSetID(checkBonus.id);
+          allPayandBonus = checkBonus.bonusAmount + amountCOn;
+        } else {
+          mBonusAmount = 0;
+          allPayandBonus = amountCOn;
+        }
+        // check = false;
+      });
 
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("renewUser1"));
       const orgIDs = data11.orgID;
       const raw = JSON.stringify({
         orgID: orgIDs,
@@ -362,6 +272,8 @@ function PaymentHis() {
             type: "success",
             text: result.message,
           }).then(() => {
+            localStorage.clear();
+            navigate("/authentication/sign-in", { replace: true });
             window.location.reload();
           });
         })
@@ -392,161 +304,6 @@ function PaymentHis() {
     paymentDescription: descripx,
     isTestMode: true,
   };
-
-  //   const handleOnClick = () => {
-  //     setOpened(true);
-  //     const data11 = JSON.parse(localStorage.getItem("user1"));
-  //     //   bonusAmount: 10
-  //     //   createdTime: 1649875827073
-  //     //   deleteFlag: 0
-  //     //   endTime: 1651104000000
-  //     //   id: "62571b73813e040d304c13fd"
-  //     //   maxTrigger: 6000
-  //     //   minTrigger: 2000
-  //     //   name: "Test Freebie"
-  //     //   startTime: 1649894400000
-  //     //   status: 0
-  //     let allPayandBonus = 0;
-  //     let mBonusAmount = 0;
-  //     // eslint-disable-next-line radix
-  //     const amountCOn = parseInt(amountx);
-  //     // eslint-disable-next-line array-callback-return
-  //     bonusCheck.map((checkBonus) => {
-  //       if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
-  //         mBonusAmount = checkBonus.bonusAmount;
-  //         allPayandBonus = checkBonus.bonusAmount + amountCOn;
-  //       } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
-  //         mBonusAmount = checkBonus.bonusAmount;
-  //         allPayandBonus = checkBonus.bonusAmount + amountCOn;
-  //       } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
-  //         mBonusAmount = checkBonus.bonusAmount;
-  //         allPayandBonus = checkBonus.bonusAmount + amountCOn;
-  //       } else {
-  //         mBonusAmount = 0;
-  //         allPayandBonus = amountCOn;
-  //       }
-  //       // check = false;
-  //     });
-  //     const orgIDs = data11.orgID;
-  //     const raw = JSON.stringify({
-  //       orgID: orgIDs,
-  //       paidAmount: amountCOn,
-  //       bonusAmount: mBonusAmount,
-  //       totalAmount: allPayandBonus,
-  //     });
-  //     const requestOptions = {
-  //       method: "POST",
-  //       headers: myHeaders,
-  //       body: raw,
-  //       redirect: "follow",
-  //     };
-  //     console.log(raw);
-  //     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`, requestOptions)
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         console.log(result);
-  //         if (result.message === "Expired Access") {
-  //           navigate("/authentication/sign-in");
-  //         }
-  //         if (result.message === "Token Does Not Exist") {
-  //           navigate("/authentication/sign-in");
-  //         }
-  //         if (result.message === "Unauthorized Access") {
-  //           navigate("/authentication/forbiddenPage");
-  //         }
-  //         setOpened(false);
-  //         MySwal.fire({
-  //           title: result.status,
-  //           type: "success",
-  //           text: result.message,
-  //         }).then(() => {
-  //           window.location.reload();
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         MySwal.fire({
-  //           title: error.status,
-  //           type: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   };
-
-  const handleClick = (e) => {
-    setOpened(true);
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const auditConSDate = new Date(auditSDate).getTime();
-    const auditConEDate = new Date(auditEDate).getTime();
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      startDate: auditConSDate,
-      endDate: auditConEDate,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/getFilter`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        setItems(result);
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
-  const pColumns = [
-    { Header: "Organization", accessor: "orgName", align: "left" },
-    { Header: "Paid Amount", accessor: "paidAmount", align: "left" },
-    { Header: "Bonus Amount", accessor: "bonusAmount", align: "left" },
-    { Header: "Total Amount", accessor: "totalAmount", align: "left" },
-    { Header: "Balance", accessor: "balance", align: "left" },
-    {
-      Header: "Last Updated",
-      accessor: "lastUpdatedTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
-      align: "left",
-    },
-    {
-      Header: "Date Created",
-      accessor: "createdTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
-      align: "left",
-    },
-  ];
 
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
@@ -606,52 +363,12 @@ function PaymentHis() {
   };
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
+    <BasicLayout image={bgImage}>
       <Container>
         <div className="row">
-          <div className="col-sm-5">
+          <div className="col-sm-12">
             <Card>
-              <MDBox
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="success"
-                mt={2}
-                mx={0}
-                p={1}
-                textAlign="left"
-              >
-                <MDTypography
-                  variant="h4"
-                  fontWeight="medium"
-                  color="white"
-                  textAlign="center"
-                  mt={1}
-                >
-                  Balance
-                </MDTypography>
-              </MDBox>
-              <MDBox
-                variant="gradient"
-                bgColor="white"
-                borderRadius="lg"
-                coloredShadow="success"
-                mx={3}
-                mt={2}
-                p={6}
-                mb={1}
-                textAlign="left"
-              >
-                <MDTypography variant="h1" fontWeight="medium" color="info" textAlign="center">
-                  {concaBalance}
-                </MDTypography>
-              </MDBox>
-            </Card>
-          </div>
-          <div className="col-sm-7">
-            <Card>
-              <MDBox pt={4} pb={3} px={3}>
+              <MDBox pt={4} pb={3} px={2}>
                 <MDBox
                   variant="gradient"
                   bgColor="info"
@@ -781,7 +498,7 @@ function PaymentHis() {
                       </div>
                     </Container>
                   </MDBox>
-                  <MDBox mt={4} mb={1}>
+                  <MDBox mt={4} mb={1} ml={3}>
                     <div>
                       <MonnifyConsumer {...monNey} className="btn">
                         {({ initializePayment }) => (
@@ -804,133 +521,13 @@ function PaymentHis() {
             </Card>
           </div>
         </div>
-        &nbsp;
-        <Card>
-          <MDBox pt={4} pb={3} px={30}>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={1}
-              mt={2}
-              p={2}
-              mb={1}
-              textAlign="left"
-            >
-              <MDTypography
-                variant="h4"
-                fontWeight="medium"
-                color="white"
-                textAlign="center"
-                mt={1}
-              >
-                Payment History
-              </MDTypography>
-            </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="error"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={3}
-              mt={1}
-              p={1}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
-                {" "}
-              </MDTypography>
-            </MDBox>
-            <MDBox component="form" role="form">
-              <MDBox mb={2}>
-                <Container>
-                  <div align="center">
-                    {" "}
-                    <div className="row">
-                      <div className="col-sm-6">
-                        <MDBox mt={2}>
-                          <MDTypography
-                            variant="button"
-                            fontWeight="regular"
-                            fontSize="80%"
-                            align="left"
-                            color="text"
-                          >
-                            Start Date
-                          </MDTypography>
-                          <DatePicker
-                            placeholderText="MM/DD/YY"
-                            style={{ marginRight: "10px" }}
-                            selected={auditSDate}
-                            peekNextMonth
-                            showMonthDropdown
-                            showYearDropdown
-                            dropdownMode="select"
-                            onChange={(time) => setAuditSDate(time)}
-                          />{" "}
-                        </MDBox>{" "}
-                      </div>
-                      <div className="col-sm-6">
-                        <MDBox mt={2}>
-                          <MDTypography
-                            variant="button"
-                            fontWeight="regular"
-                            fontSize="80%"
-                            align="left"
-                            color="text"
-                          >
-                            End Date
-                          </MDTypography>
-                          <DatePicker
-                            placeholderText="MM/DD/YY"
-                            style={{ marginRight: "10px" }}
-                            selected={auditEDate}
-                            onChange={(time) => setAuditEDate(time)}
-                            peekNextMonth
-                            showMonthDropdown
-                            showYearDropdown
-                            dropdownMode="select"
-                          />{" "}
-                        </MDBox>
-                      </div>
-                    </div>
-                    <MDBox mt={4} mb={1}>
-                      <MDButton
-                        variant="gradient"
-                        onClick={handleClick}
-                        color="info"
-                        width="50%"
-                        align="center"
-                      >
-                        Add Filters
-                      </MDButton>
-                    </MDBox>
-                  </div>
-                </Container>
-              </MDBox>
-            </MDBox>
-          </MDBox>
-        </Card>
-        &nbsp;
-        <MDBox>
-          <DataTable
-            table={{ columns: pColumns, rows: items }}
-            isSorted
-            entriesPerPage
-            showTotalEntries
-            noEndBorder
-            canSearch
-          />
-        </MDBox>
       </Container>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
       </Backdrop>
-    </DashboardLayout>
+    </BasicLayout>
   );
 }
 
-export default PaymentHis;
+export default RenewSub;

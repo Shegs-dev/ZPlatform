@@ -77,6 +77,8 @@ import Birthdays from "layouts/birthdays/data/birthdays";
 import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
+import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
+import RenewSub from "layouts/authentication/renewSubscription";
 
 const routes = [
   {
@@ -268,6 +270,20 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    name: "Log In",
+    key: "renewLogin",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/renew-Login",
+    component: <RenewLog />,
+  },
+  {
+    name: "Renew Subscription",
+    key: "renewSubscription",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/renew-Subscription",
+    component: <RenewSub />,
   },
   {
     name: "Invite User",
