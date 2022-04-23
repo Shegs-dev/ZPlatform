@@ -272,7 +272,7 @@ function RenewSub() {
             type: "success",
             text: result.message,
           }).then(() => {
-            localStorage.clear();
+            // localStorage.clear();
             navigate("/authentication/sign-in", { replace: true });
             window.location.reload();
           });
