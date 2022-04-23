@@ -99,7 +99,7 @@ function Basic() {
             type: "success",
             text: result.message,
           }).then(() => {
-            if (result.otherDetailsDTO.autopass === 0) {
+            if (result.otherDetailsDTO.autopass === 1) {
               navigate("/authentication/userlogin", { replace: true });
             } else {
               navigate("/dashboard", { replace: true });
