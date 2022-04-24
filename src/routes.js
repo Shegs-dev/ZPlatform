@@ -41,6 +41,7 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
 import ChangePassword from "layouts/authentication/changepassword";
+import Userlogin from "layouts/authentication/userlogin";
 import Position from "layouts/position";
 
 // @mui icons
@@ -78,6 +79,8 @@ import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
+import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
+import RenewSub from "layouts/authentication/renewSubscription";
 
 const routes = [
   {
@@ -244,6 +247,14 @@ const routes = [
     component: <ChangePassword />,
   },
   {
+    type: "collapse",
+    name: "user login",
+    key: "userlogin",
+    icon: <Icon fontSize="small">edit</Icon>,
+    route: "/authentication/userlogin",
+    component: <Userlogin />,
+  },
+  {
     name: "User Profile",
     key: "userProfile",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -284,6 +295,20 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    name: "Log In",
+    key: "renewLogin",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/renew-Login",
+    component: <RenewLog />,
+  },
+  {
+    name: "Renew Subscription",
+    key: "renewSubscription",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/authentication/renew-Subscription",
+    component: <RenewSub />,
   },
   {
     name: "Invite User",

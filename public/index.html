@@ -83,29 +83,34 @@ Software.
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-      var duration = 1; // duration in minutes
+      sessionStorage.removeItem("lg");
+      if (sessionStorage.getItem("lg") == null) {
+        var duration = 1; // duration in minutes
 
-      setInterval(updateTimer, 1200000);
+        setInterval(updateTimer, 1200000);
 
-      function updateTimer() {
-        duration--;
-        if (duration < 1) {
-          Swal.fire({
-            title: "Timeout",
-            text: "you have been logged out",
-            icon: "error",
-          });
-          setTimeout(redirectLog, 5000);
+        function updateTimer() {
+          duration--;
+          if (duration < 1) {
+            Swal.fire({
+              title: "Timeout",
+              text: "you have been logged out",
+              icon: "error",
+            });
+            setTimeout(redirectLog, 5000);
+          }
+        }
+        function redirectLog() {
+          window.location = "authentication/sign-in";
+        }
+        window.addEventListener("mousemove", resetTimer);
+
+        function resetTimer() {
+          duration = 2;
         }
       }
-      function redirectLog() {
-        window.location = "authentication/sign-in";
-      }
-      window.addEventListener("mousemove", resetTimer);
 
-      function resetTimer() {
-        duration = 2;
-      }
+      sessionStorage.setItem("lg", 1);
       // $(document).ready(function () {
       //   document.getElementById("root").addEventListener("mousemove", function (event) {
       //     myFunction(event);
