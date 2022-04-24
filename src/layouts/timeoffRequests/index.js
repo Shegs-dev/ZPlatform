@@ -123,142 +123,160 @@ function TimeOff() {
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
-
-    const startDateandendDate = endCDate - startCDate;
-    const varx = 24 * 60 * 60 * 1000;
-    const numofdays = Math.ceil(startDateandendDate / varx);
-
     const orgIDs = data11.orgID;
-    const currentholderID = data11.personalID;
-    let eTOTId = {};
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      empID: personalIds,
-      empSetupID: empSetupIdx,
-      noOfDaysRequested: numofdays,
-      startDate: startCDate,
-      endDate: endCDate,
-      resumptionDate: resumptionCDate,
-      dutyRelieverID: duty,
-      purpose: purposex,
-      adminID: adminIdx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    let check = 0;
-    if (startCDate < CurTime) {
-      check = 1;
-      MySwal.fire({
-        title: "Invalid Date",
-        type: "error",
-        text: "Please Enter A Date From The Future",
-      });
-    }
-    if (check === 0 && endCDate < startCDate) {
-      check = 1;
-      MySwal.fire({
-        title: "Invalid Ending Date",
-        type: "error",
-        text: "Please Enter A Date From The Future",
-      });
-    }
-    if (check === 0 && resumptionCDate < endCDate) {
-      check = 1;
-      MySwal.fire({
-        title: "Invalid Resuming Date",
-        type: "error",
-        text: "Please Enter A Date From The Future",
-      });
-    }
-    // const endCDate - startCDate 24 * 60 * 60 * 1000
-    // const startDateandendDates = endCDate - startCDate;
-    // if (startDateandendDate) {
-    //   // eslint-disable-next-line no-unused-expressions
-    //     for (var i = 24; i * 60 * 60 * 1000;) {
-    //       startDateandendDate/
-    //     }
 
-    // }
+    fetch(
+      `${process.env.REACT_APP_NSUTANA_URL}/freedays/getBetween/${orgIDs}/${startCDate}/${endCDate}`
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
 
-    // console.log(startDateandendDate);
-    if (check === 0) {
-      fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/add`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          eTOTId = result;
+        const numberOfFreedays = result.length;
+        console.log(numberOfFreedays);
+        console.log(result.length);
+        const startDateandendDate = endCDate - startCDate;
+        const varx = 24 * 60 * 60 * 1000;
+        const numofdays = Math.ceil(startDateandendDate / varx) - numberOfFreedays;
 
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-          }
+        // const orgIDs = data11.orgID;
+        const currentholderID = data11.personalID;
+        let eTOTId = {};
+        const raw = JSON.stringify({
+          orgID: orgIDs,
+          empID: personalIds,
+          empSetupID: empSetupIdx,
+          noOfDaysRequested: numofdays,
+          startDate: startCDate,
+          endDate: endCDate,
+          resumptionDate: resumptionCDate,
+          dutyRelieverID: duty,
+          purpose: purposex,
+          adminID: adminIdx,
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+        let check = 0;
+        if (startCDate < CurTime) {
+          check = 1;
           MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          })
-            .then(() => {
-              window.location.reload();
+            title: "Invalid Date",
+            type: "error",
+            text: "Please Enter A Date From The Future",
+          });
+        }
+        if (check === 0 && endCDate < startCDate) {
+          check = 1;
+          MySwal.fire({
+            title: "Invalid Ending Date",
+            type: "error",
+            text: "Please Enter A Date From The Future",
+          });
+        }
+        if (check === 0 && resumptionCDate < endCDate) {
+          check = 1;
+          MySwal.fire({
+            title: "Invalid Resuming Date",
+            type: "error",
+            text: "Please Enter A Date From The Future",
+          });
+        }
+
+        if (check === 0) {
+          fetch(
+            `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/add`,
+            requestOptions
+          )
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
             })
-            .then(() => {
-              // const ids = data11.id;
-              const raw2 = JSON.stringify({
-                orgID: orgIDs,
-                employeeTimeOffTransactionID: eTOTId.data.id,
-                currentHolderID: currentholderID,
-              });
-              const requestOptions2 = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw2,
-                redirect: "follow",
-              };
-              fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeoffjourney/add`, requestOptions2)
-                .then(async (res) => {
-                  const aToken = res.headers.get("token-1");
-                  localStorage.setItem("rexxdex", aToken);
-                  return res.json();
+            .then((resultx) => {
+              eTOTId = resultx;
+
+              if (resultx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resultx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resultx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
+              MySwal.fire({
+                title: resultx.status,
+                type: "success",
+                text: resultx.message,
+              })
+                .then(() => {
+                  // const ids = data11.id;
+                  const raw2 = JSON.stringify({
+                    orgID: orgIDs,
+                    employeeTimeOffTransactionID: eTOTId.data.id,
+                    currentHolderID: currentholderID,
+                  });
+                  const requestOptions2 = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw2,
+                    redirect: "follow",
+                  };
+                  fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeoffjourney/add`, requestOptions2)
+                    .then(async (res) => {
+                      const aToken = res.headers.get("token-1");
+                      localStorage.setItem("rexxdex", aToken);
+                      return res.json();
+                    })
+                    .then((resulty) => {
+                      if (resulty.message === "Expired Access") {
+                        navigate("/authentication/sign-in");
+                      }
+                      if (resulty.message === "Token Does Not Exist") {
+                        navigate("/authentication/sign-in");
+                      }
+                      if (resulty.message === "Unauthorized Access") {
+                        navigate("/authentication/forbiddenPage");
+                      }
+                    });
+                  window.location.reload();
                 })
-                .then((resultx) => {
-                  if (resultx.message === "Expired Access") {
-                    navigate("/authentication/sign-in");
-                  }
-                  if (resultx.message === "Token Does Not Exist") {
-                    navigate("/authentication/sign-in");
-                  }
-                  if (resultx.message === "Unauthorized Access") {
-                    navigate("/authentication/forbiddenPage");
-                  }
+                .catch((error) => {
+                  console.log({
+                    title: error.status,
+                    type: "error",
+                    text: error.message,
+                  });
                 });
             })
             .catch((error) => {
-              console.log({
+              MySwal.fire({
                 title: error.status,
                 type: "error",
                 text: error.message,
               });
             });
-        })
-        .catch((error) => {
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
   };
 
   return (
