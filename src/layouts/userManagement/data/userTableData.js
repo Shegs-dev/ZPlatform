@@ -199,8 +199,12 @@ export default function UserData() {
       });
   };
 
+  // const handleAddsalary = (value) => {
+  //   navigate(`/user-Management/user-Salary`(value));
+  // };
+
   const handleAddsalary = (value) => {
-    navigate(`/useManagement/addUserSalary`(value));
+    navigate(`/user-Management/user-Salary?id=${value}`);
   };
 
   return {

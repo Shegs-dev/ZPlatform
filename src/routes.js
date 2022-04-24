@@ -70,7 +70,7 @@ import Checklists from "layouts/checklists";
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
-import UserTOT from "layouts/userManagement/userTimeOffType";
+import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement/index";
 import PaymentHis from "layouts/paymentHistory";
 
 import Birthdays from "layouts/birthdays/data/birthdays";
@@ -112,11 +112,11 @@ const routes = [
     component: <TimeOffType />,
   },
   {
-    name: "User TimeOff Type",
-    key: "userTimeOffType",
+    name: "User Salary",
+    key: "userSalary",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/user-TimeOff-Type",
-    component: <UserTOT />,
+    route: "/user-Management/user-Salary",
+    component: <AddUserpayment />,
   },
   {
     type: "collapse",
