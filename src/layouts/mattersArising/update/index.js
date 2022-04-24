@@ -36,8 +36,8 @@ function EditMattersArising() {
   const [user, setUser] = useState([]);
   // const [updateMatter, setUpdateMatter] = useState([]);
 
-  const [checkedTitle, setCheckedTitle] = useState("");
-  const [enabled, setEnabled] = useState("");
+  // const [checkedTitle, setCheckedTitle] = useState("");
+  // const [enabled, setEnabled] = useState("");
 
   // /concern/getForEmp/{orgID}/{empID}    /concern/getByIds/{ids}
 
@@ -195,26 +195,6 @@ function EditMattersArising() {
     };
   }, []);
 
-  const handleOnTitleKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!titlex.match(letters)) {
-      setCheckedTitle(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML =
-        "Title - input only capital and small letters<br>";
-    }
-    if (titlex.match(letters)) {
-      setCheckedTitle(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML = "";
-    }
-    if (titlex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML = "Title is required<br>";
-    }
-    setEnabled(checkedTitle === true);
-  };
-
   const handleOnMessageKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!messagex.match(letters)) {
@@ -225,10 +205,33 @@ function EditMattersArising() {
     if (messagex.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("message").innerHTML = "";
+      handleUpdate();
     }
     if (messagex.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("message").innerHTML = "Message is required<br>";
+    }
+    // setEnabled(checkedTitle === true);
+  };
+
+  const handleOnTitleKeys = (e) => {
+    e.preventDefault();
+    const letters = /^[a-zA-Z ]+$/;
+    if (!titlex.match(letters)) {
+      // setCheckedTitle(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("title").innerHTML =
+        "Title - input only capital and small letters<br>";
+    }
+    if (titlex.match(letters)) {
+      // setCheckedTitle(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("title").innerHTML = "";
+      handleOnMessageKeys();
+    }
+    if (titlex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("title").innerHTML = "Title is required<br>";
     }
     // setEnabled(checkedTitle === true);
   };
@@ -279,7 +282,7 @@ function EditMattersArising() {
                     type="text"
                     label="Title *"
                     value={titlex || ""}
-                    onKeyUp={handleOnTitleKeys}
+                    // onKeyUp={handleOnTitleKeys}
                     onChange={(e) => setTitlex(e.target.value)}
                     variant="standard"
                     fullWidth
@@ -291,7 +294,7 @@ function EditMattersArising() {
                     type="text"
                     label="Message *"
                     value={messagex || ""}
-                    onKeyUp={handleOnMessageKeys}
+                    // onKeyUp={handleOnMessageKeys}
                     onChange={(e) => setMessagex(e.target.value)}
                     variant="standard"
                     fullWidth
@@ -346,8 +349,8 @@ function EditMattersArising() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleUpdate}
-                disabled={!enabled}
+                onClick={(e) => handleOnTitleKeys(e)}
+                // disabled={!enabled}
                 color="info"
                 width="50%"
                 align="center"
