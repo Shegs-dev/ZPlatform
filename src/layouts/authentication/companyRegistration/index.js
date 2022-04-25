@@ -68,13 +68,12 @@ function CompanyReg() {
   const [comEnabled, setComEnabled] = useState("");
 
   const [opened, setOpened] = useState(false);
-
   useEffect(() => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/configuration/gets`, { myHeaders })
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/configuration/gets`, { myHeaders })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -94,7 +93,7 @@ function CompanyReg() {
           window.location.reload();
         }
         if (isMounted) {
-          setConfigPrice(result.value);
+          setConfigPrice(result[0].value);
         }
       });
     return () => {
@@ -103,11 +102,13 @@ function CompanyReg() {
   }, []);
 
   const handleClick = (e) => {
+    console.log(configPrice);
     setOpened(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
     e.preventDefault();
     const raw = JSON.stringify({
       name: namex,
@@ -126,7 +127,7 @@ function CompanyReg() {
       body: raw,
       redirect: "follow",
     };
-
+    console.log(raw);
     fetch(`${process.env.REACT_APP_KUBU_URL}/company/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
@@ -141,10 +142,15 @@ function CompanyReg() {
           body: raw1,
           redirect: "follow",
         };
-
+        console.log(raw1);
         fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
           .then((res) => res.json())
           .then((resultx) => {
+            MySwal.fire({
+              title: resultx.status,
+              type: "success",
+              text: resultx.message,
+            });
             localStorage.setItem("company", JSON.stringify(resultx.data));
             const raw2 = JSON.stringify({
               orgID: result.data.id,
@@ -158,14 +164,15 @@ function CompanyReg() {
               body: raw2,
               redirect: "follow",
             };
+            console.log(raw2);
             fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
               .then((res) => res.json())
-              .then(() => {
+              .then((ress) => {
                 setOpened(false);
                 MySwal.fire({
-                  title: result.status,
+                  title: ress.status,
                   type: "success",
-                  text: result.message,
+                  text: ress.message,
                 }).then(() => {
                   const raw4 = JSON.stringify({
                     orgID: result.data.id,
@@ -173,6 +180,7 @@ function CompanyReg() {
                     bonusAmount: 0,
                     totalAmount: configPrice,
                   });
+                  console.log(raw4);
                   const requestOptions4 = {
                     method: "POST",
                     headers: myHeaders,
