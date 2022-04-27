@@ -68,13 +68,12 @@ function CompanyReg() {
   const [comEnabled, setComEnabled] = useState("");
 
   const [opened, setOpened] = useState(false);
-
   useEffect(() => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/configuration/gets`, { myHeaders })
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/configuration/gets`, { myHeaders })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -94,7 +93,7 @@ function CompanyReg() {
           window.location.reload();
         }
         if (isMounted) {
-          setConfigPrice(result.value);
+          setConfigPrice(result[0].value);
         }
       });
     return () => {
@@ -126,7 +125,6 @@ function CompanyReg() {
       body: raw,
       redirect: "follow",
     };
-
     fetch(`${process.env.REACT_APP_KUBU_URL}/company/add`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
@@ -141,7 +139,6 @@ function CompanyReg() {
           body: raw1,
           redirect: "follow",
         };
-
         fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
           .then((res) => res.json())
           .then((resultx) => {
@@ -161,45 +158,31 @@ function CompanyReg() {
             fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
               .then((res) => res.json())
               .then(() => {
-                setOpened(false);
-                MySwal.fire({
-                  title: result.status,
-                  type: "success",
-                  text: result.message,
-                }).then(() => {
-                  const raw4 = JSON.stringify({
-                    orgID: result.data.id,
-                    paidAmount: configPrice,
-                    bonusAmount: 0,
-                    totalAmount: configPrice,
-                  });
-                  const requestOptions4 = {
-                    method: "POST",
-                    headers: myHeaders,
-                    body: raw4,
-                    redirect: "follow",
-                  };
-                  fetch(
-                    `${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`,
-                    requestOptions4
-                  )
-                    .then(async (res) => {
-                      const aToken = res.headers.get("token-1");
-                      localStorage.setItem("rexxdex", aToken);
-                      return res.json();
-                    })
-                    .then((resultp) => {
-                      MySwal.fire({
-                        title: resultp.status,
-                        type: "success",
-                        text: resultp.message,
-                      });
-                    });
+                const raw4 = JSON.stringify({
+                  orgID: result.data.id,
+                  paidAmount: configPrice,
+                  bonusAmount: 0,
+                  totalAmount: configPrice,
+                });
+                const requestOptions4 = {
+                  method: "POST",
+                  headers: myHeaders,
+                  body: raw4,
+                  redirect: "follow",
+                };
+                fetch(
+                  `${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`,
+                  requestOptions4
+                ).then(async (res) => {
+                  const aToken = res.headers.get("token-1");
+                  localStorage.setItem("rexxdex", aToken);
+                  return res.json();
                 });
               });
           });
       })
       .then((result) => {
+        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",

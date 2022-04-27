@@ -2,68 +2,87 @@ import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
-import DataTable from "examples/Tables/DataTable";
 import Card from "@mui/material/Card";
-import { Container, Form } from "react-bootstrap";
-import announcement from "layouts/announcement/data/announcement";
+import { Container } from "react-bootstrap";
 import MDButton from "components/MDButton";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
-import { useNavigate } from "react-router-dom";
 
-function Announcement() {
+function AddUserpayment() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = announcement();
 
-  const [titlex, setTitle] = useState("");
-  const [messagex, setMessage] = useState("");
-  const [annoucementTypeIDx, setAnnoucementTypeID] = useState("");
-  const [allAnnouncementType, setAllAnnouncementType] = useState([]);
+  // const [employeeIDx, setEmployeeID] = useState(0);
+  const [idx, setID] = useState("");
+  const [orgIDx, setOrgID] = useState("");
+  const [empIDx, setEmpID] = useState(0);
+  const [amountx, setAmount] = useState(0);
+  const [currencyx, setCurrency] = useState("NGN");
+  const [createdTimex, setCreatedTime] = useState(0);
+  const [deleteFlagx, setDeleteFlag] = useState(0);
 
-  const [checkedTitle, setCheckedTitle] = useState("");
+  const [checkedAmount, setCheckedAmount] = useState("");
   const [enabled, setEnabled] = useState("");
+
+  const [opened, setOpened] = useState(false);
 
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  // Method to fetch all announcementtype
   useEffect(() => {
-    const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    setOpened(true);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
 
+    const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
+    const headers = miHeaders;
     let isMounted = true;
-    // console.log()
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/getForEmp/${orgIDs}/${idVal}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
+        console.log(result);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
-          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
-          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-          window.location.reload();
         }
         if (isMounted) {
-          setAllAnnouncementType(result);
-          console.log(result);
+          // eslint-disable-next-line eqeqeq
+          if (result.length != 0) {
+            setID(result.id);
+            setOrgID(result.orgID);
+            setEmpID(result.empID);
+            setAmount(result.amount);
+            setCurrency(result.currency);
+            setDeleteFlag(result.deleteFlag);
+            setCreatedTime(result.createdTime);
+          } else {
+            setID(null);
+          }
         }
       });
     return () => {
@@ -72,43 +91,64 @@ function Announcement() {
   }, []);
 
   const handleClick = (e) => {
+    setOpened(true);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const idVal = JSON.parse([id]);
+
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const personalIDs = data11.personalID;
+    let allRaw = {};
     const raw = JSON.stringify({
-      orgID: orgIDs,
-      title: titlex,
-      message: messagex,
-      announcementTypeID: annoucementTypeIDx,
-      createdBy: personalIDs,
+      orgID: data11.orgID,
+      empID: idVal,
+      amount: amountx,
+      currency: currencyx,
     });
+
+    const updateRaw = JSON.stringify({
+      id: idx,
+      orgID: orgIDx,
+      empID: empIDx,
+      amount: amountx,
+      currency: currencyx,
+      createdTime: createdTimex,
+      deleteFlag: deleteFlagx,
+    });
+    if (idx !== null) {
+      allRaw = updateRaw;
+    } else {
+      allRaw = raw;
+    }
+    let endpoint = "add";
+    if (idx !== null) {
+      endpoint = "update";
+    }
+
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: raw,
+      body: allRaw,
       redirect: "follow",
     };
-
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/add`, requestOptions)
+    console.log(allRaw);
+    fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/${endpoint}`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
-          window.location.reload();
         }
         if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
-          window.location.reload();
         }
         if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-          window.location.reload();
         }
         MySwal.fire({
           title: result.status,
@@ -119,6 +159,7 @@ function Announcement() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -126,29 +167,23 @@ function Announcement() {
         });
       });
   };
-
-  const handleOnChangeAnnounceType = (e) => {
-    setAnnoucementTypeID(e.target.value);
-  };
-
-  const handleOnTitleKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!titlex.match(letters)) {
-      setCheckedTitle(false);
+  const handleOnAmountKeys = () => {
+    const numbers = /^[-+]?[0-9]+.[0-9]+$/;
+    if (!amountx.match(numbers)) {
+      setCheckedAmount(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML =
-        "Title - input only capital and small letters<br>";
+      document.getElementById("amount").innerHTML = "Amount - input a valid Amount<br>";
     }
-    if (titlex.match(letters)) {
-      setCheckedTitle(true);
+    if (amountx.match(numbers)) {
+      setCheckedAmount(true);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML = "";
+      document.getElementById("amount").innerHTML = "";
     }
-    if (titlex.length === 0) {
+    if (amountx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML = "Title is required<br>";
+      document.getElementById("amount").innerHTML = "Amount is required<br>";
     }
-    setEnabled(checkedTitle === true);
+    setEnabled(checkedAmount === true);
   };
 
   return (
@@ -168,7 +203,7 @@ function Announcement() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Announcement
+              Add User Salary
             </MDTypography>
           </MDBox>
           <MDBox
@@ -182,7 +217,7 @@ function Announcement() {
             mb={1}
             textAlign="center"
           >
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="title">
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="amount">
               {" "}
             </MDTypography>
           </MDBox>
@@ -193,10 +228,10 @@ function Announcement() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Title*"
-                      value={titlex || ""}
-                      onKeyUp={handleOnTitleKeys}
-                      onChange={(e) => setTitle(e.target.value)}
+                      label="Amount*"
+                      value={amountx || ""}
+                      onKeyUp={handleOnAmountKeys}
+                      onChange={(e) => setAmount(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -205,35 +240,13 @@ function Announcement() {
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      value={messagex || ""}
-                      onChange={(e) => setMessage(e.target.value)}
-                      label="Message"
+                      value={currencyx || ""}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      label="Currency *"
+                      disabled
                       variant="standard"
                       fullWidth
                     />
-                  </div>
-                </div>
-              </Container>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                      Annoucement Type
-                    </MDTypography>
-                    <MDBox textAlign="right">
-                      <Form.Select
-                        value={annoucementTypeIDx || ""}
-                        aria-label="Default select example"
-                        onChange={handleOnChangeAnnounceType}
-                      >
-                        <option>--Select Announcement Type--</option>
-                        {allAnnouncementType.map((apic) => (
-                          <option key={apic.id} value={apic.id}>
-                            {apic.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </MDBox>
                   </div>
                 </div>
               </Container>
@@ -252,19 +265,12 @@ function Announcement() {
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }
 
-export default Announcement;
+export default AddUserpayment;

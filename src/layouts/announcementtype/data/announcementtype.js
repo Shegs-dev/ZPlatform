@@ -97,7 +97,7 @@ export default function data() {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      colorcodex = filteredItems[0].colorcode;
+      colorcodex = filteredItems[0].colorCode;
       descripx = filteredItems[0].descrip;
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
@@ -106,10 +106,12 @@ export default function data() {
     MySwal.fire({
       title: "Update Announcement Type",
       html: `<table><tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
-      <tr><td><label for="descrip">Description</label></td>
-      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr></table>`,
+      <label for="name">Name:   </label></td>
+      <td><input type="text" id="name" value="${namex}" class="form-control" placeholder="Name"></td></tr><br>
+      <tr><td><label for="descrip">Description:   </label></td>
+      <td><input type="text" class="form-control" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
+      <tr><td><label for="colorcode">Colorcode:</label></td>
+      <td><input type="color"  class="form-control" id="colorcode" value="${colorcodex}" placeholder="Colorcode"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -117,12 +119,13 @@ export default function data() {
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
+        const colorCodee = Swal.getPopup().querySelector("#colorcode").value;
         const id = value;
         const letters = /^[a-zA-Z ]+$/;
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, name, colorcodex, descrip, deleteFlagx, createdTimex);
+          handleUpdate(id, name, colorCodee, descrip, deleteFlagx, createdTimex);
         }
       },
     });
@@ -220,6 +223,7 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
+          console.log(result);
         }
       });
     return () => {
@@ -232,6 +236,12 @@ export default function data() {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
       { Header: "description", accessor: "descrip", align: "left" },
+      {
+        Header: "Color",
+        accessor: "colorCode",
+        Cell: ({ cell: { value } }) => <input type="color" disabled value={value} />,
+        align: "left",
+      },
       {
         Header: "Date Created",
         accessor: "createdTime",

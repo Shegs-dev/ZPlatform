@@ -174,7 +174,10 @@ function Announcementtype() {
                 </div>
                 <div className="row">
                   <div className="col-sm-6">
-                    <MDBox mt={5}>
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={5}>
+                      Card Color
+                    </MDTypography>
+                    <MDBox mt={0}>
                       <input type="color" onChange={(e) => setColor(e.target.value)} />
                     </MDBox>
                   </div>
