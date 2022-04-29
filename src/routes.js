@@ -67,11 +67,12 @@ import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import FreeDay from "layouts/free-days";
 import Checklists from "layouts/checklists";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
-import UserTOT from "layouts/userManagement/userTimeOffType";
+import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement/index";
 import PaymentHis from "layouts/paymentHistory";
 
 import Birthdays from "layouts/birthdays/data/birthdays";
@@ -82,6 +83,8 @@ import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 // import App from "layouts/mattersArising/viewMatter/client/app";
+// import Createbonus from "layouts/createbonus";
+import Bonusdeduction from "layouts/bonusdeduction";
 
 const routes = [
   {
@@ -101,6 +104,13 @@ const routes = [
     component: <UserManagement />,
   },
   {
+    name: "Add Time-Off Type To User",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-TimeOff-Type",
+    component: <UserTOT />,
+  },
+  {
     type: "collapse",
     name: "Birthdays",
     key: "birthdays",
@@ -117,11 +127,11 @@ const routes = [
     component: <TimeOffType />,
   },
   {
-    name: "User TimeOff Type",
-    key: "userTimeOffType",
+    name: "User Salary",
+    key: "userSalary",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/user-TimeOff-Type",
-    component: <UserTOT />,
+    route: "/user-Management/user-Salary",
+    component: <AddUserpayment />,
   },
   {
     type: "collapse",
@@ -192,6 +202,22 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
+  },
+  // {
+  //   type: "collapse",
+  //   name: "Create bonus",
+  //   key: "createbonus",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/create-bonus",
+  //   component: <Createbonus />,
+  // },
+  {
+    type: "collapse",
+    name: "Bonus/Deduction",
+    key: "bonusdeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/bonusDeduction",
+    component: <Bonusdeduction />,
   },
   {
     type: "collapse",

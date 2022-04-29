@@ -1,7 +1,3 @@
-/* eslint-disable react/prop-types */
-
-// @mui material components
-
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
@@ -13,7 +9,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-export default function data() {
+export default function bonusdeductionData() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
@@ -21,9 +17,8 @@ export default function data() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const navigate = useNavigate();
-
-  // Method to handle diable
-  const handleUpdate = (idx, namex, colorcodex, descripx, createdTimex, deleteFlagx) => {
+  // Method to handle update
+  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
@@ -31,7 +26,6 @@ export default function data() {
       id: idx,
       orgID: orgIDs,
       name: namex,
-      colorcode: colorcodex,
       descrip: descripx,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
@@ -43,7 +37,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -82,51 +76,52 @@ export default function data() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let colorcodex = "";
-    let descripx = "";
-    let createdTimex = 0;
-    let deleteFlagx = 0;
+    let amountx = "";
+    let currencyx = "";
+    let frequencyx = "";
+    // let setupTypex = "";
+    let createdTime = 0;
+    let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      colorcodex = "";
-      descripx = "";
-      createdTimex = 0;
-      deleteFlagx = 0;
+      amountx = "";
+      frequencyx = "";
+      currencyx = "";
+      createdTime = 0;
+      deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      colorcodex = filteredItems[0].colorCode;
-      descripx = filteredItems[0].descrip;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
+      amountx = filteredItems[0].amount;
+      frequencyx = filteredItems[0].frequency;
+      currencyx = filteredItems[0].currency;
+      createdTime = filteredItems[0].createdTime;
+      deleteFlag = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
-      title: "Update Announcement Type",
-      html: `<table><tr><td>
-      <label for="name">Name:   </label></td>
-      <td><input type="text" id="name" value="${namex}" class="form-control" placeholder="Name"></td></tr><br>
-      <tr><td><label for="descrip">Description:   </label></td>
-      <td><input type="text" class="form-control" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
-      <tr><td><label for="colorcode">Colorcode:</label></td>
-      <td><input type="color"  class="form-control" id="colorcode" value="${colorcodex}" placeholder="Colorcode"></td></tr></table>`,
+      title: "Update Bonus/Deduction",
+      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
+            <input type="text" class="swal2-input" id="amount" value="${amountx}" placeholder="Amount">\
+            <input type="text" class="swal2-input" id="frequency" value="${frequencyx}" placeholder="Frequency">\
+            <input type="text" class="swal2-input" id="currency" value="${currencyx}" placeholder="Currrency">`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
-        const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const colorCodee = Swal.getPopup().querySelector("#colorcode").value;
+        const amount = Swal.getPopup().querySelector("#amount").value;
+        const frequency = Swal.getPopup().querySelector("#frequency").value;
+        const currency = Swal.getPopup().querySelector("#currency").value;
+        const setupType = Swal.getPopup().querySelector("#setupType").value;
         const id = value;
-        const letters = /^[a-zA-Z ]+$/;
-        if (name.length > 0 && !name.match(letters)) {
-          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
-        } else {
-          handleUpdate(id, name, colorCodee, descrip, deleteFlagx, createdTimex);
+        if (!name) {
+          Swal.showValidationMessage(`Please enter name`);
         }
+        handleUpdate(id, name, amount, frequency, currency, setupType, createdTime, deleteFlag);
       },
     });
   };
@@ -149,7 +144,7 @@ export default function data() {
         };
 
         fetch(
-          `${process.env.REACT_APP_SHASHA_URL}/announcementtype/delete/${value}`,
+          `${process.env.REACT_APP_TANTA_URL}//remunerationpackagesetup/delete/{id}${value}`,
           requestOptions
         )
           .then(async (res) => {
@@ -193,16 +188,15 @@ export default function data() {
     return retDate;
   };
 
-  // Method to fetch all announcementtype
+  // Method to fetch all departments
+  // env.environments
   useEffect(() => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    console.log(headers);
-    // console.log()
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -223,7 +217,6 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {
@@ -235,13 +228,10 @@ export default function data() {
   return {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
-      { Header: "description", accessor: "descrip", align: "left" },
-      {
-        Header: "Color",
-        accessor: "colorCode",
-        Cell: ({ cell: { value } }) => <input type="color" disabled value={value} />,
-        align: "left",
-      },
+      { Header: "amount", accessor: "amount", align: "left" },
+      { Header: "frequency", accessor: "frequency", align: "left" },
+      { Header: "currency", accessor: "currency", align: "left" },
+      { Header: "setupType", accessor: "setupType", align: "left" },
       {
         Header: "Date Created",
         accessor: "createdTime",
@@ -251,6 +241,7 @@ export default function data() {
       {
         Header: "actions",
         accessor: "id",
+        // eslint-disable-next-line react/prop-types
         Cell: ({ cell: { value } }) => (
           <div
             style={{

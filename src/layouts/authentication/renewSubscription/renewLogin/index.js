@@ -86,14 +86,7 @@ function RenewLog() {
         setOpened(false);
         if (result.status === "SUCCESS") {
           localStorage.setItem("renewUser1", JSON.stringify(result.data));
-          MySwal.fire({
-            // eslint-disable-next-line dot-notation
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            navigate("/authentication/renew-Subscription", { replace: true });
-          });
+          navigate("/authentication/renew-Subscription", { replace: true });
         } else {
           MySwal.fire({
             title: result.status,
