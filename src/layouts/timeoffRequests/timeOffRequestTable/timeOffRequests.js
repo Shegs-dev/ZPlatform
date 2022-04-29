@@ -22,6 +22,7 @@ export default function TimeOffRequestData() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
+  // timeofftypedetails
   // Method to handle diable
   const handleUpdate = (
     idx,
@@ -104,6 +105,28 @@ export default function TimeOffRequestData() {
       });
   };
 
+  const getCurrentDate = () => new Date().getTime();
+
+  const changeUpdateDate = (timestamp) => {
+    const date = new Date(timestamp);
+    let month = "0";
+    if (date.getMonth() + 1 < 10) {
+      const mymonth = date.getMonth() + 1;
+      month += mymonth;
+    } else {
+      const mymonth = date.getMonth() + 1;
+      month = mymonth;
+    }
+    let day = "0";
+    if (date.getDate() < 10) {
+      day += date.getDate();
+    } else {
+      day = date.getDate();
+    }
+    const retDate = `${date.getFullYear()}-${month}-${day}`;
+    return retDate;
+  };
+
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let empSetupIdx = "";
@@ -140,8 +163,8 @@ export default function TimeOffRequestData() {
       empSetupIdx = filteredItems[0].empSetupID;
       daysx = filteredItems[0].noOfDaysRequested;
       daysapprovex = filteredItems[0].noOfDaysApproved;
-      startx = filteredItems[0].startDate;
-      endx = filteredItems[0].endDate;
+      startx = changeUpdateDate(filteredItems[0].startDate);
+      endx = changeUpdateDate(filteredItems[0].endDate);
       resumex = filteredItems[0].resumptionDate;
       dutyrelieverx = filteredItems[0].dutyRelieverID;
       createdx = filteredItems[0].createdDate;
@@ -151,18 +174,24 @@ export default function TimeOffRequestData() {
       adminx = filteredItems[0].adminID;
       reasonx = filteredItems[0].reasonForDisapproval;
     }
-    const sDate = new Date(startx);
-    startx = sDate.getDate();
-    const eDate = new Date(endx);
-    endx = eDate.getDate();
+    // const sDate = new Date(startx);
+    // startx = sDate.getDate();
+    // const eDate = new Date(endx);
+    // endx = eDate.getDate();
+
+    // const changeTime = (timestamp) => {
+    //   const startDate = new Date(timestamp);
+    //   const retTime = startDate.toDateString();
+    //   return retTime;
+    // };
 
     MySwal.fire({
       title: "Update Timeoff Type",
       html: `<table><tr><td>
       <tr><td><label for="starting">Start Date</label></td>
-      <td><input type="text" class="swal2-input" id="starting" value="${startx}" placeholder="Start Date"></td></tr>
+      <td><input type="date" class="form-control" id="starting" value="${startx}" placeholder="Start Date"></td></tr>
       <tr><td><label for="end">End Date</label></td>
-      <td><input type="text" class="swal2-input" id="end" value="${endx}" placeholder="End Date"></td></tr>
+      <td><input type="date" class="form-control" id="end" value="${endx}" placeholder="End Date"></td></tr>
       <tr><td><label for="dutyreliever">Duty Reliever</label></td>
       <td><input type="text" class="swal2-input" id="dutyreliever" value="${dutyrelieverx}" placeholder="Duty Reliever"></td></tr>
       <tr><td><label for="purpose">Purpose</label></td>
@@ -173,27 +202,33 @@ export default function TimeOffRequestData() {
       cancelButtonColor: "#d33",
       preConfirm: () => {
         const startDate = Swal.getPopup().querySelector("#starting").value;
-        const end = Swal.getPopup().querySelector("#end").value;
+        const endDate = Swal.getPopup().querySelector("#end").value;
         const dutyreliever = Swal.getPopup().querySelector("#dutyreliever").value;
         const purpose = Swal.getPopup().querySelector("#purpose").value;
         const id = value;
         const letters = /^[a-zA-Z]+$/;
-        const numbers = /^[0-9]+$/;
+        // const numbers = /^[0-9]+$/;
+        const startDates = new Date(startDate).getTime();
+        const endDates = new Date(endDate).getTime();
+        const currentTime = getCurrentDate();
         if (
-          (startDate.length > 0 && !startDate.match(numbers)) ||
-          (end.length > 0 && !end.match(numbers)) ||
+          // (startDate.length > 0 && !startDate.match(numbers)) ||
+          startDates < currentTime ||
+          endDates < startDates ||
+          // (end.length > 0 && !end.match(numbers)) ||
           (dutyreliever.length > 0 && !dutyreliever.match(letters)) ||
           (purpose.length > 0 && !purpose.match(letters))
         ) {
           Swal.showValidationMessage(`Days Requested - Please choose a day and use only numbers`);
         } else {
+          Swal.resetValidationMessage();
           handleUpdate(
             id,
             empSetupIdx,
             daysx,
             daysapprovex,
-            startDate,
-            end,
+            startDates,
+            endDates,
             resumex,
             dutyreliever,
             createdx,

@@ -81,6 +81,7 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+// import App from "layouts/mattersArising/viewMatter/client/app";
 
 const routes = [
   {
@@ -145,6 +146,14 @@ const routes = [
     route: "/matters-Arising/update",
     component: <EditMattersArising />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "Chats",
+  //   key: "chats",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/matters-Arising/viewChats",
+  //   component: <App />,
+  // },
   {
     type: "collapse",
     name: "Time Off Requests",
