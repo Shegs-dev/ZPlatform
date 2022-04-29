@@ -82,6 +82,8 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+// import Createbonus from "layouts/createbonus";
+import Bonusdeduction from "layouts/bonusdeduction";
 
 const routes = [
   {
@@ -191,6 +193,22 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
+  },
+  // {
+  //   type: "collapse",
+  //   name: "Create bonus",
+  //   key: "createbonus",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/create-bonus",
+  //   component: <Createbonus />,
+  // },
+  {
+    type: "collapse",
+    name: "Bonus/Deduction",
+    key: "bonusdeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/bonusDeduction",
+    component: <Bonusdeduction />,
   },
   {
     type: "collapse",
