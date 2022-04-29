@@ -18,7 +18,16 @@ export default function bonusdeductionData() {
 
   const navigate = useNavigate();
   // Method to handle update
-  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
+  const handleUpdate = (
+    idx,
+    namex,
+    currencyx,
+    frequencyx,
+    amountx,
+    typex,
+    createdTimex,
+    deleteFlagx
+  ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
@@ -26,7 +35,10 @@ export default function bonusdeductionData() {
       id: idx,
       orgID: orgIDs,
       name: namex,
-      descrip: descripx,
+      amount: amountx,
+      frequency: frequencyx,
+      type: typex,
+      currency: currencyx,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -79,6 +91,7 @@ export default function bonusdeductionData() {
     let amountx = "";
     let currencyx = "";
     let frequencyx = "";
+    let typex = "";
     // let setupTypex = "";
     let createdTime = 0;
     let deleteFlag = 0;
@@ -87,6 +100,7 @@ export default function bonusdeductionData() {
       namex = "";
       amountx = "";
       frequencyx = "";
+      typex = "";
       currencyx = "";
       createdTime = 0;
       deleteFlag = 0;
@@ -96,6 +110,7 @@ export default function bonusdeductionData() {
       namex = filteredItems[0].name;
       amountx = filteredItems[0].amount;
       frequencyx = filteredItems[0].frequency;
+      typex = filteredItems[0].type;
       currencyx = filteredItems[0].currency;
       createdTime = filteredItems[0].createdTime;
       deleteFlag = filteredItems[0].deleteFlag;
@@ -106,7 +121,7 @@ export default function bonusdeductionData() {
       html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
             <input type="text" class="swal2-input" id="amount" value="${amountx}" placeholder="Amount">\
             <input type="text" class="swal2-input" id="frequency" value="${frequencyx}" placeholder="Frequency">\
-            <input type="text" class="swal2-input" id="currency" value="${currencyx}" placeholder="Currrency">`,
+            <input type="text" class="swal2-input" id="type" value="${typex}" placeholder="Frequency">`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -115,13 +130,23 @@ export default function bonusdeductionData() {
         const name = Swal.getPopup().querySelector("#name").value;
         const amount = Swal.getPopup().querySelector("#amount").value;
         const frequency = Swal.getPopup().querySelector("#frequency").value;
-        const currency = Swal.getPopup().querySelector("#currency").value;
+        const type = Swal.getPopup().querySelector("#type").value;
         const setupType = Swal.getPopup().querySelector("#setupType").value;
         const id = value;
         if (!name) {
           Swal.showValidationMessage(`Please enter name`);
         }
-        handleUpdate(id, name, amount, frequency, currency, setupType, createdTime, deleteFlag);
+        handleUpdate(
+          id,
+          name,
+          amount,
+          frequency,
+          setupType,
+          type,
+          currencyx,
+          createdTime,
+          deleteFlag
+        );
       },
     });
   };
@@ -230,7 +255,7 @@ export default function bonusdeductionData() {
       { Header: "name", accessor: "name", align: "left" },
       { Header: "amount", accessor: "amount", align: "left" },
       { Header: "frequency", accessor: "frequency", align: "left" },
-      { Header: "currency", accessor: "currency", align: "left" },
+      { Header: "type", accessor: "type", align: "left" },
       { Header: "setupType", accessor: "setupType", align: "left" },
       {
         Header: "Date Created",
