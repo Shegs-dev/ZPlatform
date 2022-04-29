@@ -67,6 +67,7 @@ import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import FreeDay from "layouts/free-days";
 import Checklists from "layouts/checklists";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
@@ -98,6 +99,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    name: "Add Time-Off Type To User",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-TimeOff-Type",
+    component: <UserTOT />,
   },
   {
     type: "collapse",
