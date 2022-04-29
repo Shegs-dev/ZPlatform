@@ -118,10 +118,9 @@ export default function AddDetailsData() {
           (name.length > 0 && !name.match(letters)) ||
           (valuev.length > 0 && !valuev.match(numbers))
         ) {
-          Swal.showValidationMessage(
-            `Name - Please write a name and use only letters<br> Value - Please write a type and only use letters<br> Value - Please write a value and only use numbers`
-          );
+          Swal.showValidationMessage(`Number of Days - Please use only numbers`);
         } else {
+          Swal.resetValidationMessage();
           handleUpdate(idDet, name, valuev, typex, deleteFlagx);
         }
       },
