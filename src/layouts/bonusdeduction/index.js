@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
@@ -17,6 +17,8 @@ import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
+
 import { useNavigate } from "react-router-dom";
 
 function bonusdeduction() {
@@ -25,6 +27,7 @@ function bonusdeduction() {
 
   const [namex, setName] = useState("");
   const [amountx, setAmount] = useState("");
+  const [typex, setTypex] = useState("");
   const [currencyx, setCurrency] = useState("");
   const [setupTypex, setSetupTypex] = useState("");
   const [frequencyx, setFrequencyx] = useState("");
@@ -32,10 +35,50 @@ function bonusdeduction() {
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
 
+  const [user, setUser] = useState([]);
+  const [userIDx, setUserIDx] = useState("");
+
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setUser(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // eslint-disable-next-line consistent-return
   const handleOnNameKeys = () => {
@@ -62,46 +105,25 @@ function bonusdeduction() {
     setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    // const changeType = (setupType) => {
-    //   if (setupType === 1) {
-    //     return "Bonus";
-    //   } else if (setupType === 2) {
-    //     return "Deduction";
-    //   }
-    // };
-
     const orgIDs = data11.orgID;
-    const personalids = data11.personalID;
+
     const raw = JSON.stringify({
       orgID: orgIDs,
       name: namex,
-      empID: personalids,
+      empID: userIDx,
       setupType: setupTypex,
       amount: amountx,
+      type: typex,
       currency: currencyx,
       frequency: frequencyx,
     });
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-
-    if (setupTypex === 1) {
-      return "Bonus";
-    }
-    if (setupTypex === 2) {
-      return "Deduction";
-    }
-
-    if (frequencyx === 1) {
-      return "One-Time";
-    }
-    if (frequencyx === 2) {
-      return "Always";
-    }
 
     fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/add`, requestOptions)
       .then(async (res) => {
@@ -141,11 +163,21 @@ function bonusdeduction() {
       });
   };
 
+  const handleOnChangeSymbol = (e) => {
+    setTypex(e.target.value);
+    const symValue = e.target.value;
+    if (symValue === "FLAT") {
+      setCurrency("NGN");
+    } else if (symValue === "PERCENTAGE") {
+      setCurrency("%");
+    }
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={30}>
+        <MDBox pt={5} pb={9} px={29}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -177,64 +209,136 @@ function bonusdeduction() {
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mb={4}>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                label="Name *"
+                value={namex || ""}
+                onKeyUp={handleOnNameKeys}
+                className="form-control"
+                onChange={(e) => setName(e.target.value)}
+                variant="standard"
+                fullWidth
+              />
+            </MDBox>
+
+            <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
+                  <div className="col-sm-3">
                     <MDInput
                       type="text"
-                      label="Name *"
-                      value={namex || ""}
-                      onKeyUp={handleOnNameKeys}
-                      className="form-control"
-                      onChange={(e) => setName(e.target.value)}
+                      value={currencyx || ""}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      disabled
+                      label="Variation"
                       variant="standard"
                       fullWidth
                     />
                   </div>
                   <div className="col-sm-6">
                     <MDInput
-                      type="text"
+                      type="number"
                       value={amountx || ""}
                       onChange={(e) => setAmount(e.target.value)}
                       label="Amount"
                       variant="standard"
                       fullWidth
                     />
-                    <div className="col-sm-6">
-                      <MDInput
-                        type="text"
-                        value={currencyx || ""}
-                        onChange={(e) => setCurrency(e.target.value)}
-                        label="Currency"
-                        variant="standard"
-                        fullWidth
-                      />
-                    </div>
                   </div>
                 </div>
               </Container>
+            </MDBox>
+            <MDBox mt={2}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      User
+                    </MDTypography>
+                    <Form.Select
+                      value={userIDx}
+                      onChange={(e) => setUserIDx(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option value="">--Select User--</option>
+                      {user.map((api) => (
+                        <option key={api.personal.id} value={api.personal.id}>
+                          {api.personal.fname} {api.personal.lname}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      Variation
+                    </MDTypography>
+                    <Form.Select
+                      onChange={handleOnChangeSymbol}
+                      value={typex || ""}
+                      aria-label="Default select example"
+                    >
+                      <option>---Select Variation---</option>
+                      <option value="FLAT">FLAT</option>
+                      <option value="PERCENTAGE">PERCENTAGE</option>
+                    </Form.Select>
+                  </div>
+                </div>
+              </Container>
+            </MDBox>
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      Type
+                    </MDTypography>
                     <Form.Select
                       onChange={(e) => setSetupTypex(e.target.value)}
                       value={setupTypex || ""}
                       aria-label="Default select example"
                     >
-                      <option>---Type---</option>
+                      <option>---Select Type---</option>
                       <option value="1">Bonus</option>
                       <option value="2">Deduction</option>
                     </Form.Select>
                   </div>
 
                   <div className="col-sm-6">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      Frequency
+                    </MDTypography>
                     <Form.Select
                       onChange={(e) => setFrequencyx(e.target.value)}
                       value={frequencyx || ""}
                       aria-label="Default select example"
                     >
-                      <option>---frequency---</option>
+                      <option>---Select Frequency---</option>
                       <option value="1">One-Time</option>
                       <option value="2">Always</option>
                     </Form.Select>
