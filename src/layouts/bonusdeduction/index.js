@@ -236,9 +236,9 @@ function bonusdeduction() {
                       fullWidth
                     />
                   </div>
-                  <div className="col-sm-5">
+                  <div className="col-sm-6">
                     <MDInput
-                      type="text"
+                      type="number"
                       value={amountx || ""}
                       onChange={(e) => setAmount(e.target.value)}
                       label="Amount"
@@ -275,12 +275,7 @@ function bonusdeduction() {
                       ))}
                     </Form.Select>
                   </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mt={2}>
-              <Container>
-                <div className="row">
+
                   <div className="col-sm-6">
                     <MDTypography
                       variant="button"
@@ -327,13 +322,7 @@ function bonusdeduction() {
                       <option value="2">Deduction</option>
                     </Form.Select>
                   </div>
-                </div>
-              </Container>
-            </MDBox>
 
-            <MDBox mt={2}>
-              <Container>
-                <div className="row">
                   <div className="col-sm-6">
                     <MDTypography
                       variant="button"
