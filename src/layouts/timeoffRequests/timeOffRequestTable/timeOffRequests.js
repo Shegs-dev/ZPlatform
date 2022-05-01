@@ -479,6 +479,9 @@ export default function TimeOffRequestData() {
                 >
                   Time Off Request Journey
                 </Dropdown.Item>
+                <Dropdown.Item onClick={() => navigate(`/timeoffRequests/view?id=${value}`)}>
+                  View
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => navigate(`/timeoffRequests/forwardTimeOffRequests?id=${value}`)}
                 >
