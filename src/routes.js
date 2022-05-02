@@ -86,6 +86,7 @@ import RenewSub from "layouts/authentication/renewSubscription";
 // import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
 import View from "layouts/timeoffRequests/view";
+import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 
 const routes = [
   {
@@ -179,6 +180,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    // type: "collapse",
+    name: "update Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests/update",
+    component: <TimeoffRequestUpdate />,
   },
   {
     type: "collapse",
