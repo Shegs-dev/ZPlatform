@@ -128,9 +128,13 @@ export default function bonusdeductionData() {
 
     MySwal.fire({
       title: "Update Bonus/Deduction",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"><br>
-      <input type="text" id="amount" value="${amountx}" class="swal2-input" placeholder="Amount"><br>
-            <input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type">`,
+      html: `<table><tr><td></td>
+      <label for="name">Category</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"disabled></td></tr><br>
+            <tr><td><label for="value">Amount</label></td>
+      <td><input type="text" id="amount" value="${amountx}" class="swal2-input" placeholder="Amount"></td></tr><br>
+        <tr><td><label for="value">Number Of Days</label></td>
+     <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"disabled>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

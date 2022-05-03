@@ -216,7 +216,7 @@ const routes = [
     name: "Bonus/Deduction",
     key: "bonusdeduction",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus-Deduction",
+    route: "/Bonus/Deduction",
     component: <Bonusdeduction />,
   },
   {
