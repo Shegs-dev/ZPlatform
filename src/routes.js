@@ -85,6 +85,7 @@ import RenewSub from "layouts/authentication/renewSubscription";
 // import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
+import View from "layouts/timeoffRequests/view";
 
 const routes = [
   {
@@ -140,6 +141,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Announcement",
     component: <Announcement />,
+  },
+  {
+    name: "View",
+    key: "view",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/timeoffRequests/view",
+    component: <View />,
   },
   {
     type: "collapse",

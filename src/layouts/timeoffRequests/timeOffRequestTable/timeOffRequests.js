@@ -189,7 +189,8 @@ export default function TimeOffRequestData() {
       title: "Update Timeoff Type",
       html: `<table><tr><td>
       <tr><td><label for="starting">Start Date</label></td>
-      <td><input type="date" class="form-control" id="starting" value="${startx}" placeholder="Start Date"></td></tr>
+      <td><input type="date" class="form-control" id="starting" value="${startx}" placeholder="Start Date"></td></tr><br>
+      <tr><td><br></td></tr>
       <tr><td><label for="end">End Date</label></td>
       <td><input type="date" class="form-control" id="end" value="${endx}" placeholder="End Date"></td></tr>
       <tr><td><label for="dutyreliever">Duty Reliever</label></td>
@@ -478,6 +479,9 @@ export default function TimeOffRequestData() {
                   onClick={() => navigate(`/timeoffRequests/timeOffRequestJourney?id=${value}`)}
                 >
                   Time Off Request Journey
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => navigate(`/timeoffRequests/view?id=${value}`)}>
+                  View
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => navigate(`/timeoffRequests/forwardTimeOffRequests?id=${value}`)}
