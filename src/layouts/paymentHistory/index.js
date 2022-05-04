@@ -9,7 +9,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Dropdown } from "react-bootstrap";
+import Icon from "@mui/material/Icon";
 import { useNavigate } from "react-router-dom";
 import DataTable from "examples/Tables/DataTable";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -490,6 +491,7 @@ function PaymentHis() {
       startDate: auditConSDate,
       endDate: auditConEDate,
     });
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -528,6 +530,73 @@ function PaymentHis() {
       });
   };
 
+  const handleGenReceipt = (val) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const paymentHisValue = val;
+    MySwal.fire({
+      title: "Generate Receipt",
+      text: "You won't be able to revert this!",
+      html: `<table><tr><td>
+        <label for="name">Receipt Number</label></td>
+        <td><input type="text" class="swal2-input" id="name" placeholder="Receipt No"></td></tr>`,
+      confirmButtonText: "Continue",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      const receiptNumber = Swal.getPopup().querySelector("#name").value;
+      console.log(receiptNumber);
+      if (result.isConfirmed) {
+        const raw = JSON.stringify({
+          orgID: orgIDs,
+          receiptNo: receiptNumber,
+          paymentHistoryID: paymentHisValue,
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentReceipt/generate`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            MySwal.fire({
+              title: resx.status,
+              type: "success",
+              text: resx.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
+
   const pColumns = [
     { Header: "Organization", accessor: "orgName", align: "left" },
     { Header: "Paid Amount", accessor: "paidAmount", align: "left" },
@@ -545,6 +614,32 @@ function PaymentHis() {
       accessor: "createdTime",
       Cell: ({ cell: { value } }) => changeDate(value),
       align: "left",
+    },
+    {
+      Header: "actions",
+      accessor: "id",
+      Cell: ({ cell: { value } }) => (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#dadada",
+            borderRadius: "2px",
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleGenReceipt(value)}>
+                Generate Receipt
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
+      align: "center",
     },
   ];
 
