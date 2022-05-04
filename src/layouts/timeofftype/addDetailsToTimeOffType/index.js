@@ -31,8 +31,8 @@ function AddTimeOffType() {
   const [allTOTGs, setAllTOTGs] = useState([]);
   const [typeValue, setTypeValue] = useState("");
 
-  const [checkedName, setCheckedName] = useState("");
-  const [enabled, setEnabled] = useState("");
+  // const [checkedName, setCheckedName] = useState("");
+  // const [enabled, setEnabled] = useState("");
 
   const genderx = [
     {
@@ -183,8 +183,7 @@ function AddTimeOffType() {
     };
   }, []);
 
-  const handleClick = (e) => {
-    e.preventDefault();
+  const handleClick = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
@@ -240,23 +239,27 @@ function AddTimeOffType() {
       });
   };
 
-  const handleOnNumofdayskeysKeys = () => {
-    const letters = /^[0-9 ]+$/;
-    if (!numofdaysx.match(letters)) {
-      setCheckedName(false);
+  const handleOnNumofdayskeysKeys = (e) => {
+    e.preventDefault();
+    const numbers = /^[0-9 ]+$/;
+    if (!numofdaysx.match(numbers)) {
+      // setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("numofdays").innerHTML = "Name - input only numbers<br>";
     }
-    if (numofdaysx.match(letters)) {
-      setCheckedName(true);
+    if (numofdaysx.match(numbers)) {
+      // setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("numofdays").innerHTML = "";
+      // setEnabled(checkedName === true);
+      handleClick();
     }
     if (numofdaysx.length === 0) {
+      // setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("numofdays").innerHTML = "Number Of Days is required<br>";
     }
-    setEnabled(checkedName === true);
+    // setEnabled(checkedName === true);
   };
 
   return (
@@ -346,7 +349,7 @@ function AddTimeOffType() {
                   type="text"
                   value={numofdaysx || ""}
                   onChange={(e) => setNumofdaysx(e.target.value)}
-                  onKeyUp={handleOnNumofdayskeysKeys}
+                  // onKeyUp={handleOnNumofdayskeysKeys}
                   label="Number Of Days"
                   variant="standard"
                   fullWidth
@@ -355,8 +358,8 @@ function AddTimeOffType() {
               <MDBox mt={4} mb={1}>
                 <MDButton
                   variant="gradient"
-                  onClick={(e) => handleClick(e)}
-                  disabled={!enabled}
+                  onClick={(e) => handleOnNumofdayskeysKeys(e)}
+                  // disabled={!enabled}
                   color="info"
                   width="50%"
                 >

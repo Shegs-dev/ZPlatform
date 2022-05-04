@@ -82,7 +82,7 @@ export default function UserData() {
           title: "Reason For Delete",
           text: "You won't be able to revert this!",
           icon: "warning",
-          html: `<div align="center"><select id="reasonForDelete" class="form-select" aria-label="Default select example" style="width:auto;">
+          html: `<div align="center"><select id="reasonForDelete" class="form-control" aria-label="Default select example" style="width:auto;">
           <option value="">---Reason For Delete---</option>
           <option value="Retired">Retired</option>
           <option value="Late">Late</option>
@@ -199,8 +199,12 @@ export default function UserData() {
       });
   };
 
+  // const handleAddsalary = (value) => {
+  //   navigate(`/user-Management/user-Salary`(value));
+  // };
+
   const handleAddsalary = (value) => {
-    navigate(`/useManagement/addUserSalary`(value));
+    navigate(`/user-Management/user-Salary?id=${value}`);
   };
 
   return {

@@ -16,22 +16,16 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router-dom components
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import MuiLink from "@mui/material/Link";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Container } from "react-bootstrap";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-// @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -45,7 +39,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
-function Basic() {
+function RenewLog() {
   const navigate = useNavigate();
 
   const [usernamex, setUsername] = useState("");
@@ -91,20 +85,8 @@ function Basic() {
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
-          localStorage.setItem("user1", JSON.stringify(result.data));
-          localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
-          MySwal.fire({
-            // eslint-disable-next-line dot-notation
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            if (result.otherDetailsDTO.autopass === 1) {
-              navigate("/authentication/userlogin", { replace: true });
-            } else {
-              navigate("/dashboard", { replace: true });
-            }
-          });
+          localStorage.setItem("renewUser1", JSON.stringify(result.data));
+          navigate("/authentication/renew-Subscription", { replace: true });
         } else {
           MySwal.fire({
             title: result.status,
@@ -140,25 +122,8 @@ function Basic() {
           >
             <MDBox component="img" src={plutospaceImg} alt="PlutoSpace" width="15rem" />
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Sign In
+              Log In
             </MDTypography>
-            <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-              <Grid item xs={2}>
-                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                  <FacebookIcon color="inherit" />
-                </MDTypography>
-              </Grid>
-              <Grid item xs={2}>
-                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                  <GitHubIcon color="inherit" />
-                </MDTypography>
-              </Grid>
-              <Grid item xs={2}>
-                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                  <GoogleIcon color="inherit" />
-                </MDTypography>
-              </Grid>
-            </Grid>
           </MDBox>
 
           <MDBox
@@ -222,47 +187,8 @@ function Basic() {
                 </Container>
               </MDBox>
               <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
-                sign In
+                Log In
               </MDButton>
-              <MDBox mt={1} textAlign="center">
-                <MDTypography variant="button" color="text">
-                  Don&apos;t have an account?{" "}
-                  <MDTypography
-                    component={Link}
-                    to="/authentication/sign-up"
-                    variant="button"
-                    color="info"
-                    fontWeight="medium"
-                    textGradient
-                  >
-                    Sign Up
-                  </MDTypography>
-                </MDTypography>
-              </MDBox>
-              <MDBox mb={1} mt={-1} textAlign="center">
-                <MDTypography
-                  component={Link}
-                  to="/authentication/forgot-password"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Forgot Password
-                </MDTypography>
-              </MDBox>
-              <MDBox mb={1} mt={-1} textAlign="center">
-                <MDTypography
-                  component={Link}
-                  to="/authentication/renew-Login"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Renew Subscription
-                </MDTypography>
-              </MDBox>
             </MDBox>
           </MDBox>
         </Card>
@@ -274,4 +200,4 @@ function Basic() {
   );
 }
 
-export default Basic;
+export default RenewLog;

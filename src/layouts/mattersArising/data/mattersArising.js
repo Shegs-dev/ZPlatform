@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import GHeaders from "getHeader";
+// import PHeaders from "postHeader";
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import Icon from "@mui/material/Icon";
@@ -14,15 +15,24 @@ export default function MattersArisingTable() {
   const navigate = useNavigate();
 
   const { allGHeaders: miHeaders } = GHeaders();
+  // const { allPHeaders: myHeaders } = PHeaders();
+
+  const data11 = JSON.parse(localStorage.getItem("user1"));
+  // const value = data11.id;
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const data11 = JSON.parse(localStorage.getItem("user1"));
     // const userOtherDets = JSON.parse(localStorage.getItem("userOtherDets"));
     let isMounted = true;
     const orgIDs = data11.orgID;
     const headers = miHeaders;
-    if (data11.roleID !== "0") {
+    if (
+      data11.roleID !== "0" &&
+      data11.roleID !== "" &&
+      data11.roleID !== "null" &&
+      data11.roleID !== null
+    ) {
       const personalIds = data11.personalID;
       fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/getForEmp/${orgIDs}/${personalIds}`, {
         headers,
@@ -194,6 +204,23 @@ export default function MattersArisingTable() {
     return "#ff0000";
   };
 
+  const handleUpdate = (value) => {
+    navigate(`/matters-Arising/update?id=${value}`);
+  };
+
+  const changeTime = (timestamp) => {
+    const time = new Date(timestamp);
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const seconds = time.getSeconds();
+    // const retTime = time.toDateString(); // .getTime
+    // eslint-disable-next-line prefer-template
+    const retHMS = hours + ":" + minutes + ":" + seconds;
+    // eslint-disable-next-line prefer-template
+    // return retTime + " " + retHMS;
+    return retHMS;
+  };
+
   return {
     columns: [
       { Header: "Title", accessor: "title", align: "left" },
@@ -211,7 +238,12 @@ export default function MattersArisingTable() {
         ),
         align: "left",
       },
-      { Header: "Created Time", accessor: "createdTime", align: "left" },
+      {
+        Header: "Created Time",
+        accessor: "createdTime",
+        Cell: ({ cell: { value } }) => changeTime(value),
+        align: "left",
+      },
       {
         Header: "Status",
         accessor: "status",
@@ -241,7 +273,7 @@ export default function MattersArisingTable() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                {/* <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item> */}
+                <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
               </Dropdown.Menu>
