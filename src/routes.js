@@ -82,10 +82,12 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+// import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
+import View from "layouts/timeoffRequests/view";
 
 const routes = [
   {
@@ -135,6 +137,13 @@ const routes = [
     component: <Announcement />,
   },
   {
+    name: "View",
+    key: "view",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/timeoffRequests/view",
+    component: <View />,
+  },
+  {
     type: "collapse",
     name: "Matters Arising",
     key: "mattersarising",
@@ -149,6 +158,14 @@ const routes = [
     route: "/matters-Arising/update",
     component: <EditMattersArising />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "Chats",
+  //   key: "chats",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/matters-Arising/viewChats",
+  //   component: <App />,
+  // },
   {
     type: "collapse",
     name: "Announcement Type",
@@ -264,6 +281,14 @@ const routes = [
   //   route: "/create-bonus",
   //   component: <Createbonus />,
   // },
+  {
+    type: "collapse",
+    name: "Bonus/Deduction",
+    key: "bonusdeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Bonus/Deduction",
+    component: <Bonusdeduction />,
+  },
   {
     type: "collapse",
     name: "Positions",
