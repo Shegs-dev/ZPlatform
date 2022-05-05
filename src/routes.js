@@ -85,6 +85,8 @@ import RenewSub from "layouts/authentication/renewSubscription";
 // import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
+import AppraisalQues from "layouts/appraisal/appraisalQuestions";
+import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import View from "layouts/timeoffRequests/view";
 
 const routes = [
@@ -118,14 +120,6 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/birthdays",
     component: <Birthdays />,
-  },
-  {
-    type: "collapse",
-    name: "Time-Off Type",
-    key: "timeofftype",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Time-Off-Type",
-    component: <TimeOffType />,
   },
   {
     name: "User Salary",
@@ -174,14 +168,6 @@ const routes = [
   // },
   {
     type: "collapse",
-    name: "Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests",
-    component: <TimeOffRequests />,
-  },
-  {
-    type: "collapse",
     name: "Announcement Type",
     key: "announcementtype",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -189,11 +175,87 @@ const routes = [
     component: <AnnouncementType />,
   },
   {
+    type: "collapse",
+    name: "Bonus/Deduction",
+    key: "bonusdeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/bonusDeduction",
+    component: <Bonusdeduction />,
+  },
+  {
+    type: "divider",
+    name: "",
+    key: "div3",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Appraisal",
+    key: "tit3",
+    route: "",
+  },
+  {
+    type: "collapse",
+    name: "Appraisal Questions",
+    key: "appraisalQuestions",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisal-Questions",
+    component: <AppraisalQues />,
+  },
+  {
+    name: "View Appraisal Questions",
+    key: "viewAppraisalQues",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/View-Appraisal-Questions",
+    component: <VuAppraisalQuestion />,
+  },
+  {
+    type: "divider",
+    name: "",
+    key: "div2",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Leave Management",
+    key: "tit2",
+    route: "",
+  },
+  {
+    type: "collapse",
     name: "Free Days",
     key: "free-days",
     icon: <Icon fontSize="small">today</Icon>,
     route: "/free-days",
     component: <FreeDay />,
+  },
+  {
+    type: "collapse",
+    name: "Time-Off Type",
+    key: "timeofftype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Time-Off-Type",
+    component: <TimeOffType />,
+  },
+  {
+    type: "collapse",
+    name: "Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests",
+    component: <TimeOffRequests />,
+  },
+  {
+    type: "divider",
+    name: "",
+    key: "div1",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Settings",
+    key: "tit1",
+    route: "",
   },
   {
     type: "collapse",

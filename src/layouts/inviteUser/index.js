@@ -341,82 +341,60 @@ function InviteUser() {
         return res.json();
       })
       .then((result) => {
-        if (result.status === "SUCCESS") {
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            localStorage.setItem("personalInfo", JSON.stringify(result.data));
-            const raw1 = JSON.stringify({
+        localStorage.setItem("personalInfo", JSON.stringify(result.data));
+        const raw1 = JSON.stringify({
+          orgID: orgIDx,
+          personalID: result.data.id,
+          email: emaily,
+          roleID: roleIDx,
+        });
+        const requestOptions1 = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw1,
+          redirect: "follow",
+        };
+
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`, requestOptions1)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((resultx) => {
+            localStorage.setItem("company", JSON.stringify(resultx.data));
+            const raw2 = JSON.stringify({
               orgID: orgIDx,
-              personalID: result.data.id,
-              email: emaily,
-              roleID: roleIDx,
+              empID: result.data.id,
+              username: emailx,
+              password: passwordx,
             });
-            const requestOptions1 = {
-              method: "POST",
+            const requestOptions2 = {
+              method: methodLUO,
               headers: myHeaders,
-              body: raw1,
+              body: raw2,
               redirect: "follow",
             };
-
-            fetch(
-              `${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`,
-              requestOptions1
-            )
+            fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
               .then(async (res) => {
                 const aToken = res.headers.get("token-1");
                 localStorage.setItem("rexxdex", aToken);
                 return res.json();
               })
-              .then((resultx) => {
+              .then(() => {
+                setOpened(false);
                 MySwal.fire({
-                  title: resultx.status,
+                  title: result.status,
                   type: "success",
-                  text: resultx.message,
+                  text: result.message,
                 }).then(() => {
-                  localStorage.setItem("company", JSON.stringify(resultx.data));
-                  const raw2 = JSON.stringify({
-                    orgID: orgIDx,
-                    empID: result.data.id,
-                    username: emailx,
-                    password: passwordx,
-                  });
-                  const requestOptions2 = {
-                    method: methodLUO,
-                    headers: myHeaders,
-                    body: raw2,
-                    redirect: "follow",
-                  };
-                  fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
-                    .then(async (res) => {
-                      const aToken = res.headers.get("token-1");
-                      localStorage.setItem("rexxdex", aToken);
-                      return res.json();
-                    })
-                    .then(() => {
-                      setOpened(false);
-                      MySwal.fire({
-                        title: result.status,
-                        type: "success",
-                        text: result.message,
-                      }).then(() => {
-                        navigate("/authentication/sign-in", { replace: true });
-                      });
-                    });
+                  navigate("/authentication/sign-in", { replace: true });
                 });
               });
           });
-        } else {
-          MySwal.fire({
-            title: result.status,
-            type: "error",
-            text: result.message,
-          });
-        }
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
