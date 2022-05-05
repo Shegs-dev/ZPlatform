@@ -175,14 +175,6 @@ const routes = [
     component: <AnnouncementType />,
   },
   {
-    type: "collapse",
-    name: "Bonus/Deduction",
-    key: "bonusdeduction",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/bonusDeduction",
-    component: <Bonusdeduction />,
-  },
-  {
     type: "divider",
     name: "",
     key: "div3",
@@ -352,7 +344,6 @@ const routes = [
     component: <ChangePassword />,
   },
   {
-    type: "collapse",
     name: "user login",
     key: "userlogin",
     icon: <Icon fontSize="small">edit</Icon>,

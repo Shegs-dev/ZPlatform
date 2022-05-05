@@ -199,7 +199,7 @@ export default function MattersArisingTable() {
       return "#00ff00";
     }
     if (value === "HIGH") {
-      return "#ffd700";
+      return "#FFA500";
     }
     return "#ff0000";
   };
