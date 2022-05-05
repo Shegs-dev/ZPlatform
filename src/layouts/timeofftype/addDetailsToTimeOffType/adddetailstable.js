@@ -112,12 +112,8 @@ export default function AddDetailsData() {
         const name = Swal.getPopup().querySelector("#name").value;
         const valuev = Swal.getPopup().querySelector("#value").value;
         const idDet = value;
-        const letters = /^[a-zA-Z]+$/;
         const numbers = /^[0-9]+$/;
-        if (
-          (name.length > 0 && !name.match(letters)) ||
-          (valuev.length > 0 && !valuev.match(numbers))
-        ) {
+        if (valuev.length > 0 && !valuev.match(numbers)) {
           Swal.showValidationMessage(`Number of Days - Please use only numbers`);
         } else {
           Swal.resetValidationMessage();
