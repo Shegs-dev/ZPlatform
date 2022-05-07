@@ -1,59 +1,55 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import GHeaders from "getHeader";
+/**
+=========================================================
+* Soft UI Dashboard React - v3.0.0
+=========================================================
 
-export default function SeeTodayBirthdays() {
-  const [items, setItems] = useState([]);
-  const navigate = useNavigate();
-  const { allGHeaders: miHeaders } = GHeaders();
+* Product Page: https://www.creative-tim.com/product/soft-ui-dashboard-react
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
 
-  useEffect(() => {
-    // const CurTime = new Date().getTime();
-    const Month = new Date().getMonth() + 1;
-    const Dates = new Date().getDate();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
-    const headers = miHeaders;
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getBirthdaysToday/${orgIDs}/${Dates}/${Month}`, {
-      headers,
-    })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        if (isMounted) {
-          setItems(result);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+Coded by www.creative-tim.com
 
-  return {
-    columns: [
-      { Header: "ID", accessor: "personal.id", align: "left" },
-      { Header: "Name", accessor: "personal.fname", align: "left" },
-      { Header: "Phone Number", accessor: "personal.pno", align: "left" },
-      { Header: "Country", accessor: "personal.residentialCountry", align: "left" },
-      { Header: "Marital status", accessor: "personal.maritalStatus", align: "left" },
-    ],
+ =========================================================
 
-    rows: items,
-  };
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
+// @mui material components
+import Card from "@mui/material/Card";
+
+// Soft UI Dashboard React components
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
+
+// Soft UI Dashboard Materail-UI example components
+import DataTable from "examples/Tables/DataTable";
+
+// Data
+import BirthdaysData from "layouts/dashboard/Birthdays/data/birthdaysData";
+
+function Birthdays() {
+  const { columns: pColumns, rows: pRows } = BirthdaysData();
+
+  return (
+    <Card>
+      <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+        <MDBox>
+          <MDTypography variant="h6" gutterBottom>
+            Birthdays
+          </MDTypography>
+        </MDBox>
+      </MDBox>
+      <MDBox>
+        <DataTable
+          table={{ columns: pColumns, rows: pRows }}
+          isSorted
+          entriesPerPage
+          showTotalEntries
+          noEndBorder
+          canSearch
+        />
+      </MDBox>
+    </Card>
+  );
 }
+
+export default Birthdays;

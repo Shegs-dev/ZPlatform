@@ -145,8 +145,6 @@ function TimeOff() {
         }
 
         const numberOfFreedays = result.length;
-        console.log(numberOfFreedays);
-        console.log(result.length);
         const startDateandendDate = endCDate - startCDate;
         const varx = 24 * 60 * 60 * 1000;
         const numofdays = Math.ceil(startDateandendDate / varx) - numberOfFreedays;
