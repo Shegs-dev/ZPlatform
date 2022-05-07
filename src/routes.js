@@ -82,9 +82,11 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+
 // import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
+import Groups from "layouts/groups";
 import View from "layouts/timeoffRequests/view";
 
 const routes = [
@@ -111,6 +113,13 @@ const routes = [
     route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
   },
+  // {
+  //   name: "Add Time-Off Type To User",
+  //   key: "userTimeOffType",
+  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+  //   route: "/Bonus-Deduction/attached-User",
+  //   component: <UserBD />,
+  // },
   {
     type: "collapse",
     name: "Birthdays",
@@ -134,6 +143,13 @@ const routes = [
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
   },
+  // {
+  //   name: "User Bonus",
+  //   key: "Bonus/DeductionUser",
+  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+  //   route: "/Bonus-Deduction/AttachedUserBonus",
+  //   component: <AttachedUserBonus />,
+  // },
   {
     type: "collapse",
     name: "Announcement",
@@ -224,8 +240,16 @@ const routes = [
     name: "Bonus/Deduction",
     key: "bonusdeduction",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus/Deduction",
+    route: "/Bonus-Deduction",
     component: <Bonusdeduction />,
+  },
+  {
+    type: "collapse",
+    name: "Groups",
+    key: "groups",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Groups",
+    component: <Groups />,
   },
   {
     type: "collapse",

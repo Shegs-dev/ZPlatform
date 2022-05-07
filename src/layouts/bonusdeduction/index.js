@@ -318,8 +318,8 @@ function bonusdeduction() {
                       aria-label="Default select example"
                     >
                       <option>---Select Type---</option>
-                      <option value="1">Bonus</option>
-                      <option value="2">Deduction</option>
+                      <option value="Bonus">Bonus</option>
+                      <option value="Deduction">Deduction</option>
                     </Form.Select>
                   </div>
 
@@ -339,8 +339,8 @@ function bonusdeduction() {
                       aria-label="Default select example"
                     >
                       <option>---Select Frequency---</option>
-                      <option value="1">One-Time</option>
-                      <option value="2">Always</option>
+                      <option value="One-Time">One-Time</option>
+                      <option value="Always">Always</option>
                     </Form.Select>
                   </div>
                 </div>
