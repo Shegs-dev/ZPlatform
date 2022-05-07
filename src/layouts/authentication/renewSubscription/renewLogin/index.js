@@ -36,7 +36,7 @@ import MDButton from "components/MDButton";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/bg-sign-in-basic.gif";
 import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
 function RenewLog() {

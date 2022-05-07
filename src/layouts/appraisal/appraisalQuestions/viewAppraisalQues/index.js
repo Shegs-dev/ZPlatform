@@ -32,10 +32,13 @@ function VuAppraisalQuestion() {
   const [createdDatex, setCreatedDate] = useState("");
   const [deletedflagx, setDeletedflag] = useState("");
 
+  const [optionx, setOption] = useState("");
+
   const [items, setItems] = useState([]);
 
   const [viewOption, setViewOption] = useState(false);
   const [viewMultiple, setViewMultiple] = useState(false);
+  const [viewTable, setViewTable] = useState(false);
 
   const [opened, setOpened] = useState(false);
 
@@ -83,10 +86,13 @@ function VuAppraisalQuestion() {
           if (result[0].question.inputType === "Option") {
             setViewOption(true);
             setViewMultiple(false);
+            setViewTable(true);
           } else if (result[0].question.inputType === "Multiple") {
             setViewMultiple(true);
             setViewOption(false);
+            setViewTable(true);
           } else {
+            setViewTable(false);
             setViewMultiple(false);
             setViewOption(false);
           }
@@ -153,6 +159,65 @@ function VuAppraisalQuestion() {
       });
   };
 
+  const handleAddOption = (e) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    setOpened(true);
+    e.preventDefault();
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      questionID: id,
+      optionValue: optionx,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/addOption`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        setOpened(false);
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
   // Method to handle diable
   const handleDisable = (val) => {
     MySwal.fire({
@@ -162,7 +227,7 @@ function VuAppraisalQuestion() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, remove it!",
     }).then((result) => {
       if (result.isConfirmed) {
         const requestOptions = {
@@ -170,7 +235,10 @@ function VuAppraisalQuestion() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/delete/${val}`, requestOptions)
+        fetch(
+          `${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/removeOption/${val}`,
+          requestOptions
+        )
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
@@ -232,7 +300,7 @@ function VuAppraisalQuestion() {
           window.location.reload();
         }
         if (isMounted) {
-          setItems(result[0].option);
+          setItems(result[0].options);
         }
       });
     return () => {
@@ -240,21 +308,10 @@ function VuAppraisalQuestion() {
     };
   }, []);
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
-
   const pColumns = [
-    { Header: "Question", accessor: "question.question", align: "left" },
-    { Header: "Hint", accessor: "question.hint", align: "left" },
-    { Header: "Question Type", accessor: "question.inputType", align: "left" },
     {
-      Header: "Date Created",
-      accessor: "question.createdTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
+      Header: "Option",
+      accessor: "optionValue",
       align: "left",
     },
     {
@@ -378,76 +435,110 @@ function VuAppraisalQuestion() {
                   </div>
                 </div>
               </Container>
+              <MDBox mt={4} mb={1}>
+                <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
+                  Save
+                </MDButton>
+              </MDBox>
             </MDBox>
             {viewOption ? (
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                      Add Option Type
-                    </MDTypography>
-                    <MDBox textAlign="right">
-                      <Form.Select
-                        onChange={(e) => setInputType(e.target.value)}
-                        value={inputTypex || ""}
-                        aria-label="Default select example"
-                      >
-                        <option>---Question Type---</option>
-                        <option value="Text">Text</option>
-                        <option value="Option">Option</option>
-                        <option value="Multiple">Multiple Select</option>
-                      </Form.Select>
-                    </MDBox>
+              <MDBox mb={2}>
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                  mx={2}
+                  mt={0}
+                  p={2}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                    Add Option
+                  </MDTypography>
+                </MDBox>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <MDInput
+                        type="text"
+                        value={optionx || ""}
+                        onChange={(e) => setOption(e.target.value)}
+                        label="Option"
+                        variant="standard"
+                        fullWidth
+                      />
+                    </div>
                   </div>
-                </div>
-              </Container>
+                </Container>
+                <MDBox mt={4} mb={1}>
+                  <MDButton variant="gradient" onClick={handleAddOption} color="info" width="50%">
+                    Add Option
+                  </MDButton>
+                </MDBox>
+              </MDBox>
             ) : (
               <MDBox mt={4} mb={1} />
             )}
             {viewMultiple ? (
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                      Add Multiple Type
-                    </MDTypography>
-                    <MDBox textAlign="right">
-                      <Form.Select
-                        onChange={(e) => setInputType(e.target.value)}
-                        value={inputTypex || ""}
-                        aria-label="Default select example"
-                      >
-                        <option>---Question Type---</option>
-                        <option value="Text">Text</option>
-                        <option value="Option">Option</option>
-                        <option value="Multiple">Multiple Select</option>
-                      </Form.Select>
-                    </MDBox>
+              <MDBox mb={2}>
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                  mx={2}
+                  mt={0}
+                  p={2}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                    Add Option
+                  </MDTypography>
+                </MDBox>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <MDInput
+                        type="text"
+                        value={optionx || ""}
+                        onChange={(e) => setOption(e.target.value)}
+                        label="Option"
+                        variant="standard"
+                        fullWidth
+                      />
+                    </div>
                   </div>
-                </div>
-              </Container>
+                </Container>
+                <MDBox mt={4} mb={1}>
+                  <MDButton variant="gradient" onClick={handleAddOption} color="info" width="50%">
+                    Add Option
+                  </MDButton>
+                </MDBox>
+              </MDBox>
             ) : (
               <MDBox mt={4} mb={1} />
             )}
-            <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
-                Save
-              </MDButton>
-            </MDBox>
           </MDBox>
         </MDBox>
-      </Card>
+      </Card>{" "}
       &nbsp;
-      <MDBox>
-        <DataTable
-          table={{ columns: pColumns, rows: items }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
+      {viewTable ? (
+        <MDBox>
+          <DataTable
+            table={{ columns: pColumns, rows: items }}
+            isSorted
+            entriesPerPage
+            showTotalEntries
+            noEndBorder
+            canSearch
+          />
+        </MDBox>
+      ) : (
+        <MDBox mt={4} mb={1} />
+      )}
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />

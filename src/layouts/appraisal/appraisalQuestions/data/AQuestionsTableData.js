@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import TextWrapper from "react-text-wrapper";
 
 export default function AQuestionsData() {
   const { allGHeaders: miHeaders } = GHeaders();
@@ -122,7 +123,12 @@ export default function AQuestionsData() {
 
   return {
     columns: [
-      { Header: "Question", accessor: "question.question", align: "left" },
+      {
+        Header: "Question",
+        accessor: "question.question",
+        Cell: ({ cell: { value } }) => <TextWrapper width={300} content={value} />,
+        align: "left",
+      },
       { Header: "Hint", accessor: "question.hint", align: "left" },
       { Header: "Question Type", accessor: "question.inputType", align: "left" },
       {

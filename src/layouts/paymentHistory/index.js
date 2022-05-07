@@ -96,6 +96,49 @@ function PaymentHis() {
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/gets/${orgIDs}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resultapi) => {
+        setOpened(false);
+        if (resultapi.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          console.log(resultapi);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const headers = miHeaders;
+    let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/getBalance/${orgIDs}`, {
       headers,
     })
@@ -519,6 +562,7 @@ function PaymentHis() {
           window.location.reload();
         }
         setItems(result);
+        console.log(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -530,71 +574,105 @@ function PaymentHis() {
       });
   };
 
-  const handleGenReceipt = (val) => {
+  const handleGenReceipt = (filteredData, value) => {
+    let receiptNumber = "";
+    // Avoid filter for empty string
+    if (!value) {
+      receiptNumber = "";
+    } else {
+      const filteredItems = filteredData.filter((item) => item.id === value);
+
+      receiptNumber = filteredItems[0].receiptNo;
+    }
+
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    const paymentHisValue = val;
-    MySwal.fire({
-      title: "Generate Receipt",
-      text: "You won't be able to revert this!",
-      html: `<table><tr><td>
-        <label for="name">Receipt Number</label></td>
-        <td><input type="text" class="swal2-input" id="name" placeholder="Receipt No"></td></tr>`,
-      confirmButtonText: "Continue",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      const receiptNumber = Swal.getPopup().querySelector("#name").value;
-      console.log(receiptNumber);
-      if (result.isConfirmed) {
-        const raw = JSON.stringify({
-          orgID: orgIDs,
-          receiptNo: receiptNumber,
-          paymentHistoryID: paymentHisValue,
-        });
-
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow",
-        };
-
-        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentReceipt/generate`, requestOptions)
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
-          })
-          .then((resx) => {
-            if (resx.message === "Expired Access") {
-              navigate("/authentication/sign-in");
-            }
-            if (resx.message === "Token Does Not Exist") {
-              navigate("/authentication/sign-in");
-            }
-            if (resx.message === "Unauthorized Access") {
-              navigate("/authentication/forbiddenPage");
-            }
-            MySwal.fire({
-              title: resx.status,
-              type: "success",
-              text: resx.message,
-            }).then(() => {
-              window.location.reload();
-            });
-          })
-          .catch((error) => {
-            MySwal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
-          });
-      }
+    const paymentHisValue = value;
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      receiptNo: receiptNumber,
+      paymentHistoryID: paymentHisValue,
     });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentReceipt/generate`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resx) => {
+        if (resx.status === "SUCCESS") {
+          if (resx.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+          }
+          if (resx.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+          }
+          if (resx.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
+          console.log(resx);
+          const receiptPDF = `${resx.data.receiptNo}.pdf`;
+          console.log(receiptPDF);
+          const raw1 = JSON.stringify({
+            name: receiptPDF,
+          });
+
+          const requestOptions1 = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw1,
+            redirect: "follow",
+          };
+
+          fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/download`, requestOptions1)
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resx1) => {
+              if (resx1.status === "SUCCESS") {
+                if (resx1.message === "Expired Access") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx1.message === "Token Does Not Exist") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx1.message === "Unauthorized Access") {
+                  navigate("/authentication/forbiddenPage");
+                }
+                MySwal.fire({
+                  title: "SUCCESS",
+                  type: "success",
+                  text: "Download Successful",
+                });
+              }
+            })
+            .catch((error) => {
+              MySwal.fire({
+                title: error.status,
+                type: "error",
+                text: error.message,
+              });
+            });
+        }
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
   };
 
   const pColumns = [
@@ -632,7 +710,7 @@ function PaymentHis() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleGenReceipt(value)}>
+              <Dropdown.Item onClick={() => handleGenReceipt(items, value)}>
                 Generate Receipt
               </Dropdown.Item>
             </Dropdown.Menu>
