@@ -9,7 +9,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Dropdown } from "react-bootstrap";
+import Icon from "@mui/material/Icon";
 import { useNavigate } from "react-router-dom";
 import DataTable from "examples/Tables/DataTable";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -87,6 +88,49 @@ function PaymentHis() {
   // console.log(formatted);
 
   const concaBalance = `NGN ${commify(comBalance)}`;
+
+  useEffect(() => {
+    setOpened(true);
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/gets/${orgIDs}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resultapi) => {
+        setOpened(false);
+        if (resultapi.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultapi.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          console.log(resultapi);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     setOpened(true);
@@ -490,6 +534,7 @@ function PaymentHis() {
       startDate: auditConSDate,
       endDate: auditConEDate,
     });
+    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -517,9 +562,111 @@ function PaymentHis() {
           window.location.reload();
         }
         setItems(result);
+        console.log(result);
       })
       .catch((error) => {
         setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleGenReceipt = (filteredData, value) => {
+    let receiptNumber = "";
+    // Avoid filter for empty string
+    if (!value) {
+      receiptNumber = "";
+    } else {
+      const filteredItems = filteredData.filter((item) => item.id === value);
+
+      receiptNumber = filteredItems[0].receiptNo;
+    }
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const paymentHisValue = value;
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      receiptNo: receiptNumber,
+      paymentHistoryID: paymentHisValue,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentReceipt/generate`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resx) => {
+        if (resx.status === "SUCCESS") {
+          if (resx.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+          }
+          if (resx.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+          }
+          if (resx.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
+          console.log(resx);
+          const receiptPDF = `${resx.data.receiptNo}.pdf`;
+          console.log(receiptPDF);
+          const raw1 = JSON.stringify({
+            name: receiptPDF,
+          });
+
+          const requestOptions1 = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw1,
+            redirect: "follow",
+          };
+
+          fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/download`, requestOptions1)
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resx1) => {
+              if (resx1.status === "SUCCESS") {
+                if (resx1.message === "Expired Access") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx1.message === "Token Does Not Exist") {
+                  navigate("/authentication/sign-in");
+                }
+                if (resx1.message === "Unauthorized Access") {
+                  navigate("/authentication/forbiddenPage");
+                }
+                MySwal.fire({
+                  title: "SUCCESS",
+                  type: "success",
+                  text: "Download Successful",
+                });
+              }
+            })
+            .catch((error) => {
+              MySwal.fire({
+                title: error.status,
+                type: "error",
+                text: error.message,
+              });
+            });
+        }
+      })
+      .catch((error) => {
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -545,6 +692,32 @@ function PaymentHis() {
       accessor: "createdTime",
       Cell: ({ cell: { value } }) => changeDate(value),
       align: "left",
+    },
+    {
+      Header: "actions",
+      accessor: "id",
+      Cell: ({ cell: { value } }) => (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#dadada",
+            borderRadius: "2px",
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleGenReceipt(items, value)}>
+                Generate Receipt
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
+      align: "center",
     },
   ];
 

@@ -3,41 +3,48 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
-import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
-import Groups from "layouts/groups/data/gRoup";
 import MDButton from "components/MDButton";
+import Card from "@mui/material/Card";
+import { Container, Form } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import PHeaders from "postHeader";
 import { useNavigate } from "react-router-dom";
+import AQuestionsData from "./data/AQuestionsTableData";
 
-function GrouPs() {
+function AppraisalQues() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = Groups();
-
-  const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
-
-  const [checkedName, setCheckedName] = useState("");
-  const [enabled, setEnabled] = useState("");
+  const { columns: pColumns, rows: pRows } = AQuestionsData();
 
   const navigate = useNavigate();
 
+  const [questionx, setQuestion] = useState("");
+  const [hintx, setHint] = useState("");
+  const [inputTypex, setInputType] = useState("");
+
+  const [checkedName, setCheckedName] = useState("");
+  const [enabled, setEnabled] = useState("");
+  const [opened, setOpened] = useState(false);
   const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
+    const orgIDs = data11.orgID;
     const raw = JSON.stringify({
-      orgID: data11.orgID,
-      name: namex,
-      descrip: descripx,
+      orgID: orgIDs,
+      question: questionx,
+      hint: hintx,
+      inputType: inputTypex,
     });
     const requestOptions = {
       method: "POST",
@@ -45,7 +52,7 @@ function GrouPs() {
       body: raw,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -64,6 +71,7 @@ function GrouPs() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
+        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -73,6 +81,7 @@ function GrouPs() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -80,21 +89,14 @@ function GrouPs() {
         });
       });
   };
+
   const handleOnNameKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
+    if (questionx.length === 0) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
-    }
-    if (namex.match(letters)) {
-      setCheckedName(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "";
-    }
-    if (namex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
+    } else {
+      setCheckedName(true);
     }
     setEnabled(checkedName === true);
   };
@@ -103,7 +105,7 @@ function GrouPs() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
+        <MDBox pt={4} pb={3} px={30}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -116,7 +118,7 @@ function GrouPs() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              GROUPS
+              Add Appraisal Question
             </MDTypography>
           </MDBox>
           <MDBox
@@ -134,36 +136,67 @@ function GrouPs() {
               {" "}
             </MDTypography>
           </MDBox>
-          <MDBox component="form" role="form" name="form1">
-            <MDBox mb={2}>
+          <MDBox component="form" role="form">
+            <MDBox mb={0}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      label="Name*"
-                      value={namex || ""}
-                      onKeyUp={handleOnNameKeys}
-                      onChange={(e) => setName(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
-                    />
+                  <div className="col-sm-12">
+                    <Form.Group className="mb-1" controlId="exampleForm.ControlTextarea1">
+                      <Form.Label style={{ fontSize: 14 }}>Questions</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        value={questionx || ""}
+                        onKeyUp={handleOnNameKeys}
+                        onChange={(e) => setQuestion(e.target.value)}
+                        rows={2}
+                      />
+                    </Form.Group>
                   </div>
                 </div>
               </Container>
             </MDBox>
-
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-12">
+                    <MDInput
+                      type="text"
+                      value={hintx || ""}
+                      onChange={(e) => setHint(e.target.value)}
+                      label="Hint"
+                      variant="standard"
+                      fullWidth
+                    />
+                    <MDTypography variant="h4" fontWeight="medium" fontSize="55%">
+                      (Hint is not Compulsory)
+                    </MDTypography>
+                  </div>
+                </div>
+              </Container>
+            </MDBox>
+            <MDBox mb={2}>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-8">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      Question Type
+                    </MDTypography>
+                    <MDBox textAlign="right">
+                      <Form.Select
+                        onChange={(e) => setInputType(e.target.value)}
+                        value={inputTypex || ""}
+                        aria-label="Default select example"
+                      >
+                        <option>---Question Type---</option>
+                        <option value="Text">Text</option>
+                        <option value="Option">Option</option>
+                        <option value="Multiple">Multiple Select</option>
+                      </Form.Select>
+                    </MDBox>
+                  </div>
+                </div>
+              </Container>
+            </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
@@ -189,8 +222,11 @@ function GrouPs() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }
 
-export default GrouPs;
+export default AppraisalQues;

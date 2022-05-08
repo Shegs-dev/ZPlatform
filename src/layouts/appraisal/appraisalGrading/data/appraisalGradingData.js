@@ -14,7 +14,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-export default function Branchdata() {
+export default function AppraisalGradeData() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   // const axios = require("axios");
@@ -27,13 +27,11 @@ export default function Branchdata() {
   // Method to handle update
   const handleUpdate = (
     idx,
-    namex,
-    emailx,
-    streetx,
-    cityx,
-    statex,
-    countryx,
-    pnox,
+    valuex,
+    gradex,
+    colorCodex,
+    minScorex,
+    maxScorex,
     createdTimex,
     deleteFlagx
   ) => {
@@ -43,13 +41,11 @@ export default function Branchdata() {
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
-      name: namex,
-      email: emailx,
-      street: streetx,
-      city: cityx,
-      state: statex,
-      country: countryx,
-      pno: pnox,
+      value: valuex,
+      grade: gradex,
+      colorCode: colorCodex,
+      minScore: minScorex,
+      maxScore: maxScorex,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -60,7 +56,7 @@ export default function Branchdata() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -98,98 +94,79 @@ export default function Branchdata() {
 
   // Method to filter departments
   const handleShow = (filteredData, value) => {
-    let namex = "";
-    let emailx = "";
-    let streetx = "";
-    let cityx = "";
-    let statex = "";
-    let countryx = "";
-    let pnox = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
+    let valuex = "";
+    let gradex = "";
+    let colorCodex = "";
+    let minScorex = 0;
+    let maxScorex = 0;
+    let createdTimex = 0;
+    let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
-      namex = "";
-      emailx = "";
-      streetx = "";
-      cityx = "";
-      statex = "";
-      countryx = "";
-      pnox = "";
-      createdTime = 0;
-      deleteFlag = 0;
+      valuex = "";
+      gradex = "";
+      colorCodex = "";
+      minScorex = 0;
+      maxScorex = 0;
+      createdTimex = 0;
+      deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
-
-      namex = filteredItems[0].name;
-      emailx = filteredItems[0].email;
-      streetx = filteredItems[0].street;
-      cityx = filteredItems[0].city;
-      statex = filteredItems[0].state;
-      countryx = filteredItems[0].country;
-      pnox = filteredItems[0].pno;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      valuex = filteredItems[0].value;
+      gradex = filteredItems[0].grade;
+      colorCodex = filteredItems[0].colorCode;
+      minScorex = filteredItems[0].minScore;
+      maxScorex = filteredItems[0].maxScore;
+      createdTimex = filteredItems[0].createdTime;
+      deleteFlagx = filteredItems[0].deleteFlag;
 
       MySwal.fire({
         title: "Update Department",
         html: `<table><tr><td>
-        <label for="name">Name</label></td>
-        <td><input type="text" class="swal2-input" id="name" value="${namex}" placeholder="Name"></td></tr>
-        <tr><td><label for="email">Email</label></td>
-        <td><input type="email" class="swal2-input" id="email" value="${emailx}" placeholder="Email"></td>
-        <tr><td><label for="street">Street</label></td>
-        <td><input type="text" class="swal2-input" id="street" value="${streetx}" placeholder="Street"></td>
-        <tr><td><label for="city">City</label></td>
-        <td><input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City"></td>
-        <tr><td><label for="state">State</label></td>
-        <td><input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State"></td>
-        <tr><td><label for="country">Country</label></td>
-        <td><input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country"></td>
-        <tr><td><label for="pno">Phone Number</label></td>
-        <td><input type="text" class="swal2-input" id="pno" value="${pnox}" placeholder="Phone Number"></td>`,
+        <label for="svalue">Score Value:</label></td>
+        <td><input type="text" class="swal2-input" id="svalue" value="${valuex}" ></td></tr>
+        <tr><td><label for="grade:">Grade</label></td>
+        <td><input type="email" class="swal2-input" id="grade" value="${gradex}" ></td></tr>
+        <tr><td><label for="minScore:">Min Score</label></td>
+        <td><input type="text" class="swal2-input" id="minScore" value="${minScorex}" ></td></tr>
+        <tr><td><label for="maxScore:">Max Score</label></td>
+        <td><input type="text" class="swal2-input" id="maxScore" value="${maxScorex}" ></td></tr>
+        <tr><td><label for="colorCode:">Color</label></td>
+        <td><input type="color" class="swal2-input" style="width:77%" id="colorCode" value="${colorCodex}" ></td></tr>`,
         confirmButtonText: "Save",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         preConfirm: () => {
-          const name = Swal.getPopup().querySelector("#name").value;
-          const email = Swal.getPopup().querySelector("#email").value;
-          const street = Swal.getPopup().querySelector("#street").value;
-          const city = Swal.getPopup().querySelector("#city").value;
-          const state = Swal.getPopup().querySelector("#state").value;
-          const country = Swal.getPopup().querySelector("#country").value;
-          const pno = Swal.getPopup().querySelector("#pno").value;
+          const sValue = Swal.getPopup().querySelector("#svalue").value;
+          const grade = Swal.getPopup().querySelector("#grade").value;
+          const colorCode = Swal.getPopup().querySelector("#colorCode").value;
+          const minScore = Swal.getPopup().querySelector("#minScore").value;
+          const maxScore = Swal.getPopup().querySelector("#maxScore").value;
           const id = value;
 
           const Number = /^[0-9]+$/;
-          const letters = /^[a-zA-Z ]+$/;
-          const streetVali = /^[a-zA-Z0-9 ,-]+$/;
-          const emailVali = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+          const letters = /^[A-Z]+$/;
+          const gradeVali = /^[A-Z0-9]+$/;
           if (
-            (name.length > 0 && !name.match(letters)) ||
-            (email.length > 0 && !email.match(emailVali)) ||
-            (pno.length > 0 && !pno.match(Number)) ||
-            (street.length > 0 && !street.match(streetVali)) ||
-            (city.length > 0 && !city.match(letters)) ||
-            (state.length > 0 && !state.match(letters)) ||
-            (country.length > 0 && !country.match(letters))
+            (sValue.length > 0 && !sValue.match(letters)) ||
+            (grade.length > 0 && !grade.match(gradeVali)) ||
+            (minScore.length > 0 && !minScore.match(Number)) ||
+            (maxScore.length > 0 && !maxScore.match(Number))
           ) {
             Swal.showValidationMessage(
-              `Name - Please write a name and use only letters<br> Email - Input a valid Email<br> Phone Number - Please write a Phone Number and use only numbers<br> Street - Please write with only letters, numbers and these symbols(, -)<br> City - Please write a City and use only letters<br> State - Please write a State and use only letters<br> Country - Please write a Country and use only letters `
+              `Score Value - input only capital letters<br> Grade - input only capital letters and numbers<br>  Minimum Score - input only numbers<br> Maximum Score - input only numbers<br>`
             );
           } else {
             handleUpdate(
               id,
-              name,
-              email,
-              street,
-              city,
-              state,
-              country,
-              pno,
-              createdTime,
-              deleteFlag
+              sValue,
+              grade,
+              colorCode,
+              minScore,
+              maxScore,
+              createdTimex,
+              deleteFlagx
             );
           }
         },
@@ -214,23 +191,21 @@ export default function Branchdata() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_KUBU_URL}/branch/delete/${val}`, requestOptions)
+        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/delete/${val}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
             return res.json();
           })
           .then((resx) => {
-            // if (resx.message === "Expired Access") {
-            //   navigate("/authentication/sign-in");
-            // }
-            // if (resx.message === "Token Does Not Exist") {
-            //   navigate("/authentication/sign-in");
-            // }
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
             if (resx.message === "Unauthorized Access") {
               navigate("/authentication/forbiddenPage");
-            } else {
-              navigate("/authentication/sign-in");
             }
             MySwal.fire({
               title: resx.status,
@@ -269,7 +244,7 @@ export default function Branchdata() {
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/branch/gets/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -299,13 +274,16 @@ export default function Branchdata() {
 
   return {
     columns: [
-      { Header: "Name", accessor: "name", align: "left" },
-      { Header: "Email", accessor: "email", align: "left" },
-      { Header: "Street", accessor: "street", align: "left" },
-      { Header: "City", accessor: "city", align: "left" },
-      { Header: "State", accessor: "state", align: "left" },
-      { Header: "Country", accessor: "country", align: "left" },
-      { Header: "Phone Number", accessor: "pno", align: "left" },
+      { Header: "Score Value", accessor: "value", align: "left" },
+      { Header: "Grade", accessor: "grade", align: "left" },
+      { Header: "Minimum Score", accessor: "minScore", align: "left" },
+      { Header: "Maximum Score", accessor: "maxScore", align: "left" },
+      {
+        Header: "Color",
+        accessor: "colorCode",
+        Cell: ({ cell: { value } }) => <input type="color" disabled value={value} />,
+        align: "left",
+      },
       {
         Header: "Date Created",
         accessor: "createdTime",

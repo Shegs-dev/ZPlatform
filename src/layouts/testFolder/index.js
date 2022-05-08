@@ -47,6 +47,7 @@ import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 
 function Basic() {
   const navigate = useNavigate();
+  const [filex, setFile] = useState("");
 
   const [usernamex, setUsername] = useState("");
   const [passwordx, setPassword] = useState("");
@@ -56,6 +57,15 @@ function Basic() {
 
   const [passwordShown, setPasswordShown] = useState(false);
 
+  function handleChange(event) {
+    setFile(event.target.files[0]);
+    console.log(filex);
+    const formData = new FormData();
+    formData.append("file", filex);
+    formData.append("fileName", filex.name);
+    formData.append("fileSize", filex.size);
+    console.log(formData);
+  }
   // Password toggle handler
   const togglePassword = () => {
     // When the handler is invoked
@@ -198,6 +208,13 @@ function Basic() {
                         label="Email"
                         fullWidth
                       />
+                    </div>
+                  </div>
+                </Container>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-12">
+                      <input type="file" onChange={handleChange} />
                     </div>
                   </div>
                 </Container>
