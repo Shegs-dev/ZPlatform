@@ -82,9 +82,11 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+
 // import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
+import Groups from "layouts/groups";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
@@ -116,6 +118,13 @@ const routes = [
     route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
   },
+  // {
+  //   name: "Add Time-Off Type To User",
+  //   key: "userTimeOffType",
+  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+  //   route: "/Bonus-Deduction/attached-User",
+  //   component: <UserBD />,
+  // },
   {
     type: "collapse",
     name: "Birthdays",
@@ -131,6 +140,13 @@ const routes = [
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
   },
+  // {
+  //   name: "User Bonus",
+  //   key: "Bonus/DeductionUser",
+  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+  //   route: "/Bonus-Deduction/AttachedUserBonus",
+  //   component: <AttachedUserBonus />,
+  // },
   {
     type: "collapse",
     name: "Announcement",
@@ -312,14 +328,14 @@ const routes = [
     route: "/departments",
     component: <Departments />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Create bonus",
-  //   key: "createbonus",
-  //   icon: <Icon fontSize="small">meeting_room</Icon>,
-  //   route: "/create-bonus",
-  //   component: <Createbonus />,
-  // },
+  {
+    type: "collapse",
+    name: "Groups",
+    key: "groups",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Groups",
+    component: <Groups />,
+  },
   {
     type: "collapse",
     name: "Positions",
@@ -374,6 +390,7 @@ const routes = [
     route: "/checklists",
     component: <Checklists />,
   },
+
   {
     type: "divider",
     name: "",
