@@ -91,7 +91,6 @@ import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
-
 const routes = [
   {
     type: "collapse",
@@ -380,6 +379,7 @@ const routes = [
     route: "/checklists",
     component: <Checklists />,
   },
+
   {
     type: "divider",
     name: "",

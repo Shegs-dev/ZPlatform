@@ -172,6 +172,7 @@ export default function data() {
       }
     });
   };
+
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
