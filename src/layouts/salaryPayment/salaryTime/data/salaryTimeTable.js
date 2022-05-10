@@ -1,10 +1,5 @@
-/* eslint-disable react/prop-types */
-
-// @mui material components
-
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
-// import MDButton from "components/MDButton";
 import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
@@ -14,38 +9,23 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-export default function AppraisalGradeData() {
+export default function SalaryTimeData() {
+  const MySwal = withReactContent(Swal);
+  const [items, setItems] = useState([]);
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-  // const axios = require("axios");
-  const [items, setItems] = useState([]);
-  // const [id, setId] = useState("");
+
   const navigate = useNavigate();
-
-  const MySwal = withReactContent(Swal);
-
   // Method to handle update
-  const handleUpdate = (
-    idx,
-    valuex,
-    gradex,
-    colorCodex,
-    minScorex,
-    maxScorex,
-    createdTimex,
-    deleteFlagx
-  ) => {
+  const handleUpdate = (idx, timex, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
-      value: valuex,
-      grade: gradex,
-      colorCode: colorCodex,
-      minScore: minScorex,
-      maxScore: maxScorex,
+      payTime: timex,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -56,7 +36,7 @@ export default function AppraisalGradeData() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -94,90 +74,80 @@ export default function AppraisalGradeData() {
 
   // Method to filter departments
   const handleShow = (filteredData, value) => {
-    let valuex = "";
-    let gradex = "";
-    let colorCodex = "";
-    let minScorex = 0;
-    let maxScorex = 0;
-    let createdTimex = 0;
-    let deleteFlagx = 0;
+    let timex = "";
+    let createdTime = 0;
+    let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
-      valuex = "";
-      gradex = "";
-      colorCodex = "";
-      minScorex = 0;
-      maxScorex = 0;
-      createdTimex = 0;
-      deleteFlagx = 0;
+      timex = "";
+      createdTime = 0;
+      deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
-      valuex = filteredItems[0].value;
-      gradex = filteredItems[0].grade;
-      colorCodex = filteredItems[0].colorCode;
-      minScorex = filteredItems[0].minScore;
-      maxScorex = filteredItems[0].maxScore;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
 
-      MySwal.fire({
-        title: "Update Department",
-        html: `<table><tr><td>
-        <label for="svalue">Score Value:</label></td>
-        <td><input type="text" class="swal2-input" id="svalue" value="${valuex}" ></td></tr>
-        <tr><td><label for="grade:">Grade</label></td>
-        <td><input type="email" class="swal2-input" id="grade" value="${gradex}" ></td></tr>
-        <tr><td><label for="minScore:">Min Score</label></td>
-        <td><input type="text" class="swal2-input" id="minScore" value="${minScorex}" ></td></tr>
-        <tr><td><label for="maxScore:">Max Score</label></td>
-        <td><input type="text" class="swal2-input" id="maxScore" value="${maxScorex}" ></td></tr>
-        <tr><td><label for="colorCode:">Color</label></td>
-        <td><input type="color" class="swal2-input" style="width:77%" id="colorCode" value="${colorCodex}" ></td></tr>`,
-        confirmButtonText: "Save",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        preConfirm: () => {
-          const sValue = Swal.getPopup().querySelector("#svalue").value;
-          const grade = Swal.getPopup().querySelector("#grade").value;
-          const colorCode = Swal.getPopup().querySelector("#colorCode").value;
-          const minScore = Swal.getPopup().querySelector("#minScore").value;
-          const maxScore = Swal.getPopup().querySelector("#maxScore").value;
-          const id = value;
-
-          const Number = /^[0-9]+$/;
-          const letters = /^[A-Z ]+$/;
-          const gradeVali = /^[A-Z0-9 ]+$/;
-          if (
-            minScore > maxScore ||
-            (sValue.length > 0 && !sValue.match(letters)) ||
-            (grade.length > 0 && !grade.match(gradeVali)) ||
-            (minScore.length > 0 && !minScore.match(Number)) ||
-            (maxScore.length > 0 && !maxScore.match(Number))
-          ) {
-            Swal.showValidationMessage(
-              `Score Value - input only capital letters<br> Grade - input only capital letters and numbers<br>  Minimum Score - input only numbers<br> Maximum Score - input only numbers<br> Mininmum Score should be lower than the Maximum Score `
-            );
-          } else {
-            Swal.resetValidationMessage();
-            handleUpdate(
-              id,
-              sValue,
-              grade,
-              colorCode,
-              minScore,
-              maxScore,
-              createdTimex,
-              deleteFlagx
-            );
-          }
-        },
-      });
+      timex = filteredItems[0].payTime;
+      createdTime = filteredItems[0].createdTime;
+      deleteFlag = filteredItems[0].deleteFlag;
     }
+    const changeDateandTime = (timestamp) => {
+      const date = new Date(timestamp);
+      let month = "0";
+      if (date.getMonth() + 1 < 10) {
+        const mymonth = date.getMonth() + 1;
+        month += mymonth;
+      } else {
+        const mymonth = date.getMonth() + 1;
+        month = mymonth;
+      }
+      let day = "0";
+      if (date.getDate() < 10) {
+        day += date.getDate();
+      } else {
+        day = date.getDate();
+      }
+      const retDate = `${date.getFullYear()}-${month}-${day}`;
+
+      let hour = "0";
+      let minutes = "0";
+
+      if (date.getHours() < 10) {
+        hour += date.getHours();
+      } else {
+        hour = date.getHours();
+      }
+
+      if (date.getMinutes() < 10) {
+        minutes += date.getMinutes();
+      } else {
+        minutes = date.getMinutes();
+      }
+
+      return `${retDate}T${hour}:${minutes}`;
+    };
+    const changeTime = changeDateandTime(timex);
+    MySwal.fire({
+      title: "Update Department",
+      html: `<table><tr><td>
+      <label for="name">Time</label></td>
+      <td><input type="datetime-local" class="swal2-input" id="timexx" value="${changeTime}"></td></tr>`,
+      confirmButtonText: "Save",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      preConfirm: () => {
+        const timee = Swal.getPopup().querySelector("#timexx").value;
+        const conTime = new Date(timee).getTime();
+        const id = value;
+        if (!timee) {
+          Swal.showValidationMessage(`Please Select Date and Time`);
+        }
+        handleUpdate(id, conTime, createdTime, deleteFlag);
+      },
+    });
   };
 
   // Method to handle diable
-  const handleDisable = (val) => {
+  const handleDisable = (value) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -193,7 +163,7 @@ export default function AppraisalGradeData() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/delete/${val}`, requestOptions)
+        fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/delete/${value}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
@@ -229,24 +199,60 @@ export default function AppraisalGradeData() {
   };
 
   // Method to change date from timestamp
-  const changeBranchDate = (timestamp) => {
+  const changeDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
   };
 
-  // Function to get cell value
-  // const getCellValue = (value) => {
-  //   setId(value);
-  // };
-  // Method to fetch all Branch
+  const changeDateandTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    let hour = "0";
+    let minutes = "0";
+    let seconds = "0";
+
+    if (date.getHours() < 10) {
+      hour += date.getHours();
+    } else {
+      hour = date.getHours();
+    }
+
+    if (date.getMinutes() < 10) {
+      minutes += date.getMinutes();
+    } else {
+      minutes = date.getMinutes();
+    }
+
+    if (date.getSeconds() < 10) {
+      seconds += date.getSeconds();
+    } else {
+      seconds = date.getSeconds();
+    }
+    return `${retDate} ${hour}:${minutes}:${seconds}`;
+  };
+
+  // Method to change type
+  // eslint-disable-next-line consistent-return
+  const changeStat = (status) => {
+    if (status === 0) {
+      return "Created";
+      // eslint-disable-next-line no-else-return
+    } else if (status === 1) {
+      return "Initiated";
+      // eslint-disable-next-line no-else-return
+    }
+  };
+
+  // Method to fetch all departments
+  // env.environments
   useEffect(() => {
+    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/gets/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -266,6 +272,7 @@ export default function AppraisalGradeData() {
           window.location.reload();
         }
         if (isMounted) {
+          console.log(result);
           setItems(result);
         }
       });
@@ -274,27 +281,31 @@ export default function AppraisalGradeData() {
     };
   }, []);
 
+  // Return table
   return {
     columns: [
-      { Header: "Score Value", accessor: "value", align: "left" },
-      { Header: "Grade", accessor: "grade", align: "left" },
-      { Header: "Minimum Score", accessor: "minScore", align: "left" },
-      { Header: "Maximum Score", accessor: "maxScore", align: "left" },
       {
-        Header: "Color",
-        accessor: "colorCode",
-        Cell: ({ cell: { value } }) => <input type="color" disabled value={value} />,
+        Header: "Payment Time",
+        accessor: "payTime",
+        Cell: ({ cell: { value } }) => changeDateandTime(value),
+        align: "left",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ cell: { value } }) => changeStat(value),
         align: "left",
       },
       {
         Header: "Date Created",
         accessor: "createdTime",
-        Cell: ({ cell: { value } }) => changeBranchDate(value),
+        Cell: ({ cell: { value } }) => changeDate(value),
         align: "left",
       },
       {
         Header: "actions",
         accessor: "id",
+        // eslint-disable-next-line react/prop-types
         Cell: ({ cell: { value } }) => (
           <div
             style={{
@@ -315,7 +326,7 @@ export default function AppraisalGradeData() {
             </Dropdown>
           </div>
         ),
-        align: "center",
+        align: "left",
       },
     ],
 

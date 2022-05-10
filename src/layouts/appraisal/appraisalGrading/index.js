@@ -32,9 +32,7 @@ function AppraisalGrade() {
   const [colorCodex, setColorCode] = useState("#000000");
 
   const [checkedEmail, setCheckedEmail] = useState("");
-  const [checkedStreet, setCheckedStreet] = useState("");
   const [checkedName, setCheckedName] = useState("");
-  const [checkedCity, setCheckedCity] = useState("");
   const [enabled, setEnabled] = useState("");
   const [opened, setOpened] = useState(false);
   const { allPHeaders: myHeaders } = PHeaders();
@@ -114,12 +112,7 @@ function AppraisalGrade() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Score Value is required<br>";
     }
-    setEnabled(
-      checkedEmail === true &&
-        checkedName === true &&
-        checkedCity === true &&
-        checkedStreet === true
-    );
+    setEnabled(checkedEmail === true && checkedName === true);
   };
 
   const handleOnEmailKeys = () => {
@@ -139,24 +132,17 @@ function AppraisalGrade() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Grade is required<br>";
     }
-    setEnabled(
-      checkedEmail === true &&
-        checkedName === true &&
-        checkedCity === true &&
-        checkedStreet === true
-    );
+    setEnabled(checkedEmail === true && checkedName === true);
   };
 
   const handleOnStreetKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[0-9]+$/;
     if (!minScorex.match(letters)) {
-      setCheckedStreet(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Minimum Score - input only numbers<br>";
     }
     if (minScorex.match(letters)) {
-      setCheckedStreet(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "";
     }
@@ -164,23 +150,16 @@ function AppraisalGrade() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Minimum Score is required<br>";
     }
-    setEnabled(
-      checkedEmail === true &&
-        checkedName === true &&
-        checkedCity === true &&
-        checkedStreet === true
-    );
+    setEnabled(checkedEmail === true && checkedName === true);
   };
 
   const handleOnCityKeys = () => {
     const letters = /^[0-9]+$/;
     if (!maxScorex.match(letters)) {
-      setCheckedCity(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "Maximum Score - input only numbers<br>";
     }
     if (maxScorex.match(letters)) {
-      setCheckedCity(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "";
     }
@@ -188,12 +167,7 @@ function AppraisalGrade() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "Maximum Score is required<br>";
     }
-    setEnabled(
-      checkedEmail === true &&
-        checkedName === true &&
-        checkedCity === true &&
-        checkedStreet === true
-    );
+    setEnabled(checkedEmail === true && checkedName === true);
   };
 
   return (
