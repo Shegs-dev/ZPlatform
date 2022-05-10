@@ -309,14 +309,6 @@ const routes = [
     route: "/departments",
     component: <Departments />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Create bonus",
-  //   key: "createbonus",
-  //   icon: <Icon fontSize="small">meeting_room</Icon>,
-  //   route: "/create-bonus",
-  //   component: <Createbonus />,
-  // },
   {
     type: "collapse",
     name: "Groups",
