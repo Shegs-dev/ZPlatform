@@ -46,7 +46,6 @@ export default function bonusdeductionData() {
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -219,9 +218,6 @@ export default function bonusdeductionData() {
     });
   };
 
-  const handleUserBD = (value) => {
-    navigate(`/Bonus-Deduction/attached-User?id=${value}`);
-  };
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
