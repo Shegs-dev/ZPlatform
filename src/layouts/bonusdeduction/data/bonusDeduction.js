@@ -46,7 +46,6 @@ export default function bonusdeductionData() {
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,

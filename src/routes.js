@@ -95,6 +95,8 @@ import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
 
+import Appraisal from "layouts/appraisal/appraisal";
+
 const routes = [
   {
     type: "collapse",
@@ -119,13 +121,6 @@ const routes = [
     route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
   },
-  // {
-  //   name: "Add Time-Off Type To User",
-  //   key: "userTimeOffType",
-  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-  //   route: "/Bonus-Deduction/attached-User",
-  //   component: <UserBD />,
-  // },
   {
     type: "collapse",
     name: "Birthdays",
@@ -141,13 +136,6 @@ const routes = [
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
   },
-  // {
-  //   name: "User Bonus",
-  //   key: "Bonus/DeductionUser",
-  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-  //   route: "/Bonus-Deduction/AttachedUserBonus",
-  //   component: <AttachedUserBonus />,
-  // },
   {
     type: "collapse",
     name: "Announcement",
@@ -197,6 +185,14 @@ const routes = [
     title: "Appraisal",
     key: "tit3",
     route: "",
+  },
+  {
+    type: "collapse",
+    name: "Appraisals",
+    key: "appraisalz",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisals",
+    component: <Appraisal />,
   },
   {
     type: "collapse",
