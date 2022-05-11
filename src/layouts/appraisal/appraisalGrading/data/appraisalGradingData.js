@@ -146,18 +146,20 @@ export default function AppraisalGradeData() {
           const id = value;
 
           const Number = /^[0-9]+$/;
-          const letters = /^[A-Z]+$/;
-          const gradeVali = /^[A-Z0-9]+$/;
+          const letters = /^[A-Z ]+$/;
+          const gradeVali = /^[A-Z0-9 ]+$/;
           if (
+            minScore > maxScore ||
             (sValue.length > 0 && !sValue.match(letters)) ||
             (grade.length > 0 && !grade.match(gradeVali)) ||
             (minScore.length > 0 && !minScore.match(Number)) ||
             (maxScore.length > 0 && !maxScore.match(Number))
           ) {
             Swal.showValidationMessage(
-              `Score Value - input only capital letters<br> Grade - input only capital letters and numbers<br>  Minimum Score - input only numbers<br> Maximum Score - input only numbers<br>`
+              `Score Value - input only capital letters<br> Grade - input only capital letters and numbers<br>  Minimum Score - input only numbers<br> Maximum Score - input only numbers<br> Mininmum Score should be lower than the Maximum Score `
             );
           } else {
+            Swal.resetValidationMessage();
             handleUpdate(
               id,
               sValue,

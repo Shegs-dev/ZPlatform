@@ -113,7 +113,6 @@ export default function AQuestionsData() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

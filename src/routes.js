@@ -91,6 +91,8 @@ import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
+import SalaryTime from "layouts/salaryPayment/salaryTime";
+import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 
 import Appraisal from "layouts/appraisal/appraisal";
 
@@ -228,6 +230,22 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Salary Prorate",
+    key: "salaryProrate",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/salary-Prorate",
+    component: <SalaryProrate />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Time Settings",
+    key: "salaryTime",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/salary-Time-Settings",
+    component: <SalaryTime />,
+  },
+  {
+    type: "collapse",
     name: "Bonus/Deduction",
     key: "bonusdeduction",
     icon: <Icon fontSize="small">meeting_room</Icon>,
@@ -306,14 +324,6 @@ const routes = [
     route: "/departments",
     component: <Departments />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Create bonus",
-  //   key: "createbonus",
-  //   icon: <Icon fontSize="small">meeting_room</Icon>,
-  //   route: "/create-bonus",
-  //   component: <Createbonus />,
-  // },
   {
     type: "collapse",
     name: "Groups",
@@ -376,6 +386,7 @@ const routes = [
     route: "/checklists",
     component: <Checklists />,
   },
+
   {
     type: "divider",
     name: "",

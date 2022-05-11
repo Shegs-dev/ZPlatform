@@ -172,6 +172,7 @@ export default function data() {
       }
     });
   };
+
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
@@ -208,67 +209,12 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {
       isMounted = false;
     };
   }, []);
-
-  // Method to handle diable
-  //   const handleSource = (SourceId) => {
-  //     MySwal.fire({
-  //       title: "Clone Time-Off Type",
-  //       text: "You won't be able to revert this!",
-  //       icon: "warning",
-  //       html: `<div align="center"><table><tr><td>
-  //           <label for="name">Clone Name</label></td>
-  //           <td><input type="text" id="soName" class="swal2-input" placeholder="Name"></td></tr></table></div>`,
-  //       confirmButtonText: "Clone",
-  //       showCancelButton: true,
-  //       confirmButtonColor: "#3085d6",
-  //       cancelButtonColor: "#d33",
-  //     }).then((resultD) => {
-  //       if (resultD.isConfirmed) {
-  //         const sourceName = document.getElementById("soName").value;
-  //         const headers = miHeaders;
-  //         fetch(`${process.env.REACT_APP_NSUTANA_URL}/timeofftype/clone/${SourceId}/${sourceName}`, {
-  //           headers,
-  //         })
-  //           .then(async (res) => {
-  //             const aToken = res.headers.get("token-1");
-  //             localStorage.setItem("rexxdex", aToken);
-  //             return res.json();
-  //           })
-  //           .then((resx) => {
-  //             if (resx.message === "Expired Access") {
-  //               navigate("/authentication/sign-in");
-  //             }
-  //             if (resx.message === "Token Does Not Exist") {
-  //               navigate("/authentication/sign-in");
-  //             }
-  //             if (resx.message === "Unauthorized Access") {
-  //               navigate("/authentication/forbiddenPage");
-  //             }
-  //             MySwal.fire({
-  //               title: resx.status,
-  //               type: "success",
-  //               text: resx.message,
-  //             }).then(() => {
-  //               window.location.reload();
-  //             });
-  //           })
-  //           .catch((error) => {
-  //             MySwal.fire({
-  //               title: error.status,
-  //               type: "error",
-  //               text: error.message,
-  //             });
-  //           });
-  //       }
-  //     });
-  //   };
 
   // Return table
   return {
