@@ -93,6 +93,7 @@ import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
+import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
 
 const routes = [
   {
@@ -239,6 +240,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/salary-Prorate",
     component: <SalaryProrate />,
+  },
+  {
+    name: "View User Prorate",
+    key: "viewUserProrate",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Salary-Prorate",
+    component: <VuUserProrate />,
   },
   {
     type: "collapse",

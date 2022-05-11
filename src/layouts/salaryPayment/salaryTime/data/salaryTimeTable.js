@@ -239,7 +239,7 @@ export default function SalaryTimeData() {
       return "Created";
       // eslint-disable-next-line no-else-return
     } else if (status === 1) {
-      return "Initiated";
+      return "Completed";
       // eslint-disable-next-line no-else-return
     }
   };
