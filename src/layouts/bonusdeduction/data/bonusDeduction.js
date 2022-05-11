@@ -219,9 +219,9 @@ export default function bonusdeductionData() {
     });
   };
 
-  const handleUserBD = (value) => {
-    navigate(`/Bonus-Deduction/attached-User?id=${value}`);
-  };
+  // const handleUserBD = (value) => {
+  //   navigate(`/Bonus-Deduction/attached-User?id=${value}`);
+  // };
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
