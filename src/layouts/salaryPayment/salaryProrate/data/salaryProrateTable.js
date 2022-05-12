@@ -55,10 +55,17 @@ export default function SalaryProrateData() {
             // if (resx.message === "Token Does Not Exist") {
             //   navigate("/authentication/sign-in");
             // }
-            if (resx.message === "Unauthorized Access") {
-              navigate("/authentication/forbiddenPage");
-            } else {
+            if (result.message === "Expired Access") {
               navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (result.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (result.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+              window.location.reload();
             }
             MySwal.fire({
               title: resx.status,
