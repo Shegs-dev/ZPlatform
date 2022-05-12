@@ -199,12 +199,12 @@ function SalaryProrate() {
       });
   };
 
-  const handleOnStreetKeys = () => {
+  const handleOnNODKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[0-9]+$/;
     if (!noOfDaysx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+      document.getElementById("street").innerHTML = "Number Of Days - use only numbers<br>";
     }
     if (noOfDaysx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
@@ -212,15 +212,16 @@ function SalaryProrate() {
     }
     if (noOfDaysx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street is required<br>";
+      document.getElementById("street").innerHTML = "Number Of Days is required<br>";
     }
   };
 
-  const handleOnCityKeys = () => {
+  const handleOnTNDKeys = () => {
     const letters = /^[0-9]+$/;
     if (!totalNumberOfDaysx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
+      document.getElementById("city").innerHTML =
+        "Total Number of Days - input only capital and small letters<br>";
     }
     if (totalNumberOfDaysx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
@@ -228,7 +229,7 @@ function SalaryProrate() {
     }
     if (totalNumberOfDaysx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "City is required<br>";
+      document.getElementById("city").innerHTML = "Total Number of Days is required<br>";
     }
   };
 
@@ -316,7 +317,7 @@ function SalaryProrate() {
                     <MDInput
                       type="text"
                       value={noOfDaysx || ""}
-                      onKeyUp={handleOnStreetKeys}
+                      onKeyUp={handleOnNODKeys}
                       onChange={(e) => setNoOfDays(e.target.value)}
                       label="Prorate No Of Days"
                       variant="standard"
@@ -327,7 +328,7 @@ function SalaryProrate() {
                     <MDInput
                       type="text"
                       value={totalNumberOfDaysx || ""}
-                      onKeyUp={handleOnCityKeys}
+                      onKeyUp={handleOnTNDKeys}
                       onChange={(e) => setTotalNumberOfDays(e.target.value)}
                       label="Employee Total Working Days"
                       variant="standard"
