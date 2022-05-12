@@ -91,6 +91,11 @@ import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
+import SalaryTime from "layouts/salaryPayment/salaryTime";
+import SalaryProrate from "layouts/salaryPayment/salaryProrate";
+import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
+
+import Appraisal from "layouts/appraisal/appraisal";
 
 const routes = [
   {
@@ -116,13 +121,6 @@ const routes = [
     route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
   },
-  // {
-  //   name: "Add Time-Off Type To User",
-  //   key: "userTimeOffType",
-  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-  //   route: "/Bonus-Deduction/attached-User",
-  //   component: <UserBD />,
-  // },
   {
     type: "collapse",
     name: "Birthdays",
@@ -138,13 +136,6 @@ const routes = [
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
   },
-  // {
-  //   name: "User Bonus",
-  //   key: "Bonus/DeductionUser",
-  //   icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-  //   route: "/Bonus-Deduction/AttachedUserBonus",
-  //   component: <AttachedUserBonus />,
-  // },
   {
     type: "collapse",
     name: "Announcement",
@@ -197,6 +188,14 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Appraisals",
+    key: "appraisalz",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisals",
+    component: <Appraisal />,
+  },
+  {
+    type: "collapse",
     name: "Appraisal Questions",
     key: "appraisalQuestions",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -232,10 +231,33 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Bonus Deduction",
+    name: "Salary Prorate",
+    key: "salaryProrate",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/salary-Prorate",
+    component: <SalaryProrate />,
+  },
+  {
+    name: "View User Prorate",
+    key: "viewUserProrate",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Salary-Prorate",
+    component: <VuUserProrate />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Time Settings",
+    key: "salaryTime",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/salary-Time-Settings",
+    component: <SalaryTime />,
+  },
+  {
+    type: "collapse",
+    name: "Bonus/Deduction",
     key: "bonusdeduction",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus-Deduction",
+    route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
   },
   {

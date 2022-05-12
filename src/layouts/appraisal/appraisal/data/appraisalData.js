@@ -10,11 +10,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+// import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-import TextWrapper from "react-text-wrapper";
+// import { id } from "date-fns/locale";
 
-export default function AQuestionsData() {
+export default function AppraisalData() {
+  // const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   // const axios = require("axios");
   const [items, setItems] = useState([]);
@@ -23,8 +25,58 @@ export default function AQuestionsData() {
 
   const MySwal = withReactContent(Swal);
 
-  // Method to handle diable
-  const handleDisable = (val) => {
+  // Method to change date from timestamp
+  const changeBranchDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    return retDate;
+  };
+
+  // Function to get cell value
+  // const getCellValue = (value) => {
+  //   setId(value);
+  // };
+  // Method to fetch all Branch
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/gets/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          console.log(result);
+          setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleUpdate = (value) => {
+    console.log(value);
+  };
+
+  const handleDisable = (value) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -40,7 +92,7 @@ export default function AQuestionsData() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/delete/${val}`, requestOptions)
+        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/delete/${value}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
@@ -75,70 +127,37 @@ export default function AQuestionsData() {
     });
   };
 
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
+  const changeStatus = (value) => {
+    if (value === 0) {
+      return "Created";
+      // eslint-disable-next-line no-else-return
+    } else if (value === 1) {
+      return "Open";
+    }
+    return "Closed";
   };
-
-  const handleView = (value) => {
-    navigate(`/View-Appraisal-Questions?id=${value}`);
-  };
-  // Method to fetch all Data
-  useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const headers = miHeaders;
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/gets/${orgIDs}`, { headers })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        if (isMounted) {
-          setItems(result);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return {
     columns: [
+      { Header: "appraisee Name", accessor: "appraiseeName", align: "left" },
+      { Header: "Name", accessor: "name", align: "left" },
+      { Header: "created By", accessor: "createdByName", align: "left" },
       {
-        Header: "Question",
-        accessor: "question.question",
-        Cell: ({ cell: { value } }) => <TextWrapper width={300} content={value} />,
+        Header: "Status",
+        accessor: "status",
+        // eslint-disable-next-line react/prop-types
+        Cell: ({ cell: { value } }) => <span>{changeStatus(value)}</span>,
         align: "left",
       },
-      { Header: "Hint", accessor: "question.hint", align: "left" },
-      { Header: "Question Type", accessor: "question.inputType", align: "left" },
       {
         Header: "Date Created",
-        accessor: "question.createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
+        accessor: "createdTime",
+        Cell: ({ cell: { value } }) => changeBranchDate(value),
         align: "left",
       },
       {
         Header: "actions",
-        accessor: "question.id",
+        accessor: "id",
         Cell: ({ cell: { value } }) => (
           <div
             style={{
@@ -148,12 +167,12 @@ export default function AQuestionsData() {
             }}
           >
             <Dropdown>
-              <Dropdown.Toggle variant="secondary" id="dropdown-basic-button">
+              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
                 <Icon sx={{ fontWeight: "light" }}>settings</Icon>
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

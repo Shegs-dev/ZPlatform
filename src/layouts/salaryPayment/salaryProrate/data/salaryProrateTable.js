@@ -12,9 +12,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-import TextWrapper from "react-text-wrapper";
 
-export default function AQuestionsData() {
+export default function SalaryProrateData() {
   const { allGHeaders: miHeaders } = GHeaders();
   // const axios = require("axios");
   const [items, setItems] = useState([]);
@@ -40,21 +39,33 @@ export default function AQuestionsData() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/delete/${val}`, requestOptions)
+        fetch(
+          `${process.env.REACT_APP_TANTA_URL}/prorateRemuneration/delete/${val}`,
+          requestOptions
+        )
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
             return res.json();
           })
           .then((resx) => {
-            if (resx.message === "Expired Access") {
+            // if (resx.message === "Expired Access") {
+            //   navigate("/authentication/sign-in");
+            // }
+            // if (resx.message === "Token Does Not Exist") {
+            //   navigate("/authentication/sign-in");
+            // }
+            if (result.message === "Expired Access") {
               navigate("/authentication/sign-in");
+              window.location.reload();
             }
-            if (resx.message === "Token Does Not Exist") {
+            if (result.message === "Token Does Not Exist") {
               navigate("/authentication/sign-in");
+              window.location.reload();
             }
-            if (resx.message === "Unauthorized Access") {
+            if (result.message === "Unauthorized Access") {
               navigate("/authentication/forbiddenPage");
+              window.location.reload();
             }
             MySwal.fire({
               title: resx.status,
@@ -76,23 +87,40 @@ export default function AQuestionsData() {
   };
 
   // Method to change date from timestamp
-  const changeDate = (timestamp) => {
+  const changeBranchDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
   };
 
-  const handleView = (value) => {
-    navigate(`/View-Appraisal-Questions?id=${value}`);
+  // Method to change type
+  // eslint-disable-next-line consistent-return
+  const changeStat = (status) => {
+    if (status === 0) {
+      return "Opened";
+      // eslint-disable-next-line no-else-return
+    } else if (status === 1) {
+      return "Closed";
+      // eslint-disable-next-line no-else-return
+    }
   };
-  // Method to fetch all Data
+
+  const handleView = (value) => {
+    navigate(`/view-Salary-Prorate?id=${value}`);
+  };
+
+  // Function to get cell value
+  // const getCellValue = (value) => {
+  //   setId(value);
+  // };
+  // Method to fetch all Branch
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/gets/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/prorateRemuneration/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -112,6 +140,7 @@ export default function AQuestionsData() {
           window.location.reload();
         }
         if (isMounted) {
+          console.log(result);
           setItems(result);
         }
       });
@@ -122,23 +151,24 @@ export default function AQuestionsData() {
 
   return {
     columns: [
+      { Header: "Employee's Name", accessor: "empName", align: "left" },
+      { Header: "Number Of Days", accessor: "noOfDays", align: "left" },
+      { Header: "Total Number Of Days", accessor: "totalNumberOfDays", align: "left" },
       {
-        Header: "Question",
-        accessor: "question.question",
-        Cell: ({ cell: { value } }) => <TextWrapper width={300} content={value} />,
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ cell: { value } }) => changeStat(value),
         align: "left",
       },
-      { Header: "Hint", accessor: "question.hint", align: "left" },
-      { Header: "Question Type", accessor: "question.inputType", align: "left" },
       {
         Header: "Date Created",
-        accessor: "question.createdTime",
-        Cell: ({ cell: { value } }) => changeDate(value),
+        accessor: "createdTime",
+        Cell: ({ cell: { value } }) => changeBranchDate(value),
         align: "left",
       },
       {
         Header: "actions",
-        accessor: "question.id",
+        accessor: "id",
         Cell: ({ cell: { value } }) => (
           <div
             style={{
@@ -148,7 +178,7 @@ export default function AQuestionsData() {
             }}
           >
             <Dropdown>
-              <Dropdown.Toggle variant="secondary" id="dropdown-basic-button">
+              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
                 <Icon sx={{ fontWeight: "light" }}>settings</Icon>
               </Dropdown.Toggle>
 

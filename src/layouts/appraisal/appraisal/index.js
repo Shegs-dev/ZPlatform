@@ -1,43 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
-import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
-import Groups from "layouts/groups/data/gRoup";
+import AppraisalData from "layouts/appraisal/appraisal/data/appraisalData";
 import MDButton from "components/MDButton";
+import Card from "@mui/material/Card";
+import { Container, Form } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-function GrouPs() {
+function AppraiseeIDX() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = Groups();
-
-  const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
-
-  const [checkedName, setCheckedName] = useState("");
-  const [enabled, setEnabled] = useState("");
+  const { columns: pColumns, rows: pRows } = AppraisalData();
 
   const navigate = useNavigate();
 
-  const { allPHeaders: myHeaders } = PHeaders();
+  const [appraiseeIDx, setAppraiseeIDx] = useState("");
+  const [userx, setUser] = useState([]);
+  const [namex, setNamex] = useState("");
 
+  const [enabled, setEnabled] = useState("");
+  const [checkedName, setCheckedName] = useState("");
+  const [opened, setOpened] = useState(false);
+
+  const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
+
+  useEffect(() => {
+    console.log(setOpened);
+    const headers = miHeaders;
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setUser(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
+    const orgIDs = data11.orgID;
+    const personalIDx = data11.personalID;
     const raw = JSON.stringify({
-      orgID: data11.orgID,
+      orgID: orgIDs,
+      appraiseeID: appraiseeIDx,
+      createdBy: personalIDx,
       name: namex,
-      descrip: descripx,
     });
     const requestOptions = {
       method: "POST",
@@ -45,13 +93,15 @@ function GrouPs() {
       body: raw,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/add`, requestOptions)
+
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -73,6 +123,7 @@ function GrouPs() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -81,10 +132,7 @@ function GrouPs() {
       });
   };
 
-  // const handleUpdate = (value) => {
-  //   navigate(`/groups/groupview?id=${value}`);
-  // };
-
+  // eslint-disable-next-line consistent-return
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
@@ -108,7 +156,7 @@ function GrouPs() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
+        <MDBox pt={4} pb={3} px={30}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -121,7 +169,7 @@ function GrouPs() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Groups
+              Add Appraisal
             </MDTypography>
           </MDBox>
           <MDBox
@@ -139,36 +187,39 @@ function GrouPs() {
               {" "}
             </MDTypography>
           </MDBox>
-          <MDBox component="form" role="form" name="form1">
+          <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Name*"
+                      label="Name"
                       value={namex || ""}
+                      placeholder=""
                       onKeyUp={handleOnNameKeys}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setNamex(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
-
                   <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
-                    />
+                    <Form.Select
+                      value={appraiseeIDx}
+                      onChange={(e) => setAppraiseeIDx(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option value="">Select Appraisee</option>
+                      {userx.map((api) => (
+                        <option key={api.personal.id} value={api.personal.id}>
+                          {api.personal.fname} {api.personal.lname}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </div>
                 </div>
               </Container>
             </MDBox>
-
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
@@ -194,8 +245,11 @@ function GrouPs() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }
 
-export default GrouPs;
+export default AppraiseeIDX;

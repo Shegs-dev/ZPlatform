@@ -9,7 +9,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-export default function bonusdeductionData() {
+export default function SalaryTimeData() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
@@ -18,31 +18,14 @@ export default function bonusdeductionData() {
 
   const navigate = useNavigate();
   // Method to handle update
-  const handleUpdate = (
-    idx,
-    empIDx,
-    namex,
-    amountx,
-    frequencyx,
-    setupTypex,
-    typex,
-    currencyx,
-    createdTimex,
-    deleteFlagx
-  ) => {
+  const handleUpdate = (idx, timex, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     const raw = JSON.stringify({
       id: idx,
       orgID: orgIDs,
-      empID: empIDx,
-      name: namex,
-      amount: amountx,
-      frequency: frequencyx,
-      type: typex,
-      setupType: setupTypex,
-      currency: currencyx,
+      payTime: timex,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
@@ -53,7 +36,7 @@ export default function bonusdeductionData() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -91,74 +74,74 @@ export default function bonusdeductionData() {
 
   // Method to filter departments
   const handleShow = (filteredData, value) => {
-    let namex = "";
-    let empIDx = "";
-    let amountx = 0;
-    let currencyx = "";
-    let frequencyx = 0;
-    let setupTypex = 0;
-    let typex = "";
+    let timex = "";
     let createdTime = 0;
     let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
-      namex = "";
-      empIDx = "";
-      amountx = 0;
-      frequencyx = 0;
-      setupTypex = 0;
-      typex = "";
-      currencyx = "";
+      timex = "";
       createdTime = 0;
       deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
-      namex = filteredItems[0].name;
-      empIDx = filteredItems[0].empID;
-      amountx = filteredItems[0].amount;
-      frequencyx = filteredItems[0].frequency;
-      typex = filteredItems[0].type;
-      setupTypex = filteredItems[0].setupType;
-      currencyx = filteredItems[0].currency;
+      timex = filteredItems[0].payTime;
       createdTime = filteredItems[0].createdTime;
       deleteFlag = filteredItems[0].deleteFlag;
     }
+    const changeDateandTime = (timestamp) => {
+      const date = new Date(timestamp);
+      let month = "0";
+      if (date.getMonth() + 1 < 10) {
+        const mymonth = date.getMonth() + 1;
+        month += mymonth;
+      } else {
+        const mymonth = date.getMonth() + 1;
+        month = mymonth;
+      }
+      let day = "0";
+      if (date.getDate() < 10) {
+        day += date.getDate();
+      } else {
+        day = date.getDate();
+      }
+      const retDate = `${date.getFullYear()}-${month}-${day}`;
 
+      let hour = "0";
+      let minutes = "0";
+
+      if (date.getHours() < 10) {
+        hour += date.getHours();
+      } else {
+        hour = date.getHours();
+      }
+
+      if (date.getMinutes() < 10) {
+        minutes += date.getMinutes();
+      } else {
+        minutes = date.getMinutes();
+      }
+
+      return `${retDate}T${hour}:${minutes}`;
+    };
+    const changeTime = changeDateandTime(timex);
     MySwal.fire({
-      title: "Update Bonus/Deduction",
-      html: `<tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"disabled></td></tr><br>
-            <tr><td><label for="value">Amount</label></td>
-      <td><input type="text" id="amount" value="${amountx}" class="swal2-input" placeholder="Amount"></td></tr><br>
-        <tr><td><label for="value">Type</label></td>
-     <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"disabled></td></tr>`,
+      title: "Update Department",
+      html: `<table><tr><td>
+      <label for="name">Time</label></td>
+      <td><input type="datetime-local" class="swal2-input" id="timexx" value="${changeTime}"></td></tr>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const amount = Swal.getPopup().querySelector("#amount").value;
-        const type = Swal.getPopup().querySelector("#type").value;
-        const setupType = setupTypex;
+        const timee = Swal.getPopup().querySelector("#timexx").value;
+        const conTime = new Date(timee).getTime();
         const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
+        if (!timee) {
+          Swal.showValidationMessage(`Please Select Date and Time`);
         }
-        handleUpdate(
-          id,
-          empIDx,
-          name,
-          amount,
-          frequencyx,
-          setupType,
-          type,
-          currencyx,
-          createdTime,
-          deleteFlag
-        );
+        handleUpdate(id, conTime, createdTime, deleteFlag);
       },
     });
   };
@@ -180,10 +163,7 @@ export default function bonusdeductionData() {
           headers: miHeaders,
         };
 
-        fetch(
-          `${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/delete/${value}`,
-          requestOptions
-        )
+        fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/delete/${value}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
@@ -218,14 +198,50 @@ export default function bonusdeductionData() {
     });
   };
 
-  // const handleUserBD = (value) => {
-  //   navigate(`/Bonus-Deduction/attached-User?id=${value}`);
-  // };
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
+  };
+
+  const changeDateandTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    let hour = "0";
+    let minutes = "0";
+    let seconds = "0";
+
+    if (date.getHours() < 10) {
+      hour += date.getHours();
+    } else {
+      hour = date.getHours();
+    }
+
+    if (date.getMinutes() < 10) {
+      minutes += date.getMinutes();
+    } else {
+      minutes = date.getMinutes();
+    }
+
+    if (date.getSeconds() < 10) {
+      seconds += date.getSeconds();
+    } else {
+      seconds = date.getSeconds();
+    }
+    return `${retDate} ${hour}:${minutes}:${seconds}`;
+  };
+
+  // Method to change type
+  // eslint-disable-next-line consistent-return
+  const changeStat = (status) => {
+    if (status === 0) {
+      return "Created";
+      // eslint-disable-next-line no-else-return
+    } else if (status === 1) {
+      return "Completed";
+      // eslint-disable-next-line no-else-return
+    }
   };
 
   // Method to fetch all departments
@@ -236,7 +252,7 @@ export default function bonusdeductionData() {
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/gets/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -256,6 +272,7 @@ export default function bonusdeductionData() {
           window.location.reload();
         }
         if (isMounted) {
+          console.log(result);
           setItems(result);
         }
       });
@@ -267,11 +284,18 @@ export default function bonusdeductionData() {
   // Return table
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
-      { Header: "amount", accessor: "amount", align: "left" },
-      { Header: "frequency", accessor: "frequency", align: "left" },
-      { Header: "type", accessor: "type", align: "left" },
-      { Header: "setupType", accessor: "setupType", align: "left" },
+      {
+        Header: "Payment Time",
+        accessor: "payTime",
+        Cell: ({ cell: { value } }) => changeDateandTime(value),
+        align: "left",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ cell: { value } }) => changeStat(value),
+        align: "left",
+      },
       {
         Header: "Date Created",
         accessor: "createdTime",
