@@ -2,33 +2,32 @@ import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
-import DataTable from "examples/Tables/DataTable";
-import AppraisalData from "layouts/appraisal/appraisal/data/appraisalData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+// import DataTable from "examples/Tables/DataTable";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
-function AppraiseeIDX() {
+function ViewAppraisal() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = AppraisalData();
-
   const navigate = useNavigate();
 
   const [appraiseeIDx, setAppraiseeIDx] = useState("");
   const [userx, setUser] = useState([]);
   const [namex, setNamex] = useState("");
+  const [items, setItems] = useState({});
 
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
@@ -38,7 +37,7 @@ function AppraiseeIDX() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
-    // console.log(setOpened);
+    console.log(setOpened);
     const headers = miHeaders;
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -80,11 +79,14 @@ function AppraiseeIDX() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    const personalIDx = data11.personalID;
     const raw = JSON.stringify({
+      id: items.id,
+      deleteFlag: items.deleteFlag,
+      status: items.status,
+      createdTime: items.createdTime,
       orgID: orgIDs,
       appraiseeID: appraiseeIDx,
-      createdBy: personalIDx,
+      createdBy: items.createdBy,
       name: namex,
     });
     const requestOptions = {
@@ -94,7 +96,7 @@ function AppraiseeIDX() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -119,7 +121,8 @@ function AppraiseeIDX() {
           type: "success",
           text: result.message,
         }).then(() => {
-          window.location.reload();
+          // window.location.reload();
+          navigate(`/Appraisals`);
         });
       })
       .catch((error) => {
@@ -152,6 +155,43 @@ function AppraiseeIDX() {
     setEnabled(checkedName === true);
   };
 
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/getByIds/${id}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setItems(result[0]);
+          setAppraiseeIDx(result[0].appraiseeID);
+          setNamex(result[0].name);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -169,7 +209,7 @@ function AppraiseeIDX() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Appraisal
+              Update Appraisal
             </MDTypography>
           </MDBox>
           <MDBox
@@ -188,7 +228,7 @@ function AppraiseeIDX() {
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
+            <MDBox mb={0}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
@@ -234,16 +274,6 @@ function AppraiseeIDX() {
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
@@ -252,4 +282,4 @@ function AppraiseeIDX() {
   );
 }
 
-export default AppraiseeIDX;
+export default ViewAppraisal;
