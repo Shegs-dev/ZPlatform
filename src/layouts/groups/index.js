@@ -80,6 +80,11 @@ function GrouPs() {
         });
       });
   };
+
+  // const handleUpdate = (value) => {
+  //   navigate(`/groups/groupview?id=${value}`);
+  // };
+
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
