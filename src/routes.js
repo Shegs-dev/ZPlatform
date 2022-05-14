@@ -61,6 +61,7 @@ import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
+import Groupview from "layouts/groupview";
 import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
@@ -409,6 +410,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/checklists",
     component: <Checklists />,
+  },
+  {
+    name: "Group view",
+    key: "groupview",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/groupview",
+    component: <Groupview />,
   },
 
   {
