@@ -72,8 +72,8 @@ export default function AppraisalData() {
     };
   }, []);
 
-  const handleUpdate = (value) => {
-    console.log(value);
+  const handleView = (value) => {
+    navigate(`/View-Appraisals?id=${value}`);
   };
 
   const handleDisable = (value) => {
@@ -172,7 +172,7 @@ export default function AppraisalData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

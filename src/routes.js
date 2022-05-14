@@ -97,6 +97,7 @@ import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
 
 import Appraisal from "layouts/appraisal/appraisal";
+import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
 
 const routes = [
   {
@@ -194,6 +195,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Appraisals",
     component: <Appraisal />,
+  },
+  {
+    name: "View Appraisal",
+    key: "viewAppraisal",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/View-Appraisals",
+    component: <ViewAppraisal />,
   },
   {
     type: "collapse",
