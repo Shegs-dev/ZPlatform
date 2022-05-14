@@ -76,6 +76,10 @@ export default function AppraisalData() {
     navigate(`/View-Appraisals?id=${value}`);
   };
 
+  const handleQuestions = (value) => {
+    navigate(`/Set-Appraisal-Questions?id=${value}`);
+  };
+
   const handleDisable = (value) => {
     MySwal.fire({
       title: "Are you sure?",
@@ -173,6 +177,7 @@ export default function AppraisalData() {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleView(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleQuestions(value)}>Set Questions</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
