@@ -16,7 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/bg-sign-in-basic.gif";
 import Footer from "examples/Footer";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";

@@ -174,7 +174,7 @@ function FreeDay() {
   };
 
   const handleOnTitleKeys = () => {
-    const letters = /^[a-zA-Z0-9 -]+$/;
+    const letters = /^[a-zA-Z0-9 -']+$/;
     if (!newEvent.title.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions

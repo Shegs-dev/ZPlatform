@@ -113,8 +113,8 @@ function bonusdeduction() {
       empID: userIDx,
       setupType: setupTypex,
       amount: amountx,
-      type: typex,
       currency: currencyx,
+      type: typex,
       frequency: frequencyx,
     });
     console.log(raw);
@@ -190,7 +190,7 @@ function bonusdeduction() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              BONUS/DEDUCTION
+              BONUS AND DEDUCTION
             </MDTypography>
           </MDBox>
           <MDBox

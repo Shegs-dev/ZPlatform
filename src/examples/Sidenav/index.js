@@ -186,7 +186,14 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         </MDBox>
         <br />
         <MDBox variant="gradient" bgColor="secondary" borderRadius="lg" coloredShadow="light">
-          <MDTypography variant="h6" color="white" fontFamily="Helvetica" fontSize="80%">
+          <MDTypography
+            color="white"
+            display="block"
+            variant="h6"
+            fontWeight="bold"
+            textTransform="uppercase"
+            fontSize="70%"
+          >
             {userFullName}
             <br />
             {userRoleID}

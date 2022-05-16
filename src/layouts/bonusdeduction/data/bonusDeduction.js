@@ -46,7 +46,6 @@ export default function bonusdeductionData() {
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -128,9 +127,13 @@ export default function bonusdeductionData() {
 
     MySwal.fire({
       title: "Update Bonus/Deduction",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"><br>
-      <input type="text" id="amount" value="${amountx}" class="swal2-input" placeholder="Amount"><br>
-            <input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type">`,
+      html: `<tr><td>
+      <label for="name">Name</label></td>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"disabled></td></tr><br>
+            <tr><td><label for="value">Amount</label></td>
+      <td><input type="text" id="amount" value="${amountx}" class="swal2-input" placeholder="Amount"></td></tr><br>
+        <tr><td><label for="value">Type</label></td>
+     <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"disabled></td></tr>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -215,6 +218,9 @@ export default function bonusdeductionData() {
     });
   };
 
+  // const handleUserBD = (value) => {
+  //   navigate(`/Bonus-Deduction/attached-User?id=${value}`);
+  // };
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);

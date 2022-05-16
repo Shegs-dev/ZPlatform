@@ -221,14 +221,16 @@ export default function Branchdata() {
             return res.json();
           })
           .then((resx) => {
-            if (resx.message === "Expired Access") {
-              navigate("/authentication/sign-in");
-            }
-            if (resx.message === "Token Does Not Exist") {
-              navigate("/authentication/sign-in");
-            }
+            // if (resx.message === "Expired Access") {
+            //   navigate("/authentication/sign-in");
+            // }
+            // if (resx.message === "Token Does Not Exist") {
+            //   navigate("/authentication/sign-in");
+            // }
             if (resx.message === "Unauthorized Access") {
               navigate("/authentication/forbiddenPage");
+            } else {
+              navigate("/authentication/sign-in");
             }
             MySwal.fire({
               title: resx.status,

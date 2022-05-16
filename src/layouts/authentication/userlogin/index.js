@@ -11,7 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/bg-sign-in-basic.gif";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";

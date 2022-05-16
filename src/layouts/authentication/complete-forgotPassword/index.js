@@ -33,7 +33,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/bg-sign-in-basic.gif";
 
 function ComForgotPass() {
   const navigate = useNavigate();
