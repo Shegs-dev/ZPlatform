@@ -1,45 +1,53 @@
+import React, { useState, useEffect } from "react";
+import MDBox from "components/MDBox";
+
+import MDTypography from "components/MDTypography";
+// import MDButton from "components/MDButton";
+import Card from "@mui/material/Card";
 import { Form } from "react-bootstrap";
+
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Card from "@mui/material/Card";
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
-
-import { useState, useEffect, React } from "react";
+import Footer from "examples/Footer";
+// import DataTable from "examples/Tables/DataTable";
+import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import "bootstrap/dist/css/bootstrap.min.css";
+// import Swal from "sweetalert2";
+// import withReactContent from "sweetalert2-react-content";
+
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import PHeaders from "postHeader";
 
-function Checkbox() {
-  const [namex, setName] = useState("");
-  const [groupmembers, setGroupMember] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [usermembers, setUserMember] = useState([]);
-
-  const [opened, setOpened] = useState(false);
-
+function AppraisalQuestion() {
+  // const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
 
+  const [questions, setQuestions] = useState([]);
+  const [appraisalQuestions, setAppraisalQuestions] = useState([]);
+  const [aQuestions, setAQuestions] = useState([]);
+  const [appraisal, setAppraisal] = useState({});
+  const [opened, setOpened] = useState(false);
   const { allPHeaders: myHeaders } = PHeaders();
-
   const { allGHeaders: miHeaders } = GHeaders();
 
   const handleOnClick = (e, apix) => {
-    e.preventDefault();
-    setOpened(true);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
 
     const checks = e.target.checked;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
     if (checks) {
+      // const headers = miHeaders;
       const raw = JSON.stringify({
         orgID: orgIDs,
-        groupID: apix.groupID,
-        empID: apix.empID,
+        questionID: apix.questionID,
+        appraisalID: id,
       });
-      console.log(raw);
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -47,15 +55,13 @@ function Checkbox() {
         redirect: "follow",
       };
 
-      // const headers = miHeaders;
-      fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/addMember`, requestOptions)
+      fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/add`, requestOptions)
         .then(async (res) => {
           const aToken = res.headers.get("token-1");
           localStorage.setItem("rexxdex", aToken);
           return res.json();
         })
         .then((result) => {
-          setOpened(false);
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");
             window.location.reload();
@@ -69,19 +75,19 @@ function Checkbox() {
             window.location.reload();
           }
           console.log(result);
-          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
+      // const headers = miHeaders;
       const requestOptions = {
         method: "DELETE",
         headers: miHeaders,
       };
 
       fetch(
-        `${process.env.REACT_APP_SHASHA_URL}/groups/removeMember/${orgIDs}/${apix.groupID}/${apix.empID}`,
+        `${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/remove/${apix.id}`,
         requestOptions
       )
         .then(async (res) => {
@@ -90,7 +96,6 @@ function Checkbox() {
           return res.json();
         })
         .then((resx) => {
-          setOpened(false);
           if (resx.message === "Expired Access") {
             navigate("/authentication/sign-in");
           }
@@ -101,7 +106,6 @@ function Checkbox() {
             navigate("/authentication/forbiddenPage");
           }
           console.log(resx);
-          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -109,48 +113,52 @@ function Checkbox() {
     }
   };
 
-  // useEffect(() => {
-  //   setOpened(true);
-  //   const queryString = window.location.search;
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const id = urlParams.get("id");
-  //   const headers = miHeaders;
-  //   let isMounted = true;
-  //   fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/getByIds/${id}`, { headers })
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((resultg) => {
-  //       setOpened(false);
-  //       if (resultg.message === "Expired Access") {
-  //         navigate("/authentication/sign-in");
-  //       }
-  //       if (resultg.message === "Token Does Not Exist") {
-  //         navigate("/authentication/sign-in");
-  //       }
-  //       if (resultg.message === "Unauthorized Access") {
-  //         navigate("/authentication/forbiddenPage");
-  //       }
-  //       if (isMounted) {
-  //         setName(resultg[0].name);
-  //       }
-  //     });
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // });
-
   useEffect(() => {
     setOpened(true);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+
     const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/getByIds/${id}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setAppraisal(result[0]);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
+
     const orgIDs = data11.orgID;
 
-    const permissionsList = [];
+    const questionsList = [];
+    const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -167,15 +175,14 @@ function Checkbox() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(resultd);
-          setUsers(resultd);
+          setQuestions(resultd);
         }
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("id");
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/getByIds/${id}`, {
+        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/gets/${orgIDs}/${id}`, {
           headers,
         })
           .then(async (res) => {
@@ -184,7 +191,7 @@ function Checkbox() {
             return res.json();
           })
           .then((resultrs) => {
-            setOpened(false);
+            // setOpened(false);
             if (resultrs.message === "Expired Access") {
               navigate("/authentication/sign-in");
             }
@@ -195,19 +202,19 @@ function Checkbox() {
               navigate("/authentication/forbiddenPage");
             }
             if (isMounted) {
-              console.log(resultrs);
-              setName(resultrs[0].group.name);
-              setGroupMember(resultrs[0].groupMembers);
+              setAppraisalQuestions(resultrs);
             }
 
             // eslint-disable-next-line array-callback-return
-            resultd.map((emp) => {
+            resultd.map((question) => {
               let check = false;
-              if (resultrs[0].groupMembers != null) {
+              let myID = null;
+              if (resultrs != null) {
                 // eslint-disable-next-line array-callback-return
-                resultrs[0].groupMembers.map((member) => {
-                  if (member.empID === emp.personal.id) {
+                resultrs.map((aQues) => {
+                  if (aQues.questionID === question.question.id) {
                     // if (rolPermi.isCheck === 1) {
+                    myID = aQues.id;
                     check = true;
                     // }
                   }
@@ -216,18 +223,17 @@ function Checkbox() {
               }
 
               const pObj = {
-                groupID: id,
-                empID: emp.personal.id,
-                fname: emp.personal.fname,
-                lname: emp.personal.lname,
+                id: myID,
+                questionID: question.question.id,
+                question: question.question.question,
                 isCheck: check,
               };
 
-              permissionsList.push(pObj);
+              questionsList.push(pObj);
             });
-            console.log(users);
-            console.log(groupmembers);
-            setUserMember(permissionsList);
+            setAQuestions(questionsList);
+            console.log(questions);
+            console.log(appraisalQuestions);
           });
       });
     return () => {
@@ -239,45 +245,47 @@ function Checkbox() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="success"
-          mx={30}
-          mt={2}
-          p={2}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="h4" fontWeight="medium" color="white" textAlign="center" mt={1}>
-            {namex}
-          </MDTypography>
-        </MDBox>
-        <MDBox pt={0} px={4}>
-          &nbsp;
-          <Form>
-            {usermembers.map((api) => (
-              <div key={api.empID} className="mb-3">
-                <Form.Check type="checkbox">
-                  <Form.Check.Input
-                    type="checkbox"
-                    defaultChecked={api.isCheck}
-                    onClick={(e) => handleOnClick(e, api)}
-                  />
-                  <Form.Check.Label>
-                    {api.fname} {api.lname}
-                  </Form.Check.Label>
-                </Form.Check>
-              </div>
-            ))}
-          </Form>
+        <MDBox pt={4} pb={3} px={30}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" textAlign="center" mt={1}>
+              {appraisal.name}
+            </MDTypography>
+          </MDBox>
+          <MDBox pt={0} px={4}>
+            &nbsp;
+            <Form>
+              {aQuestions.map((api) => (
+                <div key={api.questionID} className="mb-3">
+                  <Form.Check type="checkbox">
+                    <Form.Check.Input
+                      type="checkbox"
+                      defaultChecked={api.isCheck}
+                      onClick={(e) => handleOnClick(e, api)}
+                    />
+                    <Form.Check.Label>{api.question}</Form.Check.Label>
+                  </Form.Check>
+                </div>
+              ))}
+            </Form>
+          </MDBox>
         </MDBox>
       </Card>
+      <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
       </Backdrop>
     </DashboardLayout>
   );
 }
-export default Checkbox;
+
+export default AppraisalQuestion;

@@ -81,10 +81,6 @@ function GrouPs() {
       });
   };
 
-  // const handleUpdate = (value) => {
-  //   navigate(`/groups/groupview?id=${value}`);
-  // };
-
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
@@ -121,7 +117,7 @@ function GrouPs() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Groups
+              Groups
             </MDTypography>
           </MDBox>
           <MDBox
