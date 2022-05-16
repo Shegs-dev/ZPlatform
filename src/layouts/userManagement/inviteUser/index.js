@@ -426,7 +426,7 @@ function InviteUser() {
     const lnameu = urlParams.get("lname");
     const emailu = urlParams.get("email");
     const orgIDu = urlParams.get("orgID");
-    const roleIDu = urlParams.get("roleID");
+    const roleIDu = urlParams.get("role");
     let isMounted = true;
     if (isMounted) {
       setFname(fnameu);
