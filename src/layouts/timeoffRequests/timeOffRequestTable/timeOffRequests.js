@@ -474,7 +474,11 @@ export default function TimeOffRequestData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => navigate(`/time-off-Requests/update?id=${value}`)}>
+                <Dropdown.Item
+                  onClick={() =>
+                    navigate(`/time-off-Requests/update-time-off-Requests?id=${value}`)
+                  }
+                >
                   Update
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>

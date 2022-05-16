@@ -319,7 +319,7 @@ const routes = [
     name: "update Time Off Requests",
     key: "timeOffRequest",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests/update",
+    route: "/time-off-Requests/update-time-off-Requests",
     component: <TimeoffRequestUpdate />,
   },
   {
