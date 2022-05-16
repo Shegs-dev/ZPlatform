@@ -222,6 +222,7 @@ function UserAudit() {
     { Header: "User", accessor: "userName", align: "left" },
     { Header: "Service", accessor: "service", align: "left" },
     { Header: "Action Call", accessor: "actionCallDisplayName", align: "left" },
+    { Header: "Action Call URL", accessor: "actionCall", align: "left" },
     { Header: "Cost", accessor: "price", align: "left" },
     {
       Header: "Date Executed",
