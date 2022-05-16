@@ -404,6 +404,8 @@ function InviteUser() {
             title: result.status,
             type: "error",
             text: result.message,
+          }).then(() => {
+            window.location.reload();
           });
         }
       })

@@ -92,6 +92,7 @@ import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
+import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
@@ -312,6 +313,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    // type: "collapse",
+    name: "update Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests/update-time-off-Requests",
+    component: <TimeoffRequestUpdate />,
   },
   {
     type: "divider",
