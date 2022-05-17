@@ -21,14 +21,15 @@ function AddUserpayment() {
   const MySwal = withReactContent(Swal);
 
   // const [employeeIDx, setEmployeeID] = useState(0);
-  const [idx, setID] = useState("");
+  const [idx, setID] = useState(500);
   const [orgIDx, setOrgID] = useState("");
   const [empIDx, setEmpID] = useState(0);
   const [amountx, setAmount] = useState(0);
   const [currencyx, setCurrency] = useState("NGN");
   const [createdTimex, setCreatedTime] = useState(0);
   const [deleteFlagx, setDeleteFlag] = useState(0);
-
+  console.log(idx);
+  console.log(empIDx);
   const [checkedAmount, setCheckedAmount] = useState("");
   const [enabled, setEnabled] = useState("");
 
@@ -43,24 +44,25 @@ function AddUserpayment() {
     setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get("id");
-    const idVal = JSON.parse([id]);
+    const uid = urlParams.get("id");
+    // const idVal = JSON.parse([id]);
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/getForEmp/${orgIDs}/${idVal}`, {
+    fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/getForEmp/${orgIDs}/${uid}`, {
       headers,
     })
       .then(async (res) => {
+        console.log(res);
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        return res;
       })
       .then((result) => {
-        setOpened(false);
         console.log(result);
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
@@ -72,7 +74,7 @@ function AddUserpayment() {
         }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
-          if (result.length != 0) {
+          if (result.data === "") {
             setID(result.id);
             setOrgID(result.orgID);
             setEmpID(result.empID);
@@ -82,6 +84,7 @@ function AddUserpayment() {
             setCreatedTime(result.createdTime);
           } else {
             setID(null);
+            setEmpID(uid);
           }
         }
       });
@@ -91,22 +94,23 @@ function AddUserpayment() {
   }, []);
 
   const handleClick = (e) => {
+    e.preventDefault();
     setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get("id");
-    const idVal = JSON.parse([id]);
+    const uid = urlParams.get("id");
+    // const idVal = JSON.parse([id]);
 
-    e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    let allRaw = {};
+    let allRaw = null;
+    console.log(`allRaw ${allRaw}`);
     const raw = JSON.stringify({
       orgID: data11.orgID,
-      empID: idVal,
+      empID: uid,
       amount: amountx,
       currency: currencyx,
     });
-
+    console.log(`raw ${raw}`);
     const updateRaw = JSON.stringify({
       id: idx,
       orgID: orgIDx,
@@ -116,6 +120,8 @@ function AddUserpayment() {
       createdTime: createdTimex,
       deleteFlag: deleteFlagx,
     });
+    console.log(idx);
+    console.log(`updateRaw ${updateRaw}`);
     if (idx !== null) {
       allRaw = updateRaw;
     } else {

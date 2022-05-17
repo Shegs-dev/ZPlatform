@@ -73,7 +73,8 @@ import UserTOT from "layouts/userManagement/userTimeOffType";
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
-import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement/index";
+import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement";
+import AddClonesalary from "layouts/userManagement/cloneUserSalary/index";
 import PaymentHis from "layouts/paymentHistory";
 
 import Birthdays from "layouts/birthdays/data/birthdays";
@@ -140,6 +141,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
+  },
+  {
+    name: "User Clone",
+    key: "userClone",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-Salary-Clone",
+    component: <AddClonesalary />,
   },
   {
     type: "collapse",

@@ -198,13 +198,16 @@ export default function UserData() {
         }
       });
   };
-
   // const handleAddsalary = (value) => {
   //   navigate(`/user-Management/user-Salary`(value));
   // };
 
   const handleAddsalary = (value) => {
     navigate(`/user-Management/user-Salary?id=${value}`);
+  };
+
+  const handleAddclone = (value) => {
+    navigate(`/user-Management/user-Salary-Clone?id=${value}`);
   };
 
   return {
@@ -246,6 +249,9 @@ export default function UserData() {
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddsalary(value)}>
                     Add User Salary
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleAddclone(value)}>
+                    Clone User Salary
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
