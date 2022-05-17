@@ -629,21 +629,23 @@ function ViewUser() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          setNkFname(resultnk[0].fname);
-          setNkLname(resultnk[0].lname);
-          setNkOname(resultnk[0].oname);
-          setNKEmail(resultnk[0].email);
-          setNkPhone(resultnk[0].pno);
-          setNkTitle(resultnk[0].title);
-          const filteredItems = AlCountry.filter(
-            (item) => item.name === resultnk[0].residentialCountry
-          );
-          setAllStates(filteredItems[0].states);
-          setNkResidentialStreet(resultnk[0].residentialStreet);
-          setNkResidentialCity(resultnk[0].residentialCity);
-          setNkResidentialState(resultnk[0].residentialState);
-          setNkResidentialCountry(resultnk[0].residentialCountry);
-          setNkOccupation(resultnk[0].occupation);
+          if (resultnk.length !== 0) {
+            setNkFname(resultnk[0].fname);
+            setNkLname(resultnk[0].lname);
+            setNkOname(resultnk[0].oname);
+            setNKEmail(resultnk[0].email);
+            setNkPhone(resultnk[0].pno);
+            setNkTitle(resultnk[0].title);
+            const filteredItems = AlCountry.filter(
+              (item) => item.name === resultnk[0].residentialCountry
+            );
+            setAllStates(filteredItems[0].states);
+            setNkResidentialStreet(resultnk[0].residentialStreet);
+            setNkResidentialCity(resultnk[0].residentialCity);
+            setNkResidentialState(resultnk[0].residentialState);
+            setNkResidentialCountry(resultnk[0].residentialCountry);
+            setNkOccupation(resultnk[0].occupation);
+          }
         }
       });
     return () => {

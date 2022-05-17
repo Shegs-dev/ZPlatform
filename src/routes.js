@@ -61,12 +61,14 @@ import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
+import Groupview from "layouts/groupview";
 import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
 import FreeDay from "layouts/free-days";
 import Checklists from "layouts/checklists";
+import UserTOT from "layouts/userManagement/userTimeOffType";
 
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
@@ -82,6 +84,23 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+
+// import App from "layouts/mattersArising/viewMatter/client/app";
+// import Createbonus from "layouts/createbonus";
+import Bonusdeduction from "layouts/bonusdeduction";
+import Groups from "layouts/groups";
+import AppraisalQues from "layouts/appraisal/appraisalQuestions";
+import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
+import AppraisalGrade from "layouts/appraisal/appraisalGrading";
+import View from "layouts/timeoffRequests/view";
+import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
+import SalaryTime from "layouts/salaryPayment/salaryTime";
+import SalaryProrate from "layouts/salaryPayment/salaryProrate";
+import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
+
+import Appraisal from "layouts/appraisal/appraisal";
+import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
+import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 
 const routes = [
   {
@@ -101,20 +120,19 @@ const routes = [
     component: <UserManagement />,
   },
   {
+    name: "Add Time-Off Type To User",
+    key: "userTimeOffType",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-TimeOff-Type",
+    component: <UserTOT />,
+  },
+  {
     type: "collapse",
     name: "Birthdays",
     key: "birthdays",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/birthdays",
     component: <Birthdays />,
-  },
-  {
-    type: "collapse",
-    name: "Time-Off Type",
-    key: "timeofftype",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Time-Off-Type",
-    component: <TimeOffType />,
   },
   {
     name: "User Salary",
@@ -139,6 +157,13 @@ const routes = [
     component: <Announcement />,
   },
   {
+    name: "View",
+    key: "view",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/timeoffRequests/view",
+    component: <View />,
+  },
+  {
     type: "collapse",
     name: "Matters Arising",
     key: "mattersarising",
@@ -153,6 +178,142 @@ const routes = [
     route: "/matters-Arising/update",
     component: <EditMattersArising />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "Chats",
+  //   key: "chats",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/matters-Arising/viewChats",
+  //   component: <App />,
+  // },
+  {
+    type: "divider",
+    name: "",
+    key: "div3",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Appraisal",
+    key: "tit3",
+    route: "",
+  },
+  {
+    type: "collapse",
+    name: "Appraisals",
+    key: "appraisalz",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisals",
+    component: <Appraisal />,
+  },
+  {
+    name: "View Appraisal",
+    key: "viewAppraisal",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/View-Appraisals",
+    component: <ViewAppraisal />,
+  },
+  {
+    name: "Set Appraisal Questions",
+    key: "setAppraisalQuestions",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Set-Appraisal-Questions",
+    component: <SetAppraisalQuestion />,
+  },
+  {
+    type: "collapse",
+    name: "Appraisal Questions",
+    key: "appraisalQuestions",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisal-Questions",
+    component: <AppraisalQues />,
+  },
+  {
+    name: "View Appraisal Questions",
+    key: "viewAppraisalQues",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/View-Appraisal-Questions",
+    component: <VuAppraisalQuestion />,
+  },
+  {
+    type: "collapse",
+    name: "Appraisal Grading",
+    key: "appraisalGrading",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisal-Grading",
+    component: <AppraisalGrade />,
+  },
+  {
+    type: "divider",
+    name: "",
+    key: "div4",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Salary Management",
+    key: "tit4",
+    route: "",
+  },
+  {
+    type: "collapse",
+    name: "Salary Prorate",
+    key: "salaryProrate",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/salary-Prorate",
+    component: <SalaryProrate />,
+  },
+  {
+    name: "View User Prorate",
+    key: "viewUserProrate",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Salary-Prorate",
+    component: <VuUserProrate />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Time Settings",
+    key: "salaryTime",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/salary-Time-Settings",
+    component: <SalaryTime />,
+  },
+  {
+    type: "collapse",
+    name: "Bonus/Deduction",
+    key: "bonusdeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Bonus-And-Deduction",
+    component: <Bonusdeduction />,
+  },
+  {
+    type: "divider",
+    name: "",
+    key: "div2",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Leave Management",
+    key: "tit2",
+    route: "",
+  },
+  {
+    type: "collapse",
+    name: "Free Days",
+    key: "free-days",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/free-days",
+    component: <FreeDay />,
+  },
+  {
+    type: "collapse",
+    name: "Time-Off Type",
+    key: "timeofftype",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Time-Off-Type",
+    component: <TimeOffType />,
+  },
   {
     type: "collapse",
     name: "Time Off Requests",
@@ -162,19 +323,32 @@ const routes = [
     component: <TimeOffRequests />,
   },
   {
+    // type: "collapse",
+    name: "update Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests/update-time-off-Requests",
+    component: <TimeoffRequestUpdate />,
+  },
+  {
+    type: "divider",
+    name: "",
+    key: "div1",
+    route: "",
+  },
+  {
+    type: "title",
+    title: "Settings",
+    key: "tit1",
+    route: "",
+  },
+  {
     type: "collapse",
     name: "Announcement Type",
     key: "announcementtype",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Announcement-Type",
     component: <AnnouncementType />,
-  },
-  {
-    name: "Free Days",
-    key: "free-days",
-    icon: <Icon fontSize="small">today</Icon>,
-    route: "/free-days",
-    component: <FreeDay />,
   },
   {
     type: "collapse",
@@ -191,6 +365,14 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/departments",
     component: <Departments />,
+  },
+  {
+    type: "collapse",
+    name: "Groups",
+    key: "groups",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Groups",
+    component: <Groups />,
   },
   {
     type: "collapse",
@@ -247,6 +429,20 @@ const routes = [
     component: <Checklists />,
   },
   {
+    name: "Group view",
+    key: "groupview",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/groupview",
+    component: <Groupview />,
+  },
+
+  {
+    type: "divider",
+    name: "",
+    key: "divSet",
+    route: "",
+  },
+  {
     type: "collapse",
     name: "Change Password",
     key: "ChangePassword",
@@ -256,6 +452,13 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "User History",
+    key: "userHistory",
+    icon: <Icon fontSize="small">history</Icon>,
+    route: "/user-History",
+    component: <UserAudit />,
+  },
+  {
     name: "user login",
     key: "userlogin",
     icon: <Icon fontSize="small">edit</Icon>,
@@ -366,14 +569,6 @@ const routes = [
     icon: <Icon fontSize="small">today</Icon>,
     route: "/payment",
     component: <PaymentHis />,
-  },
-  {
-    type: "collapse",
-    name: "User History",
-    key: "userHistory",
-    icon: <Icon fontSize="small">history</Icon>,
-    route: "/user-History",
-    component: <UserAudit />,
   },
   {
     name: "Forbidden",
