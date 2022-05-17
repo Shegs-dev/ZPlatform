@@ -253,7 +253,7 @@ function EditMattersArising() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Matters Arising
+              Update Matters Arising
             </MDTypography>
           </MDBox>
           <MDBox

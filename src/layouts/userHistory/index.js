@@ -219,11 +219,13 @@ function UserAudit() {
   };
 
   const pColumns = [
-    { Header: "Organization", accessor: "orgID", align: "left" },
+    { Header: "User", accessor: "userName", align: "left" },
     { Header: "Service", accessor: "service", align: "left" },
-    { Header: "Action Call", accessor: "actionCall", align: "left" },
+    { Header: "Action Call", accessor: "actionCallDisplayName", align: "left" },
+    { Header: "Action Call URL", accessor: "actionCall", align: "left" },
+    { Header: "Cost", accessor: "price", align: "left" },
     {
-      Header: "Date Created",
+      Header: "Date Executed",
       accessor: "executionTime",
       Cell: ({ cell: { value } }) => changeDate(value),
       align: "left",
@@ -281,7 +283,7 @@ function UserAudit() {
                           align="left"
                           color="text"
                         >
-                          Start Date
+                          Start Date *
                         </MDTypography>
                         <DatePicker
                           placeholderText="MM/DD/YY"
@@ -304,7 +306,7 @@ function UserAudit() {
                           align="left"
                           color="text"
                         >
-                          End Date
+                          End Date *
                         </MDTypography>
                         <DatePicker
                           placeholderText="MM/DD/YY"

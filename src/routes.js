@@ -61,6 +61,7 @@ import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
+import Groupview from "layouts/groupview";
 import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
@@ -91,6 +92,7 @@ import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
+import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
@@ -98,6 +100,7 @@ import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
 import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
 import Polls from "layouts/polls";
+import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 
 const routes = [
   {
@@ -212,6 +215,13 @@ const routes = [
     component: <ViewAppraisal />,
   },
   {
+    name: "Set Appraisal Questions",
+    key: "setAppraisalQuestions",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Set-Appraisal-Questions",
+    component: <SetAppraisalQuestion />,
+  },
+  {
     type: "collapse",
     name: "Appraisal Questions",
     key: "appraisalQuestions",
@@ -314,6 +324,14 @@ const routes = [
     component: <TimeOffRequests />,
   },
   {
+    // type: "collapse",
+    name: "update Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests/update-time-off-Requests",
+    component: <TimeoffRequestUpdate />,
+  },
+  {
     type: "divider",
     name: "",
     key: "div1",
@@ -410,6 +428,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/checklists",
     component: <Checklists />,
+  },
+  {
+    name: "Group view",
+    key: "groupview",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/groupview",
+    component: <Groupview />,
   },
 
   {
