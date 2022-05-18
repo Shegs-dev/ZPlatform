@@ -217,7 +217,7 @@ export default function PollsData() {
       return "CREATED";
     }
     if (value === 1) {
-      return "Open";
+      return "OPEN";
     }
     if (value === 2) {
       return "CLOSED";

@@ -103,6 +103,8 @@ import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
 import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 
+import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
+
 const routes = [
   {
     type: "collapse",
@@ -126,6 +128,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management/user-TimeOff-Type",
     component: <UserTOT />,
+  },
+  {
+    name: "Update User System Role",
+    key: "userSystemRole",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/update-system-role",
+    component: <UpdateSystemRole />,
   },
   {
     type: "collapse",
