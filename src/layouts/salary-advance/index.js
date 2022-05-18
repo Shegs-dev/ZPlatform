@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
-import bonusdeductionData from "layouts/bonusdeduction/data/bonusDeduction";
+import SalaryAdvanceData from "layouts/salary-advance/data/salaryAdvanceData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
@@ -18,25 +18,16 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
-
 import { useNavigate } from "react-router-dom";
 
-function bonusdeduction() {
+function SalaryAdvance() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = bonusdeductionData();
+  const { columns: pColumns, rows: pRows } = SalaryAdvanceData();
 
-  const [namex, setName] = useState("");
   const [amountx, setAmount] = useState("");
-  const [typex, setTypex] = useState("");
-  const [currencyx, setCurrency] = useState("");
-  const [setupTypex, setSetupTypex] = useState("");
-  const [frequencyx, setFrequencyx] = useState("");
-
-  const [enabled, setEnabled] = useState("");
-  const [checkedName, setCheckedName] = useState("");
+  const [approver, setApprover] = useState(0);
 
   const [user, setUser] = useState([]);
-  const [userIDx, setUserIDx] = useState("");
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -81,41 +72,16 @@ function bonusdeduction() {
   }, []);
 
   // eslint-disable-next-line consistent-return
-  const handleOnNameKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
-      setCheckedName(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
-    }
-    if (namex.match(letters)) {
-      setCheckedName(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "";
-    }
-    if (namex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name is required<br>";
-    }
-    setEnabled(checkedName === true);
-  };
-
-  // eslint-disable-next-line consistent-return
-  const handleClick = (e) => {
+  const handleClick = () => {
     setOpened(true);
-    e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
 
+    const orgIDs = data11.orgID;
     const raw = JSON.stringify({
       orgID: orgIDs,
-      name: namex,
-      empID: userIDx,
-      setupType: setupTypex,
+      empID: data11.personalID,
       amount: amountx,
-      currency: currencyx,
-      type: typex,
-      frequency: frequencyx,
+      approverID: approver,
     });
     const requestOptions = {
       method: "POST",
@@ -124,7 +90,7 @@ function bonusdeduction() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -162,13 +128,22 @@ function bonusdeduction() {
       });
   };
 
-  const handleOnChangeSymbol = (e) => {
-    setTypex(e.target.value);
-    const symValue = e.target.value;
-    if (symValue === "FLAT") {
-      setCurrency("NGN");
-    } else if (symValue === "PERCENTAGE") {
-      setCurrency("%");
+  // eslint-disable-next-line consistent-return
+  const handleOnAmountKeys = () => {
+    const letters = /^[0-9]+$/;
+    if (!amountx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML =
+        "Amount Not Valid. No Decimal Places or Alphabets<br>";
+    }
+    if (amountx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+      handleClick();
+    }
+    if (amountx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Amount is required<br>";
     }
   };
 
@@ -176,7 +151,7 @@ function bonusdeduction() {
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={5} pb={9} px={29}>
+        <MDBox pt={4} pb={3} px={30}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -189,7 +164,7 @@ function bonusdeduction() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              BONUS AND DEDUCTION
+              Add Salary Advance
             </MDTypography>
           </MDBox>
           <MDBox
@@ -209,47 +184,20 @@ function bonusdeduction() {
           </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name *"
-                value={namex || ""}
-                onKeyUp={handleOnNameKeys}
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
-            </MDBox>
-
-            <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-3">
-                    <MDInput
-                      type="text"
-                      value={currencyx || ""}
-                      onChange={(e) => setCurrency(e.target.value)}
-                      disabled
-                      label="Variation"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
                   <div className="col-sm-6">
                     <MDInput
-                      type="number"
+                      type="text"
+                      label="Amount (No Decimal Places) *"
                       value={amountx || ""}
+                      className="form-control"
                       onChange={(e) => setAmount(e.target.value)}
-                      label="Amount"
                       variant="standard"
                       fullWidth
                     />
                   </div>
                 </div>
-              </Container>
-            </MDBox>
-            <MDBox mt={2}>
-              <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDTypography
@@ -259,87 +207,19 @@ function bonusdeduction() {
                       align="left"
                       color="text"
                     >
-                      User
+                      Approver
                     </MDTypography>
                     <Form.Select
-                      value={userIDx}
-                      onChange={(e) => setUserIDx(e.target.value)}
+                      value={approver}
+                      onChange={(e) => setApprover(e.target.value)}
                       aria-label="Default select example"
                     >
-                      <option value="">--Select User--</option>
+                      <option value="">--Select Approver--</option>
                       {user.map((api) => (
                         <option key={api.personal.id} value={api.personal.id}>
                           {api.personal.fname} {api.personal.lname}
                         </option>
                       ))}
-                    </Form.Select>
-                  </div>
-
-                  <div className="col-sm-6">
-                    <MDTypography
-                      variant="button"
-                      fontWeight="regular"
-                      fontSize="80%"
-                      align="left"
-                      color="text"
-                    >
-                      Variation
-                    </MDTypography>
-                    <Form.Select
-                      onChange={handleOnChangeSymbol}
-                      value={typex || ""}
-                      aria-label="Default select example"
-                    >
-                      <option>---Select Variation---</option>
-                      <option value="FLAT">FLAT</option>
-                      <option value="PERCENTAGE">PERCENTAGE</option>
-                    </Form.Select>
-                  </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDTypography
-                      variant="button"
-                      fontWeight="regular"
-                      fontSize="80%"
-                      align="left"
-                      color="text"
-                    >
-                      Type
-                    </MDTypography>
-                    <Form.Select
-                      onChange={(e) => setSetupTypex(e.target.value)}
-                      value={setupTypex || ""}
-                      aria-label="Default select example"
-                    >
-                      <option>---Select Type---</option>
-                      <option value="1">Bonus</option>
-                      <option value="2">Deduction</option>
-                    </Form.Select>
-                  </div>
-
-                  <div className="col-sm-6">
-                    <MDTypography
-                      variant="button"
-                      fontWeight="regular"
-                      fontSize="80%"
-                      align="left"
-                      color="text"
-                    >
-                      Frequency
-                    </MDTypography>
-                    <Form.Select
-                      onChange={(e) => setFrequencyx(e.target.value)}
-                      value={frequencyx || ""}
-                      aria-label="Default select example"
-                    >
-                      <option>---Select Frequency---</option>
-                      <option value="1">One-Time</option>
-                      <option value="2">Always</option>
                     </Form.Select>
                   </div>
                 </div>
@@ -348,8 +228,7 @@ function bonusdeduction() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
+                onClick={handleOnAmountKeys}
                 color="info"
                 width="50%"
                 align="left"
@@ -378,4 +257,4 @@ function bonusdeduction() {
   );
 }
 
-export default bonusdeduction;
+export default SalaryAdvance;

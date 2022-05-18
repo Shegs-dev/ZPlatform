@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
+import PollsData from "layouts/polls/data/pollsTable";
+import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
-import announcement from "layouts/announcement/data/announcement";
-import MDButton from "components/MDButton";
+import "bootstrap/dist/css/bootstrap.min.css";
+import MDTypography from "components/MDTypography";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -17,32 +20,32 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-function Announcement() {
+function Polls() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = announcement();
+  const { columns: pColumns, rows: pRows } = PollsData();
 
-  const [titlex, setTitle] = useState("");
-  const [messagex, setMessage] = useState("");
-  const [annoucementTypeIDx, setAnnoucementTypeID] = useState("");
-  const [allAnnouncementType, setAllAnnouncementType] = useState([]);
+  const [questionx, setQuestion] = useState("");
+  const [groupidx, setGroupIdx] = useState("");
 
-  const [checkedTitle, setCheckedTitle] = useState("");
   const [enabled, setEnabled] = useState("");
+  const [checkedQuestion, setCheckedQuestion] = useState("");
 
+  const [user, setUser] = useState([]);
+
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  // Method to fetch all announcementtype
   useEffect(() => {
     const headers = miHeaders;
+
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    // console.log()
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -62,8 +65,7 @@ function Announcement() {
           window.location.reload();
         }
         if (isMounted) {
-          setAllAnnouncementType(result);
-          console.log(result);
+          setUser(result);
         }
       });
     return () => {
@@ -71,19 +73,40 @@ function Announcement() {
     };
   }, []);
 
+  // eslint-disable-next-line consistent-return
+  const handleOnQuestionKeys = () => {
+    // const letters = /^[a-zA-Z0-9 ]+$/;
+    // if (!questionx.match(letters)) {
+    //   setCheckedQuestion(false);
+    //   // eslint-disable-next-line no-unused-expressions
+    //   document.getElementById("question").innerHTML =
+    //     "Question - input only capital and small letters<br>";
+    // }
+    // if (questionx.match(letters)) {
+    //   setCheckedQuestion(true);
+    //   // eslint-disable-next-line no-unused-expressions
+    //   document.getElementById("question").innerHTML = "";
+    // }
+    if (questionx.length === 0) {
+      setCheckedQuestion(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("question").innerHTML = "Question is required<br>";
+    } else {
+      setCheckedQuestion(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("question").innerHTML = "";
+    }
+    setEnabled(checkedQuestion === true);
+  };
+
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
+    setOpened(true);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
-    const personalIDs = data11.personalID;
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      title: titlex,
-      message: messagex,
-      announcementTypeID: annoucementTypeIDx,
-      createdBy: personalIDs,
-    });
+    const raw = JSON.stringify({ orgID: orgIDs, groupID: groupidx, question: questionx });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -91,13 +114,14 @@ function Announcement() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/add`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -119,6 +143,7 @@ function Announcement() {
         });
       })
       .catch((error) => {
+        setOpened(false);
         MySwal.fire({
           title: error.status,
           type: "error",
@@ -127,29 +152,11 @@ function Announcement() {
       });
   };
 
-  const handleOnChangeAnnounceType = (e) => {
-    setAnnoucementTypeID(e.target.value);
-  };
-
-  const handleOnTitleKeys = () => {
-    const letters = /^[a-zA-Z ('") ]+$/;
-    if (titlex.match(letters)) {
-      setCheckedTitle(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML = "";
-    }
-    if (titlex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML = "Title is required<br>";
-    }
-    setEnabled(checkedTitle === true);
-  };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
+        <MDBox pt={4} pb={3} px={30}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -162,7 +169,7 @@ function Announcement() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Announcement
+              Add Polls
             </MDTypography>
           </MDBox>
           <MDBox
@@ -176,57 +183,56 @@ function Announcement() {
             mb={1}
             textAlign="center"
           >
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="title">
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="question">
               {" "}
             </MDTypography>
           </MDBox>
-          <MDBox component="form" role="form" name="form1">
+          <MDBox component="form" role="form">
             <MDBox mb={2}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      label="Title*"
-                      value={titlex || ""}
-                      onKeyUp={handleOnTitleKeys}
-                      onChange={(e) => setTitle(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={messagex || ""}
-                      onChange={(e) => setMessage(e.target.value)}
-                      label="Message"
+                      label="Question *"
+                      value={questionx || ""}
+                      onKeyUp={handleOnQuestionKeys}
+                      className="form-control"
+                      onChange={(e) => setQuestion(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
                 </div>
               </Container>
+            </MDBox>
+            <MDBox>
               <Container>
                 <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                      Annoucement Type
-                    </MDTypography>
-                    <MDBox textAlign="right">
-                      <Form.Select
-                        value={annoucementTypeIDx || ""}
-                        aria-label="Default select example"
-                        onChange={handleOnChangeAnnounceType}
+                  <div className="col-sm-6">
+                    <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="right"
+                        color="text"
                       >
-                        <option>--Select Announcement Type--</option>
-                        {allAnnouncementType.map((apic) => (
-                          <option key={apic.id} value={apic.id}>
-                            {apic.name}
+                        GroupID
+                      </MDTypography>
+                      <Form.Select
+                        value={groupidx || ""}
+                        onChange={(e) => setGroupIdx(e.target.value)}
+                        aria-label="Default select example"
+                      >
+                        <option value="">GroupID</option>
+                        {user.map((api) => (
+                          <option key={api.group.id} value={api.group.id}>
+                            {api.group.name}
                           </option>
                         ))}
                       </Form.Select>
+                      <br />
                     </MDBox>
                   </div>
                 </div>
@@ -239,6 +245,7 @@ function Announcement() {
                 disabled={!enabled}
                 color="info"
                 width="50%"
+                align="left"
               >
                 Save
               </MDButton>
@@ -257,8 +264,11 @@ function Announcement() {
         />
       </MDBox>
       <Footer />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
     </DashboardLayout>
   );
 }
 
-export default Announcement;
+export default Polls;

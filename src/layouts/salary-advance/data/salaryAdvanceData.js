@@ -1,7 +1,4 @@
 /* eslint-disable react/prop-types */
-
-// @mui material components
-
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
@@ -13,7 +10,7 @@ import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-export default function data() {
+export default function SalaryAdvanceData() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
@@ -21,9 +18,8 @@ export default function data() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const navigate = useNavigate();
-
-  // Method to handle diable
-  const handleUpdate = (idx, namex, colorCodex, descripx, createdTimex, deleteFlagx) => {
+  // Method to handle update
+  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
@@ -31,7 +27,6 @@ export default function data() {
       id: idx,
       orgID: orgIDs,
       name: namex,
-      colorCode: colorCodex,
       descrip: descripx,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
@@ -43,7 +38,7 @@ export default function data() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_KUBU_URL}/department/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -82,36 +77,28 @@ export default function data() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let colorCodex = "";
     let descripx = "";
-    let createdTimex = 0;
-    let deleteFlagx = 0;
+    let createdTime = 0;
+    let deleteFlag = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      colorCodex = "";
       descripx = "";
-      createdTimex = 0;
-      deleteFlagx = 0;
+      createdTime = 0;
+      deleteFlag = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      colorCodex = filteredItems[0].colorCode;
       descripx = filteredItems[0].descrip;
-      createdTimex = filteredItems[0].createdTime;
-      deleteFlagx = filteredItems[0].deleteFlag;
+      createdTime = filteredItems[0].createdTime;
+      deleteFlag = filteredItems[0].deleteFlag;
     }
 
     MySwal.fire({
-      title: "Update Announcement Type",
-      html: `<table><tr><td>
-      <label for="name">Name:   </label></td>
-      <td><input type="text" id="name" value="${namex}" class="form-control" placeholder="Name"></td></tr><br>
-      <tr><td><label for="descrip">Description:   </label></td>
-      <td><input type="text" class="form-control" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
-      <tr><td><label for="colorCode">ColorCode:</label></td>
-      <td><input type="color"  class="form-control" id="colorCode" value="${colorCodex}" placeholder="ColorCode"></td></tr></table>`,
+      title: "Update Department",
+      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
+           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -119,14 +106,11 @@ export default function data() {
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const colorCodee = Swal.getPopup().querySelector("#colorCode").value;
         const id = value;
-        const letters = /^[a-zA-Z ]+$/;
-        if (name.length > 0 && !name.match(letters)) {
-          Swal.showValidationMessage(`Name - Please write a name and use only letters`);
-        } else {
-          handleUpdate(id, name, colorCodee, descrip, deleteFlagx, createdTimex);
+        if (!name) {
+          Swal.showValidationMessage(`Please enter name`);
         }
+        handleUpdate(id, name, descrip, createdTime, deleteFlag);
       },
     });
   };
@@ -148,10 +132,7 @@ export default function data() {
           headers: miHeaders,
         };
 
-        fetch(
-          `${process.env.REACT_APP_SHASHA_URL}/announcementtype/delete/${value}`,
-          requestOptions
-        )
+        fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/delete/${value}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
@@ -193,37 +174,90 @@ export default function data() {
     return retDate;
   };
 
-  // Method to fetch all announcementtype
+  // Method to change type
+  const changeType = (status) => {
+    const filteredItems = items.filter((item) => item.id === status);
+    if (filteredItems[0].comment !== null && filteredItems[0].comment !== "") {
+      return "Decision Made";
+    }
+    return "Created";
+  };
+
+  const changeCol = (status) => {
+    const filteredItems = items.filter((item) => item.id === status);
+    if (filteredItems[0].comment !== null && filteredItems[0].comment !== "") {
+      return "#FF0000";
+    }
+    return "#0000FF";
+  };
+
+  // Method to fetch all departments
+  // env.environments
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
 
+    const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
+
+    if (
+      data11.roleID !== "0" &&
+      data11.roleID !== "" &&
+      data11.roleID !== "null" &&
+      data11.roleID !== null
+    ) {
+      const personalIds = data11.personalID;
+      fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/getForEmp/${orgIDs}/${personalIds}`, {
+        headers,
       })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        if (isMounted) {
-          setItems(result);
-          console.log(result);
-        }
-      });
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          if (isMounted) {
+            setItems(result);
+          }
+        });
+    } else {
+      fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/gets/${orgIDs}`, { headers })
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          if (isMounted) {
+            setItems(result);
+          }
+        });
+    }
+
     return () => {
       isMounted = false;
     };
@@ -232,12 +266,21 @@ export default function data() {
   // Return table
   return {
     columns: [
-      { Header: "name", accessor: "name", align: "left" },
-      { Header: "description", accessor: "descrip", align: "left" },
+      { Header: "employee name", accessor: "empName", align: "left" },
+      { Header: "amount (ngn)", accessor: "amount", align: "left" },
+      { Header: "comment", accessor: "comment", align: "left" },
+      { Header: "approver", accessor: "approverName", align: "left" },
       {
-        Header: "Color",
-        accessor: "colorCode",
-        Cell: ({ cell: { value } }) => <input type="color" disabled value={value} />,
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ cell: { row } }) => (
+          <span
+            className="badge badge-pill"
+            style={{ backgroundColor: changeCol(row.original.id) }}
+          >
+            {changeType(row.original.id)}
+          </span>
+        ),
         align: "left",
       },
       {
@@ -249,6 +292,7 @@ export default function data() {
       {
         Header: "actions",
         accessor: "id",
+        // eslint-disable-next-line react/prop-types
         Cell: ({ cell: { value } }) => (
           <div
             style={{

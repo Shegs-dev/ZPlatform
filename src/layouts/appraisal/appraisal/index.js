@@ -38,7 +38,7 @@ function AppraiseeIDX() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
-    console.log(setOpened);
+    // console.log(setOpened);
     const headers = miHeaders;
 
     const data11 = JSON.parse(localStorage.getItem("user1"));

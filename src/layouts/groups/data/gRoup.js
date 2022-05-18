@@ -246,6 +246,9 @@ export default function data() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => navigate(`/View-Group?id=${value}`)}>
+                  View
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

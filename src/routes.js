@@ -61,6 +61,7 @@ import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
 import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
+import Groupview from "layouts/groupview";
 import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
@@ -72,7 +73,8 @@ import UserTOT from "layouts/userManagement/userTimeOffType";
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
-import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement/index";
+import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement";
+import AddClonesalary from "layouts/userManagement/cloneUserSalary/index";
 import PaymentHis from "layouts/paymentHistory";
 
 import Birthdays from "layouts/birthdays/data/birthdays";
@@ -92,11 +94,19 @@ import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
 import View from "layouts/timeoffRequests/view";
+import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
+import SalaryAdvance from "layouts/salary-advance";
 
 import Appraisal from "layouts/appraisal/appraisal";
+import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
+import Polls from "layouts/polls";
+import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
+
+import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
+import UpdatePolls from "layouts/polls/updatepolls";
 
 const routes = [
   {
@@ -123,6 +133,13 @@ const routes = [
     component: <UserTOT />,
   },
   {
+    name: "Update User System Role",
+    key: "userSystemRole",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/update-system-role",
+    component: <UpdateSystemRole />,
+  },
+  {
     type: "collapse",
     name: "Birthdays",
     key: "birthdays",
@@ -136,6 +153,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
+  },
+  {
+    name: "User Clone",
+    key: "userClone",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-Salary-Clone",
+    component: <AddClonesalary />,
   },
   {
     type: "collapse",
@@ -159,6 +183,21 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    type: "collapse",
+    name: "Polls",
+    key: "polls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls",
+    component: <Polls />,
+  },
+  {
+    name: "Update polls",
+    key: "updatepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Update-Poll",
+    component: <UpdatePolls />,
   },
   {
     name: "Edit Matters Arising",
@@ -194,6 +233,20 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Appraisals",
     component: <Appraisal />,
+  },
+  {
+    name: "View Appraisal",
+    key: "viewAppraisal",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/View-Appraisals",
+    component: <ViewAppraisal />,
+  },
+  {
+    name: "Set Appraisal Questions",
+    key: "setAppraisalQuestions",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Set-Appraisal-Questions",
+    component: <SetAppraisalQuestion />,
   },
   {
     type: "collapse",
@@ -258,7 +311,7 @@ const routes = [
     name: "Bonus/Deduction",
     key: "bonusdeduction",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus/Deduction",
+    route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
   },
   {
@@ -268,6 +321,14 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Salary-Payment",
     component: <SalaryPayment />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Advance",
+    key: "salaryAdvance",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Advance",
+    component: <SalaryAdvance />,
   },
   {
     type: "divider",
@@ -304,6 +365,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    // type: "collapse",
+    name: "update Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/time-off-Requests/update-time-off-Requests",
+    component: <TimeoffRequestUpdate />,
   },
   {
     type: "divider",
@@ -402,6 +471,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/checklists",
     component: <Checklists />,
+  },
+  {
+    name: "View Group",
+    key: "viewgroup",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/View-Group",
+    component: <Groupview />,
   },
 
   {

@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
-// import Swal from "sweetalert2";
-// import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 // import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+// import { id } from "date-fns/locale";
 
 export default function AppraisalData() {
   // const { allPHeaders: myHeaders } = PHeaders();
@@ -22,7 +23,7 @@ export default function AppraisalData() {
   // const [id, setId] = useState("");
   const navigate = useNavigate();
 
-  // const MySwal = withReactContent(Swal);
+  const MySwal = withReactContent(Swal);
 
   // Method to change date from timestamp
   const changeBranchDate = (timestamp) => {
@@ -71,8 +72,63 @@ export default function AppraisalData() {
     };
   }, []);
 
-  const handleUpdate = (value) => {
-    console.log(value);
+  const handleView = (value) => {
+    navigate(`/View-Appraisals?id=${value}`);
+  };
+
+  const handleQuestions = (value) => {
+    navigate(`/Set-Appraisal-Questions?id=${value}`);
+  };
+
+  const handleDisable = (value) => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/delete/${value}`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            MySwal.fire({
+              title: resx.status,
+              type: "success",
+              text: resx.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
   };
 
   const changeStatus = (value) => {
@@ -120,8 +176,9 @@ export default function AppraisalData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
-                <Dropdown.Item>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleQuestions(value)}>Set Questions</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
