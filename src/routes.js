@@ -84,6 +84,7 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+import SalaryPayment from "layouts/salaryPayment";
 
 // import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
@@ -312,6 +313,14 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Payment",
+    key: "salaryPayment",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Payment",
+    component: <SalaryPayment />,
   },
   {
     type: "collapse",
