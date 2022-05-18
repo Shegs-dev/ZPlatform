@@ -104,6 +104,7 @@ import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
+import UpdatePolls from "layouts/polls/updatepolls";
 
 const routes = [
   {
@@ -188,6 +189,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/polls",
     component: <Polls />,
+  },
+  {
+    name: "Update polls",
+    key: "editupdatepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/update",
+    component: <UpdatePolls />,
   },
   {
     name: "Edit Matters Arising",
