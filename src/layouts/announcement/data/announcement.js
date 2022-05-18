@@ -131,7 +131,7 @@ export default function data() {
         const title = Swal.getPopup().querySelector("#title").value;
         const message = Swal.getPopup().querySelector("#message").value;
         const id = value;
-        const letters = /^[a-zA-Z ]+$/;
+        const letters = /^[a-zA-Z('" ) ]+$/;
         if (titlex.length > 0 && !titlex.match(letters)) {
           Swal.showValidationMessage(`Title - Please write a title and use only letters`);
         } else {

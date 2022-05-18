@@ -447,10 +447,10 @@ const routes = [
     component: <Checklists />,
   },
   {
-    name: "Group view",
-    key: "groupview",
+    name: "View Group",
+    key: "viewgroup",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/groupview",
+    route: "/View-Group",
     component: <Groupview />,
   },
 

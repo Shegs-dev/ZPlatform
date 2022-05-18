@@ -39,7 +39,6 @@ function Checkbox() {
         groupID: apix.groupID,
         empID: apix.empID,
       });
-      console.log(raw);
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -68,7 +67,6 @@ function Checkbox() {
             navigate("/authentication/forbiddenPage");
             window.location.reload();
           }
-          console.log(result);
           window.location.reload();
         })
         .catch((error) => {
@@ -100,7 +98,6 @@ function Checkbox() {
           if (resx.message === "Unauthorized Access") {
             navigate("/authentication/forbiddenPage");
           }
-          console.log(resx);
           window.location.reload();
         })
         .catch((error) => {
@@ -108,39 +105,6 @@ function Checkbox() {
         });
     }
   };
-
-  // useEffect(() => {
-  //   setOpened(true);
-  //   const queryString = window.location.search;
-  //   const urlParams = new URLSearchParams(queryString);
-  //   const id = urlParams.get("id");
-  //   const headers = miHeaders;
-  //   let isMounted = true;
-  //   fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/getByIds/${id}`, { headers })
-  //     .then(async (res) => {
-  //       const aToken = res.headers.get("token-1");
-  //       localStorage.setItem("rexxdex", aToken);
-  //       return res.json();
-  //     })
-  //     .then((resultg) => {
-  //       setOpened(false);
-  //       if (resultg.message === "Expired Access") {
-  //         navigate("/authentication/sign-in");
-  //       }
-  //       if (resultg.message === "Token Does Not Exist") {
-  //         navigate("/authentication/sign-in");
-  //       }
-  //       if (resultg.message === "Unauthorized Access") {
-  //         navigate("/authentication/forbiddenPage");
-  //       }
-  //       if (isMounted) {
-  //         setName(resultg[0].name);
-  //       }
-  //     });
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // });
 
   useEffect(() => {
     setOpened(true);
@@ -167,7 +131,6 @@ function Checkbox() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(resultd);
           setUsers(resultd);
         }
 
@@ -195,7 +158,6 @@ function Checkbox() {
               navigate("/authentication/forbiddenPage");
             }
             if (isMounted) {
-              console.log(resultrs);
               setName(resultrs[0].group.name);
               setGroupMember(resultrs[0].groupMembers);
             }
