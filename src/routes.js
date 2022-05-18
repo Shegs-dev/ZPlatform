@@ -193,9 +193,9 @@ const routes = [
   },
   {
     name: "Update polls",
-    key: "editupdatepolls",
+    key: "updatepolls",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/polls/update",
+    route: "/Update-Poll",
     component: <UpdatePolls />,
   },
   {

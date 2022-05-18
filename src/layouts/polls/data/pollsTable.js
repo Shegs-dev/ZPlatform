@@ -76,7 +76,7 @@ export default function PollsData() {
   };
 
   const handleUpdate = (value) => {
-    navigate(`/polls/update?id=${value}`);
+    navigate(`/Update-Poll?id=${value}`);
   };
 
   // Method to fetch all departments
@@ -107,7 +107,6 @@ export default function PollsData() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setItems(result);
         }
       });

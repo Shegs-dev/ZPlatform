@@ -132,7 +132,7 @@ export default function SalaryAdvanceData() {
           headers: miHeaders,
         };
 
-        fetch(`${process.env.REACT_APP_KUBU_URL}/salaryAdvance/delete/${value}`, requestOptions)
+        fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/delete/${value}`, requestOptions)
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);

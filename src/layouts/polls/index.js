@@ -29,7 +29,6 @@ function Polls() {
 
   const [enabled, setEnabled] = useState("");
   const [checkedQuestion, setCheckedQuestion] = useState("");
-  console.log(setCheckedQuestion);
 
   const [user, setUser] = useState([]);
 
@@ -66,7 +65,6 @@ function Polls() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setUser(result);
         }
       });
