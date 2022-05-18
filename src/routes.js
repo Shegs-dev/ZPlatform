@@ -97,6 +97,7 @@ import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
+import SalaryAdvance from "layouts/salary-advance";
 
 import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
@@ -303,6 +304,14 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Advance",
+    key: "salaryAdvance",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Advance",
+    component: <SalaryAdvance />,
   },
   {
     type: "divider",
