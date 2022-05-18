@@ -132,13 +132,7 @@ function Announcement() {
   };
 
   const handleOnTitleKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!titlex.match(letters)) {
-      setCheckedTitle(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("title").innerHTML =
-        "Title - input only capital and small letters<br>";
-    }
+    const letters = /^[a-zA-Z ('") ]+$/;
     if (titlex.match(letters)) {
       setCheckedTitle(true);
       // eslint-disable-next-line no-unused-expressions

@@ -200,8 +200,6 @@ export default function data() {
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    console.log(headers);
-    // console.log()
     fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
