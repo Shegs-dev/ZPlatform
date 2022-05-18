@@ -81,6 +81,7 @@ import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
+import ChatApp from "layouts/mattersArising/viewMatter/App";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 
@@ -162,6 +163,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    name: "Chats",
+    key: "viewMatter",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Matter",
+    component: <ChatApp />,
   },
   {
     name: "Edit Matters Arising",

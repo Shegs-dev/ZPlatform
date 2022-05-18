@@ -38,9 +38,9 @@ function InviteUser() {
 
   const navigate = useNavigate();
 
-  const [idx, setId] = useState("");
+  const [idx, setId] = useState(0);
   const [orgIDx, setOrgID] = useState("");
-  const [roleIDx, setRoleID] = useState("");
+  const [roleIDx, setRoleID] = useState(0);
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
@@ -53,14 +53,14 @@ function InviteUser() {
   const [residentialCountryx, setResidentialCountry] = useState("");
   const [maritalStatusx, setMaritalStatus] = useState("");
   const [startDate, setStartDate] = useState(new Date());
-  const [deleteFlagx, setDeleteFlag] = useState("");
+  const [deleteFlagx, setDeleteFlag] = useState(0);
   const [sysStatusx, setSysStatus] = useState("");
   const [createdTimex, setCreatedTime] = useState("");
   const [allStates, setAllStates] = useState([]);
   const [passwordx, setPassword] = useState("");
   const [retypePasswordx, setRetypePassword] = useState("");
   //   const [enabled, setEnabled] = useState("");
-  const [passEnabled, setPassEnabled] = useState("");
+  const [passEnabled, setPassEnabled] = useState(true);
 
   const [opened, setOpened] = useState(false);
 
@@ -77,6 +77,35 @@ function InviteUser() {
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
+  useEffect(() => {
+    /* if (idx === 0) {
+      setPassEnabled(true);
+    } */
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const fnameu = urlParams.get("fname");
+    const lnameu = urlParams.get("lname");
+    const emailu = urlParams.get("email");
+    const orgIDu = urlParams.get("orgID");
+    const roleIDu = urlParams.get("role");
+    console.log(fnameu);
+    console.log(lnameu);
+    console.log(emailu);
+    console.log(orgIDu);
+    console.log(roleIDu);
+    let isMounted = true;
+    if (isMounted) {
+      setFname(fnameu);
+      setLname(lnameu);
+      setOemail(emailu);
+      setOrgID(orgIDu);
+      setRoleID(roleIDu);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const getPersonalInformation = (e) => {
     const headers = miHeaders;
     setEmail(e.target.value);
@@ -92,6 +121,7 @@ function InviteUser() {
           return res.json();
         })
         .then((result) => {
+          console.log(result);
           if (result.id !== null) {
             setPassEnabled(false);
             setOname(result.oname);
@@ -321,10 +351,7 @@ function InviteUser() {
     if (endpoint === "update") {
       setPassword("");
     }
-    let endpointPC = "add";
-    if (endpoint === "update") {
-      endpointPC = "add";
-    }
+    const endpointPC = "add";
     let endpointL = "add";
     if (endpoint === "update") {
       endpointL = `updateOrganization/${emailx}/${orgIDx}`;
@@ -341,6 +368,7 @@ function InviteUser() {
         return res.json();
       })
       .then((result) => {
+        console.log(result);
         localStorage.setItem("personalInfo", JSON.stringify(result.data));
         const raw1 = JSON.stringify({
           orgID: orgIDx,
@@ -362,6 +390,7 @@ function InviteUser() {
             return res.json();
           })
           .then((resultx) => {
+            console.log(resultx);
             localStorage.setItem("company", JSON.stringify(resultx.data));
             const raw2 = JSON.stringify({
               orgID: orgIDx,
@@ -405,30 +434,6 @@ function InviteUser() {
 
   /* return <Select options={options} value={value} onChange={changeHandler} />
 } */
-
-  useEffect(() => {
-    if (idx === "") {
-      setPassEnabled(true);
-    }
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const fnameu = urlParams.get("fname");
-    const lnameu = urlParams.get("lname");
-    const emailu = urlParams.get("email");
-    const orgIDu = urlParams.get("orgID");
-    const roleIDu = urlParams.get("roleID");
-    let isMounted = true;
-    if (isMounted) {
-      setFname(fnameu);
-      setLname(lnameu);
-      setOemail(emailu);
-      setOrgID(orgIDu);
-      setRoleID(roleIDu);
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   return (
     <CoverLayout image={bgImage}>

@@ -245,7 +245,7 @@ function TimeoffRequestUpdate() {
                   textAlign="center"
                 >
                   <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                    Approve/Disapprove Time Off-Requests
+                    Update Time Off-Requests
                   </MDTypography>
                 </MDBox>
                 <MDBox
