@@ -124,7 +124,7 @@ export default function SalaryAdvanceData() {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, Delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         const requestOptions = {
@@ -167,6 +167,83 @@ export default function SalaryAdvanceData() {
     });
   };
 
+  // Method to handle approval
+  const handleApprove = (value) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const filteredItems = items.filter((item) => item.id === value);
+    if (data11.personalID !== filteredItems[0].approverID) {
+      MySwal.fire({
+        title: "APPROVER_ERROR",
+        type: "error",
+        text: "You Are Not The Approver For This Request",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      MySwal.fire({
+        title: "Are you sure?",
+        text: "Do you want to approve this?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Approve it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const raw = JSON.stringify({
+            id: filteredItems[0].id,
+            orgID: filteredItems[0].orgID,
+            empID: filteredItems[0].empID,
+            amount: filteredItems[0].amount,
+            status: 1,
+            comment: filteredItems[0].comment,
+            approverID: filteredItems[0].approverID,
+            deleteFlag: filteredItems[0].deleteFlag,
+            createdTime: filteredItems[0].createdTime,
+          });
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow",
+          };
+
+          fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/update`, requestOptions)
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resx) => {
+              if (resx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
+              MySwal.fire({
+                title: resx.status,
+                type: "success",
+                text: resx.message,
+              }).then(() => {
+                window.location.reload();
+              });
+            })
+            .catch((error) => {
+              MySwal.fire({
+                title: error.status,
+                type: "error",
+                text: error.message,
+              });
+            });
+        }
+      });
+    }
+  };
+
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -177,15 +254,21 @@ export default function SalaryAdvanceData() {
   // Method to change type
   const changeType = (status) => {
     const filteredItems = items.filter((item) => item.id === status);
-    if (filteredItems[0].comment !== null && filteredItems[0].comment !== "") {
-      return "Decision Made";
+    if (filteredItems[0].status === 1) {
+      return "Approved";
+    }
+    if (filteredItems[0].status === 2) {
+      return "Disapproved";
     }
     return "Created";
   };
 
   const changeCol = (status) => {
     const filteredItems = items.filter((item) => item.id === status);
-    if (filteredItems[0].comment !== null && filteredItems[0].comment !== "") {
+    if (filteredItems[0].status === 1) {
+      return "#00FF00";
+    }
+    if (filteredItems[0].status === 2) {
       return "#FF0000";
     }
     return "#0000FF";
@@ -308,6 +391,8 @@ export default function SalaryAdvanceData() {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
+                <Dropdown.Item>Disapprove</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleApprove(value)}>Approve</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
