@@ -67,7 +67,7 @@ function Checkbox() {
             navigate("/authentication/forbiddenPage");
             window.location.reload();
           }
-          // window.location.reload();
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -98,7 +98,7 @@ function Checkbox() {
           if (resx.message === "Unauthorized Access") {
             navigate("/authentication/forbiddenPage");
           }
-          // window.location.reload();
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
