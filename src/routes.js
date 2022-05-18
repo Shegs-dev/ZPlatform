@@ -100,6 +100,7 @@ import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
 
 import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
+import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 
 const routes = [
@@ -170,6 +171,14 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    type: "collapse",
+    name: "Polls",
+    key: "polls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls",
+    component: <Polls />,
   },
   {
     name: "Edit Matters Arising",
