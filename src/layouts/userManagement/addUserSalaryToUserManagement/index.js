@@ -28,8 +28,7 @@ function AddUserpayment() {
   const [currencyx, setCurrency] = useState("NGN");
   const [createdTimex, setCreatedTime] = useState(0);
   const [deleteFlagx, setDeleteFlag] = useState(0);
-  console.log(idx);
-  console.log(empIDx);
+
   const [checkedAmount, setCheckedAmount] = useState("");
   const [enabled, setEnabled] = useState("");
 
@@ -45,8 +44,6 @@ function AddUserpayment() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const uid = urlParams.get("id");
-    // const idVal = JSON.parse([id]);
-
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
@@ -55,35 +52,33 @@ function AddUserpayment() {
       headers,
     })
       .then(async (res) => {
-        console.log(res);
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res;
+        return res.json();
       })
-      .then((result) => {
-        console.log(result);
+      .then((resultba) => {
         setOpened(false);
-        if (result.message === "Expired Access") {
+        if (resultba.message === "Expired Access") {
           navigate("/authentication/sign-in");
         }
-        if (result.message === "Token Does Not Exist") {
+        if (resultba.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
         }
-        if (result.message === "Unauthorized Access") {
+        if (resultba.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
           // eslint-disable-next-line eqeqeq
-          if (result.data === "") {
-            setID(result.id);
-            setOrgID(result.orgID);
-            setEmpID(result.empID);
-            setAmount(result.amount);
-            setCurrency(result.currency);
-            setDeleteFlag(result.deleteFlag);
-            setCreatedTime(result.createdTime);
+          if (resultba.length !== 0) {
+            setID(resultba.id);
+            setOrgID(resultba.orgID);
+            setEmpID(resultba.empID);
+            setAmount(resultba.amount);
+            setCurrency(resultba.currency);
+            setDeleteFlag(resultba.deleteFlag);
+            setCreatedTime(resultba.createdTime);
           } else {
-            setID(null);
+            setID(0);
             setEmpID(uid);
           }
         }
@@ -92,6 +87,57 @@ function AddUserpayment() {
       isMounted = false;
     };
   }, []);
+
+  //   useEffect(() => {
+  //     const queryString = window.location.search;
+  //     const urlParams = new URLSearchParams(queryString);
+  //     const uid = urlParams.get("id");
+  //     // const idVal = JSON.parse([id]);
+
+  //     const data11 = JSON.parse(localStorage.getItem("user1"));
+  //     const orgIDs = data11.orgID;
+  //     const headers = miHeaders;
+  //     let isMounted = true;
+  //     fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/getForEmp/${orgIDs}/${uid}`, {
+  //       headers,
+  //     })
+  //       .then(async (res) => {
+  //         console.log(res);
+  //         const aToken = res.headers.get("token-1");
+  //         localStorage.setItem("rexxdex", aToken);
+  //         return res;
+  //       })
+  //       .then((result) => {
+  //         console.log(result);
+  //         if (result.message === "Expired Access") {
+  //           navigate("/authentication/sign-in");
+  //         }
+  //         if (result.message === "Token Does Not Exist") {
+  //           navigate("/authentication/sign-in");
+  //         }
+  //         if (result.message === "Unauthorized Access") {
+  //           navigate("/authentication/forbiddenPage");
+  //         }
+  //         if (isMounted) {
+  //           // eslint-disable-next-line eqeqeq
+  //           if (result.data === "") {
+  //             setID(result.id);
+  //             setOrgID(result.orgID);
+  //             setEmpID(result.empID);
+  //             setAmount(result.amount);
+  //             setCurrency(result.currency);
+  //             setDeleteFlag(result.deleteFlag);
+  //             setCreatedTime(result.createdTime);
+  //           } else {
+  //             setID(null);
+  //             setEmpID(uid);
+  //           }
+  //         }
+  //       });
+  //     return () => {
+  //       isMounted = false;
+  //     };
+  //   }, []);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -103,14 +149,12 @@ function AddUserpayment() {
 
     const data11 = JSON.parse(localStorage.getItem("user1"));
     let allRaw = null;
-    console.log(`allRaw ${allRaw}`);
     const raw = JSON.stringify({
       orgID: data11.orgID,
       empID: uid,
       amount: amountx,
       currency: currencyx,
     });
-    console.log(`raw ${raw}`);
     const updateRaw = JSON.stringify({
       id: idx,
       orgID: orgIDx,
@@ -120,15 +164,13 @@ function AddUserpayment() {
       createdTime: createdTimex,
       deleteFlag: deleteFlagx,
     });
-    console.log(idx);
-    console.log(`updateRaw ${updateRaw}`);
-    if (idx !== null) {
+    if (idx !== 0) {
       allRaw = updateRaw;
     } else {
       allRaw = raw;
     }
     let endpoint = "add";
-    if (idx !== null) {
+    if (idx !== 0) {
       endpoint = "update";
     }
 
@@ -138,7 +180,6 @@ function AddUserpayment() {
       body: allRaw,
       redirect: "follow",
     };
-    console.log(allRaw);
     fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/${endpoint}`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
