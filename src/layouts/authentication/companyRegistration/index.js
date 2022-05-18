@@ -162,34 +162,23 @@ function CompanyReg() {
             };
             fetch(`${process.env.REACT_APP_ZAVE_URL}/login/add`, requestOptions2)
               .then((res) => res.json())
-              .then((ress) => {
-                setOpened(false);
-                MySwal.fire({
-                  title: ress.status,
-                  type: "success",
-                  text: ress.message,
-                }).then(() => {
-                  const raw4 = JSON.stringify({
-                    orgID: result.data.id,
-                    paidAmount: configPrice,
-                    bonusAmount: 0,
-                    totalAmount: configPrice,
-                  });
-                  const requestOptions4 = {
-                    method: "POST",
-                    headers: myHeaders,
-                    body: raw4,
-                    redirect: "follow",
-                  };
-                  fetch(
-                    `${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`,
-                    requestOptions4
-                  ).then(async (res) => {
-                    const aToken = res.headers.get("token-1");
-                    localStorage.setItem("rexxdex", aToken);
-                    return res.json();
-                  });
+              .then(() => {
+                const raw4 = JSON.stringify({
+                  orgID: result.data.id,
+                  paidAmount: configPrice,
+                  bonusAmount: 0,
+                  totalAmount: configPrice,
                 });
+                const requestOptions4 = {
+                  method: "POST",
+                  headers: myHeaders,
+                  body: raw4,
+                  redirect: "follow",
+                };
+                fetch(
+                  `${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`,
+                  requestOptions4
+                ).then((res) => res.json());
               });
           });
         MySwal.fire({
@@ -197,7 +186,7 @@ function CompanyReg() {
           type: "success",
           text: result.message,
         }).then(() => {
-          navigate("/authentication/renew-Subscription", { replace: true });
+          navigate("/authentication/sign-in", { replace: true });
         });
       })
       .catch((error) => {
