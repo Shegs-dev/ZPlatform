@@ -104,6 +104,7 @@ import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
 import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
+import AppraisalAppraisers from "layouts/appraisal/appraisers";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
@@ -247,6 +248,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Set-Appraisal-Questions",
     component: <SetAppraisalQuestion />,
+  },
+  {
+    name: "Set Appraisal Appraisers",
+    key: "setAppraisalAppraisers",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Set-Appraisal-Appraisers",
+    component: <AppraisalAppraisers />,
   },
   {
     type: "collapse",
