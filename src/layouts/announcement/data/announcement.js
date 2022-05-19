@@ -45,7 +45,6 @@ export default function data() {
       createdTime: createdTimex,
       deleteFlag: deleteFlagx,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -107,7 +106,6 @@ export default function data() {
       deleteFlagx = 0;
     } else {
       const filteredItems = filteredData.filter((item) => item.announcement.id === value);
-      console.log(filteredItems);
       titlex = filteredItems[0].announcement.title;
       messagex = filteredItems[0].announcement.message;
       announcementTypeIDx = filteredItems[0].announcement.announcementTypeID;
@@ -248,7 +246,7 @@ export default function data() {
     columns: [
       { Header: "title", accessor: "announcement.title", align: "left" },
       { Header: "message", accessor: "announcement.message", align: "left" },
-      { Header: "name", accessor: "announcementType.name", align: "left" },
+      { Header: "Announcement Type", accessor: "announcementType.name", align: "left" },
       {
         Header: "Date Created",
         accessor: "announcement.createdTime",

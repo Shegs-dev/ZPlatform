@@ -23,7 +23,7 @@ export default function data() {
   const navigate = useNavigate();
 
   // Method to handle diable
-  const handleUpdate = (idx, namex, cardColorx, descripx, createdTimex, deleteFlagx) => {
+  const handleUpdate = (idx, namex, colorCodex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
@@ -31,7 +31,7 @@ export default function data() {
       id: idx,
       orgID: orgIDs,
       name: namex,
-      cardColor: cardColorx,
+      colorCode: colorCodex,
       descrip: descripx,
       createdTime: createdTimex,
       deletedFlag: deleteFlagx,
@@ -82,14 +82,14 @@ export default function data() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let namex = "";
-    let cardColorx = "";
+    let colorCodex = "";
     let descripx = "";
     let createdTimex = 0;
     let deleteFlagx = 0;
     // Avoid filter for empty string
     if (!value) {
       namex = "";
-      cardColorx = "";
+      colorCodex = "";
       descripx = "";
       createdTimex = 0;
       deleteFlagx = 0;
@@ -97,7 +97,7 @@ export default function data() {
       const filteredItems = filteredData.filter((item) => item.id === value);
 
       namex = filteredItems[0].name;
-      cardColorx = filteredItems[0].cardColor;
+      colorCodex = filteredItems[0].colorCode;
       descripx = filteredItems[0].descrip;
       createdTimex = filteredItems[0].createdTime;
       deleteFlagx = filteredItems[0].deleteFlag;
@@ -110,8 +110,8 @@ export default function data() {
       <td><input type="text" id="name" value="${namex}" class="form-control" placeholder="Name"></td></tr><br>
       <tr><td><label for="descrip">Description:   </label></td>
       <td><input type="text" class="form-control" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
-      <tr><td><label for="cardColor">CardColor:</label></td>
-      <td><input type="color"  class="form-control" id="colorCode" value="${cardColorx}" placeholder="CardColor"></td></tr></table>`,
+      <tr><td><label for="colorCode">ColorCode:</label></td>
+      <td><input type="color"  class="form-control" id="colorCode" value="${colorCodex}" placeholder="ColorCode"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -119,13 +119,13 @@ export default function data() {
       preConfirm: () => {
         const name = Swal.getPopup().querySelector("#name").value;
         const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const cardColor = Swal.getPopup().querySelector("#cardColor").value;
+        const colorCodee = Swal.getPopup().querySelector("#colorCode").value;
         const id = value;
         const letters = /^[a-zA-Z ]+$/;
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, name, cardColor, descrip, deleteFlagx, createdTimex);
+          handleUpdate(id, name, colorCodee, descrip, deleteFlagx, createdTimex);
         }
       },
     });
@@ -236,7 +236,7 @@ export default function data() {
       { Header: "description", accessor: "descrip", align: "left" },
       {
         Header: "Color",
-        accessor: "cardColor",
+        accessor: "colorCode",
         Cell: ({ cell: { value } }) => <input type="color" disabled value={value} />,
         align: "left",
       },
