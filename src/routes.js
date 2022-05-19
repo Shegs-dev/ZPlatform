@@ -86,9 +86,8 @@ import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 import SalaryPayment from "layouts/salaryPayment";
 
-// import App from "layouts/mattersArising/viewMatter/client/app";
-// import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
+import CloneBonusDeduction from "layouts/bonusdeduction/clone";
 import Groups from "layouts/groups";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
@@ -322,6 +321,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
+  },
+  {
+    name: "Clone Bonus/Deduction",
+    key: "cloneBonusDeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Bonus-And-Deduction/Clone",
+    component: <CloneBonusDeduction />,
   },
   {
     type: "collapse",

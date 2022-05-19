@@ -218,9 +218,10 @@ export default function bonusdeductionData() {
     });
   };
 
-  // const handleUserBD = (value) => {
-  //   navigate(`/Bonus-Deduction/attached-User?id=${value}`);
-  // };
+  const handleClone = (value) => {
+    navigate(`/Bonus-And-Deduction/Clone?id=${value}`);
+  };
+
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -297,6 +298,7 @@ export default function bonusdeductionData() {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleClone(value)}>Clone</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
