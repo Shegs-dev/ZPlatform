@@ -1,87 +1,39 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
+import DataTable from "examples/Tables/DataTable";
+import SalaryAdvanceData from "layouts/salary-advance/data/salaryAdvanceData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import MDTypography from "components/MDTypography";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-
-import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 
-function VuUserProrate() {
+function SalaryAdvance() {
   const MySwal = withReactContent(Swal);
+  const { columns: pColumns, rows: pRows } = SalaryAdvanceData();
 
-  const [idx, setId] = useState("");
-  const [orgIDx, setOrgID] = useState("");
-  const [statusx, setStatus] = useState("");
-  const [noOfDaysx, setNoOfDays] = useState("");
-  const [totalNumOfDayx, setTotalNumOfDays] = useState("");
-  const [createdDatex, setCreatedDate] = useState("");
-  const [deletedflagx, setDeletedflag] = useState("");
+  const [amountx, setAmount] = useState("");
+  const [approver, setApprover] = useState(0);
 
   const [user, setUser] = useState([]);
-  const [userIDx, setUserIDx] = useState("");
 
   const [opened, setOpened] = useState(false);
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get("id");
-
-    const headers = miHeaders;
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_TANTA_URL}/prorateRemuneration/getByIds/${id}`, { headers })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        if (isMounted) {
-          console.log(result);
-          setId(result[0].id);
-          setOrgID(result[0].orgID);
-          setUserIDx(result[0].empID);
-          setStatus(result[0].status);
-          setNoOfDays(result[0].noOfDays);
-          setTotalNumOfDays(result[0].totalNumberOfDays);
-          setCreatedDate(result[0].createdDate);
-          setDeletedflag(result[0].deletedflag);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     setOpened(true);
@@ -119,18 +71,17 @@ function VuUserProrate() {
     };
   }, []);
 
-  const handleClick = (e) => {
+  // eslint-disable-next-line consistent-return
+  const handleClick = () => {
     setOpened(true);
-    e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
     const raw = JSON.stringify({
-      id: idx,
-      orgID: orgIDx,
-      empID: userIDx,
-      status: statusx,
-      noOfDays: noOfDaysx,
-      totalNumberOfDays: totalNumOfDayx,
-      createdTime: createdDatex,
-      deleteFlag: deletedflagx,
+      orgID: orgIDs,
+      empID: data11.personalID,
+      amount: amountx,
+      approverID: approver,
     });
     const requestOptions = {
       method: "POST",
@@ -138,13 +89,15 @@ function VuUserProrate() {
       body: raw,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_TANTA_URL}/prorateRemuneration/update`, requestOptions)
+
+    fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -157,7 +110,6 @@ function VuUserProrate() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -174,6 +126,25 @@ function VuUserProrate() {
           text: error.message,
         });
       });
+  };
+
+  // eslint-disable-next-line consistent-return
+  const handleOnAmountKeys = () => {
+    const letters = /^[0-9]+$/;
+    if (!amountx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML =
+        "Amount Not Valid. No Decimal Places or Alphabets<br>";
+    }
+    if (amountx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+      handleClick();
+    }
+    if (amountx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Amount is required<br>";
+    }
   };
 
   return (
@@ -193,7 +164,7 @@ function VuUserProrate() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Salary Prorate
+              Add Salary Advance
             </MDTypography>
           </MDBox>
           <MDBox
@@ -212,64 +183,72 @@ function VuUserProrate() {
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mb={0}>
+            <MDBox mb={2}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      value={noOfDaysx || ""}
-                      onChange={(e) => setNoOfDays(e.target.value)}
-                      label="Number Of Days"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={totalNumOfDayx || ""}
-                      onChange={(e) => setTotalNumOfDays(e.target.value)}
-                      label="Total Number Of Days"
+                      label="Amount (No Decimal Places) *"
+                      value={amountx || ""}
+                      className="form-control"
+                      onChange={(e) => setAmount(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
                 </div>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      Approver
+                    </MDTypography>
+                    <Form.Select
+                      value={approver}
+                      onChange={(e) => setApprover(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option value="">--Select Approver--</option>
+                      {user.map((api) => (
+                        <option key={api.personal.id} value={api.personal.id}>
+                          {api.personal.fname} {api.personal.lname}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </div>
+                </div>
               </Container>
             </MDBox>
-            <MDBox mt={2}>
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                fontSize="80%"
+            <MDBox mt={4} mb={1}>
+              <MDButton
+                variant="gradient"
+                onClick={handleOnAmountKeys}
+                color="info"
+                width="50%"
                 align="left"
-                color="text"
               >
-                User
-              </MDTypography>
-              <Form.Select
-                value={userIDx}
-                onChange={(e) => setUserIDx(e.target.value)}
-                aria-label="Default select example"
-              >
-                <option value="">--Select User--</option>
-                {user.map((api) => (
-                  <option key={api.personal.id} value={api.personal.id}>
-                    {api.personal.fname} {api.personal.lname}
-                  </option>
-                ))}
-              </Form.Select>
-              <br />
+                Save
+              </MDButton>
             </MDBox>
-          </MDBox>
-          <MDBox mt={4} mb={1}>
-            <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
-              Save
-            </MDButton>
           </MDBox>
         </MDBox>
       </Card>
+      <MDBox pt={3}>
+        <DataTable
+          table={{ columns: pColumns, rows: pRows }}
+          isSorted
+          entriesPerPage
+          showTotalEntries
+          noEndBorder
+          canSearch
+        />
+      </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
@@ -278,4 +257,4 @@ function VuUserProrate() {
   );
 }
 
-export default VuUserProrate;
+export default SalaryAdvance;

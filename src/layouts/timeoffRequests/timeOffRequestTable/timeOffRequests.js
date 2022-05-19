@@ -334,7 +334,6 @@ export default function TimeOffRequestData() {
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
-    console.log(personalIds);
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;

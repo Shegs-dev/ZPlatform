@@ -1,103 +1,57 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import MDTypography from "components/MDTypography";
+import DataTable from "examples/Tables/DataTable";
+import PollsData from "layouts/polls/data/pollsTable";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import MDTypography from "components/MDTypography";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-
-import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 
-function VuUserProrate() {
+function Polls() {
   const MySwal = withReactContent(Swal);
+  const { columns: pColumns, rows: pRows } = PollsData();
 
-  const [idx, setId] = useState("");
-  const [orgIDx, setOrgID] = useState("");
-  const [statusx, setStatus] = useState("");
-  const [noOfDaysx, setNoOfDays] = useState("");
-  const [totalNumOfDayx, setTotalNumOfDays] = useState("");
-  const [createdDatex, setCreatedDate] = useState("");
-  const [deletedflagx, setDeletedflag] = useState("");
+  const [questionx, setQuestion] = useState("");
+  const [groupidx, setGroupIdx] = useState("");
+
+  const [enabled, setEnabled] = useState("");
+  const [checkedQuestion, setCheckedQuestion] = useState("");
 
   const [user, setUser] = useState([]);
-  const [userIDx, setUserIDx] = useState("");
 
   const [opened, setOpened] = useState(false);
+  const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const id = urlParams.get("id");
-
     const headers = miHeaders;
-    let isMounted = true;
-    fetch(`${process.env.REACT_APP_TANTA_URL}/prorateRemuneration/getByIds/${id}`, { headers })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        if (isMounted) {
-          console.log(result);
-          setId(result[0].id);
-          setOrgID(result[0].orgID);
-          setUserIDx(result[0].empID);
-          setStatus(result[0].status);
-          setNoOfDays(result[0].noOfDays);
-          setTotalNumOfDays(result[0].totalNumberOfDays);
-          setCreatedDate(result[0].createdDate);
-          setDeletedflag(result[0].deletedflag);
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
-  useEffect(() => {
-    setOpened(true);
-    const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
 
+    const orgIDs = data11.orgID;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -119,32 +73,55 @@ function VuUserProrate() {
     };
   }, []);
 
+  // eslint-disable-next-line consistent-return
+  const handleOnQuestionKeys = () => {
+    // const letters = /^[a-zA-Z0-9 ]+$/;
+    // if (!questionx.match(letters)) {
+    //   setCheckedQuestion(false);
+    //   // eslint-disable-next-line no-unused-expressions
+    //   document.getElementById("question").innerHTML =
+    //     "Question - input only capital and small letters<br>";
+    // }
+    // if (questionx.match(letters)) {
+    //   setCheckedQuestion(true);
+    //   // eslint-disable-next-line no-unused-expressions
+    //   document.getElementById("question").innerHTML = "";
+    // }
+    if (questionx.length === 0) {
+      setCheckedQuestion(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("question").innerHTML = "Question is required<br>";
+    } else {
+      setCheckedQuestion(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("question").innerHTML = "";
+    }
+    setEnabled(checkedQuestion === true);
+  };
+
+  // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
-    const raw = JSON.stringify({
-      id: idx,
-      orgID: orgIDx,
-      empID: userIDx,
-      status: statusx,
-      noOfDays: noOfDaysx,
-      totalNumberOfDays: totalNumOfDayx,
-      createdTime: createdDatex,
-      deleteFlag: deletedflagx,
-    });
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const raw = JSON.stringify({ orgID: orgIDs, groupID: groupidx, question: questionx });
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-    fetch(`${process.env.REACT_APP_TANTA_URL}/prorateRemuneration/update`, requestOptions)
+
+    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/add`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -157,7 +134,6 @@ function VuUserProrate() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -193,7 +169,7 @@ function VuUserProrate() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Salary Prorate
+              Add Polls
             </MDTypography>
           </MDBox>
           <MDBox
@@ -207,30 +183,22 @@ function VuUserProrate() {
             mb={1}
             textAlign="center"
           >
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="question">
               {" "}
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mb={0}>
+            <MDBox mb={2}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
                       type="text"
-                      value={noOfDaysx || ""}
-                      onChange={(e) => setNoOfDays(e.target.value)}
-                      label="Number Of Days"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={totalNumOfDayx || ""}
-                      onChange={(e) => setTotalNumOfDays(e.target.value)}
-                      label="Total Number Of Days"
+                      label="Question *"
+                      value={questionx || ""}
+                      onKeyUp={handleOnQuestionKeys}
+                      className="form-control"
+                      onChange={(e) => setQuestion(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -238,38 +206,63 @@ function VuUserProrate() {
                 </div>
               </Container>
             </MDBox>
-            <MDBox mt={2}>
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                fontSize="80%"
-                align="left"
-                color="text"
-              >
-                User
-              </MDTypography>
-              <Form.Select
-                value={userIDx}
-                onChange={(e) => setUserIDx(e.target.value)}
-                aria-label="Default select example"
-              >
-                <option value="">--Select User--</option>
-                {user.map((api) => (
-                  <option key={api.personal.id} value={api.personal.id}>
-                    {api.personal.fname} {api.personal.lname}
-                  </option>
-                ))}
-              </Form.Select>
-              <br />
+            <MDBox>
+              <Container>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <MDBox mt={2}>
+                      <MDTypography
+                        variant="button"
+                        fontWeight="regular"
+                        fontSize="80%"
+                        align="right"
+                        color="text"
+                      >
+                        GroupID
+                      </MDTypography>
+                      <Form.Select
+                        value={groupidx || ""}
+                        onChange={(e) => setGroupIdx(e.target.value)}
+                        aria-label="Default select example"
+                      >
+                        <option value="">GroupID</option>
+                        {user.map((api) => (
+                          <option key={api.group.id} value={api.group.id}>
+                            {api.group.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      <br />
+                    </MDBox>
+                  </div>
+                </div>
+              </Container>
             </MDBox>
-          </MDBox>
-          <MDBox mt={4} mb={1}>
-            <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
-              Save
-            </MDButton>
+            <MDBox mt={4} mb={1}>
+              <MDButton
+                variant="gradient"
+                onClick={handleClick}
+                disabled={!enabled}
+                color="info"
+                width="50%"
+                align="left"
+              >
+                Save
+              </MDButton>
+            </MDBox>
           </MDBox>
         </MDBox>
       </Card>
+      <MDBox pt={3}>
+        <DataTable
+          table={{ columns: pColumns, rows: pRows }}
+          isSorted
+          entriesPerPage
+          showTotalEntries
+          noEndBorder
+          canSearch
+        />
+      </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
@@ -278,4 +271,4 @@ function VuUserProrate() {
   );
 }
 
-export default VuUserProrate;
+export default Polls;

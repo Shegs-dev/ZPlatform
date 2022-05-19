@@ -73,7 +73,8 @@ import UserTOT from "layouts/userManagement/userTimeOffType";
 import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
-import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement/index";
+import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement";
+import AddClonesalary from "layouts/userManagement/cloneUserSalary/index";
 import PaymentHis from "layouts/paymentHistory";
 
 import Birthdays from "layouts/birthdays/data/birthdays";
@@ -84,6 +85,7 @@ import EditMattersArising from "layouts/mattersArising/update";
 import ChatApp from "layouts/mattersArising/viewMatter/App";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+import SalaryPayment from "layouts/salaryPayment";
 
 // import App from "layouts/mattersArising/viewMatter/client/app";
 // import Createbonus from "layouts/createbonus";
@@ -97,10 +99,15 @@ import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
+import SalaryAdvance from "layouts/salary-advance";
 
 import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
+import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
+
+import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
+import UpdatePolls from "layouts/polls/updatepolls";
 
 const routes = [
   {
@@ -127,6 +134,13 @@ const routes = [
     component: <UserTOT />,
   },
   {
+    name: "Update User System Role",
+    key: "userSystemRole",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/update-system-role",
+    component: <UpdateSystemRole />,
+  },
+  {
     type: "collapse",
     name: "Birthdays",
     key: "birthdays",
@@ -140,6 +154,13 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management/user-Salary",
     component: <AddUserpayment />,
+  },
+  {
+    name: "User Clone",
+    key: "userClone",
+    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
+    route: "/user-Management/user-Salary-Clone",
+    component: <AddClonesalary />,
   },
   {
     type: "collapse",
@@ -170,6 +191,21 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/view-Matter",
     component: <ChatApp />,
+  },
+  {
+    type: "collapse",
+    name: "Polls",
+    key: "polls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls",
+    component: <Polls />,
+  },
+  {
+    name: "Update polls",
+    key: "updatepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Update-Poll",
+    component: <UpdatePolls />,
   },
   {
     name: "Edit Matters Arising",
@@ -285,6 +321,22 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Payment",
+    key: "salaryPayment",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Payment",
+    component: <SalaryPayment />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Advance",
+    key: "salaryAdvance",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Advance",
+    component: <SalaryAdvance />,
   },
   {
     type: "divider",
@@ -429,10 +481,10 @@ const routes = [
     component: <Checklists />,
   },
   {
-    name: "Group view",
-    key: "groupview",
+    name: "View Group",
+    key: "viewgroup",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/groupview",
+    route: "/View-Group",
     component: <Groupview />,
   },
 
