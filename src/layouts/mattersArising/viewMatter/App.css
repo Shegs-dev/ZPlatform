@@ -1,4 +1,4 @@
-.App {
+/* .App {
   width: 100vw;
   height: 100vh;
   background: #fff;
@@ -6,7 +6,7 @@
   font-family: "Open Sans", sans-serif;
   display: grid;
   place-items: center;
-}
+} */
 body {
   margin: 0%;
   padding: 0%;
@@ -51,8 +51,10 @@ body {
 }
 
 .chat-window {
-  width: 300px;
-  height: 420px;
+  width: 61vw;
+  height: 61vh;
+  border-radius: 6px;
+  background-color: #fff;
 }
 
 .chat-window p {
@@ -61,7 +63,9 @@ body {
 .chat-window .chat-header {
   height: 45px;
   border-radius: 6px;
-  background: #263238;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  background: #318CE7;
   position: relative;
   cursor: pointer;
 }
@@ -75,10 +79,10 @@ body {
 
 .chat-window .chat-body {
   height: calc(450px - (45px + 70px));
-  border: 1px solid #263238;
   background: #fff;
-
-  position: relative;
+  border-radius: 6px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 .chat-window .chat-body .message-container {
   width: 100%;
@@ -152,19 +156,20 @@ body {
 }
 
 .chat-window .chat-footer {
-  height: 40px;
-  border: 1px solid #263238;
+  height: 50px;
   border-top: none;
   display: flex;
+  place-items: center;
 }
 
 .chat-window .chat-footer input {
   height: 100%;
-  flex: 85%;
-  border: 0;
+  width: 60%;
+  justify-content: flex-end;
+  border: 1;
+  border-radius: 6px;
   padding: 0 0.7em;
   font-size: 1em;
-  border-right: 1px dotted #607d8b;
 
   outline: none;
   font-family: "Open Sans", sans-serif;
@@ -175,12 +180,15 @@ body {
   display: grid;
   place-items: center;
   cursor: pointer;
-  flex: 15%;
+  width: 15%;
   height: 100%;
   background: transparent;
   outline: none;
-  font-size: 25px;
-  color: lightgray;
+  font-size: 15px;
+  color: #fff;
+  background-color: #318CE7;
+  border-radius: 6px;
+  margin-left: 50%;
 }
 
 .chat-window .chat-footer button:hover {

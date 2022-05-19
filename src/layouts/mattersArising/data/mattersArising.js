@@ -21,7 +21,6 @@ export default function MattersArisingTable() {
 
   const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
   const userNamex = `${userOData.personal.fname} ${userOData.personal.lname}`;
-  console.log(userNamex);
   // const value = data11.id;
 
   // eslint-disable-next-line consistent-return

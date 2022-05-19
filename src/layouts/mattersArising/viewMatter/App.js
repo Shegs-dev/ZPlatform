@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
-import Footer from "examples/Footer";
 import Chat from "./chats";
 
 const socket = io.connect("http://localhost:3001");
@@ -23,22 +21,12 @@ function ChatApp() {
     const urlParams = new URLSearchParams(queryString);
     const userNamex = urlParams.get("username");
     const roomID = urlParams.get("room");
+
     let isMounted = true;
     if (isMounted) {
       setUsername(userNamex);
       setRoom(roomID);
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      if (username !== "" && room !== "") {
-        socket.emit("join_room", room);
-      }
+      socket.emit("join_room", roomID);
     }
     return () => {
       isMounted = false;
@@ -48,14 +36,11 @@ function ChatApp() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <MDBox pt={4} pb={3} px={3}>
-          <div className="App">
-            <Chat socket={socket} username={username} room={room} />
-          </div>
-        </MDBox>
-      </Card>
-      <Footer />
+      <MDBox>
+        <div className="App">
+          <Chat socket={socket} username={username} room={room} />
+        </div>
+      </MDBox>
     </DashboardLayout>
   );
 }
