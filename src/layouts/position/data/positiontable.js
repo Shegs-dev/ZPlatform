@@ -118,7 +118,7 @@ export default function data() {
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, name, descrip, deleteFlagx, createdTimex);
+          handleUpdate(id, name, descrip, createdTimex, deleteFlagx);
         }
       },
     });
