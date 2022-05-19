@@ -44,9 +44,9 @@ function View() {
   // const [reasonForDisapproval, setReasonForDisapproval] = useState("");
   const [items, setItems] = useState([]);
 
-  const [approve, setApprove] = useState(false);
-  console.log(approve);
-  const [showComment, setShowComment] = useState(false);
+  // const [approve, setApprove] = useState(false);
+  // console.log(approve);
+  // const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
     const headers = miHeaders;
@@ -164,14 +164,13 @@ function View() {
     }
   };
 
-  const handleOnChange = (e) => {
-    setShowComment(e.target.value);
+  const handleApprove = (e) => {
     setComment(e.target.value);
   };
 
-  const handleApprove = (e) => {
-    setApprove(e.target.value);
-  };
+  // const handleDisapprove = (e) => {
+  //   setApprove(e.target.value);
+  // };
 
   return (
     <DashboardLayout>
@@ -422,8 +421,8 @@ function View() {
                     className="mb-3"
                     controlId="setPurposex"
                     placeholder="Description"
-                    value={(comment || "", showComment)}
-                    onChange={(e) => handleOnChange(e.target.value)}
+                    //  value={(comment || "", showComment)}
+                    //  onChange={(e) => handleOnChange(e.target.value)}
                   >
                     <Form.Label>Approve/Disapprove Time Off-Requests</Form.Label>
                     <Form.Control as="textarea" rows={3} />
