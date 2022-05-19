@@ -82,6 +82,7 @@ import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
+import ChatApp from "layouts/mattersArising/viewMatter/App";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 import SalaryPayment from "layouts/salaryPayment";
@@ -108,6 +109,7 @@ import AppraisalAppraisers from "layouts/appraisal/appraisers";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
+import ViewPolls from "layouts/polls/viewPolls";
 
 const routes = [
   {
@@ -186,6 +188,13 @@ const routes = [
     component: <MattersArising />,
   },
   {
+    name: "Chats",
+    key: "viewMatter",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Matter",
+    component: <ChatApp />,
+  },
+  {
     type: "collapse",
     name: "Polls",
     key: "polls",
@@ -199,6 +208,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Update-Poll",
     component: <UpdatePolls />,
+  },
+  {
+    name: "View polls",
+    key: "viewpolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-polls",
+    component: <ViewPolls />,
   },
   {
     name: "Edit Matters Arising",
