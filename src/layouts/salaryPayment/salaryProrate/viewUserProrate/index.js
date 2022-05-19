@@ -193,7 +193,7 @@ function VuUserProrate() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Appraisal Question
+              Salary Prorate
             </MDTypography>
           </MDBox>
           <MDBox
@@ -212,30 +212,6 @@ function VuUserProrate() {
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mt={2}>
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                fontSize="80%"
-                align="left"
-                color="text"
-              >
-                User
-              </MDTypography>
-              <Form.Select
-                value={userIDx}
-                onChange={(e) => setUserIDx(e.target.value)}
-                aria-label="Default select example"
-              >
-                <option value="">--Select User--</option>
-                {user.map((api) => (
-                  <option key={api.personal.id} value={api.personal.id}>
-                    {api.personal.fname} {api.personal.lname}
-                  </option>
-                ))}
-              </Form.Select>
-              <br />
-            </MDBox>
             <MDBox mb={0}>
               <Container>
                 <div className="row">
@@ -261,6 +237,30 @@ function VuUserProrate() {
                   </div>
                 </div>
               </Container>
+            </MDBox>
+            <MDBox mt={2}>
+              <MDTypography
+                variant="button"
+                fontWeight="regular"
+                fontSize="80%"
+                align="left"
+                color="text"
+              >
+                User
+              </MDTypography>
+              <Form.Select
+                value={userIDx}
+                onChange={(e) => setUserIDx(e.target.value)}
+                aria-label="Default select example"
+              >
+                <option value="">--Select User--</option>
+                {user.map((api) => (
+                  <option key={api.personal.id} value={api.personal.id}>
+                    {api.personal.fname} {api.personal.lname}
+                  </option>
+                ))}
+              </Form.Select>
+              <br />
             </MDBox>
           </MDBox>
           <MDBox mt={4} mb={1}>

@@ -35,10 +35,29 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import Birthdays from "layouts/dashboard/Birthdays";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
 
+  const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
+
+  const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+
+  const userFullName = `${userOData.personal.fname} ${userOData.personal.lname}`;
+
+  console.log(birthStatus);
+  if (birthStatus === true) {
+    MySwal.fire({
+      title: "Happy Birthday",
+      icon: "info",
+      type: "info",
+      text: `Happy Birthday ${userFullName}`,
+    });
+  }
   return (
     <DashboardLayout>
       <DashboardNavbar />

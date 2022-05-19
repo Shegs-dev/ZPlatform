@@ -178,7 +178,7 @@ export default function SysRole() {
   };
 
   const handleView = (value) => {
-    navigate(`/systemRoles/addRolesAndPerms?id=${value}`);
+    navigate(`/System-Roles/Add-Permissions?id=${value}`);
   };
 
   // Method to fetch all companyroles

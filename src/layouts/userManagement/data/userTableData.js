@@ -207,7 +207,11 @@ export default function UserData() {
   };
 
   const handleAddclone = (value) => {
-    navigate(`/user-Management/user-Salary-Clone?id=${value}`);
+    navigate(`/user-Management/Clone-User-Salary?id=${value}`);
+  };
+
+  const handleUpdateSystemRole = (value) => {
+    navigate(`/update-system-role?id=${value}`);
   };
 
   return {
@@ -246,6 +250,9 @@ export default function UserData() {
                   <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handlePasswordReset(value)}>
                     Reset Password
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleUpdateSystemRole(value)}>
+                    Change User System Role
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddsalary(value)}>
                     Add User Salary
