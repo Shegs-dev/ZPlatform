@@ -207,7 +207,7 @@ export default function UserData() {
   };
 
   const handleAddclone = (value) => {
-    navigate(`/user-Management/user-Salary-Clone?id=${value}`);
+    navigate(`/user-Management/Clone-User-Salary?id=${value}`);
   };
 
   const handleUpdateSystemRole = (value) => {

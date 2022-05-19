@@ -156,10 +156,10 @@ const routes = [
     component: <AddUserpayment />,
   },
   {
-    name: "User Clone",
-    key: "userClone",
+    name: "Clone User Salary",
+    key: "cloneUserSalary",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/user-Salary-Clone",
+    route: "/user-Management/Clone-User-Salary",
     component: <AddClonesalary />,
   },
   {
@@ -462,7 +462,7 @@ const routes = [
     name: "Add Roles And Permissions",
     key: "addRolesAndPerms",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/systemRoles/addRolesAndPerms",
+    route: "/System-Roles/Add-Permissions",
     component: <RolesAndPerms />,
   },
   {
@@ -477,7 +477,7 @@ const routes = [
     name: "Checklists",
     key: "checklists",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/checklists",
+    route: "/Company-Roles/Add-Steps",
     component: <Checklists />,
   },
   {
@@ -521,14 +521,14 @@ const routes = [
     name: "User Profile",
     key: "userProfile",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/userProfile",
+    route: "/user-Profile",
     component: <UserProfile />,
   },
   {
     name: "Company Profile",
     key: "companyProfile",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/companiesProfile",
+    route: "/company-Profile",
     component: <CompanyProfile />,
   },
   {
@@ -584,14 +584,14 @@ const routes = [
     name: "Time Off Requests Journey",
     key: "timeOffRequestjourney",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/timeOffRequestJourney",
+    route: "/timeoff-Requests/timeOff-Request-Journey",
     component: <TimeOffRequestJourney />,
   },
   {
     name: "Time Off Requests Journey",
     key: "timeOffRequestjourney",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/forwardTimeOffRequests",
+    route: "/timeoff-Requests/forward-TimeOff-Requests",
     component: <ForwardTimeOff />,
   },
   {
@@ -605,7 +605,7 @@ const routes = [
     name: "Add Details To Time Off Type",
     key: "adddetailtotimeofftype",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeofftype/add-Details-To-Time-Off-Type",
+    route: "/timeoff-type/add-Details-To-Time-Off-Type",
     component: <AddTimeOffType />,
   },
   {

@@ -61,7 +61,6 @@ function updatesystemrole() {
           if (resultg.roleID === null) setRoleID("0");
           else setRoleID(resultg.roleID);
           setUsers(resultg);
-          console.log(resultg);
         }
       });
     return () => {
@@ -95,7 +94,6 @@ function updatesystemrole() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          console.log(resultg);
           setLists(resultg);
         }
       });
@@ -119,7 +117,6 @@ function updatesystemrole() {
       deleteFlag: users.deleteFlag,
       createdTime: users.createdTime,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
