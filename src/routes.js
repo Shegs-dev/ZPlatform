@@ -105,6 +105,7 @@ import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
+import Addpolloptions from "layouts/polls/addpolloptions";
 
 const routes = [
   {
@@ -196,6 +197,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/polls/update",
     component: <UpdatePolls />,
+  },
+  {
+    name: "Add Poll Option",
+    key: "editaddpolloption",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/Option",
+    component: <Addpolloptions />,
   },
   {
     name: "Edit Matters Arising",

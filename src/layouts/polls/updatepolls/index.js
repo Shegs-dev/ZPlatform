@@ -26,7 +26,7 @@ function Updatepolls() {
 
   const [user, setUser] = useState([]);
 
-  //Segun
+  // Segun
   useEffect(() => {
     const headers = miHeaders;
 

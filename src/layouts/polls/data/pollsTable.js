@@ -79,6 +79,10 @@ export default function PollsData() {
     navigate(`/polls/update?id=${value}`);
   };
 
+  const handleOptions = (value) => {
+    navigate(`/polls/Option?id=${value}`);
+  };
+
   // Method to fetch all departments
   // env.environments
   useEffect(() => {
@@ -184,6 +188,7 @@ export default function PollsData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleOptions(value)}>Options</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
