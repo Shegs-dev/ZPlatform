@@ -125,7 +125,7 @@ export default function data() {
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, name, colorCodee, descrip, deleteFlagx, createdTimex);
+          handleUpdate(id, name, colorCodee, descrip, createdTimex, deleteFlagx);
         }
       },
     });
@@ -221,7 +221,6 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

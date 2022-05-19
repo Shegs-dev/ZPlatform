@@ -29,19 +29,16 @@ function Checkbox() {
 
   const navigate = useNavigate();
 
-  // 0683357418
-
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const id = urlParams.get("id");
-  // const idVal = JSON.parse([id]);
-
   const { allPHeaders: myHeaders } = PHeaders();
 
   const { allGHeaders: miHeaders } = GHeaders();
 
   const handleOnClick = (e, apix) => {
     setOpened(true);
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
 
     let isChecked = 0;
     const checks = e.target.checked;
@@ -102,6 +99,9 @@ function Checkbox() {
   useEffect(() => {
     // setOpened(true);
 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
     const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_KUBU_URL}/role/get/${id}`, { headers })
@@ -156,6 +156,9 @@ function Checkbox() {
           setPermissions(resultd);
         }
 
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const id = urlParams.get("id");
         fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${id}`, {
           headers,
         })

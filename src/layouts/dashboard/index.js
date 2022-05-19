@@ -14,34 +14,45 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+// import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+// import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+// import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+// import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+// import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+// import Projects from "layouts/dashboard/components/Projects";
+// import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import Birthdays from "layouts/dashboard/Birthdays";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
-const MySwal = withReactContent(Swal);
+import { useNavigate } from "react-router-dom";
+import GHeaders from "getHeader";
 
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
+  const MySwal = withReactContent(Swal);
+  const [card, setItems] = useState([]);
+  const { allGHeaders: miHeaders } = GHeaders();
+  const navigate = useNavigate();
+
+  // const { sales, tasks } = reportsLineChartData;
 
   const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
 
@@ -49,7 +60,39 @@ function Dashboard() {
 
   const userFullName = `${userOData.personal.fname} ${userOData.personal.lname}`;
 
-  console.log(birthStatus);
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/getCurrent/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   if (birthStatus === true) {
     MySwal.fire({
       title: "Happy Birthday",
@@ -61,8 +104,39 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Card>
+        <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left" mt={1}>
+          Announcements
+        </MDTypography>
+        <Container>
+          <div className="row">
+            {card.map((api) => (
+              <div className="col-sm-6">
+                <Card
+                  key={api.announcement.id}
+                  style={{ backgroundColor: api.announcementType.colorCode }}
+                >
+                  <CardContent>
+                    <MDTypography
+                      variant="h4"
+                      fontWeight="medium"
+                      color="white"
+                      textAlign="left"
+                      mt={1}
+                    >
+                      {api.announcement.title}
+                    </MDTypography>
+                    <div style={{ color: "#f5f5f5" }}>{api.announcement.message}</div>
+                  </CardContent>
+                </Card>
+                <br />
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Card>
       <MDBox py={3}>
-        <Grid container spacing={3}>
+        {/* <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
@@ -122,8 +196,8 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-        </Grid>
-        <MDBox mt={4.5}>
+        </Grid> */}
+        {/* <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
@@ -163,15 +237,15 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
-        </MDBox>
+        </MDBox> */}
         <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
+            {/* <Grid item xs={12} md={6} lg={8}>
               <Projects />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <OrdersOverview />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={6} lg={8}>
               <Birthdays />
             </Grid>

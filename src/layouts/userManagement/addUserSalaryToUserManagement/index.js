@@ -146,7 +146,6 @@ function AddUserpayment() {
     const urlParams = new URLSearchParams(queryString);
     const uid = urlParams.get("id");
     // const idVal = JSON.parse([id]);
-
     const data11 = JSON.parse(localStorage.getItem("user1"));
     let allRaw = null;
     const raw = JSON.stringify({
@@ -155,6 +154,7 @@ function AddUserpayment() {
       amount: amountx,
       currency: currencyx,
     });
+    console.log(raw);
     const updateRaw = JSON.stringify({
       id: idx,
       orgID: orgIDx,
