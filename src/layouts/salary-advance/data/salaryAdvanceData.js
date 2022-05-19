@@ -19,17 +19,27 @@ export default function SalaryAdvanceData() {
 
   const navigate = useNavigate();
   // Method to handle update
-  const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
+  const handleUpdate = (
+    idx,
+    orgIDx,
+    empIDx,
+    amountx,
+    createdTimex,
+    commentx,
+    approverIDx,
+    statusx,
+    deleteFlagx
+  ) => {
     const raw = JSON.stringify({
       id: idx,
-      orgID: orgIDs,
-      name: namex,
-      descrip: descripx,
+      orgID: orgIDx,
+      empID: empIDx,
+      amount: amountx,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
+      comment: commentx,
+      approverID: approverIDx,
+      status: statusx,
     });
     const requestOptions = {
       method: "POST",
@@ -38,29 +48,26 @@ export default function SalaryAdvanceData() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/department/update`, requestOptions)
+    fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/update`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
-      .then((result) => {
-        if (result.message === "Expired Access") {
+      .then((resx) => {
+        if (resx.message === "Expired Access") {
           navigate("/authentication/sign-in");
-          window.location.reload();
         }
-        if (result.message === "Token Does Not Exist") {
+        if (resx.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
-          window.location.reload();
         }
-        if (result.message === "Unauthorized Access") {
+        if (resx.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-          window.location.reload();
         }
         MySwal.fire({
-          title: result.status,
+          title: resx.status,
           type: "success",
-          text: result.message,
+          text: resx.message,
         }).then(() => {
           window.location.reload();
         });
@@ -75,44 +82,55 @@ export default function SalaryAdvanceData() {
   };
 
   // Method to filter departments
-  const handleShow = (filteredData, value) => {
-    let namex = "";
-    let descripx = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
+  const handleDisapprove = (value) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const filteredItems = items.filter((item) => item.id === value);
     // Avoid filter for empty string
-    if (!value) {
-      namex = "";
-      descripx = "";
-      createdTime = 0;
-      deleteFlag = 0;
+    if (data11.personalID !== filteredItems[0].approverID) {
+      MySwal.fire({
+        title: "APPROVER_ERROR",
+        type: "error",
+        text: "You Are Not The Approver For This Request",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (filteredItems[0].status !== 0) {
+      MySwal.fire({
+        title: "DECISION_MADE",
+        type: "error",
+        text: "You Cannot Change The Decision Already Made For This Request",
+      }).then(() => {
+        window.location.reload();
+      });
     } else {
-      const filteredItems = filteredData.filter((item) => item.id === value);
-
-      namex = filteredItems[0].name;
-      descripx = filteredItems[0].descrip;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
+      MySwal.fire({
+        title: "Add Comment",
+        html: `<texarea rows="4" id="comment" class="form-control">`,
+        confirmButtonText: "Save",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        preConfirm: () => {
+          const comment = Swal.getPopup().querySelector("#comment").value;
+          if (comment.length === 0) {
+            Swal.showValidationMessage(`Please enter a comment`);
+          } else {
+            Swal.resetValidationMessage();
+            handleUpdate(
+              filteredItems[0].id,
+              filteredItems[0].orgID,
+              filteredItems[0].empID,
+              filteredItems[0].amount,
+              filteredItems[0].createdTime,
+              comment,
+              filteredItems[0].approverID,
+              2,
+              filteredItems[0].deleteFlag
+            );
+          }
+        },
+      });
     }
-
-    MySwal.fire({
-      title: "Update Department",
-      html: `<input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name">\
-           <input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description">`,
-      confirmButtonText: "Save",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const descrip = Swal.getPopup().querySelector("#descrip").value;
-        const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
-        }
-        handleUpdate(id, name, descrip, createdTime, deleteFlag);
-      },
-    });
   };
 
   // Method to handle diable
@@ -179,6 +197,14 @@ export default function SalaryAdvanceData() {
       }).then(() => {
         window.location.reload();
       });
+    } else if (filteredItems[0].status !== 0) {
+      MySwal.fire({
+        title: "DECISION_MADE",
+        type: "error",
+        text: "You Cannot Change The Decision Already Made For This Request",
+      }).then(() => {
+        window.location.reload();
+      });
     } else {
       MySwal.fire({
         title: "Are you sure?",
@@ -190,58 +216,25 @@ export default function SalaryAdvanceData() {
         confirmButtonText: "Yes, Approve it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          const raw = JSON.stringify({
-            id: filteredItems[0].id,
-            orgID: filteredItems[0].orgID,
-            empID: filteredItems[0].empID,
-            amount: filteredItems[0].amount,
-            status: 1,
-            comment: filteredItems[0].comment,
-            approverID: filteredItems[0].approverID,
-            deleteFlag: filteredItems[0].deleteFlag,
-            createdTime: filteredItems[0].createdTime,
-          });
-          const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow",
-          };
-
-          fetch(`${process.env.REACT_APP_TANTA_URL}/salaryAdvance/update`, requestOptions)
-            .then(async (res) => {
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex", aToken);
-              return res.json();
-            })
-            .then((resx) => {
-              if (resx.message === "Expired Access") {
-                navigate("/authentication/sign-in");
-              }
-              if (resx.message === "Token Does Not Exist") {
-                navigate("/authentication/sign-in");
-              }
-              if (resx.message === "Unauthorized Access") {
-                navigate("/authentication/forbiddenPage");
-              }
-              MySwal.fire({
-                title: resx.status,
-                type: "success",
-                text: resx.message,
-              }).then(() => {
-                window.location.reload();
-              });
-            })
-            .catch((error) => {
-              MySwal.fire({
-                title: error.status,
-                type: "error",
-                text: error.message,
-              });
-            });
+          handleUpdate(
+            filteredItems[0].id,
+            filteredItems[0].orgID,
+            filteredItems[0].empID,
+            filteredItems[0].amount,
+            filteredItems[0].createdTime,
+            filteredItems[0].comment,
+            filteredItems[0].approverID,
+            1,
+            filteredItems[0].deleteFlag
+          );
         }
       });
     }
+  };
+
+  // Method to setup update
+  const handleShow = (value) => {
+    navigate(`/Salary-Advance/Update?id=${value}`);
   };
 
   // Method to change date from timestamp
@@ -390,8 +383,8 @@ export default function SalaryAdvanceData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
-                <Dropdown.Item>Disapprove</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleShow(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisapprove(value)}>Disapprove</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleApprove(value)}>Approve</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
