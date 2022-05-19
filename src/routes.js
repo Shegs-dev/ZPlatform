@@ -100,6 +100,7 @@ import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
 import SalaryAdvance from "layouts/salary-advance";
+import UpdateSalaryAdvance from "layouts/salary-advance/update-salary-advance";
 
 import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
@@ -337,6 +338,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Salary-Advance",
     component: <SalaryAdvance />,
+  },
+  {
+    name: "Update Salary Advance",
+    key: "updateSalaryAdvance",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Advance/Update",
+    component: <UpdateSalaryAdvance />,
   },
   {
     type: "divider",
