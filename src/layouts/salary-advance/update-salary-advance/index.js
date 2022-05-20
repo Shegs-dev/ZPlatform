@@ -99,7 +99,7 @@ function EditSalaryAdvance() {
         }
         if (isMounted) {
           setSalaryAdvance(result[0]);
-          setAmount(result[0].amount);
+          setAmount(` ${result[0].amount}`);
           setApprover(result[0].approverID);
         }
       });
@@ -109,8 +109,11 @@ function EditSalaryAdvance() {
   }, []);
 
   // eslint-disable-next-line consistent-return
-  const handleClick = () => {
-    setOpened(true);
+  const handleClick = (e) => {
+    e.preventDefault();
+    // setOpened(true);
+    const letters = /^[0-9]+$/;
+    const amt = amountx.trim();
     if (salaryAdvance.status !== 0) {
       MySwal.fire({
         title: "UPDATE_DISALLOWED",
@@ -119,12 +122,28 @@ function EditSalaryAdvance() {
       }).then(() => {
         window.location.reload();
       });
+    } else if (amt.length === 0) {
+      MySwal.fire({
+        title: "AMOUNT_EMPTY",
+        type: "error",
+        text: "Please Fill In Amount",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (!amt.match(letters)) {
+      MySwal.fire({
+        title: "AMOUNT_INVALID",
+        type: "error",
+        text: "Amount Value Is Invalid",
+      }).then(() => {
+        window.location.reload();
+      });
     } else {
       const raw = JSON.stringify({
         id: salaryAdvance.id,
         orgID: salaryAdvance.orgID,
         empID: salaryAdvance.empID,
-        amount: amountx,
+        amount: amt,
         createdTime: salaryAdvance.createdTime,
         deleteFlag: salaryAdvance.deleteFlag,
         comment: salaryAdvance.comment,
@@ -145,7 +164,7 @@ function EditSalaryAdvance() {
           return res.json();
         })
         .then((result) => {
-          setOpened(false);
+          // setOpened(false);
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");
             window.location.reload();
@@ -178,23 +197,24 @@ function EditSalaryAdvance() {
   };
 
   // eslint-disable-next-line consistent-return
-  const handleOnAmountKeys = () => {
-    const letters = /^[0-9]+$/;
-    if (!amountx.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML =
-        "Amount Not Valid. No Decimal Places or Alphabets<br>";
-    }
-    if (amountx.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "";
-      handleClick();
-    }
-    if (amountx.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Amount is required<br>";
-    }
-  };
+  // const handleOnAmountKeys = () => {
+  //   const letters = /^[0-9]+$/;
+  //   console.log(amountx);
+  //   if (!amountx.match(letters)) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("name").innerHTML =
+  //       "Amount Not Valid. No Decimal Places or Alphabets<br>";
+  //   }
+  //   if (amountx.match(letters)) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("name").innerHTML = "";
+  //     handleClick();
+  //   }
+  //   if (amountx.length === 0) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("name").innerHTML = "Amount is required<br>";
+  //   }
+  // };
 
   return (
     <DashboardLayout>
@@ -277,7 +297,7 @@ function EditSalaryAdvance() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleOnAmountKeys}
+                onClick={(e) => handleClick(e)}
                 color="info"
                 width="50%"
                 align="left"

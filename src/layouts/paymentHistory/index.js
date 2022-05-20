@@ -37,7 +37,6 @@ function PaymentHis() {
   const [descripx, setDescripx] = useState("");
   const [currencyx, setCurrency] = useState("NGN");
   const [amountx, setAmountx] = useState(0);
-  const [comBalance, setComBalance] = useState(0);
   const [pnox, setPno] = useState("");
   const [bonusCheck, setBonusCheck] = useState([]);
   const [referenceSKey, setReferenceSKey] = useState();
@@ -51,6 +50,7 @@ function PaymentHis() {
   const [items, setItems] = useState([]);
   const [auditSDate, setAuditSDate] = useState("");
   const [auditEDate, setAuditEDate] = useState("");
+  const [concaBalance, setConcaBalance] = useState("");
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -65,29 +65,6 @@ function PaymentHis() {
     return retDate;
   };
   const bonusStatus = "1";
-  // eslint-disable-next-line consistent-return
-  function commify(n) {
-    let parts = 0;
-    if (comBalance > 0) {
-      parts = n.toString().split(".");
-    }
-    const numberPart = parts[0];
-    const decimalPart = parts[1];
-    const thousands = /\B(?=(\d{3})+(?!\d))/g;
-    if (comBalance > 0) {
-      // eslint-disable-next-line prefer-template
-      return numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "");
-      // eslint-disable-next-line no-else-return
-    } else {
-      return 0;
-    }
-  }
-
-  // const numberFormatter = Intl.NumberFormat("en-US");
-  // const formatted = numberFormatter.format(comBalance);
-  // console.log(formatted);
-
-  const concaBalance = `NGN ${commify(comBalance)}`;
 
   useEffect(() => {
     setOpened(true);
@@ -159,11 +136,25 @@ function PaymentHis() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
+          let comBalance = 0;
           if (resultapi.length === 0) {
-            setComBalance(0);
+            comBalance = 0;
           } else {
-            setComBalance(resultapi.balance);
+            comBalance = resultapi.balance;
           }
+
+          let parts = 0;
+          if (comBalance > 0) {
+            parts = comBalance.toString().split(".");
+          }
+          const numberPart = parts[0];
+          const decimalPart = parts[1];
+          const thousands = /\B(?=(\d{3})+(?!\d))/g;
+          let value = 0;
+          if (comBalance > 0) {
+            value = numberPart.replace(thousands, ",") + (decimalPart ? `.${decimalPart}` : "");
+          }
+          setConcaBalance(`NGN ${value}`);
         }
       })
       .catch((error) => {
@@ -437,90 +428,6 @@ function PaymentHis() {
     isTestMode: true,
   };
 
-  //   const handleOnClick = () => {
-  //     setOpened(true);
-  //     const data11 = JSON.parse(localStorage.getItem("user1"));
-  //     //   bonusAmount: 10
-  //     //   createdTime: 1649875827073
-  //     //   deleteFlag: 0
-  //     //   endTime: 1651104000000
-  //     //   id: "62571b73813e040d304c13fd"
-  //     //   maxTrigger: 6000
-  //     //   minTrigger: 2000
-  //     //   name: "Test Freebie"
-  //     //   startTime: 1649894400000
-  //     //   status: 0
-  //     let allPayandBonus = 0;
-  //     let mBonusAmount = 0;
-  //     // eslint-disable-next-line radix
-  //     const amountCOn = parseInt(amountx);
-  //     // eslint-disable-next-line array-callback-return
-  //     bonusCheck.map((checkBonus) => {
-  //       if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
-  //         mBonusAmount = checkBonus.bonusAmount;
-  //         allPayandBonus = checkBonus.bonusAmount + amountCOn;
-  //       } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
-  //         mBonusAmount = checkBonus.bonusAmount;
-  //         allPayandBonus = checkBonus.bonusAmount + amountCOn;
-  //       } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
-  //         mBonusAmount = checkBonus.bonusAmount;
-  //         allPayandBonus = checkBonus.bonusAmount + amountCOn;
-  //       } else {
-  //         mBonusAmount = 0;
-  //         allPayandBonus = amountCOn;
-  //       }
-  //       // check = false;
-  //     });
-  //     const orgIDs = data11.orgID;
-  //     const raw = JSON.stringify({
-  //       orgID: orgIDs,
-  //       paidAmount: amountCOn,
-  //       bonusAmount: mBonusAmount,
-  //       totalAmount: allPayandBonus,
-  //     });
-  //     const requestOptions = {
-  //       method: "POST",
-  //       headers: myHeaders,
-  //       body: raw,
-  //       redirect: "follow",
-  //     };
-  //     console.log(raw);
-  //     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`, requestOptions)
-  //       .then(async (res) => {
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res.json();
-  //       })
-  //       .then((result) => {
-  //         console.log(result);
-  //         if (result.message === "Expired Access") {
-  //           navigate("/authentication/sign-in");
-  //         }
-  //         if (result.message === "Token Does Not Exist") {
-  //           navigate("/authentication/sign-in");
-  //         }
-  //         if (result.message === "Unauthorized Access") {
-  //           navigate("/authentication/forbiddenPage");
-  //         }
-  //         setOpened(false);
-  //         MySwal.fire({
-  //           title: result.status,
-  //           type: "success",
-  //           text: result.message,
-  //         }).then(() => {
-  //           window.location.reload();
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         setOpened(false);
-  //         MySwal.fire({
-  //           title: error.status,
-  //           type: "error",
-  //           text: error.message,
-  //         });
-  //       });
-  //   };
-
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
@@ -534,7 +441,6 @@ function PaymentHis() {
       startDate: auditConSDate,
       endDate: auditConEDate,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -562,7 +468,6 @@ function PaymentHis() {
           window.location.reload();
         }
         setItems(result);
-        console.log(result);
       })
       .catch((error) => {
         setOpened(false);
