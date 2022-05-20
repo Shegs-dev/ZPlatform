@@ -111,11 +111,28 @@ function EditSalaryAdvance() {
   // eslint-disable-next-line consistent-return
   const handleClick = () => {
     setOpened(true);
+    const letters = /^[0-9]+$/;
     if (salaryAdvance.status !== 0) {
       MySwal.fire({
         title: "UPDATE_DISALLOWED",
         type: "error",
         text: "You Cannot Update A Request After Decision Is Already Made",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (amountx.length === 0) {
+      MySwal.fire({
+        title: "AMOUNT_EMPTY",
+        type: "error",
+        text: "Please Fill In Amount",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (!amountx.match(letters)) {
+      MySwal.fire({
+        title: "AMOUNT_INVALID",
+        type: "error",
+        text: "Amount Value Is Invalid",
       }).then(() => {
         window.location.reload();
       });
@@ -178,23 +195,24 @@ function EditSalaryAdvance() {
   };
 
   // eslint-disable-next-line consistent-return
-  const handleOnAmountKeys = () => {
-    const letters = /^[0-9]+$/;
-    if (!amountx.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML =
-        "Amount Not Valid. No Decimal Places or Alphabets<br>";
-    }
-    if (amountx.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "";
-      handleClick();
-    }
-    if (amountx.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Amount is required<br>";
-    }
-  };
+  // const handleOnAmountKeys = () => {
+  //   const letters = /^[0-9]+$/;
+  //   console.log(amountx);
+  //   if (!amountx.match(letters)) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("name").innerHTML =
+  //       "Amount Not Valid. No Decimal Places or Alphabets<br>";
+  //   }
+  //   if (amountx.match(letters)) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("name").innerHTML = "";
+  //     handleClick();
+  //   }
+  //   if (amountx.length === 0) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("name").innerHTML = "Amount is required<br>";
+  //   }
+  // };
 
   return (
     <DashboardLayout>
@@ -277,7 +295,7 @@ function EditSalaryAdvance() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleOnAmountKeys}
+                onClick={handleClick}
                 color="info"
                 width="50%"
                 align="left"
