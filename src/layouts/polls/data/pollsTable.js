@@ -145,6 +145,82 @@ export default function PollsData() {
     }
   };
 
+  const handleView = (value) => {
+    navigate(`/view-polls?id=${value}`);
+  };
+
+  // const handleStatus = (status) => {
+  //   if (status === 1) {
+  //     return "OPENED";
+  //   }
+  //   if (status === 2) {
+  //     return "CLOSED";
+  //   }
+  // };
+
+  const handleOpen = (value) => {
+    // navigate(`/open-polls?id=${value}`);
+    const requestOptions = {
+      method: "GET",
+      headers: miHeaders,
+    };
+    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/openOrClose/${value}/1`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resx) => {
+        if (resx.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resx.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resx.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        MySwal.fire({
+          title: resx.status,
+          type: "success",
+          text: resx.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      });
+  };
+
+  const handleClose = (value) => {
+    const requestOptions = {
+      method: "GET",
+      headers: miHeaders,
+    };
+    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/openOrClose/${value}/2`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resx) => {
+        if (resx.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resx.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resx.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        MySwal.fire({
+          title: resx.status,
+          type: "success",
+          text: resx.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      });
+  };
+
   // Return table
   return {
     columns: [
@@ -188,6 +264,9 @@ export default function PollsData() {
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleOptions(value)}>Options</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleOpen(value)}>Open </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

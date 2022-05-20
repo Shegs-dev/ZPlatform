@@ -44,6 +44,10 @@ function View() {
   // const [reasonForDisapproval, setReasonForDisapproval] = useState("");
   const [items, setItems] = useState([]);
 
+  // const [approve, setApprove] = useState(false);
+  // console.log(approve);
+  // const [showComment, setShowComment] = useState(false);
+
   useEffect(() => {
     const headers = miHeaders;
     let isMounted = true;
@@ -159,6 +163,14 @@ function View() {
         });
     }
   };
+
+  const handleApprove = (e) => {
+    setComment(e.target.value);
+  };
+
+  // const handleDisapprove = (e) => {
+  //   setApprove(e.target.value);
+  // };
 
   return (
     <DashboardLayout>
@@ -408,13 +420,40 @@ function View() {
                   <Form.Group
                     className="mb-3"
                     controlId="setPurposex"
-                    value={comment || ""}
-                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Description"
+                    //  value={(comment || "", showComment)}
+                    //  onChange={(e) => handleOnChange(e.target.value)}
                   >
                     <Form.Label>Approve/Disapprove Time Off-Requests</Form.Label>
                     <Form.Control as="textarea" rows={3} />
                   </Form.Group>
                 </Form>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="disapprove"
+                    id="disapprove"
+                    //  onChange={handleOnChange}
+                  />
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                  <label className="form-check-label" htmlFor="disapprove">
+                    Disapprove
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="approve"
+                    id="approve"
+                    onChange={handleApprove}
+                  />
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                  <label className="form-check-label" htmlFor="approve">
+                    Approve
+                  </label>
+                </div>
               </MDBox>
               <Container>
                 <div className="row">

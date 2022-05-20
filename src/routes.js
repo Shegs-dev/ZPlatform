@@ -82,6 +82,7 @@ import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
+import ChatApp from "layouts/mattersArising/viewMatter/App";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 import SalaryPayment from "layouts/salaryPayment";
@@ -109,6 +110,8 @@ import AppraisalAppraisers from "layouts/appraisal/appraisers";
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
 import Addpolloptions from "layouts/polls/addpolloptions";
+import ViewPolls from "layouts/polls/viewPolls";
+import Disapprove from "layouts/timeoffRequests/disapprove";
 
 const routes = [
   {
@@ -187,6 +190,13 @@ const routes = [
     component: <MattersArising />,
   },
   {
+    name: "Chats",
+    key: "viewMatter",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Matter",
+    component: <ChatApp />,
+  },
+  {
     type: "collapse",
     name: "Polls",
     key: "polls",
@@ -207,6 +217,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/polls/Option",
     component: <Addpolloptions />,
+  },
+  {
+    name: "View polls",
+    key: "viewpolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-polls",
+    component: <ViewPolls />,
   },
   {
     name: "Edit Matters Arising",
@@ -395,6 +412,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    name: "disapprove Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoff-Requests/disapprove",
+    component: <Disapprove />,
   },
   {
     // type: "collapse",
