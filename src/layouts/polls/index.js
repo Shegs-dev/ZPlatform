@@ -88,11 +88,11 @@ function Polls() {
     //   document.getElementById("question").innerHTML = "";
     // }
     if (questionx.length === 0) {
-      setCheckedQuestion(true);
+      setCheckedQuestion(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("question").innerHTML = "Question is required<br>";
     } else {
-      setCheckedQuestion(false);
+      setCheckedQuestion(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("question").innerHTML = "";
     }

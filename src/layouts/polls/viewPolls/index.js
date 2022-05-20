@@ -222,7 +222,7 @@ function ViewPolls() {
               variant="gradient"
               onClick={(e) => handleUpdate(e)}
               // disabled={!enabled}
-              color="info"
+              color="info"/
               width="50%"
               align="center"
             >

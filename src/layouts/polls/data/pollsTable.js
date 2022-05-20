@@ -217,6 +217,10 @@ export default function PollsData() {
       });
   };
 
+  const handleVote = (value) => {
+    navigate(`/polls/vote-polls?id=${value}`);
+  };
+
   // Return table
   return {
     columns: [
@@ -262,6 +266,7 @@ export default function PollsData() {
                 <Dropdown.Item onClick={() => handleView(value)}>View Polls</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleOpen(value)}>Open Polls</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close Polls</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleVote(value)}>Vote Polls</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

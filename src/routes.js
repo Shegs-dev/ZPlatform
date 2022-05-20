@@ -93,7 +93,7 @@ import Groups from "layouts/groups";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
-import View from "layouts/timeoffRequests/view";
+// import View from "layouts/timeoffRequests/view";
 import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
@@ -111,6 +111,7 @@ import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
 import ViewPolls from "layouts/polls/viewPolls";
 import Disapprove from "layouts/timeoffRequests/disapprove";
+import VotePolls from "layouts/polls/votePolls";
 
 const routes = [
   {
@@ -173,13 +174,13 @@ const routes = [
     route: "/Announcement",
     component: <Announcement />,
   },
-  {
-    name: "View",
-    key: "view",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/timeoffRequests/view",
-    component: <View />,
-  },
+  // {
+  //   name: "View",
+  //   key: "view",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/timeoffRequests/view",
+  //   component: <View />,
+  // },
   {
     type: "collapse",
     name: "Matters Arising",
@@ -216,6 +217,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/view-polls",
     component: <ViewPolls />,
+  },
+  {
+    name: "Vote polls",
+    key: "votepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/vote-polls",
+    component: <VotePolls />,
   },
   {
     name: "Edit Matters Arising",
