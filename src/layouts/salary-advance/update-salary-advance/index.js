@@ -99,7 +99,7 @@ function EditSalaryAdvance() {
         }
         if (isMounted) {
           setSalaryAdvance(result[0]);
-          setAmount(result[0].amount);
+          setAmount(` ${result[0].amount}`);
           setApprover(result[0].approverID);
         }
       });
@@ -109,9 +109,11 @@ function EditSalaryAdvance() {
   }, []);
 
   // eslint-disable-next-line consistent-return
-  const handleClick = () => {
-    setOpened(true);
+  const handleClick = (e) => {
+    e.preventDefault();
+    // setOpened(true);
     const letters = /^[0-9]+$/;
+    const amt = amountx.trim();
     if (salaryAdvance.status !== 0) {
       MySwal.fire({
         title: "UPDATE_DISALLOWED",
@@ -120,7 +122,7 @@ function EditSalaryAdvance() {
       }).then(() => {
         window.location.reload();
       });
-    } else if (amountx.length === 0) {
+    } else if (amt.length === 0) {
       MySwal.fire({
         title: "AMOUNT_EMPTY",
         type: "error",
@@ -128,7 +130,7 @@ function EditSalaryAdvance() {
       }).then(() => {
         window.location.reload();
       });
-    } else if (!amountx.match(letters)) {
+    } else if (!amt.match(letters)) {
       MySwal.fire({
         title: "AMOUNT_INVALID",
         type: "error",
@@ -141,7 +143,7 @@ function EditSalaryAdvance() {
         id: salaryAdvance.id,
         orgID: salaryAdvance.orgID,
         empID: salaryAdvance.empID,
-        amount: amountx,
+        amount: amt,
         createdTime: salaryAdvance.createdTime,
         deleteFlag: salaryAdvance.deleteFlag,
         comment: salaryAdvance.comment,
@@ -162,7 +164,7 @@ function EditSalaryAdvance() {
           return res.json();
         })
         .then((result) => {
-          setOpened(false);
+          // setOpened(false);
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");
             window.location.reload();
@@ -295,7 +297,7 @@ function EditSalaryAdvance() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleClick}
+                onClick={(e) => handleClick(e)}
                 color="info"
                 width="50%"
                 align="left"
