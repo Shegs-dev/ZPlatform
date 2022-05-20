@@ -143,9 +143,9 @@ export default function Branchdata() {
         <tr><td><label for="city">City</label></td>
         <td><input type="text" class="swal2-input" id="city" value="${cityx}" placeholder="City"></td>
         <tr><td><label for="state">State</label></td>
-        <td><input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State"></td>
+        <td><input type="text" class="swal2-input" id="state" value="${statex}" placeholder="State" disabled></td>
         <tr><td><label for="country">Country</label></td>
-        <td><input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country"></td>
+        <td><input type="text" class="swal2-input" id="country" value="${countryx}" placeholder="Country" disabled></td>
         <tr><td><label for="pno">Phone Number</label></td>
         <td><input type="text" class="swal2-input" id="pno" value="${pnox}" placeholder="Phone Number"></td>`,
         confirmButtonText: "Save",

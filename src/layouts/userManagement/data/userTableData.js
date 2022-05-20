@@ -207,7 +207,7 @@ export default function UserData() {
   };
 
   const handleAddclone = (value) => {
-    navigate(`/user-Management/user-Salary-Clone?id=${value}`);
+    navigate(`/user-Management/Clone-User-Salary?id=${value}`);
   };
 
   const handleUpdateSystemRole = (value) => {
@@ -244,21 +244,21 @@ export default function UserData() {
 
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddTOT(value)}>
                     Add Time-Off Type
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handlePasswordReset(value)}>
-                    Reset Password
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleUpdateSystemRole(value)}>
-                    Change User System Role
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddsalary(value)}>
                     Add User Salary
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddclone(value)}>
                     Clone User Salary
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleUpdateSystemRole(value)}>
+                    Change User System Role
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handlePasswordReset(value)}>
+                    Reset Password
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

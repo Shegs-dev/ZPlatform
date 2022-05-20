@@ -21,12 +21,10 @@ function Updatepolls() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
   const [items, setItems] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [groupIDx, setGroupIDx] = useState("");
   const [questionx, setQuestionx] = useState("");
 
-  const [user, setUser] = useState([]);
-
-  // Segun
   useEffect(() => {
     const headers = miHeaders;
 
@@ -54,8 +52,7 @@ function Updatepolls() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
-          setUser(result);
+          setGroups(result);
         }
       });
     return () => {
@@ -70,7 +67,7 @@ function Updatepolls() {
 
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/polls/getsByIds/${ids}`, { headers })
+    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getByIds/${ids}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -90,8 +87,9 @@ function Updatepolls() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setItems(result);
+          setQuestionx(result[0].question);
+          setGroupIDx(result[0].groupID);
         }
       });
     return () => {
@@ -101,13 +99,13 @@ function Updatepolls() {
 
   const handleUpdate = () => {
     const raw = JSON.stringify({
-      id: user[0].group.id,
-      orgID: user[0].group.orgID,
+      id: items[0].id,
+      orgID: items[0].orgID,
       groupID: groupIDx,
       question: questionx,
-      status: user[0].group.status,
-      deleteFlag: user[0].group.deleteFlag,
-      createdTime: user[0].group.createdTime,
+      status: items[0].status,
+      deleteFlag: items[0].deleteFlag,
+      createdTime: items[0].createdTime,
     });
     const requestOptions = {
       method: "POST",
@@ -206,7 +204,12 @@ function Updatepolls() {
                     fullWidth
                   />
                 </div>
-
+              </div>
+            </Container>
+          </MDBox>
+          <MDBox>
+            <Container>
+              <div className="row">
                 <div className="col-sm-6">
                   <MDBox mb={2}>
                     <MDTypography variant="button" fontWeight="regular" color="text">
@@ -218,7 +221,7 @@ function Updatepolls() {
                       aria-label="Default select example"
                     >
                       <option value="">Select Group</option>
-                      {items.map((api) => (
+                      {groups.map((api) => (
                         <option key={api.group.id} value={api.group.id}>
                           {api.group.name}
                         </option>

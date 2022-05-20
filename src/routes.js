@@ -84,10 +84,10 @@ import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
+import SalaryPayment from "layouts/salaryPayment";
 
-// import App from "layouts/mattersArising/viewMatter/client/app";
-// import Createbonus from "layouts/createbonus";
 import Bonusdeduction from "layouts/bonusdeduction";
+import CloneBonusDeduction from "layouts/bonusdeduction/clone";
 import Groups from "layouts/groups";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
@@ -97,11 +97,14 @@ import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
 import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
+import SalaryAdvance from "layouts/salary-advance";
+import UpdateSalaryAdvance from "layouts/salary-advance/update-salary-advance";
 
 import Appraisal from "layouts/appraisal/appraisal";
 import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
 import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
+import AppraisalAppraisers from "layouts/appraisal/appraisers";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
@@ -154,10 +157,10 @@ const routes = [
     component: <AddUserpayment />,
   },
   {
-    name: "User Clone",
-    key: "userClone",
+    name: "Clone User Salary",
+    key: "cloneUserSalary",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/user-Salary-Clone",
+    route: "/user-Management/Clone-User-Salary",
     component: <AddClonesalary />,
   },
   {
@@ -193,9 +196,9 @@ const routes = [
   },
   {
     name: "Update polls",
-    key: "editupdatepolls",
+    key: "updatepolls",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/polls/update",
+    route: "/Update-Poll",
     component: <UpdatePolls />,
   },
   {
@@ -253,6 +256,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Set-Appraisal-Questions",
     component: <SetAppraisalQuestion />,
+  },
+  {
+    name: "Set Appraisal Appraisers",
+    key: "setAppraisalAppraisers",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Set-Appraisal-Appraisers",
+    component: <AppraisalAppraisers />,
   },
   {
     type: "collapse",
@@ -319,6 +329,36 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Bonus-And-Deduction",
     component: <Bonusdeduction />,
+  },
+  {
+    name: "Clone Bonus/Deduction",
+    key: "cloneBonusDeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Bonus-And-Deduction/Clone",
+    component: <CloneBonusDeduction />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Payment",
+    key: "salaryPayment",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Payment",
+    component: <SalaryPayment />,
+  },
+  {
+    type: "collapse",
+    name: "Salary Advance",
+    key: "salaryAdvance",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Advance",
+    component: <SalaryAdvance />,
+  },
+  {
+    name: "Update Salary Advance",
+    key: "updateSalaryAdvance",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Salary-Advance/Update",
+    component: <UpdateSalaryAdvance />,
   },
   {
     type: "divider",
@@ -444,7 +484,7 @@ const routes = [
     name: "Add Roles And Permissions",
     key: "addRolesAndPerms",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/systemRoles/addRolesAndPerms",
+    route: "/System-Roles/Add-Permissions",
     component: <RolesAndPerms />,
   },
   {
@@ -459,7 +499,7 @@ const routes = [
     name: "Checklists",
     key: "checklists",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/checklists",
+    route: "/Company-Roles/Add-Steps",
     component: <Checklists />,
   },
   {
@@ -503,14 +543,14 @@ const routes = [
     name: "User Profile",
     key: "userProfile",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/userProfile",
+    route: "/user-Profile",
     component: <UserProfile />,
   },
   {
     name: "Company Profile",
     key: "companyProfile",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/companiesProfile",
+    route: "/company-Profile",
     component: <CompanyProfile />,
   },
   {
@@ -566,14 +606,14 @@ const routes = [
     name: "Time Off Requests Journey",
     key: "timeOffRequestjourney",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/timeOffRequestJourney",
+    route: "/timeoff-Requests/timeOff-Request-Journey",
     component: <TimeOffRequestJourney />,
   },
   {
     name: "Time Off Requests Journey",
     key: "timeOffRequestjourney",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoffRequests/forwardTimeOffRequests",
+    route: "/timeoff-Requests/forward-TimeOff-Requests",
     component: <ForwardTimeOff />,
   },
   {
@@ -587,7 +627,7 @@ const routes = [
     name: "Add Details To Time Off Type",
     key: "adddetailtotimeofftype",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeofftype/add-Details-To-Time-Off-Type",
+    route: "/timeoff-type/add-Details-To-Time-Off-Type",
     component: <AddTimeOffType />,
   },
   {
