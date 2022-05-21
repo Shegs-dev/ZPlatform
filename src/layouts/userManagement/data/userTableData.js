@@ -206,10 +206,6 @@ export default function UserData() {
     navigate(`/user-Management/user-Salary?id=${value}`);
   };
 
-  const handleAddclone = (value) => {
-    navigate(`/user-Management/Clone-User-Salary?id=${value}`);
-  };
-
   const handleUpdateSystemRole = (value) => {
     navigate(`/update-system-role?id=${value}`);
   };
@@ -248,12 +244,7 @@ export default function UserData() {
                   <Dropdown.Item onClick={() => handleAddTOT(value)}>
                     Add Time-Off Type
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleAddsalary(value)}>
-                    Add User Salary
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleAddclone(value)}>
-                    Clone User Salary
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleAddsalary(value)}>User Salary</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleUpdateSystemRole(value)}>
                     Change User System Role
                   </Dropdown.Item>
