@@ -173,7 +173,6 @@ export default function TimeOffRequestData() {
       approvex = filteredItems[0].approverID;
       adminx = filteredItems[0].adminID;
       reasonx = filteredItems[0].reasonForDisapproval;
-      console.log(filteredItems[0].noOfDaysRequested);
     }
     // const sDate = new Date(startx);
     // startx = sDate.getDate();
@@ -474,6 +473,10 @@ export default function TimeOffRequestData() {
   //   navigate(`/timeoffRequests/timeOffRequestJourney?id=${eTOTId}`);
   // };
 
+  const handleDisapprove = (filteredData, value) => {
+    navigate(`/timeoff-Requests/disapprove?id=${value}`);
+  };
+
   // Return table
   return {
     columns: [
@@ -534,6 +537,9 @@ export default function TimeOffRequestData() {
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Approve</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisapprove(items, value)}>
+                  Disapprove
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => navigate(`/timeoff-Requests/timeOff-Request-Journey?id=${value}`)}
                 >

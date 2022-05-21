@@ -109,7 +109,9 @@ import AppraisalAppraisers from "layouts/appraisal/appraisers";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
+import Addpolloptions from "layouts/polls/addpolloptions";
 import ViewPolls from "layouts/polls/viewPolls";
+import Disapprove from "layouts/timeoffRequests/disapprove";
 
 const routes = [
   {
@@ -208,6 +210,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Update-Poll",
     component: <UpdatePolls />,
+  },
+  {
+    name: "Add Poll Option",
+    key: "editaddpolloption",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/Option",
+    component: <Addpolloptions />,
   },
   {
     name: "View polls",
@@ -403,6 +412,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    name: "disapprove Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoff-Requests/disapprove",
+    component: <Disapprove />,
   },
   {
     // type: "collapse",

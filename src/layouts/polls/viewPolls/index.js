@@ -21,6 +21,7 @@ function ViewPolls() {
   const [groupIDx, setGroupIDx] = useState("");
   const [questionx, setQuestionx] = useState("");
   const [optionx, setOptions] = useState("");
+  console.log(optionx);
 
   useEffect(() => {
     const headers = miHeaders;
@@ -229,10 +230,6 @@ function ViewPolls() {
             </MDButton>
           </MDBox> */}
         </MDBox>
-      </Card>
-      &nbsp;
-      <Card>
-        <MDBox>value={optionx || ""}</MDBox>
       </Card>
     </DashboardLayout>
   );
