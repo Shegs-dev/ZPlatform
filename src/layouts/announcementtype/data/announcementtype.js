@@ -22,7 +22,7 @@ export default function data() {
 
   const navigate = useNavigate();
 
-  // Method to handle diable
+  // Method to handle disable
   const handleUpdate = (idx, namex, colorCodex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 

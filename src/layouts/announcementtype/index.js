@@ -172,18 +172,22 @@ function Announcementtype() {
                     />
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={5}>
+              </Container>
+            </MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-6">
+                  <MDBox mb={2}>
+                    <MDTypography variant="button" fontWeight="regular" color="text">
                       Color Code
                     </MDTypography>
                     <MDBox mt={0}>
                       <input type="color" onChange={(e) => setColor(e.target.value)} />
                     </MDBox>
-                  </div>
+                  </MDBox>
                 </div>
-              </Container>
-            </MDBox>
+              </div>
+            </Container>
             <MDBox mt={2} mb={2}>
               <MDButton
                 variant="gradient"
