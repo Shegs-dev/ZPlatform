@@ -182,7 +182,12 @@ function Announcementtype() {
                       Color Code
                     </MDTypography>
                     <MDBox mt={0}>
-                      <input type="color" onChange={(e) => setColor(e.target.value)} />
+                      <input
+                        type="color"
+                        className="form-control"
+                        style={{ width: "70%" }}
+                        onChange={(e) => setColor(e.target.value)}
+                      />
                     </MDBox>
                   </MDBox>
                 </div>

@@ -107,11 +107,11 @@ export default function data() {
       title: "Update Announcement Type",
       html: `<table><tr><td>
       <label for="name">Name:   </label></td>
-      <td><input type="text" id="name" value="${namex}" class="form-control" placeholder="Name"></td></tr><br>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
       <tr><td><label for="descrip">Description:   </label></td>
-      <td><input type="text" class="form-control" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
       <tr><td><label for="colorCode">ColorCode:</label></td>
-      <td><input type="color"  class="form-control" id="colorCode" value="${colorCodex}" placeholder="ColorCode"></td></tr></table>`,
+      <td><input type="color"  class="swal2-input" style="width:77%" id="colorCode" value="${colorCodex}" placeholder="ColorCode"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
