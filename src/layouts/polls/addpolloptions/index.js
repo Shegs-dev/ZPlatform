@@ -1,10 +1,13 @@
+/* eslint-disable react/prop-types */
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Dropdown } from "react-bootstrap";
+import Icon from "@mui/material/Icon";
 import MDInput from "components/MDInput";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -125,7 +128,86 @@ function Addpolloptions() {
       isMounted = false;
     };
   }, []);
-  const pColumns = [{ Header: "Options", accessor: "value", align: "left" }];
+
+  // Method to handle diable
+  const handleDisable = (value) => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(`${process.env.REACT_APP_KUBU_URL}/poll/removeOption/${value}`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            MySwal.fire({
+              title: resx.status,
+              type: "success",
+              text: resx.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
+
+  const pColumns = [
+    { Header: "Options", accessor: "value", align: "left" },
+    {
+      Header: "actions",
+      accessor: "id",
+      Cell: ({ cell: { value } }) => (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#dadada",
+            borderRadius: "2px",
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleDisable(value)}>Remove</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
+      align: "left",
+    },
+  ];
 
   return (
     <DashboardLayout>
