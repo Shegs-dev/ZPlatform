@@ -79,6 +79,10 @@ export default function PollsData() {
     navigate(`/Update-Poll?id=${value}`);
   };
 
+  const handleOptions = (value) => {
+    navigate(`/polls/Option?id=${value}`);
+  };
+
   // Method to fetch all departments
   // env.environments
   useEffect(() => {
@@ -217,9 +221,9 @@ export default function PollsData() {
       });
   };
 
-  const handleVote = (value) => {
-    navigate(`/polls/vote-polls?id=${value}`);
-  };
+  // const handleVote = (value) => {
+  //   navigate(`/polls/vote-polls?id=${value}`);
+  // };
 
   // Return table
   return {
@@ -263,10 +267,10 @@ export default function PollsData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleView(value)}>View Polls</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleOpen(value)}>Open Polls</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleClose(value)}>Close Polls</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleVote(value)}>Vote Polls</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleOptions(value)}>Options</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleOpen(value)}>Open </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

@@ -109,6 +109,7 @@ import AppraisalAppraisers from "layouts/appraisal/appraisers";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
+import Addpolloptions from "layouts/polls/addpolloptions";
 import ViewPolls from "layouts/polls/viewPolls";
 import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
@@ -210,6 +211,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Update-Poll",
     component: <UpdatePolls />,
+  },
+  {
+    name: "Add Poll Option",
+    key: "editaddpolloption",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/Option",
+    component: <Addpolloptions />,
   },
   {
     name: "View polls",
