@@ -154,10 +154,26 @@ export default function UserData() {
   };
 
   const handlePasswordReset = (value) => {
-    const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { headers })
-      .then((res) => res.json())
+    const gheaders = miHeaders;
+    const hheaders = myHeaders;
+    console.log(miHeaders);
+    console.log(gheaders);
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { gheaders })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         console.log(resultp);
         if (resultp.length > 0) {
           const raw = JSON.stringify({
@@ -165,7 +181,7 @@ export default function UserData() {
           });
           const requestOptions = {
             method: "POST",
-            headers: myHeaders,
+            headers: hheaders,
             body: raw,
             redirect: "follow",
           };
