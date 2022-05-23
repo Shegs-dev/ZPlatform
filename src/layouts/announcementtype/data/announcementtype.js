@@ -22,7 +22,7 @@ export default function data() {
 
   const navigate = useNavigate();
 
-  // Method to handle diable
+  // Method to handle disable
   const handleUpdate = (idx, namex, colorCodex, descripx, createdTimex, deleteFlagx) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -107,11 +107,11 @@ export default function data() {
       title: "Update Announcement Type",
       html: `<table><tr><td>
       <label for="name">Name:   </label></td>
-      <td><input type="text" id="name" value="${namex}" class="form-control" placeholder="Name"></td></tr><br>
+      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"></td></tr><br>
       <tr><td><label for="descrip">Description:   </label></td>
-      <td><input type="text" class="form-control" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
+      <td><input type="text" class="swal2-input" id="descrip" value="${descripx}" placeholder="Description"></td></tr><br>
       <tr><td><label for="colorCode">ColorCode:</label></td>
-      <td><input type="color"  class="form-control" id="colorCode" value="${colorCodex}" placeholder="ColorCode"></td></tr></table>`,
+      <td><input type="color"  class="swal2-input" style="width:77%" id="colorCode" value="${colorCodex}" placeholder="ColorCode"></td></tr></table>`,
       confirmButtonText: "Save",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -125,7 +125,7 @@ export default function data() {
         if (name.length > 0 && !name.match(letters)) {
           Swal.showValidationMessage(`Name - Please write a name and use only letters`);
         } else {
-          handleUpdate(id, name, colorCodee, descrip, deleteFlagx, createdTimex);
+          handleUpdate(id, name, colorCodee, descrip, createdTimex, deleteFlagx);
         }
       },
     });
@@ -221,7 +221,6 @@ export default function data() {
         }
         if (isMounted) {
           setItems(result);
-          console.log(result);
         }
       });
     return () => {

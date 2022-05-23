@@ -2,12 +2,12 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDBox from "components/MDBox";
 import Card from "@mui/material/Card";
-import { Form, Container } from "react-bootstrap";
-import MDButton from "components/MDButton";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { Container } from "react-bootstrap";
+// import MDButton from "components/MDButton";
+// import Swal from "sweetalert2";
+// import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
-import PHeaders from "postHeader";
+// import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useState, useEffect } from "react";
 import MDInput from "components/MDInput";
@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 // import InputGroup from ""
 
 function View() {
-  const MySwal = withReactContent(Swal);
+  // const MySwal = withReactContent(Swal);
 
   const navigate = useNavigate();
 
@@ -24,10 +24,10 @@ function View() {
   const urlParams = new URLSearchParams(queryString);
   const ids = urlParams.get("id");
 
-  const { allPHeaders: myHeaders } = PHeaders();
+  // const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const [comment, setComment] = useState("");
+  // const [comment, setComment] = useState("");
 
   const [empSetupID, setEmpSetupID] = useState("");
   const [noOfDaysRequested, setNoOfDaysRequested] = useState("");
@@ -42,7 +42,11 @@ function View() {
   const [approverID, setApproverID] = useState("");
   // const [adminID, setAdminID] = useState("");
   // const [reasonForDisapproval, setReasonForDisapproval] = useState("");
-  const [items, setItems] = useState([]);
+  // const [items, setItems] = useState([]);
+
+  // const [approve, setApprove] = useState(false);
+  // console.log(approve);
+  // const [showComment, setShowComment] = useState(false);
 
   useEffect(() => {
     const headers = miHeaders;
@@ -78,8 +82,8 @@ function View() {
           // setDeleteFlag(result[0].deleteFlag);
           setApproverID(result[0].approverName);
           // setAdminID(result[0].adminID);
-          setComment(result[0].reasonForDisapproval);
-          setItems(result);
+          // setComment(result[0].reasonForDisapproval);
+          // setItems(result);
         }
       });
     return () => {
@@ -87,78 +91,86 @@ function View() {
     };
   }, []);
 
-  const handleShow = () => {
-    if (noOfDaysApprovedx > items[0].noOfDaysRequested) {
-      MySwal.fire({
-        title: "INVALID_DAYS_APPROVED",
-        type: "error",
-        text: "Number Of Days Approved Cannot Be Greater Than Number Of Days Requested",
-      });
-    } else {
-      const raw = JSON.stringify({
-        id: items[0].id,
-        orgID: items[0].orgID,
-        empID: items[0].empID,
-        empSetupID: items[0].empSetupID,
-        noOfDaysRequested: items[0].noOfDaysRequested,
-        noOfDaysApproved: noOfDaysApprovedx,
-        startDate: items[0].startDate,
-        endDate: items[0].endDate,
-        resumptionDate: items[0].resumptionDate,
-        dutyRelieverID: items[0].dutyRelieverID,
-        createdDate: items[0].createdTime,
-        purpose: items[0].purpose,
-        deleteFlag: items[0].deleteFlag,
-        approverID: items[0].approverID,
-        adminID: items[0].adminID,
-        reasonForDisapproval: comment,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
+  // const handleShow = () => {
+  //   if (noOfDaysApprovedx > items[0].noOfDaysRequested) {
+  //     MySwal.fire({
+  //       title: "INVALID_DAYS_APPROVED",
+  //       type: "error",
+  //       text: "Number Of Days Approved Cannot Be Greater Than Number Of Days Requested",
+  //     });
+  //   } else {
+  //     const raw = JSON.stringify({
+  //       id: items[0].id,
+  //       orgID: items[0].orgID,
+  //       empID: items[0].empID,
+  //       empSetupID: items[0].empSetupID,
+  //       noOfDaysRequested: items[0].noOfDaysRequested,
+  //       noOfDaysApproved: noOfDaysApprovedx,
+  //       startDate: items[0].startDate,
+  //       endDate: items[0].endDate,
+  //       resumptionDate: items[0].resumptionDate,
+  //       dutyRelieverID: items[0].dutyRelieverID,
+  //       createdDate: items[0].createdTime,
+  //       purpose: items[0].purpose,
+  //       deleteFlag: items[0].deleteFlag,
+  //       approverID: items[0].approverID,
+  //       adminID: items[0].adminID,
+  //       reasonForDisapproval: comment,
+  //     });
+  //     const requestOptions = {
+  //       method: "POST",
+  //       headers: myHeaders,
+  //       body: raw,
+  //       redirect: "follow",
+  //     };
 
-      fetch(
-        `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`,
-        requestOptions
-      )
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-            window.location.reload();
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
-        })
-        .catch((error) => {
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
-        });
-    }
-  };
+  //     fetch(
+  //       `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`,
+  //       requestOptions
+  //     )
+  //       .then(async (res) => {
+  //         const aToken = res.headers.get("token-1");
+  //         localStorage.setItem("rexxdex", aToken);
+  //         return res.json();
+  //       })
+  //       .then((result) => {
+  //         if (result.message === "Expired Access") {
+  //           navigate("/authentication/sign-in");
+  //           window.location.reload();
+  //         }
+  //         if (result.message === "Token Does Not Exist") {
+  //           navigate("/authentication/sign-in");
+  //           window.location.reload();
+  //         }
+  //         if (result.message === "Unauthorized Access") {
+  //           navigate("/authentication/forbiddenPage");
+  //           window.location.reload();
+  //         }
+  //         MySwal.fire({
+  //           title: result.status,
+  //           type: "success",
+  //           text: result.message,
+  //         }).then(() => {
+  //           window.location.reload();
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         MySwal.fire({
+  //           title: error.status,
+  //           type: "error",
+  //           text: error.message,
+  //         });
+  //       });
+  //   }
+  // };
+
+  // const handleApprove = (e) => {
+  //   setComment(e.target.value);
+  // };
+
+  // const handleDisapprove = (e) => {
+  //   setApprove(e.target.value);
+  // };
 
   return (
     <DashboardLayout>
@@ -181,7 +193,7 @@ function View() {
                   textAlign="center"
                 >
                   <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                    Approve/Disapprove Time Off-Requests
+                    View Time Off-Requests
                   </MDTypography>
                 </MDBox>
                 <MDBox mb={2}>
@@ -397,7 +409,7 @@ function View() {
           </Card>
         </div>
       </div>
-      &nbsp;
+      {/* &nbsp;
       <div className="row">
         <div className="col-sm-2">&nbsp;</div>
         <div className="col-sm-8" align="center">
@@ -408,13 +420,40 @@ function View() {
                   <Form.Group
                     className="mb-3"
                     controlId="setPurposex"
-                    value={comment || ""}
-                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Description"
+                    //  value={(comment || "", showComment)}
+                    //  onChange={(e) => handleOnChange(e.target.value)}
                   >
                     <Form.Label>Approve/Disapprove Time Off-Requests</Form.Label>
                     <Form.Control as="textarea" rows={3} />
                   </Form.Group>
                 </Form>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="disapprove"
+                    id="disapprove"
+                    //  onChange={handleOnChange}
+                  />
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control 
+                  <label className="form-check-label" htmlFor="disapprove">
+                    Disapprove
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="approve"
+                    id="approve"
+                    onChange={handleApprove}
+                  />
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control 
+                  <label className="form-check-label" htmlFor="approve">
+                    Approve
+                  </label>
+                </div>
               </MDBox>
               <Container>
                 <div className="row">
@@ -442,14 +481,14 @@ function View() {
                 >
                   Add Event
                 </MDButton>
-              </MDBox> */}
-                  {/* <input type="submit" value="Submit" onClick={handleClick} /> */}
+              </MDBox> 
+                  {/* <input type="submit" value="Submit" onClick={handleClick} /> 
 
                   {/* <InputGroup className="mb-3">
                 <Button variant="outline-secondary" id="button-addon1">
                   Button
                 </Button>
-              </InputGroup> */}
+              </InputGroup> 
 
                   <div className="col-sm-6">
                     <MDBox mt={4} mb={1}>
@@ -469,7 +508,7 @@ function View() {
             </MDBox>
           </Card>
         </div>
-      </div>
+      </div> */}
     </DashboardLayout>
   );
 }

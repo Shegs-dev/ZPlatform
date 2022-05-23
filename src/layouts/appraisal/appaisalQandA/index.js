@@ -65,10 +65,9 @@ function AppraiseQandA() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
-    console.log(id);
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/getByIds/62864c9fc6b42b4e76950095`, {
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/getByIds/${id}`, {
       headers,
     })
       .then(async (res) => {
@@ -104,7 +103,6 @@ function AppraiseQandA() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
-    console.log(id);
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     setOpened(true);
@@ -112,12 +110,9 @@ function AppraiseQandA() {
 
     const headers = miHeaders;
     let isMounted = true;
-    fetch(
-      `${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/gets/${orgIDs}/62864c9fc6b42b4e76950095`,
-      {
-        headers,
-      }
-    )
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/gets/${orgIDs}/${id}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -208,19 +203,15 @@ function AppraiseQandA() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
-    console.log(id);
     const data11 = JSON.parse(localStorage.getItem("user1"));
 
     const orgIDs = data11.orgID;
 
     setOpened(true);
     const headers = miHeaders;
-    fetch(
-      `${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/gets/${orgIDs}/62864c9fc6b42b4e76950095`,
-      {
-        headers,
-      }
-    )
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/questions/gets/${orgIDs}/${id}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -327,7 +318,6 @@ function AppraiseQandA() {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("id");
-        console.log(id);
 
         const data11 = JSON.parse(localStorage.getItem("user1"));
 
@@ -335,7 +325,7 @@ function AppraiseQandA() {
         const personalIds = data11.personalID;
         const obj = {
           orgID: orgIDx,
-          appraisalID: "62864c9fc6b42b4e76950095",
+          appraisalID: id,
           questionID: questionIDx,
           empID: personalIds,
           answer: answery,
@@ -361,14 +351,13 @@ function AppraiseQandA() {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get("id");
-      console.log(id);
 
       const data11 = JSON.parse(localStorage.getItem("user1"));
       const answery = answerx.toString();
       const personalIds = data11.personalID;
       const obj = {
         orgID: orgIDx,
-        appraisalID: "62864c9fc6b42b4e76950095",
+        appraisalID: id,
         questionID: questionIDx,
         empID: personalIds,
         answer: answery,

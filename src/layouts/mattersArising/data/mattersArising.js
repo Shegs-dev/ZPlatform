@@ -18,6 +18,9 @@ export default function MattersArisingTable() {
   // const { allPHeaders: myHeaders } = PHeaders();
 
   const data11 = JSON.parse(localStorage.getItem("user1"));
+
+  const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+  const userNamex = `${userOData.personal.fname} ${userOData.personal.lname}`;
   // const value = data11.id;
 
   // eslint-disable-next-line consistent-return
@@ -177,6 +180,10 @@ export default function MattersArisingTable() {
     });
   };
 
+  const handleViewChat = (value) => {
+    navigate(`/view-Matter?username=${userNamex}&room=${value}`);
+  };
+
   const changeStatus = (value) => {
     if (value === 0) {
       return "OPEN";
@@ -206,6 +213,10 @@ export default function MattersArisingTable() {
 
   const handleUpdate = (value) => {
     navigate(`/matters-Arising/update?id=${value}`);
+  };
+
+  const handleEscalateMatter = (value) => {
+    navigate(`/matters-Arising/escalateMatter?id=${value}`);
   };
 
   const changeTime = (timestamp) => {
@@ -273,6 +284,10 @@ export default function MattersArisingTable() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
+                <Dropdown.Item onClick={() => handleViewChat(value)}>Chat</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleEscalateMatter(value)}>
+                  Escalate Matter To Another User
+                </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>

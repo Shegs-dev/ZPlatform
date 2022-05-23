@@ -88,11 +88,11 @@ function Polls() {
     //   document.getElementById("question").innerHTML = "";
     // }
     if (questionx.length === 0) {
-      setCheckedQuestion(true);
+      setCheckedQuestion(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("question").innerHTML = "Question is required<br>";
     } else {
-      setCheckedQuestion(false);
+      setCheckedQuestion(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("question").innerHTML = "";
     }
@@ -218,14 +218,14 @@ function Polls() {
                         align="right"
                         color="text"
                       >
-                        GroupID
+                        Group Name
                       </MDTypography>
                       <Form.Select
                         value={groupidx || ""}
                         onChange={(e) => setGroupIdx(e.target.value)}
                         aria-label="Default select example"
                       >
-                        <option value="">GroupID</option>
+                        <option value="">Group Name</option>
                         {user.map((api) => (
                           <option key={api.group.id} value={api.group.id}>
                             {api.group.name}

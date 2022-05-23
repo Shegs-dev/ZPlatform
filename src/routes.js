@@ -74,7 +74,6 @@ import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
 import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement";
-import AddClonesalary from "layouts/userManagement/cloneUserSalary/index";
 import PaymentHis from "layouts/paymentHistory";
 
 import Birthdays from "layouts/birthdays/data/birthdays";
@@ -82,6 +81,7 @@ import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney
 import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
 import MattersArising from "layouts/mattersArising";
 import EditMattersArising from "layouts/mattersArising/update";
+import ChatApp from "layouts/mattersArising/viewMatter/App";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 import SalaryPayment from "layouts/salaryPayment";
@@ -92,7 +92,7 @@ import Groups from "layouts/groups";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
 import AppraisalGrade from "layouts/appraisal/appraisalGrading";
-import View from "layouts/timeoffRequests/view";
+// import View from "layouts/timeoffRequests/view";
 import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
 import SalaryTime from "layouts/salaryPayment/salaryTime";
 import SalaryProrate from "layouts/salaryPayment/salaryProrate";
@@ -109,6 +109,11 @@ import AppraiseQandA from "layouts/appraisal/appaisalQandA";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
+import Addpolloptions from "layouts/polls/addpolloptions";
+import ViewPolls from "layouts/polls/viewPolls";
+import Disapprove from "layouts/timeoffRequests/disapprove";
+import VotePolls from "layouts/polls/votePolls";
+import EscalateMatter from "layouts/mattersArising/escalateMatter";
 
 const routes = [
   {
@@ -157,13 +162,6 @@ const routes = [
     component: <AddUserpayment />,
   },
   {
-    name: "Clone User Salary",
-    key: "cloneUserSalary",
-    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/Clone-User-Salary",
-    component: <AddClonesalary />,
-  },
-  {
     type: "collapse",
     name: "Announcement",
     key: "announcement",
@@ -171,13 +169,13 @@ const routes = [
     route: "/Announcement",
     component: <Announcement />,
   },
-  {
-    name: "View",
-    key: "view",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/timeoffRequests/view",
-    component: <View />,
-  },
+  // {
+  //   name: "View",
+  //   key: "view",
+  //   icon: <Icon fontSize="small">meeting_room</Icon>,
+  //   route: "/timeoffRequests/view",
+  //   component: <View />,
+  // },
   {
     type: "collapse",
     name: "Matters Arising",
@@ -185,6 +183,20 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    name: "Escalate Matter",
+    key: "escalatematter",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/matters-Arising/escalateMatter",
+    component: <EscalateMatter />,
+  },
+  {
+    name: "Chats",
+    key: "viewMatter",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-Matter",
+    component: <ChatApp />,
   },
   {
     type: "collapse",
@@ -200,6 +212,27 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Update-Poll",
     component: <UpdatePolls />,
+  },
+  {
+    name: "Add Poll Option",
+    key: "editaddpolloption",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/Option",
+    component: <Addpolloptions />,
+  },
+  {
+    name: "View polls",
+    key: "viewpolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/view-polls",
+    component: <ViewPolls />,
+  },
+  {
+    name: "Vote polls",
+    key: "votepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/vote-polls",
+    component: <VotePolls />,
   },
   {
     name: "Edit Matters Arising",
@@ -396,6 +429,13 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/time-off-Requests",
     component: <TimeOffRequests />,
+  },
+  {
+    name: "disapprove Time Off Requests",
+    key: "timeOffRequest",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/timeoff-Requests/disapprove",
+    component: <Disapprove />,
   },
   {
     // type: "collapse",
