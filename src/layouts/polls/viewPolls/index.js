@@ -20,7 +20,7 @@ function ViewPolls() {
   const [groups, setGroups] = useState([]);
   const [groupIDx, setGroupIDx] = useState("");
   const [questionx, setQuestionx] = useState("");
-  const [optionx, setOptions] = useState("");
+  const [optionx, setOptions] = useState([]);
   console.log(optionx);
 
   useEffect(() => {
@@ -124,7 +124,7 @@ function ViewPolls() {
           window.location.reload();
         }
         if (isMounted) {
-          setOptions(result[0].question);
+          setOptions(result);
           setGroupIDx(result[0].groupID);
         }
       });
@@ -229,6 +229,25 @@ function ViewPolls() {
               Update
             </MDButton>
           </MDBox> */}
+        </MDBox>
+      </Card>
+      &nbsp; &nbsp;
+      <Card>
+        <MDBox>
+          <Container>
+            <option align="center">Options</option>
+            {optionx.map((api) => (
+              <div key={api.id} className="mb-3" align="left">
+                <Form.Check.Input
+                  type="radio"
+                  defaultChecked={api.isCheck}
+                  // onClick={(e) => handleClick(e, api)}
+                  disabled
+                />
+                <Form.Check.Label>&nbsp; {api.value}</Form.Check.Label>
+              </div>
+            ))}
+          </Container>
         </MDBox>
       </Card>
     </DashboardLayout>
