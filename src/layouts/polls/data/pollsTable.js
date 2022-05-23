@@ -145,10 +145,6 @@ export default function PollsData() {
     }
   };
 
-  const handleView = (value) => {
-    navigate(`/view-polls?id=${value}`);
-  };
-
   // const handleStatus = (status) => {
   //   if (status === 1) {
   //     return "OPENED";
@@ -268,7 +264,6 @@ export default function PollsData() {
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleOptions(value)}>Options</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleOpen(value)}>Open </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
               </Dropdown.Menu>

@@ -30,6 +30,7 @@ function TimeOff() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [resumptionDate, setresumptionDate] = useState("");
+  const [approvex, setApprover] = useState("");
 
   const [user, setUser] = useState([]);
   const [empSetup, setEmpSetup] = useState([]);
@@ -162,6 +163,7 @@ function TimeOff() {
           resumptionDate: resumptionCDate,
           dutyRelieverID: duty,
           purpose: purposex,
+          approverID: approvex,
           adminID: adminIdx,
         });
         const requestOptions = {
@@ -508,6 +510,36 @@ function TimeOff() {
                       <br />
                     </MDBox>
                   </div>
+                </div>
+              </Container>
+            </MDBox>
+            <MDBox>
+              <Container>
+                <div className="col-sm-6">
+                  <MDBox mt={2}>
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      Select Approver
+                    </MDTypography>
+                    <Form.Select
+                      value={approvex || ""}
+                      onChange={(e) => setApprover(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option value="">Select Approver</option>
+                      {user.map((api) => (
+                        <option key={api.personal.id} value={api.personal.id}>
+                          {api.personal.fname} {api.personal.lname}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <br />
+                  </MDBox>
                 </div>
               </Container>
             </MDBox>
