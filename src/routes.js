@@ -112,6 +112,7 @@ import Addpolloptions from "layouts/polls/addpolloptions";
 import ViewPolls from "layouts/polls/viewPolls";
 import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
+import EscalateMatter from "layouts/mattersArising/escalateMatter";
 
 const routes = [
   {
@@ -181,6 +182,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/matters-Arising",
     component: <MattersArising />,
+  },
+  {
+    name: "Escalate Matter",
+    key: "escalatematter",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/matters-Arising/escalateMatter",
+    component: <EscalateMatter />,
   },
   {
     name: "Chats",

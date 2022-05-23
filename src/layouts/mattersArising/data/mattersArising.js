@@ -215,6 +215,10 @@ export default function MattersArisingTable() {
     navigate(`/matters-Arising/update?id=${value}`);
   };
 
+  const handleEscalateMatter = (value) => {
+    navigate(`/matters-Arising/escalateMatter?id=${value}`);
+  };
+
   const changeTime = (timestamp) => {
     const time = new Date(timestamp);
     const hours = time.getHours();
@@ -281,6 +285,9 @@ export default function MattersArisingTable() {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleViewChat(value)}>Chat</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleEscalateMatter(value)}>
+                  Escalate Matter To Another User
+                </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
