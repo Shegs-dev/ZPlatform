@@ -194,26 +194,31 @@ function RenewSub() {
       let mBonusAmount = 0;
       // eslint-disable-next-line radix
       const amountCOn = parseInt(amountx);
-      // eslint-disable-next-line array-callback-return
-      bonusCheck.map((checkBonus) => {
-        if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
-          mBonusAmount = checkBonus.bonusAmount;
-          setBonusSetID(checkBonus.id);
-          allPayandBonus = checkBonus.bonusAmount + amountCOn;
-        } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
-          mBonusAmount = checkBonus.bonusAmount;
-          setBonusSetID(checkBonus.id);
-          allPayandBonus = checkBonus.bonusAmount + amountCOn;
-        } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
-          mBonusAmount = checkBonus.bonusAmount;
-          setBonusSetID(checkBonus.id);
-          allPayandBonus = checkBonus.bonusAmount + amountCOn;
-        } else {
-          mBonusAmount = 0;
-          allPayandBonus = amountCOn;
-        }
-        // check = false;
-      });
+      if (bonusCheck.length === 0) {
+        mBonusAmount = 0;
+        allPayandBonus = amountCOn;
+      } else {
+        // eslint-disable-next-line array-callback-return
+        bonusCheck.map((checkBonus) => {
+          if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
+            mBonusAmount = checkBonus.bonusAmount;
+            setBonusSetID(checkBonus.id);
+            allPayandBonus = checkBonus.bonusAmount + amountCOn;
+          } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
+            mBonusAmount = checkBonus.bonusAmount;
+            setBonusSetID(checkBonus.id);
+            allPayandBonus = checkBonus.bonusAmount + amountCOn;
+          } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
+            mBonusAmount = checkBonus.bonusAmount;
+            setBonusSetID(checkBonus.id);
+            allPayandBonus = checkBonus.bonusAmount + amountCOn;
+          } else {
+            mBonusAmount = 0;
+            allPayandBonus = amountCOn;
+          }
+          // check = false;
+        });
+      }
 
       const data11 = JSON.parse(localStorage.getItem("renewUser1"));
       const orgIDs = data11.orgID;

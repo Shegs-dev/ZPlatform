@@ -19,8 +19,10 @@ import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
 import MDTypography from "components/MDTypography";
 
 import Accordion from "@mui/material/Accordion";
@@ -58,6 +60,7 @@ function Dashboard() {
   const [card, setItems] = useState([]);
   // const [groupGet, setGroupGet] = useState([]);
   const [polls, setPolls] = useState([]);
+  const [allApp, setAllApp] = useState([]);
 
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
@@ -191,21 +194,62 @@ function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const personalIds = data11.personalID;
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_SHASHA_URL}/appraisal/getForAppraiser/${orgIDs}/${personalIds}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          console.log(result);
+          setAllApp(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleAppraise = (value) => {
+    navigate(`/Appraisal-Question-and-Answers?id=${value}`);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
         <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left" mt={1}>
-          Announcements
+          &nbsp; Announcements
         </MDTypography>
         <Container>
           <div className="row">
             {card.map((api) => (
-              <div className="col-sm-6">
-                <Accordion
-                  key={api.announcement.id}
-                  style={{ backgroundColor: api.announcementType.colorCode }}
-                >
+              <div key={api.announcement.id} className="col-sm-6">
+                <Accordion style={{ backgroundColor: api.announcementType.colorCode }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
@@ -231,12 +275,63 @@ function Dashboard() {
           </div>
         </Container>
       </Card>
+      &nbsp;{" "}
+      <Card style={{ backgroundColor: "#318CE7" }}>
+        <MDTypography variant="h4" fontWeight="bold" color="white" textAlign="left" mt={1}>
+          &nbsp; Appraisal
+        </MDTypography>
+        &nbsp;
+        <Container>
+          <div className="row">
+            {allApp.map((item) => (
+              <div key={item.id} className="col-sm-4">
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardContent>
+                    <MDTypography
+                      variant="h5"
+                      fontWeight="medium"
+                      fontSize="120%"
+                      color="info"
+                      textAlign="left"
+                      mt={1}
+                    >
+                      {item.name}
+                    </MDTypography>
+                    <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={1}>
+                      You have been selected to appraise the Appraisal - {item.name}
+                    </MDTypography>
+                    <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={1}>
+                      Appraisee - {item.appraiseeName}
+                    </MDTypography>
+                    <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={0}>
+                      Created By - {item.createdByName}
+                    </MDTypography>
+                  </CardContent>
+                  <CardActions>
+                    <div align="right">
+                      <MDButton
+                        variant="gradient"
+                        color="info"
+                        onClick={() => handleAppraise(item.id)}
+                        width="50%"
+                      >
+                        Appraise
+                      </MDButton>
+                    </div>
+                  </CardActions>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </Container>
+        &nbsp;
+      </Card>
       &nbsp;
       <Container>
         <div className="row">
           {polls.map((api) => (
-            <Link to={`/polls/vote-Polls?id=${api.id}`}>
-              <Card key={api.id} style={{ backgroundColor: "#318CE7" }}>
+            <Link to={`/polls/vote-Polls?id=${api.id}`} key={api.id}>
+              <Card style={{ backgroundColor: "#318CE7" }}>
                 <CardContent>
                   <MDTypography
                     variant="h4"

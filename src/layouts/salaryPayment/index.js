@@ -53,14 +53,13 @@ function SalaryPayment() {
 
   useEffect(() => {
     const userMap = [];
-    setSUser(userMap);
     setOpened(true);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
 
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/payroll/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -85,12 +84,13 @@ function SalaryPayment() {
           // eslint-disable-next-line array-callback-return
           result.map((item) => {
             const fdy = {
-              value: item.personal.id,
-              label: `${item.personal.fname} ${item.personal.lname}`,
+              value: item.remuneration.id,
+              label: item.empName,
             };
             console.log(fdy);
             userMap.push(fdy);
           });
+          setSUser(userMap);
         }
       });
     return () => {
@@ -203,7 +203,7 @@ function SalaryPayment() {
     const orgIDs = data11.orgID;
     const personalIDs = data11.personalID;
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_TANTA_URL}/payroll/gets/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -225,7 +225,7 @@ function SalaryPayment() {
         const userIDsMap = [];
         // eslint-disable-next-line array-callback-return
         resultS.map((item) => {
-          const fdy = item.personal.id;
+          const fdy = item.remuneration.id;
           console.log(fdy);
           userIDsMap.push(fdy);
         });
@@ -250,6 +250,7 @@ function SalaryPayment() {
             return res.json();
           })
           .then((result) => {
+            console.log(result);
             setOpened(false);
             if (result.status === "SUCCESS") {
               setEnabled(true);
@@ -284,8 +285,8 @@ function SalaryPayment() {
   };
 
   const pColumns = [
-    { Header: "Organization", accessor: "orgName", align: "left" },
-    { Header: "Paid Amount", accessor: "paidAmount", align: "left" },
+    { Header: "Employee's Name", accessor: "empName", align: "left" },
+    { Header: "Amount (NGN)", accessor: "remuneration.amount", align: "left" },
     { Header: "Bonus Amount", accessor: "bonusAmount", align: "left" },
     { Header: "Total Amount", accessor: "totalAmount", align: "left" },
     { Header: "Balance", accessor: "balance", align: "left" },
@@ -329,13 +330,13 @@ function SalaryPayment() {
 
   const handleOnSelect = (select) => {
     const userIDs = [];
-    setAllUserID(userIDs);
     // eslint-disable-next-line array-callback-return
     select.map((item) => {
       const fdy = item.value;
       console.log(fdy);
       userIDs.push(fdy);
     });
+    setAllUserID(userIDs);
     console.log(select);
     console.log(userIDs);
   };
@@ -400,7 +401,7 @@ function SalaryPayment() {
                             Select User
                           </MDTypography>
                           <Select
-                            closeMenuOnSelectf
+                            closeMenuOnSelect
                             components={animatedComponents}
                             onChange={handleOnSelect}
                             isMulti

@@ -205,7 +205,7 @@ function VuAppraisalQuestion() {
           type: "success",
           text: result.message,
         }).then(() => {
-          window.location.reload();
+          setOption("");
         });
       })
       .catch((error) => {

@@ -207,6 +207,7 @@ export default function SysRole() {
           window.location.reload();
         }
         if (isMounted) {
+          localStorage.removeItem("permVal");
           setItems(result);
         }
       });

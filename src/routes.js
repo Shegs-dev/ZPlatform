@@ -105,6 +105,7 @@ import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
 import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 import AppraisalAppraisers from "layouts/appraisal/appraisers";
+import AppraiseQandA from "layouts/appraisal/appaisalQandA";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
@@ -288,6 +289,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Appraisal-Questions",
     component: <AppraisalQues />,
+  },
+  {
+    type: "collapse",
+    name: "Appraisal Answers",
+    key: "appraisalQandA",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Appraisal-Question-and-Answers",
+    component: <AppraiseQandA />,
   },
   {
     name: "View Appraisal Questions",

@@ -74,9 +74,8 @@ function Basic() {
     };
   }, []);
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     setOpened(true);
-    e.preventDefault();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({ username: usernamex, password: passwordx });
@@ -205,6 +204,7 @@ function Basic() {
                         type={passwordShown ? "text" : "password"}
                         value={passwordx || ""}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyPress={(ev) => ev.key === "Enter" && handleClick()}
                         label="Password"
                         fullWidth
                       />
