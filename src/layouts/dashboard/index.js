@@ -248,11 +248,8 @@ function Dashboard() {
         <Container>
           <div className="row">
             {card.map((api) => (
-              <div className="col-sm-6">
-                <Accordion
-                  key={api.announcement.id}
-                  style={{ backgroundColor: api.announcementType.colorCode }}
-                >
+              <div key={api.announcement.id} className="col-sm-6">
+                <Accordion style={{ backgroundColor: api.announcementType.colorCode }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
@@ -287,7 +284,7 @@ function Dashboard() {
         <Container>
           <div className="row">
             {allApp.map((item) => (
-              <div className="col-sm-4">
+              <div key={item.id} className="col-sm-4">
                 <Card sx={{ maxWidth: 345 }}>
                   <CardContent>
                     <MDTypography
@@ -333,8 +330,8 @@ function Dashboard() {
       <Container>
         <div className="row">
           {polls.map((api) => (
-            <Link to={`/polls/vote-Polls?id=${api.id}`}>
-              <Card key={api.id} style={{ backgroundColor: "#318CE7" }}>
+            <Link to={`/polls/vote-Polls?id=${api.id}`} key={api.id}>
+              <Card style={{ backgroundColor: "#318CE7" }}>
                 <CardContent>
                   <MDTypography
                     variant="h4"
