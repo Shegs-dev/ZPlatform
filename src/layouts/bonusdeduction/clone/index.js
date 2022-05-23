@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import DataTable from "examples/Tables/DataTable";
-import PollsData from "layouts/polls/data/pollsTable";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
@@ -16,42 +14,38 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+
 import { useNavigate } from "react-router-dom";
 
-function Polls() {
+function CloneBonusAndDeduction() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = PollsData();
 
-  const [questionx, setQuestion] = useState("");
-  const [groupidx, setGroupIdx] = useState("");
-
-  const [enabled, setEnabled] = useState("");
-  const [checkedQuestion, setCheckedQuestion] = useState("");
+  const [namex, setName] = useState("");
 
   const [user, setUser] = useState([]);
+  const [userIDx, setUserIDx] = useState("");
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
-  const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
+    setOpened(true);
     const headers = miHeaders;
-
     const data11 = JSON.parse(localStorage.getItem("user1"));
-
     const orgIDs = data11.orgID;
+
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/groups/gets/${orgIDs}`, { headers })
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getAllUserInfo/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
+        setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -74,47 +68,19 @@ function Polls() {
   }, []);
 
   // eslint-disable-next-line consistent-return
-  const handleOnQuestionKeys = () => {
-    // const letters = /^[a-zA-Z0-9 ]+$/;
-    // if (!questionx.match(letters)) {
-    //   setCheckedQuestion(false);
-    //   // eslint-disable-next-line no-unused-expressions
-    //   document.getElementById("question").innerHTML =
-    //     "Question - input only capital and small letters<br>";
-    // }
-    // if (questionx.match(letters)) {
-    //   setCheckedQuestion(true);
-    //   // eslint-disable-next-line no-unused-expressions
-    //   document.getElementById("question").innerHTML = "";
-    // }
-    if (questionx.length === 0) {
-      setCheckedQuestion(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("question").innerHTML = "Question is required<br>";
-    } else {
-      setCheckedQuestion(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("question").innerHTML = "";
-    }
-    setEnabled(checkedQuestion === true);
-  };
-
-  // eslint-disable-next-line consistent-return
-  const handleClick = (e) => {
+  const handleClick = () => {
     setOpened(true);
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
 
-    const orgIDs = data11.orgID;
-    const raw = JSON.stringify({ orgID: orgIDs, groupID: groupidx, question: questionx });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/add`, requestOptions)
+    const headers = miHeaders;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    fetch(
+      `${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/clone/${id}/${userIDx}/${namex}`,
+      {
+        headers,
+      }
+    )
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -152,11 +118,29 @@ function Polls() {
       });
   };
 
+  // eslint-disable-next-line consistent-return
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+      handleClick();
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
+    }
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Card>
-        <MDBox pt={4} pb={3} px={30}>
+        <MDBox pt={5} pb={9} px={29}>
           <MDBox
             variant="gradient"
             bgColor="info"
@@ -169,7 +153,7 @@ function Polls() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Polls
+              Clone Bonus And Deduction
             </MDTypography>
           </MDBox>
           <MDBox
@@ -183,57 +167,47 @@ function Polls() {
             mb={1}
             textAlign="center"
           >
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="question">
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
               {" "}
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
-            <MDBox mb={2}>
+            <MDBox mt={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-6">
+                  <div className="col-sm-8">
                     <MDInput
                       type="text"
-                      label="Question *"
-                      value={questionx || ""}
-                      onKeyUp={handleOnQuestionKeys}
+                      label="Name *"
+                      value={namex || ""}
                       className="form-control"
-                      onChange={(e) => setQuestion(e.target.value)}
+                      onChange={(e) => setName(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
                   </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <MDBox mt={2}>
-                      <MDTypography
-                        variant="button"
-                        fontWeight="regular"
-                        fontSize="80%"
-                        align="right"
-                        color="text"
-                      >
-                        GroupID
-                      </MDTypography>
-                      <Form.Select
-                        value={groupidx || ""}
-                        onChange={(e) => setGroupIdx(e.target.value)}
-                        aria-label="Default select example"
-                      >
-                        <option value="">GroupID</option>
-                        {user.map((api) => (
-                          <option key={api.group.id} value={api.group.id}>
-                            {api.group.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                      <br />
-                    </MDBox>
+                  <div className="col-sm-8">
+                    <MDTypography
+                      variant="button"
+                      fontWeight="regular"
+                      fontSize="80%"
+                      align="left"
+                      color="text"
+                    >
+                      User
+                    </MDTypography>
+                    <Form.Select
+                      value={userIDx}
+                      onChange={(e) => setUserIDx(e.target.value)}
+                      aria-label="Default select example"
+                    >
+                      <option value="">--Select Target User--</option>
+                      {user.map((api) => (
+                        <option key={api.personal.id} value={api.personal.id}>
+                          {api.personal.fname} {api.personal.lname}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </div>
                 </div>
               </Container>
@@ -241,28 +215,17 @@ function Polls() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
+                onClick={handleOnNameKeys}
                 color="info"
                 width="50%"
                 align="left"
               >
-                Save
+                Clone
               </MDButton>
             </MDBox>
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
@@ -271,4 +234,4 @@ function Polls() {
   );
 }
 
-export default Polls;
+export default CloneBonusAndDeduction;

@@ -625,7 +625,7 @@ function PaymentHis() {
           const raw1 = JSON.stringify({
             name: receiptPDF,
           });
-
+          console.log(raw1);
           const requestOptions1 = {
             method: "POST",
             headers: myHeaders,

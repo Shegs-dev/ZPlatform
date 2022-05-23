@@ -183,7 +183,7 @@ export default function SalaryProrateData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

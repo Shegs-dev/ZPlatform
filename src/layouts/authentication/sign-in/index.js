@@ -74,9 +74,8 @@ function Basic() {
     };
   }, []);
 
-  const handleClick = (e) => {
+  const handleClick = () => {
     setOpened(true);
-    e.preventDefault();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     const raw = JSON.stringify({ username: usernamex, password: passwordx });
@@ -99,18 +98,13 @@ function Basic() {
         if (result.status === "SUCCESS") {
           localStorage.setItem("user1", JSON.stringify(result.data));
           localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
-          MySwal.fire({
-            // eslint-disable-next-line dot-notation
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            if (result.otherDetailsDTO.autopass === 1) {
-              navigate("/authentication/userlogin", { replace: true });
-            } else {
-              navigate("/dashboard", { replace: true });
-            }
-          });
+          localStorage.setItem("BirthDayStatus", JSON.stringify(result.wishBirthday));
+
+          if (result.otherDetailsDTO.autopass === 1) {
+            navigate("/authentication/userlogin", { replace: true });
+          } else {
+            navigate("/dashboard", { replace: true });
+          }
         } else {
           MySwal.fire({
             title: result.status,
@@ -210,6 +204,7 @@ function Basic() {
                         type={passwordShown ? "text" : "password"}
                         value={passwordx || ""}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyPress={(ev) => ev.key === "Enter" && handleClick()}
                         label="Password"
                         fullWidth
                       />

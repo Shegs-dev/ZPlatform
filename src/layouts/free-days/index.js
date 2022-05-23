@@ -42,8 +42,6 @@ const localizers = dateFnsLocalizer({
 });
 
 function FreeDay() {
-  const eventList = [];
-  const [titleNames, setTitleName] = useState("");
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
   const { columns: pColumns, rows: pRows } = FreeDaysData();
@@ -51,7 +49,7 @@ function FreeDay() {
   const MySwal = withReactContent(Swal);
 
   const [newEvent, setNewEvent] = useState({ title: "", time: "" });
-  const [allEvents, setAllEvents] = useState(eventList);
+  const [allEvents, setAllEvents] = useState([]);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -59,9 +57,8 @@ function FreeDay() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  console.log(titleNames);
-
   useEffect(() => {
+    const eventList = [];
     setOpened(true);
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -90,13 +87,13 @@ function FreeDay() {
         if (isMounted) {
           // eslint-disable-next-line array-callback-return
           result.map((item) => {
-            setTitleName(item.name);
             const fdy = {
               title: item.name,
               time: new Date(item.freeDate),
             };
             eventList.push(fdy);
           });
+          setAllEvents(eventList);
         }
       });
     return () => {
@@ -192,26 +189,6 @@ function FreeDay() {
     }
     setEnabled(checkedName === true);
   };
-
-  //   const handleOnDateKeys = () => {
-  //     const letters = /^[0-9 ]+$/;
-  //     if (!newEvent.time.match(letters)) {
-  //       setCheckedDate(false);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("date").innerHTML =
-  //         "Date - Click on the Date Dropdown to set a valid date<br>";
-  //     }
-  //     if (newEvent.time.match(letters)) {
-  //       setCheckedDate(true);
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("date").innerHTML = "";
-  //     }
-  //     if (newEvent.time.length === 0) {
-  //       // eslint-disable-next-line no-unused-expressions
-  //       document.getElementById("date").innerHTML = "Date is required<br>";
-  //     }
-  //     setEnabled(checkedDate === true && checkedName === true);
-  //   };
 
   return (
     <DashboardLayout>

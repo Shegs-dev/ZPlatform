@@ -117,7 +117,6 @@ function bonusdeduction() {
       type: typex,
       frequency: frequencyx,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,

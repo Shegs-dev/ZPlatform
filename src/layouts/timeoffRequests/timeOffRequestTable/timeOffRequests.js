@@ -334,7 +334,6 @@ export default function TimeOffRequestData() {
   useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
-    console.log(personalIds);
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
@@ -483,7 +482,7 @@ export default function TimeOffRequestData() {
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item
-                  onClick={() => navigate(`/timeoffRequests/timeOffRequestJourney?id=${value}`)}
+                  onClick={() => navigate(`/timeoff-Requests/timeOff-Request-Journey?id=${value}`)}
                 >
                   Time Off Request Journey
                 </Dropdown.Item>
@@ -491,7 +490,7 @@ export default function TimeOffRequestData() {
                   View
                 </Dropdown.Item>
                 <Dropdown.Item
-                  onClick={() => navigate(`/timeoffRequests/forwardTimeOffRequests?id=${value}`)}
+                  onClick={() => navigate(`/timeoff-Requests/forward-TimeOff-Requests?id=${value}`)}
                 >
                   Forward Time Off Request
                 </Dropdown.Item>
