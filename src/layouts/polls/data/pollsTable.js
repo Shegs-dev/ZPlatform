@@ -229,7 +229,7 @@ export default function PollsData() {
   return {
     columns: [
       { Header: "question", accessor: "question", align: "left" },
-      //   { Header: "group name", accessor: "groupName", align: "left" },
+      { Header: "group name", accessor: "groupName", align: "left" },
       {
         Header: "Date Created",
         accessor: "createdTime",
