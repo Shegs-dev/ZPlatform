@@ -51,7 +51,6 @@ function AppraisalGrade() {
       minScore: minScorex,
       maxScore: maxScorex,
     });
-    console.log(raw);
     const requestOptions = {
       method: "POST",
       headers: myHeaders,

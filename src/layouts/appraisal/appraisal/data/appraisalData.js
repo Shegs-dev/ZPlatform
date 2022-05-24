@@ -84,6 +84,10 @@ export default function AppraisalData() {
     navigate(`/Set-Appraisal-Appraisers?id=${value}`);
   };
 
+  const handleGrading = (value) => {
+    navigate(`/Grade-Appraisal?id=${value}`);
+  };
+
   const handleOpenAndClose = (value) => {
     const headers = miHeaders;
 
@@ -254,6 +258,7 @@ export default function AppraisalData() {
                 <Dropdown.Item onClick={() => handleAppraisers(value)}>
                   Set Appraisers
                 </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleGrading(value)}>Grade Appraisal</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
