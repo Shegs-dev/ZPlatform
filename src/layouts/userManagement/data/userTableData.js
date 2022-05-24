@@ -11,7 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-// import PHeaders from "postHeader";
+import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 
 export default function UserData() {
@@ -20,7 +20,7 @@ export default function UserData() {
 
   const MySwal = withReactContent(Swal);
 
-  // const { allPHeaders: myHeaders } = PHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
@@ -154,11 +154,37 @@ export default function UserData() {
   };
 
   const handlePasswordReset = (value) => {
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`)
-      .then((res) => res.json())
+    const gheaders = miHeaders;
+    const hheaders = myHeaders;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { gheaders })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
       .then((resultp) => {
+        if (resultp.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (resultp.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
         if (resultp.length > 0) {
-          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/${resultp[0].email}`)
+          const raw = JSON.stringify({
+            username: resultp[0].email,
+          });
+          const requestOptions = {
+            method: "POST",
+            headers: hheaders,
+            body: raw,
+            redirect: "follow",
+          };
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword`, {
+            requestOptions,
+          })
             .then(async (res) => {
               const aToken = res.headers.get("token-1");
               localStorage.setItem("rexxdex", aToken);

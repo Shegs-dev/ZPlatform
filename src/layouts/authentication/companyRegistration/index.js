@@ -142,11 +142,6 @@ function CompanyReg() {
         fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/add`, requestOptions1)
           .then((res) => res.json())
           .then((resultx) => {
-            MySwal.fire({
-              title: resultx.status,
-              type: "success",
-              text: resultx.message,
-            });
             localStorage.setItem("company", JSON.stringify(resultx.data));
             const raw2 = JSON.stringify({
               orgID: result.data.id,
@@ -181,6 +176,7 @@ function CompanyReg() {
                 ).then((res) => res.json());
               });
           });
+        setOpened(false);
         MySwal.fire({
           title: result.status,
           type: "success",

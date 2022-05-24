@@ -111,7 +111,6 @@ import GradeAppraisal from "layouts/appraisal/appraisalResult";
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
 import Addpolloptions from "layouts/polls/addpolloptions";
-import ViewPolls from "layouts/polls/viewPolls";
 import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
@@ -220,13 +219,6 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/polls/Option",
     component: <Addpolloptions />,
-  },
-  {
-    name: "View polls",
-    key: "viewpolls",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/view-polls",
-    component: <ViewPolls />,
   },
   {
     name: "Vote polls",

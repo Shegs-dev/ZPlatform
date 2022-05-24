@@ -118,11 +118,6 @@ function Chat({ socket, username, room }) {
             navigate("/authentication/forbiddenPage");
             window.location.reload();
           }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          });
         })
         .catch((error) => {
           MySwal.fire({

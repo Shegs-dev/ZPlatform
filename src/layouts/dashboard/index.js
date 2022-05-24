@@ -100,6 +100,7 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
+        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -136,6 +137,7 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
+        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -209,6 +211,7 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
+        console.log(res.json());
         return res.json();
       })
       .then((result) => {
