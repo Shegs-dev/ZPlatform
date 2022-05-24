@@ -156,8 +156,6 @@ export default function UserData() {
   const handlePasswordReset = (value) => {
     const gheaders = miHeaders;
     const hheaders = myHeaders;
-    console.log(miHeaders);
-    console.log(gheaders);
     fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { gheaders })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -174,7 +172,6 @@ export default function UserData() {
         if (resultp.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
-        console.log(resultp);
         if (resultp.length > 0) {
           const raw = JSON.stringify({
             username: resultp[0].email,
