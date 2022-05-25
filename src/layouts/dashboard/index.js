@@ -100,7 +100,6 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -137,7 +136,6 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -161,7 +159,6 @@ function Dashboard() {
               const idcheck = `${grp.group.id},`;
               groupIDs += idcheck;
             });
-            console.log(groupIDs);
             fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForGroup/${groupIDs}`, {
               headers,
             })
@@ -186,7 +183,6 @@ function Dashboard() {
                 if (isMounted) {
                   setPolls(resultx);
                 }
-                console.log(resultx);
               });
           }
         }
@@ -211,7 +207,6 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -228,7 +223,6 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setAllApp(result);
         }
       });
