@@ -295,7 +295,7 @@ function Dashboard() {
                       {item.name}
                     </MDTypography>
                     <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={1}>
-                      You have been selected to appraise the Appraisal - {item.name}
+                      You have been selected to appraise - {item.name}
                     </MDTypography>
                     <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={1}>
                       Appraisee - {item.appraiseeName}

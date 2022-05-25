@@ -69,20 +69,10 @@ function Appraisers() {
             navigate("/authentication/forbiddenPage");
             window.location.reload();
           }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
+          window.location.reload();
         })
         .catch((error) => {
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
+          console.log(error);
         });
     } else {
       const requestOptions = {

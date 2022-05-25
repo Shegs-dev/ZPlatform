@@ -30,8 +30,6 @@ function AppraiseeIDX() {
   const [userx, setUser] = useState([]);
   const [namex, setNamex] = useState("");
 
-  const [enabled, setEnabled] = useState("");
-  const [checkedName, setCheckedName] = useState("");
   const [opened, setOpened] = useState(false);
 
   const { allPHeaders: myHeaders } = PHeaders();
@@ -132,26 +130,6 @@ function AppraiseeIDX() {
       });
   };
 
-  // eslint-disable-next-line consistent-return
-  const handleOnNameKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
-      setCheckedName(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
-    }
-    if (namex.match(letters)) {
-      setCheckedName(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "";
-    }
-    if (namex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name is required<br>";
-    }
-    setEnabled(checkedName === true);
-  };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -197,7 +175,6 @@ function AppraiseeIDX() {
                       label="Name"
                       value={namex || ""}
                       placeholder=""
-                      onKeyUp={handleOnNameKeys}
                       onChange={(e) => setNamex(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -221,13 +198,7 @@ function AppraiseeIDX() {
               </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
-                color="info"
-                width="50%"
-              >
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>

@@ -106,6 +106,7 @@ import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 import AppraisalAppraisers from "layouts/appraisal/appraisers";
 import AppraiseQandA from "layouts/appraisal/appaisalQandA";
+import GradeAppraisal from "layouts/appraisal/appraisalResult";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
@@ -274,6 +275,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Set-Appraisal-Questions",
     component: <SetAppraisalQuestion />,
+  },
+  {
+    name: "Grade Appraisal",
+    key: "gradeAppraisal",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Grade-Appraisal",
+    component: <GradeAppraisal />,
   },
   {
     name: "Set Appraisal Appraisers",
