@@ -289,7 +289,7 @@ function Dashboard() {
                         textAlign="left"
                         mt={1}
                       >
-                        You have been selected to for the Appraisal - {item.name}
+                        You have been selected for this Appraisal
                       </MDTypography>
                       <MDTypography
                         variant="h6"
