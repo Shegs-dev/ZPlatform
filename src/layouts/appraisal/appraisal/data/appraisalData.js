@@ -84,70 +84,87 @@ export default function AppraisalData() {
     navigate(`/Set-Appraisal-Appraisers?id=${value}`);
   };
 
-  const handleOpenAndClose = (value) => {
+  const handleOpen = (value) => {
     const headers = miHeaders;
 
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/getByIds/${value}`, { headers })
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/openOrClose/${value}/1`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
-      .then((resultS) => {
-        if (resultS.message === "Expired Access") {
+      .then((result) => {
+        if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
         }
-        if (resultS.message === "Token Does Not Exist") {
+        if (result.message === "Token Does Not Exist") {
           navigate("/authentication/sign-in");
           window.location.reload();
         }
-        if (resultS.message === "Unauthorized Access") {
+        if (result.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        let typex = 1;
-        if (resultS[0].status === 1) {
-          typex = 2;
-        }
+        console.log(result);
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
 
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/openOrClose/${value}/${typex}`, {
-          headers,
-        })
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
-          })
-          .then((result) => {
-            if (result.message === "Expired Access") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
-            }
-            if (result.message === "Token Does Not Exist") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
-            }
-            if (result.message === "Unauthorized Access") {
-              navigate("/authentication/forbiddenPage");
-              window.location.reload();
-            }
-            console.log(result);
-            MySwal.fire({
-              title: result.status,
-              type: "success",
-              text: result.message,
-            }).then(() => {
-              window.location.reload();
-            });
-          })
-          .catch((error) => {
-            MySwal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
-          });
+  const handleClose = (value) => {
+    const headers = miHeaders;
+
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/openOrClose/${value}/2`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        console.log(result);
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
       });
   };
 
@@ -249,7 +266,8 @@ export default function AppraisalData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleView(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleQuestions(value)}>Set Questions</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleOpenAndClose(value)}>Open/Close</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleOpen(value)}>Open</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleAppraisers(value)}>
                   Set Appraisers

@@ -61,6 +61,7 @@ function Dashboard() {
   // const [groupGet, setGroupGet] = useState([]);
   const [polls, setPolls] = useState([]);
   const [allApp, setAllApp] = useState([]);
+  const [showApp, setShowApp] = useState(false);
 
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
@@ -225,6 +226,7 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
+          setShowApp(true);
           console.log(result);
           setAllApp(result);
         }
@@ -276,56 +278,78 @@ function Dashboard() {
         </Container>
       </Card>
       &nbsp;{" "}
-      <Card style={{ backgroundColor: "#318CE7" }}>
-        <MDTypography variant="h4" fontWeight="bold" color="white" textAlign="left" mt={1}>
-          &nbsp; Appraisal
-        </MDTypography>
-        &nbsp;
-        <Container>
-          <div className="row">
-            {allApp.map((item) => (
-              <div key={item.id} className="col-sm-4">
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardContent>
-                    <MDTypography
-                      variant="h5"
-                      fontWeight="medium"
-                      fontSize="120%"
-                      color="info"
-                      textAlign="left"
-                      mt={1}
-                    >
-                      {item.name}
-                    </MDTypography>
-                    <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={1}>
-                      You have been selected to appraise the Appraisal - {item.name}
-                    </MDTypography>
-                    <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={1}>
-                      Appraisee - {item.appraiseeName}
-                    </MDTypography>
-                    <MDTypography variant="h6" color="text" fontSize="75%" textAlign="left" mt={0}>
-                      Created By - {item.createdByName}
-                    </MDTypography>
-                  </CardContent>
-                  <CardActions>
-                    <div align="right">
-                      <MDButton
-                        variant="gradient"
+      {showApp ? (
+        <Card style={{ backgroundColor: "#318CE7" }}>
+          <MDTypography variant="h4" fontWeight="bold" color="white" textAlign="left" mt={1}>
+            &nbsp; Appraisal
+          </MDTypography>
+          &nbsp;
+          <Container>
+            <div className="row">
+              {allApp.map((item) => (
+                <div key={item.id} className="col-sm-4">
+                  <Card sx={{ maxWidth: 345 }}>
+                    <CardContent>
+                      <MDTypography
+                        variant="h5"
+                        fontWeight="medium"
+                        fontSize="120%"
                         color="info"
-                        onClick={() => handleAppraise(item.id)}
-                        width="50%"
+                        textAlign="left"
+                        mt={1}
                       >
-                        Appraise
-                      </MDButton>
-                    </div>
-                  </CardActions>
-                </Card>
-              </div>
-            ))}
-          </div>
-        </Container>
-        &nbsp;
-      </Card>
+                        {item.name}
+                      </MDTypography>
+                      <MDTypography
+                        variant="h6"
+                        color="text"
+                        fontSize="75%"
+                        textAlign="left"
+                        mt={1}
+                      >
+                        You have been selected to appraise the Appraisal - {item.name}
+                      </MDTypography>
+                      <MDTypography
+                        variant="h6"
+                        color="text"
+                        fontSize="75%"
+                        textAlign="left"
+                        mt={1}
+                      >
+                        Appraisee - {item.appraiseeName}
+                      </MDTypography>
+                      <MDTypography
+                        variant="h6"
+                        color="text"
+                        fontSize="75%"
+                        textAlign="left"
+                        mt={0}
+                      >
+                        Created By - {item.createdByName}
+                      </MDTypography>
+                    </CardContent>
+                    <CardActions>
+                      <div align="right">
+                        <MDButton
+                          variant="gradient"
+                          color="info"
+                          onClick={() => handleAppraise(item.id)}
+                          width="50%"
+                        >
+                          Appraise
+                        </MDButton>
+                      </div>
+                    </CardActions>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </Container>
+          &nbsp;
+        </Card>
+      ) : (
+        <MDBox />
+      )}
       &nbsp;
       <Container>
         <div className="row">

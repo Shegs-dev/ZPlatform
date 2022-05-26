@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 // import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import PHeaders from "postHeader";
 
 export default function UserData() {
   const [items, setItems] = useState([]);
@@ -22,6 +23,7 @@ export default function UserData() {
 
   // const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
 
   useEffect(() => {
     const headers = miHeaders;
@@ -50,6 +52,7 @@ export default function UserData() {
         }
         if (isMounted) {
           setItems(result);
+          console.log(result);
         }
       });
     return () => {
@@ -154,11 +157,23 @@ export default function UserData() {
   };
 
   const handlePasswordReset = (value) => {
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`)
+    const headers = miHeaders;
+    console.log(value);
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { headers })
       .then((res) => res.json())
       .then((resultp) => {
+        const raw = JSON.stringify({
+          username: resultp[0].email,
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+        console.log(resultp);
         if (resultp.length > 0) {
-          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/${resultp[0].email}`)
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/`, requestOptions)
             .then(async (res) => {
               const aToken = res.headers.get("token-1");
               localStorage.setItem("rexxdex", aToken);

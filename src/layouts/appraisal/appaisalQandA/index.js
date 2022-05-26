@@ -40,15 +40,18 @@ function AppraiseQandA() {
   const [appraiseeName, setAppraiseeName] = useState("");
 
   const [showF, setShowF] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [showCom, setShowCom] = useState(true);
 
   const [pageNo, setPageNo] = useState(1);
   const [questNo, setQuestNo] = useState(1);
   const [rLength, setRLength] = useState(0);
 
+  const [defaultSelVal, setDefaultSelVal] = useState([]);
+
   const [items, setItems] = useState([]);
+  const [itemss, setItemss] = useState([]);
   const [allObj, setAllObj] = useState([]);
-  //   console.log(allObj);
 
   const [viewOption, setViewOption] = useState(false);
   const [viewMultiple, setViewMultiple] = useState(false);
@@ -92,6 +95,7 @@ function AppraiseQandA() {
           localStorage.removeItem("selOpt");
           setAppraisalName(result[0].name);
           setAppraiseeName(result[0].appraiseeName);
+          setShowAll(true);
         }
       });
     return () => {
@@ -164,7 +168,7 @@ function AppraiseQandA() {
               setHint(resultq[0].question.hint);
 
               if (resultq[0].question.inputType === "Option") {
-                setItems(resultq[0].options);
+                setItemss(resultq[0].options);
               } else if (resultq[0].question.inputType === "Multiple") {
                 const anwerMap = [];
                 // eslint-disable-next-line array-callback-return
@@ -230,6 +234,7 @@ function AppraiseQandA() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
+        console.log(result);
         const questID = result[tNum - 1].questionID;
         fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/getByIds/${questID}`, {
           headers,
@@ -241,6 +246,7 @@ function AppraiseQandA() {
           })
           .then((resultq) => {
             setOpened(false);
+            console.log(resultq);
             if (resultq.message === "Expired Access") {
               navigate("/authentication/sign-in");
               window.location.reload();
@@ -259,7 +265,7 @@ function AppraiseQandA() {
             setHint(resultq[0].question.hint);
 
             if (resultq[0].question.inputType === "Option") {
-              setItems(resultq[0].options);
+              setItemss(resultq[0].options);
             } else if (resultq[0].question.inputType === "Multiple") {
               const anwerMap = [];
               // eslint-disable-next-line array-callback-return
@@ -271,6 +277,22 @@ function AppraiseQandA() {
                 anwerMap.push(fdy);
               });
               setItems(anwerMap);
+              if (allObj.length >= tNum) {
+                const tDefAns = [];
+                const tAns = allObj[tNum - 1].answer;
+                const myArray = tAns.split(",");
+                // eslint-disable-next-line array-callback-return
+                myArray.map((objectx) => {
+                  const fdy = {
+                    value: objectx,
+                    label: objectx,
+                  };
+                  tDefAns.push(fdy);
+                  console.log(objectx);
+                });
+                console.log(tDefAns);
+                setDefaultSelVal(tDefAns);
+              }
             }
 
             if (resultq[0].question.inputType === "Option") {
@@ -302,34 +324,78 @@ function AppraiseQandA() {
       const fdy = item.value;
       ansA.push(fdy);
     });
-    setAnswer(ansA);
+    setAnswer(ansA.toString());
+    console.log(ansA);
   };
 
   const handleNext = () => {
     localStorage.removeItem("selOpt");
     const numberYu = 1;
     const tNum = pageNo + numberYu;
+    console.log(tNum);
+    console.log(pageNo);
     if (pageNo <= rLength) {
       if (tNum <= rLength) {
         setQuestNo(tNum);
         setPageNo(tNum);
         handleFetchQuest(tNum);
+        console.log("jfjfjfnddj1");
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("id");
 
         const data11 = JSON.parse(localStorage.getItem("user1"));
+        const personalIds = data11.personalID;
 
         const answery = answerx.toString();
-        const personalIds = data11.personalID;
-        const obj = {
-          orgID: orgIDx,
-          appraisalID: id,
-          questionID: questionIDx,
-          empID: personalIds,
-          answer: answery,
-        };
+        let questIID = "";
+        if (allObj.length !== 0) {
+          // eslint-disable-next-line array-callback-return
+          allObj.map((objectx) => {
+            if (questionIDx === objectx.questionID) {
+              questIID = objectx.questionID;
+              console.log(objectx.questionID);
+              console.log(questionIDx);
+              setAnswer("");
+              if (answerx !== objectx.answer) {
+                console.log("answerx");
+                // eslint-disable-next-line no-param-reassign
+                objectx.answer = answerx;
+              }
+            }
+          });
+
+          console.log(questIID);
+          console.log(questionIDx);
+          if (questionIDx !== questIID) {
+            console.log("questID");
+            const obj = {
+              orgID: orgIDx,
+              appraisalID: id,
+              questionID: questionIDx,
+              empID: personalIds,
+              answer: answery,
+            };
+            console.log(obj);
+            setAllObj((list) => [...list, obj]);
+            setAnswer("");
+            console.log(allObj);
+          }
+        } else {
+          const obj = {
+            orgID: orgIDx,
+            appraisalID: id,
+            questionID: questionIDx,
+            empID: personalIds,
+            answer: answery,
+          };
+          console.log(obj);
+          setAllObj((list) => [...list, obj]);
+          setAnswer("");
+          console.log(allObj);
+        }
+
         //   if (answerx !== "") {
         //     if (allObj.length !== 0) {
         //       // eslint-disable-next-line array-callback-return
@@ -343,11 +409,10 @@ function AppraiseQandA() {
         //       setAllObj((list) => [...list, obj]);
         //     }
         //   }
-        setAllObj((list) => [...list, obj]);
-        setAnswer("");
       }
     }
-    if (tNum > rLength) {
+    const rNum = pageNo;
+    if (rNum === rLength) {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const id = urlParams.get("id");
@@ -355,19 +420,73 @@ function AppraiseQandA() {
       const data11 = JSON.parse(localStorage.getItem("user1"));
       const answery = answerx.toString();
       const personalIds = data11.personalID;
-      const obj = {
-        orgID: orgIDx,
-        appraisalID: id,
-        questionID: questionIDx,
-        empID: personalIds,
-        answer: answery,
-      };
+      let questIID = "";
+      // eslint-disable-next-line array-callback-return
+      allObj.map((objectx) => {
+        if (questionIDx === objectx.questionID) {
+          questIID = objectx.questionID;
+          console.log(objectx.questionID);
+          console.log(questionIDx);
+          setAnswer("");
+          if (answerx !== objectx.answer) {
+            console.log("answerx");
+            // eslint-disable-next-line no-param-reassign
+            objectx.answer = answerx;
+          }
+        }
+      });
 
-      setAllObj((list) => [...list, obj]);
-      setAnswer("");
+      console.log(questIID);
+      console.log(questionIDx);
+      if (questionIDx !== questIID) {
+        console.log("questID");
+        const obj = {
+          orgID: orgIDx,
+          appraisalID: id,
+          questionID: questionIDx,
+          empID: personalIds,
+          answer: answery,
+        };
+        console.log(obj);
+        setAllObj((list) => [...list, obj]);
+        console.log(allObj);
+      }
 
       setShowCom(false);
       setShowF(true);
+    }
+    console.log(allObj.length);
+    console.log(tNum);
+    const nextt = tNum;
+    if (allObj.length >= nextt) {
+      if (tNum > 1) {
+        console.log(allObj[tNum - 1]);
+        setAnswer(allObj[tNum - 1].answer);
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (allObj.length === rLength) {
+      setShowF(false);
+    }
+  };
+
+  const handlePrev = () => {
+    console.log(allObj);
+    const numberYu = 1;
+    const tNum = pageNo - numberYu;
+    if (pageNo > 1) {
+      setQuestNo(tNum);
+      setPageNo(tNum);
+      handleFetchQuest(tNum);
+      setAnswer("");
+    }
+    console.log(tNum);
+    console.log(pageNo);
+    if (tNum >= 1) {
+      console.log(allObj[tNum - 1]);
+      setAnswer(allObj[tNum - 1].answer);
     }
   };
 
@@ -405,7 +524,9 @@ function AppraiseQandA() {
           type: "success",
           text: result.message,
         }).then(() => {
-          navigate("/dashboard", { replace: true });
+          if (result.status === "SUCCESS") {
+            navigate("/dashboard", { replace: true });
+          }
         });
       })
       .catch((error) => {
@@ -426,232 +547,268 @@ function AppraiseQandA() {
     <DashboardLayout>
       {/* { <DashboardNavbar />} */}
       <Card>
-        <MDBox pt={4} pb={3} px={3}>
-          {showF ? (
-            <MDBox mb={2} mt={3}>
-              <MDBox
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-                mx={2}
-                mt={-3}
-                p={2}
-                mb={1}
-                textAlign="center"
-              >
-                <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                  {appraisalName}
-                </MDTypography>
-              </MDBox>
-              <MDBox
-                variant="gradient"
-                bgColor="white"
-                borderRadius="lg"
-                coloredShadow="info"
-                mx={2}
-                mt={0}
-                p={2}
-                mb={1}
-                textAlign="center"
-              >
-                <MDTypography variant="h6" fontWeight="medium" color="text" mt={1}>
-                  Appraisal For {appraiseeName}
-                </MDTypography>
-              </MDBox>
-              <div align="center">
-                {showCom ? (
-                  <MDBox mt={4} mb={1}>
-                    <MDButton
-                      variant="gradient"
-                      onClick={handleChangeToForm}
-                      color="info"
-                      width="50%"
-                    >
-                      Start
-                    </MDButton>
-                  </MDBox>
-                ) : (
-                  <MDBox mt={4} mb={1}>
-                    <MDButton variant="gradient" onClick={handleComplete} color="info" width="50%">
-                      Complete
-                    </MDButton>
-                  </MDBox>
-                )}
-              </div>
-            </MDBox>
-          ) : (
-            <MDBox component="form" role="form">
-              <MDBox mb={0}>
-                <Container>
-                  <div className="row">
-                    <div className="col-sm-12">
-                      <Container>
-                        <div className="row">
-                          <div className="col-sm-4">
-                            <MDBox
-                              variant="gradient"
-                              bgColor="info"
-                              borderRadius="lg"
-                              coloredShadow="info"
-                              mx={2}
-                              mt={-3}
-                              p={2}
-                              mb={1}
-                              textAlign="left"
-                            >
-                              <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                                Question {questNo}
-                              </MDTypography>
-                            </MDBox>
-                          </div>
-                        </div>
-                      </Container>
-                      <MDBox
+        {showAll ? (
+          <MDBox pt={4} pb={3} px={3}>
+            {showF ? (
+              <MDBox mb={2} mt={3}>
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                  mx={2}
+                  mt={-3}
+                  p={2}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                    {appraisalName}
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="white"
+                  borderRadius="lg"
+                  coloredShadow="info"
+                  mx={2}
+                  mt={0}
+                  p={2}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography variant="h6" fontWeight="medium" color="text" mt={1}>
+                    Appraisal For {appraiseeName}
+                  </MDTypography>
+                </MDBox>
+                <div align="center">
+                  {showCom ? (
+                    <MDBox mt={4} mb={1}>
+                      <MDButton
                         variant="gradient"
-                        bgColor="white"
-                        borderRadius="lg"
-                        coloredShadow="info"
-                        mx={2}
-                        mt={0}
-                        p={2}
-                        mb={1}
-                        textAlign="center"
+                        onClick={handleChangeToForm}
+                        color="info"
+                        width="50%"
                       >
-                        <MDTypography variant="h6" fontWeight="medium" color="text" mt={1}>
-                          {questionx}
-                        </MDTypography>
-                      </MDBox>
-                    </div>
-                  </div>
-                </Container>
-              </MDBox>
-              <MDBox mb={2}>
-                <Container>
-                  <div className="row">
-                    <div className="col-sm-1" />
-                    <div className="col-sm-11">
-                      <MDTypography variant="h4" fontWeight="medium" fontSize="55%">
-                        Hint: {hintx}
-                      </MDTypography>
-                    </div>
-                  </div>
-                </Container>
-              </MDBox>
-              <MDBox mb={2}>
-                <Container>
-                  <div className="row">
-                    <div className="col-sm-4">
-                      <MDBox
-                        variant="gradient"
-                        bgColor="info"
-                        borderRadius="lg"
-                        coloredShadow="info"
-                        mx={5}
-                        mt={2}
-                        p={2}
-                        mb={-1}
-                        textAlign="left"
-                      >
-                        <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                          Answer
-                        </MDTypography>
-                      </MDBox>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-8">
-                      <MDBox textAlign="right">
-                        {viewText ? (
-                          <MDBox mb={2} mt={3}>
-                            <Container>
-                              <div className="row">
-                                <div className="col-sm-12">
-                                  <Form.Group
-                                    className="mb-1"
-                                    controlId="exampleForm.ControlTextarea1"
-                                  >
-                                    <Form.Control
-                                      as="textarea"
-                                      onChange={(e) => setAnswer(e.target.value)}
-                                      rows={2}
-                                    />
-                                  </Form.Group>
-                                </div>
-                              </div>
-                            </Container>
-                          </MDBox>
-                        ) : (
-                          <MDBox mt={4} mb={1} />
-                        )}
-                        {viewOption ? (
-                          <MDBox mb={2}>
-                            <Container>
-                              <div className="row">
-                                <div className="col-sm-4">
-                                  <FormControl>
-                                    <RadioGroup
-                                      aria-labelledby="demo-controlled-radio-buttons-group"
-                                      name="controlled-radio-buttons-group"
-                                      onChange={handleOnChangeOption}
-                                    >
-                                      {items.map((apis) => (
-                                        <FormControlLabel
-                                          key={apis.id}
-                                          value={apis.optionValue}
-                                          control={<Radio />}
-                                          label={apis.optionValue}
-                                        />
-                                      ))}
-                                    </RadioGroup>
-                                  </FormControl>
-                                </div>
-                              </div>
-                            </Container>
-                          </MDBox>
-                        ) : (
-                          <MDBox mt={4} mb={1} />
-                        )}
-                        {viewMultiple ? (
-                          <MDBox mb={2}>
-                            <Container>
-                              <div className="row">
-                                <div className="col-sm-6">
-                                  <Select
-                                    closeMenuOnSelect
-                                    components={animatedComponents}
-                                    onChange={handleOnSelect}
-                                    isMulti
-                                    options={items}
-                                  />
-                                </div>
-                              </div>
-                            </Container>
-                          </MDBox>
-                        ) : (
-                          <MDBox mt={4} mb={1} />
-                        )}
-                      </MDBox>
-                    </div>
-                  </div>
-                </Container>
-
-                <Container>
-                  <div className="row">
-                    <div className="col-sm-9" />
-                    <div className="col-sm-3">
+                        Start
+                      </MDButton>
+                    </MDBox>
+                  ) : (
+                    <MDBox mt={4} mb={1}>
                       <MDBox mt={4} mb={1}>
-                        <MDButton variant="gradient" onClick={handleNext} color="info" width="50%">
-                          Next
+                        <MDButton variant="gradient" onClick={handleBack} color="info" width="50%">
+                          Go Back
                         </MDButton>
                       </MDBox>
-                    </div>
-                  </div>
-                </Container>
+                      <MDBox mt={4} mb={1}>
+                        <MDButton
+                          variant="gradient"
+                          onClick={handleComplete}
+                          color="info"
+                          width="50%"
+                        >
+                          Complete
+                        </MDButton>
+                      </MDBox>
+                    </MDBox>
+                  )}
+                </div>
               </MDBox>
-            </MDBox>
-          )}
-        </MDBox>
+            ) : (
+              <MDBox component="form" role="form">
+                <MDBox mb={0}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <Container>
+                          <div className="row">
+                            <div className="col-sm-4">
+                              <MDBox
+                                variant="gradient"
+                                bgColor="info"
+                                borderRadius="lg"
+                                coloredShadow="info"
+                                mx={2}
+                                mt={-3}
+                                p={2}
+                                mb={1}
+                                textAlign="left"
+                              >
+                                <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                                  Question {questNo}
+                                </MDTypography>
+                              </MDBox>
+                            </div>
+                          </div>
+                        </Container>
+                        <MDBox
+                          variant="gradient"
+                          bgColor="white"
+                          borderRadius="lg"
+                          coloredShadow="info"
+                          mx={2}
+                          mt={0}
+                          p={2}
+                          mb={1}
+                          textAlign="center"
+                        >
+                          <MDTypography variant="h6" fontWeight="medium" color="text" mt={1}>
+                            {questionx}
+                          </MDTypography>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-1" />
+                      <div className="col-sm-11">
+                        <MDTypography variant="h4" fontWeight="medium" fontSize="55%">
+                          Hint: {hintx}
+                        </MDTypography>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-4">
+                        <MDBox
+                          variant="gradient"
+                          bgColor="info"
+                          borderRadius="lg"
+                          coloredShadow="info"
+                          mx={5}
+                          mt={2}
+                          p={2}
+                          mb={-1}
+                          textAlign="left"
+                        >
+                          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                            Answer
+                          </MDTypography>
+                        </MDBox>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDBox textAlign="right">
+                          {viewText ? (
+                            <MDBox mb={2} mt={3}>
+                              <Container>
+                                <div className="row">
+                                  <div className="col-sm-12">
+                                    <Form.Group
+                                      className="mb-1"
+                                      controlId="exampleForm.ControlTextarea1"
+                                    >
+                                      <Form.Control
+                                        as="textarea"
+                                        value={answerx}
+                                        onChange={(e) => setAnswer(e.target.value)}
+                                        rows={2}
+                                      />
+                                    </Form.Group>
+                                  </div>
+                                </div>
+                              </Container>
+                            </MDBox>
+                          ) : (
+                            <MDBox mt={4} mb={1} />
+                          )}
+                          {viewOption ? (
+                            <MDBox mb={2}>
+                              <Container>
+                                <div className="row">
+                                  <div className="col-sm-4">
+                                    <FormControl>
+                                      <RadioGroup
+                                        aria-labelledby="demo-controlled-radio-buttons-group"
+                                        name="controlled-radio-buttons-group"
+                                        value={answerx}
+                                        onChange={handleOnChangeOption}
+                                      >
+                                        {itemss.map((apis) => (
+                                          <FormControlLabel
+                                            key={apis.id}
+                                            value={apis.optionValue}
+                                            control={<Radio />}
+                                            label={apis.optionValue}
+                                          />
+                                        ))}
+                                      </RadioGroup>
+                                    </FormControl>
+                                  </div>
+                                </div>
+                              </Container>
+                            </MDBox>
+                          ) : (
+                            <MDBox mt={4} mb={1} />
+                          )}
+                          {viewMultiple ? (
+                            <MDBox mb={2}>
+                              <Container>
+                                <div className="row">
+                                  <div className="col-sm-6">
+                                    <Select
+                                      closeMenuOnSelect
+                                      components={animatedComponents}
+                                      defaultValue={defaultSelVal}
+                                      onChange={handleOnSelect}
+                                      isMulti
+                                      options={items}
+                                    />
+                                  </div>
+                                </div>
+                              </Container>
+                            </MDBox>
+                          ) : (
+                            <MDBox mt={4} mb={1} />
+                          )}
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <MDBox mt={4} mb={1}>
+                          <MDButton
+                            variant="gradient"
+                            onClick={handlePrev}
+                            color="info"
+                            width="50%"
+                          >
+                            Prev
+                          </MDButton>
+                        </MDBox>
+                      </div>
+                      <div className="col-sm-6" />
+                      <div className="col-sm-3">
+                        <MDBox mt={4} mb={1}>
+                          <MDButton
+                            variant="gradient"
+                            onClick={handleNext}
+                            color="info"
+                            width="50%"
+                          >
+                            Next
+                          </MDButton>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+              </MDBox>
+            )}
+          </MDBox>
+        ) : (
+          <MDBox mt={4} mb={1} />
+        )}
       </Card>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
