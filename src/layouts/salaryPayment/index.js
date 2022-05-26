@@ -36,8 +36,6 @@ function SalaryPayment() {
 
   const [allUserID, setAllUserID] = useState([]);
 
-  const [enabled, setEnabled] = useState(false);
-
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
@@ -162,9 +160,6 @@ function SalaryPayment() {
       })
       .then((result) => {
         setOpened(false);
-        if (result.status === "SUCCESS") {
-          setEnabled(true);
-        }
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -252,9 +247,6 @@ function SalaryPayment() {
           .then((result) => {
             console.log(result);
             setOpened(false);
-            if (result.status === "SUCCESS") {
-              setEnabled(true);
-            }
             if (result.message === "Expired Access") {
               navigate("/authentication/sign-in");
               window.location.reload();
@@ -339,6 +331,64 @@ function SalaryPayment() {
     setAllUserID(userIDs);
     console.log(select);
     console.log(userIDs);
+  };
+
+  const handleInitiatePay = (e) => {
+    setOpened(true);
+    e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const personalIDs = data11.personalID;
+    const raw = JSON.stringify({
+      orgID: orgIDs,
+      ids: allUserID,
+      generatedBy: personalIDs,
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    fetch(
+      `${process.env.REACT_APP_TANTA_URL}/payroll/initiateSalaryPayment/${personalIDs}`,
+      requestOptions
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        });
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
   };
 
   return (
@@ -443,17 +493,88 @@ function SalaryPayment() {
                           calculate All Users
                         </MDButton>
                       </MDBox>
-                      <MDBox mt={4} mb={1}>
-                        <MDButton
-                          variant="outlined"
-                          onClick={handleClick}
-                          color="info"
-                          width="50%"
-                          disabled={!enabled}
-                        >
-                          Pay Salary
-                        </MDButton>
-                      </MDBox>
+                    </MDBox>
+                  </div>
+                </Container>
+              </MDBox>
+            </MDBox>
+          </MDBox>
+        </Card>
+        &nbsp;
+        <Card>
+          <MDBox pt={4} pb={3} px={30}>
+            <MDBox
+              variant="gradient"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={1}
+              mt={2}
+              p={2}
+              mb={1}
+              textAlign="left"
+            >
+              <MDTypography
+                variant="h4"
+                fontWeight="medium"
+                color="white"
+                textAlign="center"
+                mt={1}
+              >
+                Initiate Payment
+              </MDTypography>
+            </MDBox>
+            <MDBox
+              variant="gradient"
+              bgColor="error"
+              borderRadius="lg"
+              coloredShadow="success"
+              mx={3}
+              mt={1}
+              p={1}
+              mb={1}
+              textAlign="center"
+            >
+              <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+                {" "}
+              </MDTypography>
+            </MDBox>
+            <MDBox component="form" role="form">
+              <MDBox mb={2}>
+                <Container>
+                  <div align="center">
+                    {" "}
+                    <div className="row">
+                      <div className="col-sm-12">
+                        <MDBox mt={2}>
+                          <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            fontSize="80%"
+                            align="left"
+                            color="text"
+                          >
+                            Select User
+                          </MDTypography>
+                          <Select
+                            closeMenuOnSelect
+                            components={animatedComponents}
+                            onChange={handleOnSelect}
+                            isMulti
+                            options={sUser}
+                          />
+                        </MDBox>
+                      </div>
+                    </div>
+                    <MDBox mt={4} mb={1}>
+                      <MDButton
+                        variant="gradient"
+                        onClick={handleInitiatePay}
+                        color="info"
+                        width="50%"
+                      >
+                        Pay Salary
+                      </MDButton>
                     </MDBox>
                   </div>
                 </Container>

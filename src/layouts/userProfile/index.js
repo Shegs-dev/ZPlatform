@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import MDAvatar from "components/MDAvatar";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import team1 from "assets/images/team-1.jpg";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
@@ -31,6 +29,8 @@ function UserProfile() {
   const { nCountries: WCountries } = NCountry();
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const MySwal = withReactContent(Swal);
+
+  const [showProf, setShowProf] = useState(false);
 
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
@@ -143,6 +143,7 @@ function UserProfile() {
               `${resultp[0].monthOfBirth}/${resultp[0].dayOfBirth}/${resultp[0].yearOfBirth}`
             )
           );
+          setShowProf(true);
         }
       });
     return () => {
@@ -396,8 +397,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -462,8 +461,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -522,8 +519,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -579,8 +574,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -636,8 +629,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -705,8 +696,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -767,8 +756,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -826,8 +813,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -886,8 +871,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -1265,82 +1248,81 @@ function UserProfile() {
       <div className="row">
         <div className="col-sm-1" />
         <div className="col-sm-4">
-          <Card>
-            <div align="center">
-              <MDBox mt={-4} mx={2} p={0}>
-                <MDAvatar src={team1} alt="name" size="xxl" />
-              </MDBox>
-            </div>
-            <div align="center">
-              <MDBox
-                variant="gradient"
-                bgColor="info"
-                borderRadius="sm"
-                coloredShadow="info"
-                mt={2}
-                mx={0}
-                p={1}
-                textAlign="center"
-              >
+          {showProf ? (
+            <Card>
+              <div align="center">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="sm"
+                  coloredShadow="info"
+                  mt={2}
+                  mx={0}
+                  p={1}
+                  textAlign="center"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    fontFamily="Helvetica"
+                    fontSize="120%"
+                    color="white"
+                  >
+                    {fnamex} {onamex} {lnamex}
+                  </MDTypography>
+                </MDBox>
+              </div>
+              <div align="center">
                 <MDTypography
-                  variant="h4"
+                  variant="h7"
+                  fontWeight="medium"
+                  fontFamily="Century Gothic"
+                  fontSize="70%"
+                  color="dark"
+                  mt={0}
+                >
+                  {emailx}
+                </MDTypography>
+              </div>
+              <div align="center">
+                <MDTypography
+                  variant="h5"
+                  fontWeight="light"
+                  fontSize="70%"
+                  fontFamily="Helvetica"
+                  color="dark"
+                  mt={0}
+                >
+                  {phonex}
+                </MDTypography>
+              </div>
+              <div align="center">
+                <MDTypography
+                  variant="h6"
                   fontWeight="medium"
                   fontFamily="Helvetica"
-                  fontSize="120%"
-                  color="white"
+                  fontSize="80%"
+                  color="dark"
+                  mt={0}
                 >
-                  {fnamex} {onamex} {lnamex}
+                  {residentialStreetx}&#44; {residentialCityx}&#44; {residentialStatex}
                 </MDTypography>
-              </MDBox>
-            </div>
-            <div align="center">
-              <MDTypography
-                variant="h7"
-                fontWeight="medium"
-                fontFamily="Century Gothic"
-                fontSize="70%"
-                color="dark"
-                mt={0}
-              >
-                {emailx}
-              </MDTypography>
-            </div>
-            <div align="center">
-              <MDTypography
-                variant="h5"
-                fontWeight="light"
-                fontSize="70%"
-                fontFamily="Helvetica"
-                color="dark"
-                mt={0}
-              >
-                {phonex}
-              </MDTypography>
-            </div>
-            <div align="center">
-              <MDTypography
-                variant="h6"
-                fontWeight="medium"
-                fontFamily="Helvetica"
-                fontSize="80%"
-                color="dark"
-                mt={0}
-              >
-                {residentialStreetx}&#44; {residentialCityx}&#44; {residentialStatex}
-              </MDTypography>
 
-              <MDTypography
-                variant="h6"
-                fontWeight="medium"
-                fontFamily="Helvetica"
-                color="dark"
-                mt={0}
-                mb={5}
-              >
-                {residentialCountryx}
-              </MDTypography>
-            </div>
-          </Card>
+                <MDTypography
+                  variant="h6"
+                  fontWeight="medium"
+                  fontFamily="Helvetica"
+                  color="dark"
+                  mt={0}
+                  mb={5}
+                >
+                  {residentialCountryx}
+                </MDTypography>
+              </div>
+            </Card>
+          ) : (
+            <MDBox />
+          )}
           &nbsp;
           <Card>
             <MDBox pt={4} pb={3} px={3}>
@@ -2148,23 +2130,6 @@ function UserProfile() {
                     </div>
                   </Container>
                 </MDBox>
-                {/* <MDBox mb={2} mx={0}>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-8">
-                        <MDInput
-                          tabel="Bank Code"
-                          ype="number"
-                          ldisabled
-                          value={baBankCodex || ""}
-                          onChange={(e) => setBaBankCode(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
-                      </div>
-                    </div>
-                  </Container>
-                </MDBox> */}
                 <div align="center">
                   <MDBox mt={4} mb={1}>
                     <MDButton

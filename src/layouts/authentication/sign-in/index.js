@@ -88,7 +88,7 @@ function Basic() {
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
       .then(async (res) => {
-        // console.log(res.headers);
+        // console.log(res.headers);;;;
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex1", aToken);
         return res.json();

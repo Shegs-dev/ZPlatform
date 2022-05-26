@@ -140,7 +140,7 @@ function VotePolls() {
     const personalIds = data11.id;
     const raw = JSON.stringify({
       orgID: orgIDs,
-      groupID: groupids,
+      pollID: groupids,
       empID: personalIds,
       response: apix.value,
     });
