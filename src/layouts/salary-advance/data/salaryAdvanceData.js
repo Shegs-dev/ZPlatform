@@ -28,8 +28,7 @@ export default function SalaryAdvanceData() {
     commentx,
     approverIDx,
     statusx,
-    deleteFlagx,
-    type
+    deleteFlagx
   ) => {
     const raw = JSON.stringify({
       id: idx,
@@ -65,96 +64,13 @@ export default function SalaryAdvanceData() {
         if (resx.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
-
-        if (type === 1) {
-          const data11 = JSON.parse(localStorage.getItem("user1"));
-
-          const personalIDs = data11.personalID;
-          fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getUserInfo/${orgIDx}/${personalIDs}`, {
-            miHeaders,
-          })
-            .then(async (res) => {
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex", aToken);
-              return res.json();
-            })
-            .then((result) => {
-              if (result.message === "Expired Access") {
-                navigate("/authentication/sign-in");
-                window.location.reload();
-              }
-              if (result.message === "Token Does Not Exist") {
-                navigate("/authentication/sign-in");
-                window.location.reload();
-              }
-              if (result.message === "Unauthorized Access") {
-                navigate("/authentication/forbiddenPage");
-                window.location.reload();
-              }
-
-              const narrationx = `Salary Advance For ${result.personal.fname} ${result.personal.lname}`;
-              // Check if Bank Code And Destination Code Are Set
-              if (result.bankAccount === null) {
-                MySwal.fire({
-                  title: "PAYMENT_REFUSED",
-                  type: "error",
-                  text: "This Payment Cannot Happen Because There Is No Bank Account Set For Employee. Please See Your System Administrator Afterwards",
-                }).then(() => {
-                  window.location.reload();
-                });
-              }
-              const raw1 = JSON.stringify({
-                amount: amountx,
-                narration: narrationx,
-                destinationBankCode: result.bankAccount.bankCode,
-                destinationAccountNumber: result.bankAccount.acctNo,
-              });
-              const requestOptions1 = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw1,
-                redirect: "follow",
-              };
-
-              fetch(
-                `${process.env.REACT_APP_TANTA_URL}/salaryAdvance/pay/${orgIDx}`,
-                requestOptions1
-              )
-                .then(async (res) => {
-                  const aToken = res.headers.get("token-1");
-                  localStorage.setItem("rexxdex", aToken);
-                  return res.json();
-                })
-                .then((resultpay) => {
-                  if (resultpay.message === "Expired Access") {
-                    navigate("/authentication/sign-in");
-                    window.location.reload();
-                  }
-                  if (resultpay.message === "Token Does Not Exist") {
-                    navigate("/authentication/sign-in");
-                    window.location.reload();
-                  }
-                  if (resultpay.message === "Unauthorized Access") {
-                    navigate("/authentication/forbiddenPage");
-                    window.location.reload();
-                  }
-                  MySwal.fire({
-                    title: resultpay.status,
-                    type: "success",
-                    text: resultpay.message,
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                })
-                .catch((error) => {
-                  MySwal.fire({
-                    title: error.status,
-                    type: "error",
-                    text: error.message,
-                  });
-                });
-            });
-        }
+        MySwal.fire({
+          title: resx.status,
+          type: "success",
+          text: resx.message,
+        }).then(() => {
+          window.location.reload();
+        });
       })
       .catch((error) => {
         MySwal.fire({
@@ -189,7 +105,7 @@ export default function SalaryAdvanceData() {
     } else {
       MySwal.fire({
         title: "Add Comment",
-        html: `<texarea rows="4" id="comment" class="form-control">`,
+        html: `<textarea rows="9" id="comment" class="form-control"></textarea>`,
         confirmButtonText: "Save",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -209,8 +125,7 @@ export default function SalaryAdvanceData() {
               comment,
               filteredItems[0].approverID,
               2,
-              filteredItems[0].deleteFlag,
-              0
+              filteredItems[0].deleteFlag
             );
           }
         },
@@ -301,18 +216,107 @@ export default function SalaryAdvanceData() {
         confirmButtonText: "Yes, Approve it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          handleUpdate(
-            filteredItems[0].id,
-            filteredItems[0].orgID,
-            filteredItems[0].empID,
-            filteredItems[0].amount,
-            filteredItems[0].createdTime,
-            filteredItems[0].comment,
-            filteredItems[0].approverID,
-            1,
-            filteredItems[0].deleteFlag,
-            1
-          );
+          const headers = miHeaders;
+
+          const personalIDs = data11.personalID;
+          const orgIDx = data11.orgID;
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getUserInfo/${orgIDx}/${personalIDs}`, {
+            headers,
+          })
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resultx) => {
+              if (resultx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (resultx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (resultx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+                window.location.reload();
+              }
+
+              const narrationx = `Salary Advance For ${resultx.personal.fname} ${resultx.personal.lname}`;
+              // Check if Bank Code And Destination Code Are Set
+              if (resultx.bankAccount === null) {
+                MySwal.fire({
+                  title: "DECISION_REFUSED",
+                  type: "error",
+                  text: "This Decision Cannot Happen Because There Is No Bank Account Set For Employee. Please See Your System Administrator Afterwards",
+                });
+              } else {
+                const raw1 = JSON.stringify({
+                  amount: filteredItems[0].amount,
+                  narration: narrationx,
+                  destinationBankCode: resultx.bankAccount.bankCode,
+                  destinationAccountNumber: resultx.bankAccount.acctNo,
+                });
+                const requestOptions1 = {
+                  method: "POST",
+                  headers: myHeaders,
+                  body: raw1,
+                  redirect: "follow",
+                };
+
+                fetch(
+                  `${process.env.REACT_APP_TANTA_URL}/salaryAdvance/pay/${orgIDx}`,
+                  requestOptions1
+                )
+                  .then(async (res) => {
+                    const aToken = res.headers.get("token-1");
+                    localStorage.setItem("rexxdex", aToken);
+                    return res.json();
+                  })
+                  .then((resultpay) => {
+                    if (resultpay.message === "Expired Access") {
+                      navigate("/authentication/sign-in");
+                      window.location.reload();
+                    }
+                    if (resultpay.message === "Token Does Not Exist") {
+                      navigate("/authentication/sign-in");
+                      window.location.reload();
+                    }
+                    if (resultpay.message === "Unauthorized Access") {
+                      navigate("/authentication/forbiddenPage");
+                      window.location.reload();
+                    }
+                    if (resultpay.status === "SUCCESS") {
+                      handleUpdate(
+                        filteredItems[0].id,
+                        filteredItems[0].orgID,
+                        filteredItems[0].empID,
+                        filteredItems[0].amount,
+                        filteredItems[0].createdTime,
+                        filteredItems[0].comment,
+                        filteredItems[0].approverID,
+                        1,
+                        filteredItems[0].deleteFlag
+                      );
+                    } else {
+                      MySwal.fire({
+                        title: resultpay.status,
+                        type: "success",
+                        text: resultpay.message,
+                      }).then(() => {
+                        window.location.reload();
+                      });
+                    }
+                  })
+                  .catch((error) => {
+                    MySwal.fire({
+                      title: error.status,
+                      type: "error",
+                      text: error.message,
+                    });
+                  });
+              }
+            });
         }
       });
     }
