@@ -42,67 +42,88 @@ function Disapprove() {
     const personalIds = data11.id;
     const orgIDs = data11.orgID;
 
-    const raw = JSON.stringify({
-      id: idx,
-      orgID: orgIDs,
-      empID: personalIds,
-      empSetupID: empSetupIdx,
-      noOfDaysRequested: daysx,
-      noOfDaysApproved: 0,
-      startDate: startx,
-      endDate: endx,
-      resumptionDate: resumex,
-      dutyRelieverID: dutyrelieverx,
-      createdDate: createdx,
-      purpose: purposex,
-      deleteFlag: deletex,
-      approverID: approvex,
-      adminID: adminx,
-      reasonForDisapproval: reasonx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        // setOpened(false);
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        // setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+    if (approvex !== personalIds) {
+      MySwal.fire({
+        title: "PROCESS_DENIED",
+        type: "success",
+        text: "You Are Not Permitted To Approve This Request",
+      }).then(() => {
+        window.location.reload();
       });
+    } else if (reasonx !== null && reasonx !== "") {
+      MySwal.fire({
+        title: "PROCESS_DENIED",
+        type: "success",
+        text: "Decision Already Made For This Request",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      const raw = JSON.stringify({
+        id: idx,
+        orgID: orgIDs,
+        empID: personalIds,
+        empSetupID: empSetupIdx,
+        noOfDaysRequested: daysx,
+        noOfDaysApproved: 0,
+        startDate: startx,
+        endDate: endx,
+        resumptionDate: resumex,
+        dutyRelieverID: dutyrelieverx,
+        createdDate: createdx,
+        purpose: purposex,
+        deleteFlag: deletex,
+        approverID: approvex,
+        adminID: adminx,
+        reasonForDisapproval: reasonx,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(
+        `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`,
+        requestOptions
+      )
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          // setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          // setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   useEffect(() => {

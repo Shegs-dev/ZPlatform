@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
@@ -160,7 +145,6 @@ function Dashboard() {
               const idcheck = `${grp.group.id},`;
               groupIDs += idcheck;
             });
-            console.log(groupIDs);
             fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForGroup/${groupIDs}`, {
               headers,
             })
@@ -185,7 +169,6 @@ function Dashboard() {
                 if (isMounted) {
                   setPolls(resultx);
                 }
-                console.log(resultx);
               });
           }
         }
@@ -227,7 +210,6 @@ function Dashboard() {
         }
         if (isMounted) {
           setShowApp(true);
-          console.log(result);
           setAllApp(result);
         }
       });
@@ -307,7 +289,7 @@ function Dashboard() {
                         textAlign="left"
                         mt={1}
                       >
-                        You have been selected to appraise the Appraisal - {item.name}
+                        You have been selected to for the Appraisal - {item.name}
                       </MDTypography>
                       <MDTypography
                         variant="h6"

@@ -106,11 +106,11 @@ import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 import AppraisalAppraisers from "layouts/appraisal/appraisers";
 import AppraiseQandA from "layouts/appraisal/appaisalQandA";
+import GradeAppraisal from "layouts/appraisal/appraisalResult";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
 import Addpolloptions from "layouts/polls/addpolloptions";
-import ViewPolls from "layouts/polls/viewPolls";
 import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
@@ -221,13 +221,6 @@ const routes = [
     component: <Addpolloptions />,
   },
   {
-    name: "View polls",
-    key: "viewpolls",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/view-polls",
-    component: <ViewPolls />,
-  },
-  {
     name: "Vote polls",
     key: "votepolls",
     icon: <Icon fontSize="small">meeting_room</Icon>,
@@ -282,6 +275,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Set-Appraisal-Questions",
     component: <SetAppraisalQuestion />,
+  },
+  {
+    name: "Grade Appraisal",
+    key: "gradeAppraisal",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Grade-Appraisal",
+    component: <GradeAppraisal />,
   },
   {
     name: "Set Appraisal Appraisers",

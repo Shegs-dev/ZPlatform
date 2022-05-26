@@ -11,9 +11,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-// import PHeaders from "postHeader";
-import GHeaders from "getHeader";
 import PHeaders from "postHeader";
+import GHeaders from "getHeader";
 
 export default function UserData() {
   const [items, setItems] = useState([]);
@@ -21,9 +20,8 @@ export default function UserData() {
 
   const MySwal = withReactContent(Swal);
 
-  // const { allPHeaders: myHeaders } = PHeaders();
-  const { allGHeaders: miHeaders } = GHeaders();
   const { allPHeaders: myHeaders } = PHeaders();
+  const { allGHeaders: miHeaders } = GHeaders();
 
   useEffect(() => {
     const headers = miHeaders;

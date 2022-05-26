@@ -44,88 +44,110 @@ export default function TimeOffRequestData() {
     const orgIDs = data11.orgID;
     const personalIds = data11.personalID;
 
-    const raw = JSON.stringify({
-      id: idx,
-      orgID: orgIDs,
-      empID: personalIds,
-      empSetupID: empSetupIdx,
-      noOfDaysRequested: daysx,
-      noOfDaysApproved: daysapprovex,
-      startDate: startx,
-      endDate: endx,
-      resumptionDate: resumex,
-      dutyRelieverID: dutyrelieverx,
-      createdDate: createdx,
-      purpose: purposex,
-      deleteFlag: deletex,
-      approverID: approvex,
-      adminID: adminx,
-      reasonForDisapproval: reasonx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+    if (approvex !== personalIds) {
+      MySwal.fire({
+        title: "PROCESS_DENIED",
+        type: "success",
+        text: "You Are Not Permitted To Approve This Request",
+      }).then(() => {
+        window.location.reload();
       });
+    } else if (reasonx !== null && reasonx !== "") {
+      MySwal.fire({
+        title: "PROCESS_DENIED",
+        type: "success",
+        text: "Decision Already Made For This Request",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      const raw = JSON.stringify({
+        id: idx,
+        orgID: orgIDs,
+        empID: personalIds,
+        empSetupID: empSetupIdx,
+        noOfDaysRequested: daysx,
+        noOfDaysApproved: daysapprovex,
+        startDate: startx,
+        endDate: endx,
+        resumptionDate: resumex,
+        dutyRelieverID: dutyrelieverx,
+        createdDate: createdx,
+        purpose: purposex,
+        deleteFlag: deletex,
+        approverID: approvex,
+        adminID: adminx,
+        reasonForDisapproval: reasonx,
+      });
+      console.log(raw);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(
+        `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`,
+        requestOptions
+      )
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   // const getCurrentDate = () => new Date().getTime();
 
-  const changeUpdateDate = (timestamp) => {
-    const date = new Date(timestamp);
-    let month = "0";
-    if (date.getMonth() + 1 < 10) {
-      const mymonth = date.getMonth() + 1;
-      month += mymonth;
-    } else {
-      const mymonth = date.getMonth() + 1;
-      month = mymonth;
-    }
-    let day = "0";
-    if (date.getDate() < 10) {
-      day += date.getDate();
-    } else {
-      day = date.getDate();
-    }
-    const retDate = `${date.getFullYear()}-${month}-${day}`;
-    return retDate;
-  };
+  // const changeUpdateDate = (timestamp) => {
+  //   const date = new Date(timestamp);
+  //   let month = "0";
+  //   if (date.getMonth() + 1 < 10) {
+  //     const mymonth = date.getMonth() + 1;
+  //     month += mymonth;
+  //   } else {
+  //     const mymonth = date.getMonth() + 1;
+  //     month = mymonth;
+  //   }
+  //   let day = "0";
+  //   if (date.getDate() < 10) {
+  //     day += date.getDate();
+  //   } else {
+  //     day = date.getDate();
+  //   }
+  //   const retDate = `${date.getFullYear()}-${month}-${day}`;
+  //   return retDate;
+  // };
 
   // Method to filter departments
   const handleShow = (filteredData, value) => {
@@ -159,12 +181,11 @@ export default function TimeOffRequestData() {
       reasonx = "";
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
-
       empSetupIdx = filteredItems[0].empSetupID;
       daysx = filteredItems[0].noOfDaysRequested;
       daysapprovex = filteredItems[0].noOfDaysApproved;
-      startx = changeUpdateDate(filteredItems[0].startDate);
-      endx = changeUpdateDate(filteredItems[0].endDate);
+      startx = filteredItems[0].startDate;
+      endx = filteredItems[0].endDate;
       resumex = filteredItems[0].resumptionDate;
       dutyrelieverx = filteredItems[0].dutyRelieverID;
       createdx = filteredItems[0].createdDate;
@@ -189,7 +210,7 @@ export default function TimeOffRequestData() {
       title: "Update Time-Off Request",
       html: `<table><tr><td>
       <tr><td><label for="days">Days Requested</label></td>
-      <td><input type="text" class="form-control" id="days" value="${daysx}" placeholder="Days Requested" disabled></td></tr><br>
+      <td><input type="text" class="swal2-input" id="days" value="${daysx}" placeholder="Days Requested" disabled></td></tr><br>
       <tr><td><br></td></tr>
       <tr><td><label for="daysapproved">Days Approved</label></td>
       <td><input type="text" class="swal2-input" id="daysapproved" value="${daysapprovex}" placeholder="Purpose"></td></tr></table>`,
@@ -473,7 +494,7 @@ export default function TimeOffRequestData() {
   //   navigate(`/timeoffRequests/timeOffRequestJourney?id=${eTOTId}`);
   // };
 
-  const handleDisapprove = (filteredData, value) => {
+  const handleDisapprove = (value) => {
     navigate(`/timeoff-Requests/disapprove?id=${value}`);
   };
 
@@ -537,9 +558,7 @@ export default function TimeOffRequestData() {
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Approve</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleDisapprove(items, value)}>
-                  Disapprove
-                </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleDisapprove(value)}>Disapprove</Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => navigate(`/timeoff-Requests/timeOff-Request-Journey?id=${value}`)}
                 >

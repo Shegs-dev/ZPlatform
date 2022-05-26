@@ -145,7 +145,7 @@ function MattersArising() {
   };
 
   const handleOnMessageKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
+    const letters = /^[a-zA-Z ,.?;:'#*!()" ]+$/;
     if (!messagex.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("message").innerHTML =

@@ -144,7 +144,6 @@ function VotePolls() {
       empID: personalIds,
       response: apix.value,
     });
-
     const requestOptions = {
       method: "POST",
       headers: myHeaders,

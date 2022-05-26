@@ -205,21 +205,21 @@ function TimeoffRequestUpdate() {
       });
   };
 
-  const handleOnMessageKeys = () => {
+  const handleOnPurposeKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!purposex.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("message").innerHTML =
-        "Message - input only capital and small letters<br>";
+      document.getElementById("purpose").innerHTML =
+        "Purpose - input only capital and small letters<br>";
     }
     if (purposex.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("message").innerHTML = "";
+      document.getElementById("purpose").innerHTML = "";
       handleUpdate();
     }
     if (purposex.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("message").innerHTML = "Message is required<br>";
+      document.getElementById("purpose").innerHTML = "Purpose is required<br>";
     }
     // setEnabled(checkedTitle === true);
   };
@@ -262,7 +262,7 @@ function TimeoffRequestUpdate() {
                   <MDTypography variant="gradient" fontSize="60%" color="white" id="title">
                     {" "}
                   </MDTypography>
-                  <MDTypography variant="gradient" fontSize="60%" color="white" id="message">
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="purpose">
                     {" "}
                   </MDTypography>
                 </MDBox>
@@ -352,6 +352,36 @@ function TimeoffRequestUpdate() {
 
                       <div className="col-sm-6">
                         <MDBox mt={2}>
+                          <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            fontSize="80%"
+                            align="left"
+                            color="text"
+                          >
+                            Select Approver
+                          </MDTypography>
+                          <Form.Select
+                            value={approvex}
+                            onChange={(e) => setApprovex(e.target.value)}
+                            aria-label="Default select example"
+                          >
+                            <option value="">Select Approver</option>
+                            {user.map((api) => (
+                              <option key={api.personal.id} value={api.personal.id}>
+                                {api.personal.fname} {api.personal.lname}
+                              </option>
+                            ))}
+                          </Form.Select>
+                          <br />
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                  <MDBox>
+                    <Container>
+                      <div className="col-sm-12">
+                        <MDBox mt={2}>
                           <MDInput
                             type="text"
                             value={purposex || ""}
@@ -362,12 +392,12 @@ function TimeoffRequestUpdate() {
                           />
                         </MDBox>
                       </div>
-                    </div>
-                  </Container>
+                    </Container>
+                  </MDBox>
                   <MDBox mt={4} mb={1}>
                     <MDButton
                       variant="gradient"
-                      onClick={(e) => handleOnMessageKeys(e)}
+                      onClick={(e) => handleOnPurposeKeys(e)}
                       // disabled={!enabled}
                       color="info"
                       width="50%"
