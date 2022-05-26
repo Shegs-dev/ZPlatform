@@ -2148,14 +2148,14 @@ function UserProfile() {
                     </div>
                   </Container>
                 </MDBox>
-                <MDBox mb={2} mx={0}>
+                {/* <MDBox mb={2} mx={0}>
                   <Container>
                     <div className="row">
                       <div className="col-sm-8">
                         <MDInput
-                          type="number"
-                          label="Bank Code"
-                          disabled
+                          tabel="Bank Code"
+                          ype="number"
+                          ldisabled
                           value={baBankCodex || ""}
                           onChange={(e) => setBaBankCode(e.target.value)}
                           variant="standard"
@@ -2164,7 +2164,7 @@ function UserProfile() {
                       </div>
                     </div>
                   </Container>
-                </MDBox>
+                </MDBox> */}
                 <div align="center">
                   <MDBox mt={4} mb={1}>
                     <MDButton
