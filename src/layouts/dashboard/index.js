@@ -323,6 +323,7 @@ function Dashboard() {
                       </div>
                     </CardActions>
                   </Card>
+                  &nbsp;
                 </div>
               ))}
             </div>

@@ -69,6 +69,65 @@ function AppraiseQandA() {
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get("id");
     const headers = miHeaders;
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIds = data11.personalID;
+
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/appraisers/gets/${orgIDs}/${id}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          console.log(result);
+          let checkUser = false;
+          // eslint-disable-next-line array-callback-return
+          result.map((item) => {
+            if (item.empID === personalIds) {
+              checkUser = true;
+            }
+          });
+          if (checkUser === false) {
+            setOpened(false);
+            MySwal.fire({
+              title: "UNAUTHORIZED_ACCESS",
+              type: "error",
+              text: "You were not set for this appraisal",
+            }).then(() => {
+              navigate("/dashboard", { replace: true });
+              window.location.reload();
+            });
+          }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get("id");
+    const headers = miHeaders;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisal/getByIds/${id}`, {
       headers,
@@ -123,6 +182,7 @@ function AppraiseQandA() {
         return res.json();
       })
       .then((result) => {
+        console.log(result);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -135,68 +195,79 @@ function AppraiseQandA() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-
-        const questID = result[pageNo - 1].questionID;
-        fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/getByIds/${questID}`, {
-          headers,
-        })
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
+        if (result.length !== 0) {
+          const questID = result[pageNo - 1].questionID;
+          fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalQuestion/getByIds/${questID}`, {
+            headers,
           })
-          .then((resultq) => {
-            setOpened(false);
-            if (resultq.message === "Expired Access") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
-            }
-            if (resultq.message === "Token Does Not Exist") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
-            }
-            if (resultq.message === "Unauthorized Access") {
-              navigate("/authentication/forbiddenPage");
-              window.location.reload();
-            }
-            if (isMounted) {
-              setRLength(result.length);
-              setItems(resultq);
-              setQuestionID(resultq[0].question.id);
-              setOrgID(resultq[0].question.orgID);
-              setQuestion(resultq[0].question.question);
-              setHint(resultq[0].question.hint);
-
-              if (resultq[0].question.inputType === "Option") {
-                setItemss(resultq[0].options);
-              } else if (resultq[0].question.inputType === "Multiple") {
-                const anwerMap = [];
-                // eslint-disable-next-line array-callback-return
-                resultq[0].options.map((item) => {
-                  const fdy = {
-                    value: item.optionValue,
-                    label: item.optionValue,
-                  };
-                  anwerMap.push(fdy);
-                });
-                setItems(anwerMap);
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resultq) => {
+              setOpened(false);
+              if (resultq.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
               }
-
-              if (resultq[0].question.inputType === "Option") {
-                setViewOption(true);
-                setViewMultiple(false);
-                setViewText(false);
-              } else if (resultq[0].question.inputType === "Multiple") {
-                setViewMultiple(true);
-                setViewOption(false);
-                setViewText(false);
-              } else {
-                setViewText(true);
-                setViewMultiple(false);
-                setViewOption(false);
+              if (resultq.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
               }
-            }
+              if (resultq.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+                window.location.reload();
+              }
+              if (isMounted) {
+                setRLength(result.length);
+                setItems(resultq);
+                setQuestionID(resultq[0].question.id);
+                setOrgID(resultq[0].question.orgID);
+                setQuestion(resultq[0].question.question);
+                setHint(resultq[0].question.hint);
+
+                if (resultq[0].question.inputType === "Option") {
+                  setItemss(resultq[0].options);
+                } else if (resultq[0].question.inputType === "Multiple") {
+                  const anwerMap = [];
+                  // eslint-disable-next-line array-callback-return
+                  resultq[0].options.map((item) => {
+                    const fdy = {
+                      value: item.optionValue,
+                      label: item.optionValue,
+                    };
+                    anwerMap.push(fdy);
+                  });
+                  setItems(anwerMap);
+                }
+
+                if (resultq[0].question.inputType === "Option") {
+                  setViewOption(true);
+                  setViewMultiple(false);
+                  setViewText(false);
+                } else if (resultq[0].question.inputType === "Multiple") {
+                  setViewMultiple(true);
+                  setViewOption(false);
+                  setViewText(false);
+                } else {
+                  setViewText(true);
+                  setViewMultiple(false);
+                  setViewOption(false);
+                }
+              }
+            });
+        } else {
+          setOpened(false);
+          MySwal.fire({
+            title: "NO_QUESTIONS_SET",
+            type: "error",
+            text: "There are no questions set for this Appraisal",
+          }).then(() => {
+            navigate("/dashboard", { replace: true });
+            window.location.reload();
           });
+        }
       });
     return () => {
       isMounted = false;
