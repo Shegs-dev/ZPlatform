@@ -40,8 +40,6 @@ function SalaryPayment() {
 
   const [allUserID, setAllUserID] = useState([]);
   const [usersID, setUsersID] = useState([]);
-  console.log(usersID);
-  console.log(allUserID);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -357,7 +355,6 @@ function SalaryPayment() {
 
   // Method to change type
   const changeType = (status) => {
-    console.log(status);
     if (status === 1) {
       return "Initiated";
       // eslint-disable-next-line no-else-return
