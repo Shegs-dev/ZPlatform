@@ -263,7 +263,9 @@ export default function PollsData() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleOptions(value)}>Options</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleOptions(value)}>
+                  Add/Remove Options
+                </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleOpen(value)}>Open </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
               </Dropdown.Menu>
