@@ -47,6 +47,7 @@ function Dashboard() {
   const [polls, setPolls] = useState([]);
   const [allApp, setAllApp] = useState([]);
   const [showApp, setShowApp] = useState(false);
+  const [showAnn, setShowAnn] = useState(false);
 
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
@@ -102,6 +103,9 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
+          if (result.length > 0) {
+            setShowAnn(true);
+          }
           setItems(result);
         }
       });
@@ -209,7 +213,9 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
-          setShowApp(true);
+          if (result.length > 0) {
+            setShowApp(true);
+          }
           setAllApp(result);
         }
       });
@@ -225,40 +231,46 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Card>
-        <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left" mt={1}>
-          &nbsp; Announcements
-        </MDTypography>
-        <Container>
-          <div className="row">
-            {card.map((api) => (
-              <div key={api.announcement.id} className="col-sm-6">
-                <Accordion style={{ backgroundColor: api.announcementType.colorCode }}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <MDTypography
-                      variant="h4"
-                      fontWeight="medium"
-                      color="white"
-                      textAlign="left"
-                      mt={1}
+      {showAnn ? (
+        <Card>
+          <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left" mt={1}>
+            &nbsp; Announcements
+          </MDTypography>
+          <Container>
+            <div className="row">
+              {card.map((api) => (
+                <div key={api.announcement.id} className="col-sm-6">
+                  <Accordion style={{ backgroundColor: api.announcementType.colorCode }}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
                     >
-                      {api.announcement.title}
-                    </MDTypography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div style={{ color: "#f5f5f5" }}>{api.announcement.message}</div>
-                  </AccordionDetails>
-                </Accordion>
-                <br />
-              </div>
-            ))}
-          </div>
-        </Container>
-      </Card>
+                      <img src={api.announcementType.icon} alt="Icon" width="62" height="62" />
+                      &nbsp; &nbsp;
+                      <MDTypography
+                        variant="h4"
+                        fontWeight="medium"
+                        color="white"
+                        textAlign="left"
+                        mt={1}
+                      >
+                        {api.announcement.title}
+                      </MDTypography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <div style={{ color: "#f5f5f5" }}>{api.announcement.message}</div>
+                    </AccordionDetails>
+                  </Accordion>
+                  <br />
+                </div>
+              ))}
+            </div>
+          </Container>
+        </Card>
+      ) : (
+        <MDBox />
+      )}
       &nbsp;{" "}
       {showApp ? (
         <Card style={{ backgroundColor: "#318CE7" }}>

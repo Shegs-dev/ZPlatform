@@ -24,10 +24,8 @@ import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
-  const { bankNameCode: allbankNameCode } = BankNameAndCode();
   const { nCountries: WCountries } = NCountry();
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const MySwal = withReactContent(Swal);
@@ -35,6 +33,7 @@ function UserProfile() {
   const [showProf, setShowProf] = useState(false);
 
   const [items, setItems] = useState([]);
+  const [allBanks, setAllBanks] = useState([]);
 
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
@@ -331,6 +330,47 @@ function UserProfile() {
             setMeID(null);
           }
         }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_TANTA_URL}/payroll/getBanks`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          setAllBanks(result);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
       });
     return () => {
       isMounted = false;
@@ -836,6 +876,7 @@ function UserProfile() {
       body: raw,
       redirect: "follow",
     };
+    console.log(raw);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/update`, requestOptions)
       .then(async (res) => {
@@ -1025,13 +1066,13 @@ function UserProfile() {
   };
 
   const handleOnChangeBank = (e) => {
-    const filteredItems = allbankNameCode.filter((item) => item.bankName === e.target.value);
+    const filteredItems = allBanks.filter((item) => item.name === e.target.value);
     if (e.target.value === "1") {
       setBaBank("");
       setBaBankCode("");
     } else {
       setBaBank(e.target.value);
-      setBaBankCode(filteredItems[0].cbnCode);
+      setBaBankCode(filteredItems[0].code);
     }
   };
 
@@ -2167,9 +2208,9 @@ function UserProfile() {
                             onChange={handleOnChangeBank}
                           >
                             <option value="1">--Select Bank--</option>
-                            {allbankNameCode.map((api) => (
-                              <option key={api.id} value={api.bankName}>
-                                {api.bankName}
+                            {allBanks.map((api) => (
+                              <option key={api.code} value={api.name}>
+                                {api.name}
                               </option>
                             ))}
                           </Form.Select>
