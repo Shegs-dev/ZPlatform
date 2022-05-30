@@ -68,10 +68,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-      // sessionStorage.removeItem("lg");
-      // if (sessionStorage.getItem("lg") == null) {
       var duration = 1; // duration in minutes 1200000
-      // console.log(window.location.pathname);
       if (window.location.pathname !== "/authentication/sign-in") {
         setInterval(updateTimer, 1200000);
 
@@ -88,6 +85,7 @@
         }
         function redirectLog() {
           window.location = "authentication/sign-in";
+          window.location.reload;
         }
         window.addEventListener("mousemove", resetTimer);
 
@@ -95,36 +93,6 @@
           duration = 2;
         }
       }
-      // }
-
-      // sessionStorage.setItem("lg", 1);
-      // $(document).ready(function () {
-      //   document.getElementById("root").addEventListener("mousemove", function (event) {
-      //     myFunction(event);
-      //   });
-
-      //   function controlLogout() {
-      //     alert("i am here");
-      //   }
-      //   var timerTime = 5000;
-      //   function myFunction(e) {
-      //     timerTime = timerTime + 10;
-      //     console.log(timerTime);
-      //   }
-      //   setTimeout(controlLogout, timerTime);
-      // });
-      // function myFunction(e) {
-      //   timerTime = timerTime + 10;
-      //   console.log(timerTime);
-      // }
-
-      // setInterval(updateTimer, 5000);
-      // clearTimeout(timer);
-      // var timer = setTimeout(updateTimer, timerTime);
-      // function updateTimer() {
-      //   alert("BYEEEEEEE");
-      //   window.location = "authentication/sign-in";
-      // }
     </script>
   </head>
 

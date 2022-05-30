@@ -23,6 +23,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+import IHeaders from "imgHeader";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Backdrop from "@mui/material/Backdrop";
@@ -57,6 +58,7 @@ function PaymentHis() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allIHeaders: iiHeaders } = IHeaders();
 
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
@@ -480,6 +482,7 @@ function PaymentHis() {
   };
 
   const handleGenReceipt = (filteredData, value) => {
+    const headers = miHeaders;
     let receiptNumber = "";
     // Avoid filter for empty string
     if (!value) {
@@ -525,49 +528,67 @@ function PaymentHis() {
             navigate("/authentication/forbiddenPage");
           }
           console.log(resx);
-          const receiptPDF = `${resx.data.receiptNo}.pdf`;
-          console.log(receiptPDF);
-          const raw1 = JSON.stringify({
-            name: receiptPDF,
-          });
-          console.log(raw1);
-          const requestOptions1 = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw1,
-            redirect: "follow",
-          };
-
-          fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/download`, requestOptions1)
+          fetch(
+            `${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/${orgIDs}/${resx.data.receiptNo}`,
+            {
+              headers,
+            }
+          )
             .then(async (res) => {
               const aToken = res.headers.get("token-1");
               localStorage.setItem("rexxdex", aToken);
               return res.json();
             })
-            .then((resx1) => {
-              if (resx1.status === "SUCCESS") {
-                if (resx1.message === "Expired Access") {
-                  navigate("/authentication/sign-in");
-                }
-                if (resx1.message === "Token Does Not Exist") {
-                  navigate("/authentication/sign-in");
-                }
-                if (resx1.message === "Unauthorized Access") {
-                  navigate("/authentication/forbiddenPage");
-                }
-                MySwal.fire({
-                  title: "SUCCESS",
-                  type: "success",
-                  text: "Download Successful",
-                });
+            .then((resxx) => {
+              if (resxx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
               }
-            })
-            .catch((error) => {
-              MySwal.fire({
-                title: error.status,
-                type: "error",
-                text: error.message,
+              if (resxx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resxx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
+
+              const raw1 = JSON.stringify({
+                name: resxx.name,
               });
+              console.log(raw1);
+              const requestOptions1 = {
+                method: "POST",
+                headers: iiHeaders,
+                body: raw1,
+                redirect: "follow",
+              };
+
+              fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/download`, requestOptions1)
+                .then((res) => res.blob())
+                .then((resx1) => {
+                  const objectURL = URL.createObjectURL(resx1);
+                  console.log(objectURL);
+
+                  // (C2) TO "FORCE DOWNLOAD"
+                  const anchor = document.createElement("a");
+                  anchor.href = objectURL;
+                  anchor.download = resxx.name;
+                  anchor.click();
+
+                  // (C3) CLEAN UP
+                  window.URL.revokeObjectURL(objectURL);
+
+                  MySwal.fire({
+                    title: "SUCCESS",
+                    type: "success",
+                    text: "Download Successful",
+                  });
+                })
+                .catch((error) => {
+                  MySwal.fire({
+                    title: error.status,
+                    type: "error",
+                    text: error.message,
+                  });
+                });
             });
         }
       })

@@ -231,6 +231,45 @@ function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const pollids = urlParams.get("id");
+
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getOptions/${orgIDs}/${pollids}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleAppraise = (value) => {
     navigate(`/Appraisal-Question-and-Answers?id=${value}`);
   };

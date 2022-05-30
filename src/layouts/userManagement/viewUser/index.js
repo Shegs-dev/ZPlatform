@@ -152,6 +152,7 @@ function ViewUser() {
   };
 
   useEffect(() => {
+    console.log(baBankCodex);
     setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -1103,7 +1104,7 @@ function ViewUser() {
                     </div>
                   </Container>
                 </MDBox>
-                <MDBox mb={2} mx={0}>
+                {/* <MDBox mb={2} mx={0}>
                   <Container>
                     <div className="row">
                       <div className="col-sm-8">
@@ -1119,7 +1120,7 @@ function ViewUser() {
                       </div>
                     </div>
                   </Container>
-                </MDBox>
+                </MDBox> */}
               </MDBox>
             </MDBox>
           </Card>

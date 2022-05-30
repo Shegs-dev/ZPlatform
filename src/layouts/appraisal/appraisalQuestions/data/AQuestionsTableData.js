@@ -83,7 +83,7 @@ export default function AQuestionsData() {
   };
 
   const handleView = (value) => {
-    navigate(`/View-Appraisal-Questions?id=${value}`);
+    navigate(`/Update-Appraisal-Questions?id=${value}`);
   };
   // Method to fetch all Data
   useEffect(() => {
@@ -151,9 +151,8 @@ export default function AQuestionsData() {
               <Dropdown.Toggle variant="secondary" id="dropdown-basic-button">
                 <Icon sx={{ fontWeight: "light" }}>settings</Icon>
               </Dropdown.Toggle>
-
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>View/Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

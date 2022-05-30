@@ -106,6 +106,7 @@ import Polls from "layouts/polls";
 import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
 import AppraisalAppraisers from "layouts/appraisal/appraisers";
 import AppraiseQandA from "layouts/appraisal/appaisalQandA";
+import GradeAppraisal from "layouts/appraisal/appraisalResult";
 
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
@@ -276,6 +277,13 @@ const routes = [
     component: <SetAppraisalQuestion />,
   },
   {
+    name: "Grade Appraisal",
+    key: "gradeAppraisal",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Grade-Appraisal",
+    component: <GradeAppraisal />,
+  },
+  {
     name: "Set Appraisal Appraisers",
     key: "setAppraisalAppraisers",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -291,7 +299,6 @@ const routes = [
     component: <AppraisalQues />,
   },
   {
-    type: "collapse",
     name: "Appraisal Answers",
     key: "appraisalQandA",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -299,10 +306,10 @@ const routes = [
     component: <AppraiseQandA />,
   },
   {
-    name: "View Appraisal Questions",
+    name: "Update Appraisal Questions",
     key: "viewAppraisalQues",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/View-Appraisal-Questions",
+    route: "/Update-Appraisal-Questions",
     component: <VuAppraisalQuestion />,
   },
   {
@@ -337,7 +344,7 @@ const routes = [
     name: "View User Prorate",
     key: "viewUserProrate",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/view-Salary-Prorate",
+    route: "/Update-Salary-Prorate",
     component: <VuUserProrate />,
   },
   {

@@ -20,17 +20,12 @@ import GHeaders from "getHeader";
 function AddUserpayment() {
   const MySwal = withReactContent(Swal);
 
-  // const [employeeIDx, setEmployeeID] = useState(0);
-  const [idx, setID] = useState(500);
-  const [orgIDx, setOrgID] = useState("");
+  const [idx, setID] = useState(0);
   const [empIDx, setEmpID] = useState(0);
   const [amountx, setAmount] = useState(0);
   const [currencyx, setCurrency] = useState("NGN");
   const [createdTimex, setCreatedTime] = useState(0);
   const [deleteFlagx, setDeleteFlag] = useState(0);
-
-  const [checkedAmount, setCheckedAmount] = useState("");
-  const [enabled, setEnabled] = useState("");
 
   const [user, setUser] = useState([]);
   const [userIDx, setUserIDx] = useState(0);
@@ -57,7 +52,6 @@ function AddUserpayment() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res);
         return res.json();
       })
       .then((resultba) => {
@@ -72,10 +66,8 @@ function AddUserpayment() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
-          // eslint-disable-next-line eqeqeq
           if (resultba.length !== 0) {
             setID(resultba.id);
-            setOrgID(resultba.orgID);
             setEmpID(resultba.empID);
             setAmount(resultba.amount);
             setCurrency(resultba.currency);
@@ -128,64 +120,11 @@ function AddUserpayment() {
     };
   }, []);
 
-  //   useEffect(() => {
-  //     const queryString = window.location.search;
-  //     const urlParams = new URLSearchParams(queryString);
-  //     const uid = urlParams.get("id");
-  //     // const idVal = JSON.parse([id]);
-
-  //     const data11 = JSON.parse(localStorage.getItem("user1"));
-  //     const orgIDs = data11.orgID;
-  //     const headers = miHeaders;
-  //     let isMounted = true;
-  //     fetch(`${process.env.REACT_APP_TANTA_URL}/basicremuneration/getForEmp/${orgIDs}/${uid}`, {
-  //       headers,
-  //     })
-  //       .then(async (res) => {
-  //         console.log(res);
-  //         const aToken = res.headers.get("token-1");
-  //         localStorage.setItem("rexxdex", aToken);
-  //         return res;
-  //       })
-  //       .then((result) => {
-  //         console.log(result);
-  //         if (result.message === "Expired Access") {
-  //           navigate("/authentication/sign-in");
-  //         }
-  //         if (result.message === "Token Does Not Exist") {
-  //           navigate("/authentication/sign-in");
-  //         }
-  //         if (result.message === "Unauthorized Access") {
-  //           navigate("/authentication/forbiddenPage");
-  //         }
-  //         if (isMounted) {
-  //           // eslint-disable-next-line eqeqeq
-  //           if (result.data === "") {
-  //             setID(result.id);
-  //             setOrgID(result.orgID);
-  //             setEmpID(result.empID);
-  //             setAmount(result.amount);
-  //             setCurrency(result.currency);
-  //             setDeleteFlag(result.deleteFlag);
-  //             setCreatedTime(result.createdTime);
-  //           } else {
-  //             setID(null);
-  //             setEmpID(uid);
-  //           }
-  //         }
-  //       });
-  //     return () => {
-  //       isMounted = false;
-  //     };
-  //   }, []);
-
-  const handleClick = (e) => {
-    e.preventDefault();
+  const handleClick = () => {
     setOpened(true);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const uid = urlParams.get("id");
-    // const idVal = JSON.parse([id]);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     let allRaw = null;
     const raw = JSON.stringify({
@@ -194,10 +133,9 @@ function AddUserpayment() {
       amount: amountx,
       currency: currencyx,
     });
-    console.log(raw);
     const updateRaw = JSON.stringify({
       id: idx,
-      orgID: orgIDx,
+      orgID: data11.orgID,
       empID: empIDx,
       amount: amountx,
       currency: currencyx,
@@ -254,32 +192,28 @@ function AddUserpayment() {
         });
       });
   };
+
   const handleOnAmountKeys = () => {
-    const numbers = /^[-+]?[0-9]+.[0-9]+$/;
+    const numbers = /^[0-9]+$/;
     if (!amountx.match(numbers)) {
-      setCheckedAmount(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("amount").innerHTML = "Amount - input a valid Amount<br>";
     }
     if (amountx.match(numbers)) {
-      setCheckedAmount(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("amount").innerHTML = "";
+      handleClick();
     }
     if (amountx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("amount").innerHTML = "Amount is required<br>";
     }
-    setEnabled(checkedAmount === true);
   };
 
   // Method to handle disable
   const handleSource = () => {
-    console.log(idx);
-    console.log(userIDx);
-    console.log(empIDx);
     const emps = `${empIDx}`;
-    if (idx === null || idx === "") {
+    if (idx === 0) {
       MySwal.fire({
         title: "CANNOT_CLONE",
         type: "error",
@@ -358,7 +292,7 @@ function AddUserpayment() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add User Salary
+              User Salary
             </MDTypography>
           </MDBox>
           <MDBox
@@ -376,16 +310,15 @@ function AddUserpayment() {
               {" "}
             </MDTypography>
           </MDBox>
-          <MDBox component="form" role="form" name="form1">
+          <MDBox component="form" role="form" name="form">
             <MDBox mb={2}>
               <Container>
                 <div className="row">
                   <div className="col-sm-6">
                     <MDInput
-                      type="text"
+                      type="number"
                       label="Amount*"
-                      value={amountx || ""}
-                      onKeyUp={handleOnAmountKeys}
+                      value={amountx}
                       onChange={(e) => setAmount(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -407,13 +340,7 @@ function AddUserpayment() {
               </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
-                color="info"
-                width="50%"
-              >
+              <MDButton variant="gradient" onClick={handleOnAmountKeys} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>
@@ -436,21 +363,6 @@ function AddUserpayment() {
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
               Clone User Salary
-            </MDTypography>
-          </MDBox>
-          <MDBox
-            variant="gradient"
-            bgColor="error"
-            borderRadius="lg"
-            coloredShadow="success"
-            mx={3}
-            mt={1}
-            p={1}
-            mb={1}
-            textAlign="center"
-          >
-            <MDTypography variant="gradient" fontSize="60%" color="white" id="amount">
-              {" "}
             </MDTypography>
           </MDBox>
           <MDBox component="form" role="form" name="form1">

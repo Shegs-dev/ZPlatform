@@ -3,6 +3,7 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
+import * as FontAwesome from "react-icons/fa";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import announcementtype from "layouts/announcementtype/data/announcementtype";
@@ -32,6 +33,7 @@ function Announcementtype() {
   const { allPHeaders: myHeaders } = PHeaders();
 
   const handleClick = (e) => {
+    console.log(FontAwesome);
     e.preventDefault();
     const data11 = JSON.parse(localStorage.getItem("user1"));
 

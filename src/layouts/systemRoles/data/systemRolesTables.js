@@ -239,7 +239,7 @@ export default function SysRole() {
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>Add Permissions</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
