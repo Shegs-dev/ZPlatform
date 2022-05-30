@@ -34,16 +34,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-// import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-// import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-// import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { Link } from 'react-router-dom';
 
 // Data
-// import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-// import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
 // import Projects from "layouts/dashboard/components/Projects";
@@ -53,6 +50,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate, Link } from "react-router-dom";
 import GHeaders from "getHeader";
+import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+// import ReportsLineChartData from "./data/reportsLineChartData";
 // import MDButton from "components/MDButton";
 
 function Dashboard() {
@@ -65,7 +65,7 @@ function Dashboard() {
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
 
-  // const { sales, tasks } = reportsLineChartData;
+  const { sales, tasks } = reportsLineChartData;
 
   useEffect(() => {
     const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
@@ -100,7 +100,6 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -137,7 +136,6 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -161,7 +159,6 @@ function Dashboard() {
               const idcheck = `${grp.group.id},`;
               groupIDs += idcheck;
             });
-            console.log(groupIDs);
             fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForGroup/${groupIDs}`, {
               headers,
             })
@@ -186,7 +183,6 @@ function Dashboard() {
                 if (isMounted) {
                   setPolls(resultx);
                 }
-                console.log(resultx);
               });
           }
         }
@@ -211,7 +207,6 @@ function Dashboard() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        console.log(res.json());
         return res.json();
       })
       .then((result) => {
@@ -228,7 +223,6 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setAllApp(result);
         }
       });
@@ -367,7 +361,7 @@ function Dashboard() {
       </Container>
       <MDBox py={3}>
         {/* <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
+         <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
@@ -382,7 +376,7 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={3}>
+           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
@@ -427,7 +421,7 @@ function Dashboard() {
             </MDBox>
           </Grid>
         </Grid> */}
-        {/* <MDBox mt={4.5}>
+        <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
@@ -467,7 +461,7 @@ function Dashboard() {
               </MDBox>
             </Grid>
           </Grid>
-        </MDBox> */}
+        </MDBox>
         <MDBox>
           <Grid container spacing={3}>
             {/* <Grid item xs={12} md={6} lg={8}>

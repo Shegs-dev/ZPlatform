@@ -72,7 +72,7 @@ function ViewUser() {
   const [companyRole, setCompanyRole] = useState([]);
   const [position, setPosition] = useState([]);
   const [branch, setBranch] = useState([]);
-  const [step, setStep] = useState([]);
+  const [stepsss, setStep] = useState([]);
   const [status, setStatus] = useState([]);
   const [statusmap, setStatusmap] = useState([]);
   // medical
@@ -326,6 +326,7 @@ function ViewUser() {
                                               }
                                               if (isMounted) {
                                                 setStep(resultst);
+                                                console.log(resultst);
                                               }
                                             });
                                         }
@@ -354,13 +355,14 @@ function ViewUser() {
                                             setStep(resultst);
 
                                             if (result[0].stepID != null) {
-                                              let fStep = {};
+                                              // let fStep = {};
                                               // eslint-disable-next-line array-callback-return
-                                              resultst.map((item) => {
+                                              resultst.steps.map((item) => {
                                                 if (item.id === result[0].stepID) {
                                                   // eslint-disable-next-line prefer-destructuring
-                                                  fStep = item;
-                                                  stepStepx(fStep.id);
+                                                  // fStep = item;
+                                                  console.log(item);
+                                                  // stepStepx(fStep.id);
                                                 }
                                               });
                                             }
@@ -720,7 +722,7 @@ function ViewUser() {
     const orgIDs = data11.orgID;
     setCompanyx(e.target.value);
     const headers = miHeaders;
-    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/getsRoleSteps/${orgIDs}/${e.target.value}`, {
+    fetch(`${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${e.target.value}`, {
       headers,
     })
       .then(async (res) => {
@@ -740,6 +742,7 @@ function ViewUser() {
           navigate("/authentication/forbiddenPage");
         }
         setStep(resultst);
+        console.log(resultst);
       });
   };
 
@@ -1544,9 +1547,9 @@ function ViewUser() {
                         aria-label="Default select example"
                       >
                         <option value="">Add Users To Company Steps</option>
-                        {step.map((api) => (
+                        {stepsss.map((api) => (
                           <option key={api.id} value={api.id}>
-                            {api.id}
+                            {api.name}
                           </option>
                         ))}
                       </Form.Select>
