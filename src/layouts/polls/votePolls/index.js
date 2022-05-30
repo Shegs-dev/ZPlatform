@@ -175,7 +175,7 @@ function VotePolls() {
           type: "success",
           text: result.message,
         }).then(() => {
-          window.location.reload();
+          navigate(`/dashboard`);
         });
       })
       .catch((error) => {

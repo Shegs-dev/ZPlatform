@@ -314,6 +314,7 @@ function UserManagement() {
                       onChange={(e) => setRoleID(e.target.value)}
                     >
                       <option>Select Roles *</option>
+                      <option value="0">Admin</option>
                       {items.map((api) => (
                         <option key={api.id} value={api.id}>
                           {api.name}

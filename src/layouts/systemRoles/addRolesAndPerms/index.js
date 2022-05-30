@@ -19,7 +19,6 @@ function RolesAndPerms() {
 
   const [services, setServices] = useState([]);
   const [rService, setRService] = useState("");
-
   const [vPermissions, setVPermissions] = useState([]);
 
   const [showSAll, setSAll] = useState(false);
@@ -140,6 +139,7 @@ function RolesAndPerms() {
                 name: permission.displayName,
                 isCheck: check,
                 actionCall: permission.actionCall,
+                descrip: permission.descrip,
               };
 
               permissionsList.push(pObj);
@@ -430,6 +430,8 @@ function RolesAndPerms() {
                   onClick={(e) => handleOnClick(e, api)}
                 />
                 <Form.Check.Label>{api.name}</Form.Check.Label>
+                &nbsp;
+                <h6>{api.descrip}</h6>
               </div>
             ))}
           </Form>

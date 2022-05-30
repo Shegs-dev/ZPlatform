@@ -209,16 +209,20 @@ function bonusdeduction() {
           </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput
-                type="text"
-                label="Name *"
-                value={namex || ""}
-                onKeyUp={handleOnNameKeys}
-                className="form-control"
-                onChange={(e) => setName(e.target.value)}
-                variant="standard"
-                fullWidth
-              />
+              <div className="row">
+                <div className="col-sm-12">
+                  <MDInput
+                    type="text"
+                    label="Name *"
+                    value={namex || ""}
+                    onKeyUp={handleOnNameKeys}
+                    // className="form-control"
+                    onChange={(e) => setName(e.target.value)}
+                    variant="standard"
+                    fullWidth
+                  />
+                </div>
+              </div>
             </MDBox>
 
             <MDBox mb={2}>
@@ -235,7 +239,7 @@ function bonusdeduction() {
                       fullWidth
                     />
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-9">
                     <MDInput
                       type="number"
                       value={amountx || ""}
