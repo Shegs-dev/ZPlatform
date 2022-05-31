@@ -168,14 +168,17 @@ function TimeOffType() {
                   </div>
 
                   <div className="col-sm-6">
-                    <MDInput
-                      type="text"
-                      value={descripx || ""}
-                      onChange={(e) => setDescrip(e.target.value)}
-                      label="Description"
-                      variant="standard"
-                      fullWidth
-                    />
+                    <Form.Group className="mb-1" controlId="exampleForm.ControlTextArea">
+                      <Form.Label style={{ fontSize: 14 }}>Message</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        value={descripx || ""}
+                        onChange={(e) => setDescrip(e.target.value)}
+                        label="Message"
+                        variant="standard"
+                        fullWidth
+                      />
+                    </Form.Group>
                   </div>
                 </div>
               </Container>
