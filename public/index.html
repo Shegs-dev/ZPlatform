@@ -70,7 +70,9 @@
     <script>
       var duration = 1; // duration in minutes 1200000
       if (window.location.pathname !== "/authentication/sign-in") {
-        setInterval(updateTimer, 1200000);
+        setInterval(redoTimeout, 10000);
+        function redoTimeout() {
+       const myTimeout = setTimeout(updateTimer, 1200000);
 
         function updateTimer() {
           duration--;
@@ -79,19 +81,29 @@
               title: "Timeout",
               text: "you have been logged out",
               icon: "error",
+            })
+            .then(() => {
+              window.location = "authentication/sign-in";
+              setTimeout(function () {
+        location.reload()
+    }, 1000);
             });
             setTimeout(redirectLog, 5000);
           }
         }
         function redirectLog() {
           window.location = "authentication/sign-in";
-          window.location.reload;
+          setTimeout(function () {
+        location.reload()
+    }, 1000);
         }
         window.addEventListener("mousemove", resetTimer);
 
         function resetTimer() {
           duration = 2;
+          clearTimeout(myTimeout);
         }
+      }
       }
     </script>
   </head>
