@@ -111,10 +111,14 @@ function EditSalaryAdvance() {
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
     e.preventDefault();
-    // setOpened(true);
+    setOpened(true);
     const letters = /^[0-9]+$/;
     const amt = amountx.trim();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const approverCompare = ` ${approver}`;
+    const personalCompare = ` ${data11.personalID}`;
     if (salaryAdvance.status !== 0) {
+      setOpened(false);
       MySwal.fire({
         title: "UPDATE_DISALLOWED",
         type: "error",
@@ -123,6 +127,7 @@ function EditSalaryAdvance() {
         window.location.reload();
       });
     } else if (amt.length === 0) {
+      setOpened(false);
       MySwal.fire({
         title: "AMOUNT_EMPTY",
         type: "error",
@@ -131,10 +136,20 @@ function EditSalaryAdvance() {
         window.location.reload();
       });
     } else if (!amt.match(letters)) {
+      setOpened(false);
       MySwal.fire({
         title: "AMOUNT_INVALID",
         type: "error",
         text: "Amount Value Is Invalid",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (approverCompare === personalCompare) {
+      setOpened(false);
+      MySwal.fire({
+        title: "APPROVER_REJECTED",
+        type: "error",
+        text: "You Cannot Set Yourself As The Approver Of Your Request",
       }).then(() => {
         window.location.reload();
       });
@@ -164,7 +179,7 @@ function EditSalaryAdvance() {
           return res.json();
         })
         .then((result) => {
-          // setOpened(false);
+          setOpened(false);
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");
             window.location.reload();

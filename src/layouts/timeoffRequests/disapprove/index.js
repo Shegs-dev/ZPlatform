@@ -76,6 +76,7 @@ function Disapprove() {
         approverID: approvex,
         adminID: adminx,
         reasonForDisapproval: reasonx,
+        status: 2,
       });
       const requestOptions = {
         method: "POST",

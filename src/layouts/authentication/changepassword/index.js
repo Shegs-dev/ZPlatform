@@ -89,7 +89,9 @@ function ChangePassword() {
       });
   };
   const handleOnPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
+    );
     if (!passwordx.match(passwordValidate)) {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
@@ -109,7 +111,9 @@ function ChangePassword() {
   };
 
   const handleOnNPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
+    );
     if (!npasswordx.match(passwordValidate)) {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
@@ -129,7 +133,9 @@ function ChangePassword() {
   };
 
   const handleOnRTNPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
+    );
     if (!retypepasswordx.match(passwordValidate)) {
       setCheckedRTNPass(false);
       // eslint-disable-next-line no-unused-expressions

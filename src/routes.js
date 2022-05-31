@@ -307,7 +307,6 @@ const routes = [
     component: <AppraisalQues />,
   },
   {
-    type: "collapse",
     name: "Appraisal Answers",
     key: "appraisalQandA",
     icon: <Icon fontSize="small">receipt_long</Icon>,
@@ -315,10 +314,10 @@ const routes = [
     component: <AppraiseQandA />,
   },
   {
-    name: "View Appraisal Questions",
+    name: "Update Appraisal Questions",
     key: "viewAppraisalQues",
     icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/View-Appraisal-Questions",
+    route: "/Update-Appraisal-Questions",
     component: <VuAppraisalQuestion />,
   },
   {
@@ -353,7 +352,7 @@ const routes = [
     name: "View User Prorate",
     key: "viewUserProrate",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/view-Salary-Prorate",
+    route: "/Update-Salary-Prorate",
     component: <VuUserProrate />,
   },
   {

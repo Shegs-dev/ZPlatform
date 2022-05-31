@@ -22,6 +22,8 @@ function MattersArising() {
   const [messagex, setMessage] = useState("");
   const [levelx, setLevel] = useState("");
 
+  const [checkedMessage, setCheckedMessage] = useState("");
+
   const { columns: pColumns, rows: pRows } = MattersArisingTable();
 
   const [checkedTitle, setCheckedTitle] = useState("");
@@ -144,22 +146,33 @@ function MattersArising() {
     setEnabled(checkedTitle === true);
   };
 
+  // const handleOnMessageKeys = () => {
+  //   const letters = /^[a-zA-Z ,.?;:'#*!()" ]+$/;
+  //   if (!messagex.match(letters)) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("message").innerHTML =
+  //       "Message - input only capital and small letters<br>";
+  //   }
+  //   if (messagex.match(letters)) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("message").innerHTML = "";
+  //   }
+  //   if (messagex.length === 0) {
+  //     // eslint-disable-next-line no-unused-expressions
+  //     document.getElementById("message").innerHTML = "Message is required<br>";
+  //   }
+  //   // setEnabled(checkedMessage === true);
+  // };
+
   const handleOnMessageKeys = () => {
-    const letters = /^[a-zA-Z ,.?;:'#*!()" ]+$/;
-    if (!messagex.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("message").innerHTML =
-        "Message - input only capital and small letters<br>";
-    }
-    if (messagex.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("message").innerHTML = "";
-    }
     if (messagex.length === 0) {
+      setCheckedMessage(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("message").innerHTML = "Message is required<br>";
+    } else {
+      setCheckedMessage(true);
     }
-    // setEnabled(checkedMessage === true);
+    setEnabled(checkedMessage === true);
   };
 
   return (
@@ -216,7 +229,24 @@ function MattersArising() {
                   />
                 </div>
 
+                {/* <Container>
+                <div className="row"> */}
                 <div className="col-sm-6">
+                  <Form.Group className="mb-1" controlId="exampleForm.ControlTextarea1">
+                    <Form.Label style={{ fontSize: 14 }}>Message</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      value={messagex || ""}
+                      onKeyUp={handleOnMessageKeys}
+                      onChange={(e) => setMessage(e.target.value)}
+                      rows={2}
+                    />
+                  </Form.Group>
+                </div>
+                {/* </div>
+                 </Container> */}
+
+                {/* <div className="col-sm-6">
                   <MDInput
                     type="text"
                     label="Message *"
@@ -226,7 +256,7 @@ function MattersArising() {
                     variant="standard"
                     fullWidth
                   />
-                </div>
+                </div> */}
               </div>
             </Container>
           </MDBox>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import MDAvatar from "components/MDAvatar";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import team1 from "assets/images/team-1.jpg";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
+// import Icon from "@mui/material/Icon";
+import DataTable from "examples/Tables/DataTable";
 import DatePicker from "react-datepicker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AllCountriesAndStates from "countries-states-master/countries";
@@ -24,13 +24,16 @@ import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import BankNameAndCode from "./bankcode";
 
 function UserProfile() {
-  const { bankNameCode: allbankNameCode } = BankNameAndCode();
   const { nCountries: WCountries } = NCountry();
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
   const MySwal = withReactContent(Swal);
+
+  const [showProf, setShowProf] = useState(false);
+
+  const [items, setItems] = useState([]);
+  const [allBanks, setAllBanks] = useState([]);
 
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
@@ -143,6 +146,7 @@ function UserProfile() {
               `${resultp[0].monthOfBirth}/${resultp[0].dayOfBirth}/${resultp[0].yearOfBirth}`
             )
           );
+          setShowProf(true);
         }
       });
     return () => {
@@ -332,6 +336,148 @@ function UserProfile() {
     };
   }, []);
 
+  useEffect(() => {
+    setOpened(true);
+
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_TANTA_URL}/payroll/getBanks`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          setAllBanks(result);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const personalIDs = data11.personalID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_TANTA_URL}/payroll/getEmpPayrollHistory/${orgIDs}/${personalIDs}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        if (isMounted) {
+          setItems(result);
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Method to change date from timestamp
+  const changeDate = (timestamp) => {
+    if (timestamp === 0) {
+      return "No Date";
+      // eslint-disable-next-line no-else-return
+    } else {
+      const date = new Date(timestamp);
+      const retDate = date.toDateString();
+      return retDate;
+    }
+  };
+
+  // Method to change type
+  const changeType = (status) => {
+    if (status === 1) {
+      return "Initiated";
+      // eslint-disable-next-line no-else-return
+    } else if (status === 2) {
+      return "Paid";
+    } else if (status === 3) {
+      return "Payment Error";
+    } else {
+      return "Created";
+    }
+  };
+
+  const pColumns = [
+    { Header: "Employee's Name", accessor: "empName", align: "left" },
+    { Header: "Amount (NGN)", accessor: "remuneration.amount", align: "left" },
+    { Header: "Updated Amount (NGN)", accessor: "payroll.amount", align: "left" },
+    { Header: "Generated By", accessor: "payroll.generatedByName", align: "left" },
+    {
+      Header: "Payment Status",
+      accessor: "payroll.paymentStatus",
+      Cell: ({ cell: { value } }) => changeType(value),
+      align: "left",
+    },
+    { Header: "Last Retried By", accessor: "payroll.lastRetryByName", align: "left" },
+    { Header: "Retried Times", accessor: "payroll.retryTimes", align: "left" },
+    {
+      Header: "Last Retried Time",
+      accessor: "payroll.lastRetryTime",
+      Cell: ({ cell: { value } }) => changeDate(value),
+      align: "left",
+    },
+    { Header: "Terminated By", accessor: "payroll.terminatedByName", align: "left" },
+    {
+      Header: "Terminated Time",
+      accessor: "payroll.terminatedTime",
+      Cell: ({ cell: { value } }) => changeDate(value),
+      align: "left",
+    },
+  ];
+
   const handleUpdate = () => {
     setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -396,8 +542,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -462,8 +606,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -522,8 +664,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -579,8 +719,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -636,8 +774,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -705,8 +841,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -742,6 +876,7 @@ function UserProfile() {
       body: raw,
       redirect: "follow",
     };
+    console.log(raw);
 
     fetch(`${process.env.REACT_APP_ZAVE_URL}/bankaccount/update`, requestOptions)
       .then(async (res) => {
@@ -767,8 +902,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -826,8 +959,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -886,8 +1017,6 @@ function UserProfile() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -937,13 +1066,13 @@ function UserProfile() {
   };
 
   const handleOnChangeBank = (e) => {
-    const filteredItems = allbankNameCode.filter((item) => item.bankName === e.target.value);
+    const filteredItems = allBanks.filter((item) => item.name === e.target.value);
     if (e.target.value === "1") {
       setBaBank("");
       setBaBankCode("");
     } else {
       setBaBank(e.target.value);
-      setBaBankCode(filteredItems[0].cbnCode);
+      setBaBankCode(filteredItems[0].code);
     }
   };
 
@@ -1265,82 +1394,81 @@ function UserProfile() {
       <div className="row">
         <div className="col-sm-1" />
         <div className="col-sm-4">
-          <Card>
-            <div align="center">
-              <MDBox mt={-4} mx={2} p={0}>
-                <MDAvatar src={team1} alt="name" size="xxl" />
-              </MDBox>
-            </div>
-            <div align="center">
-              <MDBox
-                variant="gradient"
-                bgColor="info"
-                borderRadius="sm"
-                coloredShadow="info"
-                mt={2}
-                mx={0}
-                p={1}
-                textAlign="center"
-              >
+          {showProf ? (
+            <Card>
+              <div align="center">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="sm"
+                  coloredShadow="info"
+                  mt={2}
+                  mx={0}
+                  p={1}
+                  textAlign="center"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    fontFamily="Helvetica"
+                    fontSize="120%"
+                    color="white"
+                  >
+                    {fnamex} {onamex} {lnamex}
+                  </MDTypography>
+                </MDBox>
+              </div>
+              <div align="center">
                 <MDTypography
-                  variant="h4"
+                  variant="h7"
+                  fontWeight="medium"
+                  fontFamily="Century Gothic"
+                  fontSize="70%"
+                  color="dark"
+                  mt={0}
+                >
+                  {emailx}
+                </MDTypography>
+              </div>
+              <div align="center">
+                <MDTypography
+                  variant="h5"
+                  fontWeight="light"
+                  fontSize="70%"
+                  fontFamily="Helvetica"
+                  color="dark"
+                  mt={0}
+                >
+                  {phonex}
+                </MDTypography>
+              </div>
+              <div align="center">
+                <MDTypography
+                  variant="h6"
                   fontWeight="medium"
                   fontFamily="Helvetica"
-                  fontSize="120%"
-                  color="white"
+                  fontSize="80%"
+                  color="dark"
+                  mt={0}
                 >
-                  {fnamex} {onamex} {lnamex}
+                  {residentialStreetx}&#44; {residentialCityx}&#44; {residentialStatex}
                 </MDTypography>
-              </MDBox>
-            </div>
-            <div align="center">
-              <MDTypography
-                variant="h7"
-                fontWeight="medium"
-                fontFamily="Century Gothic"
-                fontSize="70%"
-                color="dark"
-                mt={0}
-              >
-                {emailx}
-              </MDTypography>
-            </div>
-            <div align="center">
-              <MDTypography
-                variant="h5"
-                fontWeight="light"
-                fontSize="70%"
-                fontFamily="Helvetica"
-                color="dark"
-                mt={0}
-              >
-                {phonex}
-              </MDTypography>
-            </div>
-            <div align="center">
-              <MDTypography
-                variant="h6"
-                fontWeight="medium"
-                fontFamily="Helvetica"
-                fontSize="80%"
-                color="dark"
-                mt={0}
-              >
-                {residentialStreetx}&#44; {residentialCityx}&#44; {residentialStatex}
-              </MDTypography>
 
-              <MDTypography
-                variant="h6"
-                fontWeight="medium"
-                fontFamily="Helvetica"
-                color="dark"
-                mt={0}
-                mb={5}
-              >
-                {residentialCountryx}
-              </MDTypography>
-            </div>
-          </Card>
+                <MDTypography
+                  variant="h6"
+                  fontWeight="medium"
+                  fontFamily="Helvetica"
+                  color="dark"
+                  mt={0}
+                  mb={5}
+                >
+                  {residentialCountryx}
+                </MDTypography>
+              </div>
+            </Card>
+          ) : (
+            <MDBox />
+          )}
           &nbsp;
           <Card>
             <MDBox pt={4} pb={3} px={3}>
@@ -2080,9 +2208,9 @@ function UserProfile() {
                             onChange={handleOnChangeBank}
                           >
                             <option value="1">--Select Bank--</option>
-                            {allbankNameCode.map((api) => (
-                              <option key={api.id} value={api.bankName}>
-                                {api.bankName}
+                            {allBanks.map((api) => (
+                              <option key={api.code} value={api.name}>
+                                {api.name}
                               </option>
                             ))}
                           </Form.Select>
@@ -2141,23 +2269,6 @@ function UserProfile() {
                           value={baAcctNamex || ""}
                           onKeyUp={handleOnBAAccNameKeys}
                           onChange={(e) => setBaAcctName(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
-                      </div>
-                    </div>
-                  </Container>
-                </MDBox>
-                <MDBox mb={2} mx={0}>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-8">
-                        <MDInput
-                          type="number"
-                          label="Bank Code"
-                          disabled
-                          value={baBankCodex || ""}
-                          onChange={(e) => setBaBankCode(e.target.value)}
                           variant="standard"
                           fullWidth
                         />
@@ -2281,6 +2392,17 @@ function UserProfile() {
           </Card>
         </div>
       </div>
+      &nbsp;
+      <MDBox>
+        <DataTable
+          table={{ columns: pColumns, rows: items }}
+          isSorted
+          entriesPerPage
+          showTotalEntries
+          noEndBorder
+          canSearch
+        />
+      </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />

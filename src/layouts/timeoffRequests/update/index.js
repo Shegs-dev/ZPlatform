@@ -36,6 +36,7 @@ function TimeoffRequestUpdate() {
   const [approvex, setApprovex] = useState("");
   const [adminx, setAdminx] = useState("");
   const [reasonx, setReasonx] = useState("");
+  const [statusx, setStatusx] = useState("");
 
   const [user, setUser] = useState([]);
 
@@ -91,6 +92,7 @@ function TimeoffRequestUpdate() {
             setApprovex(result[0].approverID);
             setAdminx(result[0].adminID);
             setReasonx(result[0].reasonForDisapproval);
+            setStatusx(result[0].status);
           } else {
             setIdx(null);
           }
@@ -159,6 +161,7 @@ function TimeoffRequestUpdate() {
       approverID: approvex,
       adminID: adminx,
       reasonForDisapproval: reasonx,
+      status: statusx,
     });
     const requestOptions = {
       method: "POST",
