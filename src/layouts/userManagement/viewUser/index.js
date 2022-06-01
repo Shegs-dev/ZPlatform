@@ -712,7 +712,6 @@ function ViewUser() {
         if (resultst.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
-        console.log(resultst);
         if (resultst.steps !== null) {
           setStep(resultst.steps);
         } else {
