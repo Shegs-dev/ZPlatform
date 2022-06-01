@@ -14,18 +14,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import AllCountries from "countries";
-import BankNameAndCode from "layouts/userProfile/bankcode";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-import AllCountriesAndStates from "countries-states-master/countries";
 
 function ViewUser() {
-  const { bankNameCode: allbankNameCode } = BankNameAndCode();
-  const { countries: WCountries } = AllCountries();
-  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
-
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
@@ -50,8 +43,6 @@ function ViewUser() {
   const [nkResidentialCountryx, setNkResidentialCountry] = useState("");
   const [nkOccupationx, setNkOccupation] = useState("");
 
-  const [allStates, setAllStates] = useState([]);
-
   const [startDate, setStartDate] = useState(new Date());
 
   const navigate = useNavigate();
@@ -63,7 +54,6 @@ function ViewUser() {
   const [baCountryx, setBaCountry] = useState("");
   const [baAcctNox, setBaAcctNo] = useState("");
   const [baAcctNamex, setBaAcctName] = useState("");
-  const [baBankCodex, setBaBankCode] = useState("");
 
   const [maNoOfSpousesx, setMaNoOfSpouses] = useState("");
   const [maNoOfChildrenx, setMaNoOfChildren] = useState("");
@@ -105,6 +95,7 @@ function ViewUser() {
       roleID: companyx,
       branchID: branx,
       deptID: departx,
+      stepID: stepx,
     });
     const requestOptions = {
       method: "POST",
@@ -137,8 +128,6 @@ function ViewUser() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -152,7 +141,6 @@ function ViewUser() {
   };
 
   useEffect(() => {
-    console.log(baBankCodex);
     setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -326,49 +314,59 @@ function ViewUser() {
                                                 navigate("/authentication/forbiddenPage");
                                               }
                                               if (isMounted) {
-                                                setStep(resultst);
-                                                console.log(resultst);
+                                                setStep(resultst.steps);
+
+                                                if (result[0].stepID != null) {
+                                                  // eslint-disable-next-line array-callback-return
+                                                  resultst.steps.map((sitem) => {
+                                                    if (sitem.id === result[0].stepID) {
+                                                      // eslint-disable-next-line prefer-destructuring
+                                                      stepStepx(sitem.id);
+                                                    }
+                                                  });
+                                                }
                                               }
                                             });
                                         }
                                       });
 
-                                      fetch(
-                                        `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${result[0].roleID}`,
-                                        { headers }
-                                      )
-                                        .then(async (res) => {
-                                          const aToken = res.headers.get("token-1");
-                                          localStorage.setItem("rexxdex", aToken);
-                                          return res.json();
-                                        })
-                                        .then((resultst) => {
-                                          if (resultst.message === "Expired Access") {
-                                            navigate("/authentication/sign-in");
-                                          }
-                                          if (resultst.message === "Token Does Not Exist") {
-                                            navigate("/authentication/sign-in");
-                                          }
-                                          if (resultst.message === "Unauthorized Access") {
-                                            navigate("/authentication/forbiddenPage");
-                                          }
-                                          if (isMounted) {
-                                            setStep(resultst);
+                                      // fetch(
+                                      //   `${process.env.REACT_APP_KUBU_URL}/rolestep/gets/${orgIDs}/${result[0].roleID}`,
+                                      //   { headers }
+                                      // )
+                                      //   .then(async (res) => {
+                                      //     const aToken = res.headers.get("token-1");
+                                      //     localStorage.setItem("rexxdex", aToken);
+                                      //     return res.json();
+                                      //   })
+                                      //   .then((resultst) => {
+                                      //     if (resultst.message === "Expired Access") {
+                                      //       navigate("/authentication/sign-in");
+                                      //     }
+                                      //     if (resultst.message === "Token Does Not Exist") {
+                                      //       navigate("/authentication/sign-in");
+                                      //     }
+                                      //     if (resultst.message === "Unauthorized Access") {
+                                      //       navigate("/authentication/forbiddenPage");
+                                      //     }
+                                      //     if (isMounted) {
+                                      //       setStep(resultst.steps);
+                                      //       console.log(resultst);
 
-                                            if (result[0].stepID != null) {
-                                              // let fStep = {};
-                                              // eslint-disable-next-line array-callback-return
-                                              resultst.steps.map((item) => {
-                                                if (item.id === result[0].stepID) {
-                                                  // eslint-disable-next-line prefer-destructuring
-                                                  // fStep = item;
-                                                  console.log(item);
-                                                  // stepStepx(fStep.id);
-                                                }
-                                              });
-                                            }
-                                          }
-                                        });
+                                      //       if (result[0].stepID != null) {
+                                      //         // let fStep = {};
+                                      //         // eslint-disable-next-line array-callback-return
+                                      //         resultst.steps.map((item) => {
+                                      //           if (item.id === result[0].stepID) {
+                                      //             // eslint-disable-next-line prefer-destructuring
+                                      //             // fStep = item;
+                                      //             console.log(item);
+                                      //             // stepStepx(fStep.id);
+                                      //           }
+                                      //         });
+                                      //       }
+                                      //     }
+                                      //   });
                                     }
                                   }
                                 }
@@ -508,8 +506,6 @@ function ViewUser() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -639,10 +635,6 @@ function ViewUser() {
             setNKEmail(resultnk[0].email);
             setNkPhone(resultnk[0].pno);
             setNkTitle(resultnk[0].title);
-            const filteredItems = AlCountry.filter(
-              (item) => item.name === resultnk[0].residentialCountry
-            );
-            setAllStates(filteredItems[0].states);
             setNkResidentialStreet(resultnk[0].residentialStreet);
             setNkResidentialCity(resultnk[0].residentialCity);
             setNkResidentialState(resultnk[0].residentialState);
@@ -655,16 +647,6 @@ function ViewUser() {
       isMounted = false;
     };
   }, []);
-
-  const handleOnChangeNKCountry = (e) => {
-    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
-    setAllStates(filteredItems[0].states);
-    setNkResidentialCountry(e.target.value);
-  };
-
-  const handleOnChangeNKState = (e) => {
-    setNkResidentialState(e.target.value);
-  };
 
   useEffect(() => {
     setOpened(true);
@@ -697,7 +679,6 @@ function ViewUser() {
             setBaCountry(resultba[0].country);
             setBaAcctNo(resultba[0].acctNo);
             setBaAcctName(resultba[0].acctName);
-            setBaBankCode(resultba[0].bankCode);
           }
         }
       });
@@ -705,17 +686,6 @@ function ViewUser() {
       isMounted = false;
     };
   }, []);
-
-  const handleOnChangeBank = (e) => {
-    const filteredItems = allbankNameCode.filter((item) => item.bankName === e.target.value);
-    if (e.target.value === "1") {
-      setBaBank("");
-      setBaBankCode("");
-    } else {
-      setBaBank(e.target.value);
-      setBaBankCode(filteredItems[0].cbnCode);
-    }
-  };
 
   const handleRoleSteps = (e) => {
     setOpened(true);
@@ -742,8 +712,12 @@ function ViewUser() {
         if (resultst.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
         }
-        setStep(resultst);
         console.log(resultst);
+        if (resultst.steps !== null) {
+          setStep(resultst.steps);
+        } else {
+          setStep([]);
+        }
       });
   };
 
@@ -1030,42 +1004,33 @@ function ViewUser() {
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-12">
-                        <MDBox textAlign="right">
-                          <Form.Select
-                            value={baBankx || ""}
-                            disabled
-                            aria-label="Default select example"
-                            onChange={handleOnChangeBank}
-                          >
-                            <option value="1">--Select Bank--</option>
-                            {allbankNameCode.map((api) => (
-                              <option key={api.id} value={api.bankName}>
-                                {api.bankName}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </MDBox>
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="text"
+                          label="Bank Name"
+                          disabled
+                          value={baBankx || ""}
+                          onChange={(e) => setBaBank(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
                       </div>
                     </div>
                   </Container>
+                </MDBox>
+                <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-12">
-                        <MDBox textAlign="right" mt={2}>
-                          <Form.Select
-                            disabled
-                            value={baCountryx || ""}
-                            aria-label="Default select example"
-                          >
-                            <option>--Select Country--</option>
-                            {WCountries.map((apic) => (
-                              <option key={apic.code} value={apic.name}>
-                                {apic.name}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </MDBox>
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="text"
+                          label="Country"
+                          disabled
+                          value={baCountryx || ""}
+                          onChange={(e) => setBaCountry(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
                       </div>
                     </div>
                   </Container>
@@ -1104,23 +1069,6 @@ function ViewUser() {
                     </div>
                   </Container>
                 </MDBox>
-                {/* <MDBox mb={2} mx={0}>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-8">
-                        <MDInput
-                          type="number"
-                          label="Bank Code"
-                          disabled
-                          value={baBankCodex || ""}
-                          onChange={(e) => setBaBankCode(e.target.value)}
-                          variant="standard"
-                          fullWidth
-                        />
-                      </div>
-                    </div>
-                  </Container>
-                </MDBox> */}
               </MDBox>
             </MDBox>
           </Card>
@@ -1390,54 +1338,40 @@ function ViewUser() {
                   </Container>
                 </MDBox>
                 <MDBox mb={2}>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-8">
-                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                          Country
-                        </MDTypography>
-                        <MDBox textAlign="right">
-                          <Form.Select
+                  <MDBox mb={2}>
+                    <Container>
+                      <div className="row">
+                        <div className="col-sm-8">
+                          <MDInput
+                            type="email"
+                            label="Country"
                             disabled
                             value={nkResidentialCountryx || ""}
-                            aria-label="Default select example"
-                            onChange={handleOnChangeNKCountry}
-                          >
-                            <option>--Select Country--</option>
-                            {AlCountry.map((apic) => (
-                              <option key={apic.code3} value={apic.name}>
-                                {apic.name}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </MDBox>
+                            onChange={(e) => setNkResidentialCountry(e.target.value)}
+                            variant="standard"
+                            fullWidth
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Container>
-                  <Container>
-                    <div className="row">
-                      <div className="col-sm-8">
-                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                          State
-                        </MDTypography>
-                        <MDBox textAlign="right">
-                          <Form.Select
-                            value={nkResidentialStatex}
+                    </Container>
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <Container>
+                      <div className="row">
+                        <div className="col-sm-8">
+                          <MDInput
+                            type="email"
+                            label="State"
                             disabled
-                            aria-label="Default select example"
-                            onChange={handleOnChangeNKState}
-                          >
-                            <option>--Select State--</option>
-                            {allStates.map((apis) => (
-                              <option key={apis.code} value={apis.name}>
-                                {apis.name}
-                              </option>
-                            ))}
-                          </Form.Select>
-                        </MDBox>
+                            value={nkResidentialStatex || ""}
+                            onChange={(e) => setNkResidentialState(e.target.value)}
+                            variant="standard"
+                            fullWidth
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Container>
+                    </Container>
+                  </MDBox>
                 </MDBox>
                 <Container>
                   <div className="row">

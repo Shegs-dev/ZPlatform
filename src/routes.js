@@ -108,6 +108,7 @@ import AppraisalAppraisers from "layouts/appraisal/appraisers";
 import AppraiseQandA from "layouts/appraisal/appaisalQandA";
 import GradeAppraisal from "layouts/appraisal/appraisalResult";
 
+import UpdateAnnouncement from "layouts/announcement/updateannouncement";
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
 import Addpolloptions from "layouts/polls/addpolloptions";
@@ -169,6 +170,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Announcement",
     component: <Announcement />,
+  },
+  {
+    name: "Update announcement",
+    key: "updateannouncement",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Update-Announcement",
+    component: <UpdateAnnouncement />,
   },
   // {
   //   name: "View",

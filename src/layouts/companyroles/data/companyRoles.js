@@ -234,7 +234,7 @@ export default function ComRole() {
                 <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => navigate(`/Company-Roles/Add-Steps?id=${value}`)}>
-                  View
+                  Add Company Roles
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
