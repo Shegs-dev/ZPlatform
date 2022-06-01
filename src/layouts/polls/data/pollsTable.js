@@ -217,6 +217,10 @@ export default function PollsData() {
       });
   };
 
+  const handleView = (value) => {
+    navigate(`/polls/view?id=${value}`);
+  };
+
   // const handleVote = (value) => {
   //   navigate(`/polls/vote-polls?id=${value}`);
   // };
@@ -268,6 +272,7 @@ export default function PollsData() {
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleOpen(value)}>Open </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

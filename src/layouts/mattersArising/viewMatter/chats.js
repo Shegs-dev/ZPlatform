@@ -8,17 +8,31 @@ import GHeaders from "getHeader";
 
 import { useNavigate } from "react-router-dom";
 
+// import Footer from "examples/Footer";
+// import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+// import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+// import MDBox from "components/MDBox";
+// import Card from "@mui/material/Card";
+// import MDButton from "components/MDButton";
+
+// import { Container } from "react-bootstrap";
+// import Emojis from "./emoji";
+
 // eslint-disable-next-line react/prop-types
 function Chat({ socket, username, room }) {
   const MySwal = withReactContent(Swal);
 
   const navigate = useNavigate();
 
+  // const { emoticons: allEmojis } = Emojis();
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+
+  const [titlex, setTitlex] = useState("");
 
   useEffect(() => {
     const messageMap = [];
@@ -130,6 +144,44 @@ function Chat({ socket, username, room }) {
   };
 
   useEffect(() => {
+    const headers = miHeaders;
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const ids = urlParams.get("room");
+
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/concern/getByIds/${ids}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setTitlex(result[0].title);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
     // eslint-disable-next-line react/prop-types
     socket.on("receive_message", (data) => {
@@ -144,49 +196,71 @@ function Chat({ socket, username, room }) {
   }, [socket]);
 
   return (
-    <div className="chat-window">
-      <div className="chat-header">
-        <p>Live Chat</p>
-      </div>
-      <div className="chat-body">
-        <ScrollToBottom className="message-container">
-          {messageList.map((messageContent) => (
-            <div
-              className="message"
-              id={username === messageContent.author ? "other" : "you"}
-              key={messageContent.id}
-            >
-              <div>
-                <div className="message-content">
-                  <p>{messageContent.message}</p>
-                </div>
-                <div className="message-meta">
-                  <p id="time">{messageContent.time}</p>
-                  <p id="author">{messageContent.author}</p>
+    <>
+      <div className="chat-window">
+        <div className="chat-header">
+          <div
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "30rem",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <p>{titlex}</p>
+          </div>
+        </div>
+        <div className="chat-body">
+          <ScrollToBottom className="message-container">
+            {messageList.map((messageContent) => (
+              <div
+                className="message"
+                id={username === messageContent.author ? "other" : "you"}
+                key={messageContent.id}
+              >
+                <div>
+                  <div className="message-content">
+                    <p>{messageContent.message}</p>
+                  </div>
+                  <div className="message-meta">
+                    <p id="time">{messageContent.time}</p>
+                    <p id="author">{messageContent.author}</p>
+                  </div>
                 </div>
               </div>
+            ))}
+          </ScrollToBottom>
+        </div>
+        <div className="chat-footer">
+          <input
+            type="text"
+            value={currentMessage}
+            placeholder="Type Message..."
+            onChange={(event) => {
+              setCurrentMessage(event.target.value);
+            }}
+            onKeyPress={(event) => {
+              // eslint-disable-next-line no-unused-expressions
+              event.key === "Enter" && sendMessage();
+            }}
+          />
+          <button type="button" onClick={sendMessage}>
+            send
+          </button>
+        </div>
+        {/* <ScrollToBottom className="emoji-container">
+          <Container>
+            <div className="row">
+              {allEmojis.map((apis) => (
+                <div key={apis.emoji} value={apis.emoji} className="col-sm-1">
+                  <button type="button">{apis.emoji}</button>
+                </div>
+              ))}
             </div>
-          ))}
-        </ScrollToBottom>
+          </Container>
+        </ScrollToBottom> */}
       </div>
-      <div className="chat-footer">
-        <input
-          type="text"
-          value={currentMessage}
-          placeholder="Hey..."
-          onChange={(event) => {
-            setCurrentMessage(event.target.value);
-          }}
-          onKeyPress={(event) => {
-            // eslint-disable-next-line no-unused-expressions
-            event.key === "Enter" && sendMessage();
-          }}
-        />
-        <button type="button" onClick={sendMessage}>
-          send
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
 

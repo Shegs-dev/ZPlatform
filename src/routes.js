@@ -114,6 +114,7 @@ import Addpolloptions from "layouts/polls/addpolloptions";
 import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
+import PollsView from "layouts/polls/view";
 
 const routes = [
   {
@@ -221,11 +222,18 @@ const routes = [
     component: <Addpolloptions />,
   },
   {
-    name: "Vote polls",
-    key: "votepolls",
+    name: "View polls",
+    key: "viewpolls",
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/polls/vote-polls",
     component: <VotePolls />,
+  },
+  {
+    name: "Vote polls",
+    key: "votepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/view",
+    component: <PollsView />,
   },
   {
     name: "Edit Matters Arising",
