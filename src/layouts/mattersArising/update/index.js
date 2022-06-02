@@ -149,8 +149,6 @@ function EditMattersArising() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {
@@ -290,15 +288,16 @@ function EditMattersArising() {
                 </div>
 
                 <div className="col-sm-6">
-                  <MDInput
-                    type="text"
-                    label="Message *"
-                    value={messagex || ""}
-                    // onKeyUp={handleOnMessageKeys}
-                    onChange={(e) => setMessagex(e.target.value)}
-                    variant="standard"
-                    fullWidth
-                  />
+                  <Form.Group className="mb-1" controlId="exampleForm.ControlTextarea1">
+                    <Form.Label style={{ fontSize: 14 }}>Message</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      value={messagex || ""}
+                      // onKeyUp={handleOnMessageKeys}
+                      onChange={(e) => setMessagex(e.target.value)}
+                      rows={2}
+                    />
+                  </Form.Group>
                 </div>
               </div>
             </Container>

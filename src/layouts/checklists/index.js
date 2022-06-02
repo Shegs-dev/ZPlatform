@@ -83,8 +83,6 @@ function Checkbox() {
           title: result.status,
           type: "success",
           text: result.message,
-        }).then(() => {
-          window.location.reload();
         });
       })
       .catch((error) => {

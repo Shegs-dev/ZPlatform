@@ -50,6 +50,7 @@ export default function UserData() {
         }
         if (isMounted) {
           setItems(result);
+          console.log(result);
         }
       });
     return () => {
@@ -154,37 +155,23 @@ export default function UserData() {
   };
 
   const handlePasswordReset = (value) => {
-    const gheaders = miHeaders;
-    const hheaders = myHeaders;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { gheaders })
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
+    const headers = miHeaders;
+    console.log(value);
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/get/${value}`, { headers })
+      .then((res) => res.json())
       .then((resultp) => {
-        if (resultp.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-        }
-        if (resultp.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-        }
-        if (resultp.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-        }
+        const raw = JSON.stringify({
+          username: resultp[0].email,
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+        console.log(resultp);
         if (resultp.length > 0) {
-          const raw = JSON.stringify({
-            username: resultp[0].email,
-          });
-          const requestOptions = {
-            method: "POST",
-            headers: hheaders,
-            body: raw,
-            redirect: "follow",
-          };
-          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword`, {
-            requestOptions,
-          })
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/login/resetpassword/`, requestOptions)
             .then(async (res) => {
               const aToken = res.headers.get("token-1");
               localStorage.setItem("rexxdex", aToken);
@@ -265,14 +252,16 @@ export default function UserData() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleView(value)}>
+                    View/Add Office Details
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddTOT(value)}>
                     Add Time-Off Type
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddsalary(value)}>User Salary</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleUpdateSystemRole(value)}>
-                    Change User System Role
+                    Change User&apos;s System Role
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handlePasswordReset(value)}>
                     Reset Password

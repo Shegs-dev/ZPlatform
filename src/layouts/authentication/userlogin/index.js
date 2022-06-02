@@ -27,7 +27,7 @@ function userlogin() {
   const [retypepasswordx, setretypepassword] = useState("");
   const [checkedNPass, setCheckedNPass] = useState("");
   const [checkedRTNPass, setCheckedRTNPass] = useState("");
-  const [enabled, setEnabled] = useState("");
+  const [enabled, setEnabled] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
 
   const [opened, setOpened] = useState(false);
@@ -43,70 +43,23 @@ function userlogin() {
 
   const { allPHeaders: myHeaders } = PHeaders();
 
-  const handleClick = (e) => {
-    setOpened(true);
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const emailCh = data11.email;
-    const raw = JSON.stringify({ username: emailCh, password: passwordx, npassword: npasswordx });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          navigate("/dashboard", { replace: true });
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
   const handleOnPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (passwordx.match(passwordValidate)) {
-      setCheckedNPass(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML = "";
-    }
     if (passwordx.length === 0) {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Old Password is required<br>";
+    } else {
+      setCheckedNPass(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML = "";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
 
   const handleOnNPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
+    );
     if (!npasswordx.match(passwordValidate)) {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
@@ -118,6 +71,13 @@ function userlogin() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("npassword").innerHTML = "";
     }
+    if (npasswordx !== 0) {
+      if (retypepasswordx !== npasswordx) {
+        setCheckedRTNPass(false);
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
+      }
+    }
     if (npasswordx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("npassword").innerHTML = "New Password is required<br>";
@@ -126,7 +86,9 @@ function userlogin() {
   };
 
   const handleOnRTNPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
+    );
     if (retypepasswordx !== npasswordx) {
       setCheckedRTNPass(false);
       // eslint-disable-next-line no-unused-expressions
@@ -138,6 +100,61 @@ function userlogin() {
       document.getElementById("retypepassword").innerHTML = "";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
+  };
+
+  const handleClick = (e) => {
+    handleOnNPasswordKeys();
+    handleOnPasswordKeys();
+    handleOnRTNPasswordKeys();
+    if (enabled) {
+      setOpened(true);
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const emailCh = data11.email;
+      const raw = JSON.stringify({ username: emailCh, password: passwordx, npassword: npasswordx });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            if (result.status === "SUCCESS") {
+              navigate("/dashboard", { replace: true });
+              window.location.reload();
+            }
+          });
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   return (
@@ -244,13 +261,7 @@ function userlogin() {
                 </Container>
               </MDBox>
               <MDBox mt={4} mb={1}>
-                <MDButton
-                  variant="gradient"
-                  disabled={!enabled}
-                  onClick={handleClick}
-                  color="info"
-                  width="40%"
-                >
+                <MDButton variant="gradient" onClick={handleClick} color="info" width="40%">
                   Save
                 </MDButton>
               </MDBox>

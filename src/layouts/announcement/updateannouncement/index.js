@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
-import DataTable from "examples/Tables/DataTable";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
-import announcement from "layouts/announcement/data/announcement";
 import MDButton from "components/MDButton";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -15,22 +14,25 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
-import { useNavigate } from "react-router-dom";
 
-function Announcement() {
+function UpdateAnnouncement() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = announcement();
 
   const [titlex, setTitle] = useState("");
   const [messagex, setMessage] = useState("");
   const [groupidx, setGroupIdx] = useState("");
   const [annoucementTypeIDx, setAnnoucementTypeID] = useState("");
+  const [deletex, setDeletex] = useState("");
+  const [createbyx, setCreatebyx] = useState("");
+  const [createx, setCreatex] = useState("");
+  const [idx, setIdx] = useState("");
+
   const [allAnnouncementType, setAllAnnouncementType] = useState([]);
 
   const [user, setUser] = useState([]);
 
   const [checkedTitle, setCheckedTitle] = useState("");
-  const [enabled, setEnabled] = useState("");
+  const [, setEnabled] = useState("");
 
   const navigate = useNavigate();
 
@@ -79,7 +81,6 @@ function Announcement() {
 
     const orgIDs = data11.orgID;
     let isMounted = true;
-    // console.log()
     fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/getAll/${orgIDs}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
@@ -101,7 +102,6 @@ function Announcement() {
         }
         if (isMounted) {
           setAllAnnouncementType(result);
-          console.log(result);
         }
       });
     return () => {
@@ -109,28 +109,14 @@ function Announcement() {
     };
   }, []);
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const ids = urlParams.get("id");
 
-    const orgIDs = data11.orgID;
-    const personalIDs = data11.personalID;
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      title: titlex,
-      message: messagex,
-      groupID: groupidx,
-      announcementTypeID: annoucementTypeIDx,
-      createdBy: personalIDs,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/add`, requestOptions)
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/getByIds/${ids}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -149,22 +135,23 @@ function Announcement() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+        if (isMounted) {
+          // setItems(result);
+          setIdx(result[0].announcement.id);
+          setTitle(result[0].announcement.title);
+          setMessage(result[0].announcement.message);
+          setGroupIdx(result[0].announcement.groupID);
+          setCreatebyx(result[0].announcement.createdBy);
+          setDeletex(result[0].announcement.deleteFlag);
+          setCreatex(result[0].announcement.createdTime);
+          setAnnoucementTypeID(result[0].announcementType.id);
+        }
+        console.log(result);
       });
-  };
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOnChangeAnnounceType = (e) => {
     setAnnoucementTypeID(e.target.value);
@@ -184,6 +171,67 @@ function Announcement() {
     setEnabled(checkedTitle === true);
   };
 
+  const handleUpdate = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const ids = data11.id;
+    // const personalIds = data11.id;
+    const orgIDs = data11.orgID;
+
+    const raw = JSON.stringify({
+      id: idx,
+      title: titlex,
+      message: messagex,
+      orgID: orgIDs,
+      groupID: groupidx,
+      announcementTypeID: annoucementTypeIDx,
+      createdBy: createbyx,
+      createdTime: createx,
+      deleteFlag: deletex,
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/update`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        // setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        });
+      })
+      .catch((error) => {
+        // setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -201,7 +249,7 @@ function Announcement() {
             textAlign="center"
           >
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Add Announcement
+              Update Announcement
             </MDTypography>
           </MDBox>
           <MDBox
@@ -248,6 +296,17 @@ function Announcement() {
                       />
                     </Form.Group>
                   </div>
+
+                  {/* <div className="col-sm-6">
+                    <MDInput
+                      type="textarea"
+                      value={messagex || ""}
+                      onChange={(e) => setMessage(e.target.value)}
+                      label="Message"
+                      variant="standard"
+                      fullWidth
+                    />
+                  </div> */}
                 </div>
               </Container>
               <Container>
@@ -310,30 +369,20 @@ function Announcement() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
+                onClick={(e) => handleUpdate(e)}
+                // disabled={!enabled}
                 color="info"
                 width="50%"
               >
-                Save
+                Update
               </MDButton>
             </MDBox>
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
 
-export default Announcement;
+export default UpdateAnnouncement;
