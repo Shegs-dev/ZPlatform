@@ -85,78 +85,6 @@ function Cover() {
 
   const [opened, setOpened] = useState(false);
 
-  const handleClick = (e) => {
-    setOpened(true);
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    let dayx = "";
-    let monthx = "";
-    let yearx = "";
-    if (startDate != null) {
-      dayx = startDate.getDate();
-      monthx = startDate.getMonth() + 1;
-      yearx = startDate.getFullYear();
-    }
-    e.preventDefault();
-    const raw = JSON.stringify({
-      fname: fnamex,
-      lname: lnamex,
-      oname: onamex,
-      email: emailx,
-      pno: phonex,
-      nationality: nationalityx,
-      residentialStreet: residentialStreetx,
-      residentialCity: residentialCityx,
-      residentialState: residentialStatex,
-      residentialCountry: residentialCountryx,
-      dayOfBirth: dayx,
-      monthOfBirth: monthx,
-      yearOfBirth: yearx,
-      maritalStatus: maritalStatusx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    localStorage.setItem("pass1", passwordx);
-    localStorage.setItem("email1", emaily);
-
-    if (passwordx === retypePasswordx) {
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
-        .then((res) => res.json())
-        .then((result) => {
-          setOpened(false);
-          if (result.status === "SUCCESS") {
-            MySwal.fire({
-              title: result.status,
-              type: "success",
-              text: result.message,
-            }).then(() => {
-              localStorage.setItem("user", JSON.stringify(result.data));
-              navigate("/authentication/company-Registration", { replace: true });
-            });
-          } else {
-            MySwal.fire({
-              title: result.status,
-              type: "error",
-              text: result.message,
-            });
-          }
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
-        });
-    }
-  };
-
   const handleOnChangeRCCountry = (e) => {
     const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
     setAllStates(filteredItems[0].states);
@@ -339,6 +267,7 @@ function Cover() {
   const handleOnRTPasswordKeys = () => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
     if (!retypePasswordx.match(passwordValidate)) {
+      setCheckedPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
         "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
@@ -346,10 +275,98 @@ function Cover() {
     if (retypePasswordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("rtPassword").innerHTML = "";
+      setCheckedPass(true);
+    }
+    if (retypePasswordx === passwordx) {
+      setCheckedPass(true);
     }
     if (retypePasswordx !== passwordx) {
+      setCheckedPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
+    }
+  };
+
+  const handleClick = (e) => {
+    handleOnFirstKeys();
+    handleOnLastKeys();
+    handleOnOtherKeys();
+    handleOnPEmailKeys();
+    handleOnOEmailKeys();
+    handleOnStreetKeys();
+    handleOnCityKeys();
+    handleOnPasswordKeys();
+    handleOnRTPasswordKeys();
+    if (enabled) {
+      setOpened(true);
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      let dayx = "";
+      let monthx = "";
+      let yearx = "";
+      if (startDate != null) {
+        dayx = startDate.getDate();
+        monthx = startDate.getMonth() + 1;
+        yearx = startDate.getFullYear();
+      }
+      e.preventDefault();
+      const raw = JSON.stringify({
+        fname: fnamex,
+        lname: lnamex,
+        oname: onamex,
+        email: emailx,
+        pno: phonex,
+        nationality: nationalityx,
+        residentialStreet: residentialStreetx,
+        residentialCity: residentialCityx,
+        residentialState: residentialStatex,
+        residentialCountry: residentialCountryx,
+        dayOfBirth: dayx,
+        monthOfBirth: monthx,
+        yearOfBirth: yearx,
+        maritalStatus: maritalStatusx,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      localStorage.setItem("pass1", passwordx);
+      localStorage.setItem("email1", emaily);
+
+      if (passwordx === retypePasswordx) {
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
+          .then((res) => res.json())
+          .then((result) => {
+            setOpened(false);
+            if (result.status === "SUCCESS") {
+              MySwal.fire({
+                title: result.status,
+                type: "success",
+                text: result.message,
+              }).then(() => {
+                localStorage.setItem("user", JSON.stringify(result.data));
+                navigate("/authentication/company-Registration", { replace: true });
+              });
+            } else {
+              MySwal.fire({
+                title: result.status,
+                type: "error",
+                text: result.message,
+              });
+            }
+          })
+          .catch((error) => {
+            setOpened(false);
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
     }
   };
 
@@ -814,13 +831,7 @@ function Cover() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                disabled={!enabled}
-                onClick={handleClick}
-                color="info"
-                fullWidth
-              >
+              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
                 Create Account
               </MDButton>
             </MDBox>

@@ -64,6 +64,12 @@ function InviteUser() {
 
   const [opened, setOpened] = useState(false);
 
+  const [checkedPemail, setCheckedPEmail] = useState("");
+  const [checkedPass, setCheckedPass] = useState("");
+  const [checkedFirst, setCheckedFirst] = useState("");
+  const [checkedLast, setCheckedLast] = useState("");
+  const [enabled, setEnabled] = useState("");
+
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
@@ -172,11 +178,13 @@ function InviteUser() {
   const handleOnFirstKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!fnamex.match(letters)) {
+      setCheckedFirst(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML =
         "First Name - input only capital and small letters<br>";
     }
     if (fnamex.match(letters)) {
+      setCheckedFirst(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML = "";
     }
@@ -184,16 +192,24 @@ function InviteUser() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML = "First Name is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnLastKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!lnamex.match(letters)) {
+      setCheckedLast(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML =
         "Last Name - input only capital and small letters<br>";
     }
     if (lnamex.match(letters)) {
+      setCheckedLast(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML = "";
     }
@@ -201,6 +217,12 @@ function InviteUser() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML = "Last Name is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnOtherKeys = () => {
@@ -223,10 +245,12 @@ function InviteUser() {
   const handleOnPEmailKeys = () => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     if (!emailx.match(letters)) {
+      setCheckedPEmail(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email - input a valid email<br>";
     }
     if (emailx.match(letters)) {
+      setCheckedPEmail(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "";
     }
@@ -234,14 +258,20 @@ function InviteUser() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
   };
 
   const handleOnStreetKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
-    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    const letters = /^[a-zA-Z0-9 ,-]+$/;
     if (!residentialStreetx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+      document.getElementById("street").innerHTML = "Street - use only [ - , ] as symbols<br>";
     }
     if (residentialStreetx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
@@ -254,36 +284,18 @@ function InviteUser() {
   };
 
   const handleOnCityKeys = () => {
-    // eslint-disable-next-line no-invalid-regexp
-    const letters = /^[a-zA-Z0-9 .,-]+$/;
-    if (!residentialStreetx.match(letters)) {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!residentialCityx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
     }
-    if (residentialStreetx.match(letters)) {
+    if (residentialCityx.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "";
+      document.getElementById("city").innerHTML = "";
     }
-    if (residentialStreetx.length === 0) {
+    if (residentialCityx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street is required<br>";
-    }
-  };
-
-  const handleOnRTPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!retypePasswordx.match(passwordValidate)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML =
-        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
-    }
-    if (retypePasswordx.match(passwordValidate)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("rtPassword").innerHTML = "";
-    }
-    if (retypePasswordx !== passwordx) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
+      document.getElementById("city").innerHTML = "City is required<br>";
     }
   };
 
@@ -292,144 +304,185 @@ function InviteUser() {
     if (!passwordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
-        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)";
+        "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
+      setCheckedPass(false);
     }
     if (passwordx.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
+      setCheckedPass(true);
     }
     if (passwordx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Password is required<br>";
     }
+    setEnabled(
+      checkedPemail === true &&
+        checkedPass === true &&
+        checkedFirst === true &&
+        checkedLast === true
+    );
+  };
+
+  const handleOnRTPasswordKeys = () => {
+    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+    if (!retypePasswordx.match(passwordValidate)) {
+      setCheckedPass(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("password").innerHTML =
+        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
+    }
+    if (retypePasswordx.match(passwordValidate)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("rtPassword").innerHTML = "";
+      setCheckedPass(true);
+    }
+    if (retypePasswordx === passwordx) {
+      setCheckedPass(true);
+    }
+    if (retypePasswordx !== passwordx) {
+      setCheckedPass(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
+    }
   };
 
   const handleClick = (e) => {
-    setOpened(true);
-    // const user = JSON.parse(localStorage.getItem("user"));
-    let dayx = "";
-    let monthx = "";
-    let yearx = "";
-    if (startDate != null) {
-      dayx = startDate.getDate();
-      monthx = startDate.getMonth() + 1;
-      yearx = startDate.getFullYear();
-    }
-    e.preventDefault();
-    const raw = JSON.stringify({
-      id: idx,
-      fname: fnamex,
-      lname: lnamex,
-      oname: onamex,
-      email: emailx,
-      pno: phonex,
-      nationality: nationalityx,
-      residentialStreet: residentialStreetx,
-      residentialCity: residentialCityx,
-      residentialState: residentialStatex,
-      residentialCountry: residentialCountryx,
-      dayOfBirth: dayx,
-      monthOfBirth: monthx,
-      yearOfBirth: yearx,
-      maritalStatus: maritalStatusx,
-      deleteFlag: deleteFlagx,
-      sysStatus: sysStatusx,
-      createdTime: createdTimex,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    localStorage.setItem("email1", emailx);
-
-    let endpoint = "add";
-    if (idx !== 0) {
-      endpoint = "update";
-    }
-    if (endpoint === "update") {
-      setPassword("");
-    }
-    const endpointPC = "add";
-    let endpointL = "add";
-    if (endpoint === "update") {
-      endpointL = `updateOrganization/${emailx}/${orgIDx}`;
-    }
-    let methodLUO = "POST";
-    if (endpointL !== "add") {
-      methodLUO = "GET";
-    }
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/${endpoint}`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        console.log(result);
-        localStorage.setItem("personalInfo", JSON.stringify(result.data));
-        const raw1 = JSON.stringify({
-          orgID: orgIDx,
-          personalID: result.data.id,
-          email: emaily,
-          roleID: roleIDx,
-        });
-        const requestOptions1 = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw1,
-          redirect: "follow",
-        };
-
-        fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`, requestOptions1)
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
-          })
-          .then((resultx) => {
-            console.log(resultx);
-            localStorage.setItem("company", JSON.stringify(resultx.data));
-            const raw2 = JSON.stringify({
-              orgID: orgIDx,
-              empID: result.data.id,
-              username: emailx,
-              password: passwordx,
-            });
-            const requestOptions2 = {
-              method: methodLUO,
-              headers: myHeaders,
-              body: raw2,
-              redirect: "follow",
-            };
-            fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
-              .then(async (res) => {
-                const aToken = res.headers.get("token-1");
-                localStorage.setItem("rexxdex", aToken);
-                return res.json();
-              })
-              .then(() => {
-                setOpened(false);
-                MySwal.fire({
-                  title: result.status,
-                  type: "success",
-                  text: result.message,
-                }).then(() => {
-                  navigate("/authentication/sign-in", { replace: true });
-                });
-              });
-          });
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+    handleOnFirstKeys();
+    handleOnLastKeys();
+    handleOnOtherKeys();
+    handleOnPEmailKeys();
+    handleOnStreetKeys();
+    handleOnCityKeys();
+    handleOnPasswordKeys();
+    handleOnRTPasswordKeys();
+    if (enabled) {
+      setOpened(true);
+      // const user = JSON.parse(localStorage.getItem("user"));
+      let dayx = "";
+      let monthx = "";
+      let yearx = "";
+      if (startDate != null) {
+        dayx = startDate.getDate();
+        monthx = startDate.getMonth() + 1;
+        yearx = startDate.getFullYear();
+      }
+      e.preventDefault();
+      const raw = JSON.stringify({
+        id: idx,
+        fname: fnamex,
+        lname: lnamex,
+        oname: onamex,
+        email: emailx,
+        pno: phonex,
+        nationality: nationalityx,
+        residentialStreet: residentialStreetx,
+        residentialCity: residentialCityx,
+        residentialState: residentialStatex,
+        residentialCountry: residentialCountryx,
+        dayOfBirth: dayx,
+        monthOfBirth: monthx,
+        yearOfBirth: yearx,
+        maritalStatus: maritalStatusx,
+        deleteFlag: deleteFlagx,
+        sysStatus: sysStatusx,
+        createdTime: createdTimex,
       });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      localStorage.setItem("email1", emailx);
+
+      let endpoint = "add";
+      if (idx !== 0) {
+        endpoint = "update";
+      }
+      if (endpoint === "update") {
+        setPassword("");
+      }
+      const endpointPC = "add";
+      let endpointL = "add";
+      if (endpoint === "update") {
+        endpointL = `updateOrganization/${emailx}/${orgIDx}`;
+      }
+      let methodLUO = "POST";
+      if (endpointL !== "add") {
+        methodLUO = "GET";
+      }
+
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/${endpoint}`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          console.log(result);
+          localStorage.setItem("personalInfo", JSON.stringify(result.data));
+          const raw1 = JSON.stringify({
+            orgID: orgIDx,
+            personalID: result.data.id,
+            email: emaily,
+            roleID: roleIDx,
+          });
+          const requestOptions1 = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw1,
+            redirect: "follow",
+          };
+
+          fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`, requestOptions1)
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resultx) => {
+              console.log(resultx);
+              localStorage.setItem("company", JSON.stringify(resultx.data));
+              const raw2 = JSON.stringify({
+                orgID: orgIDx,
+                empID: result.data.id,
+                username: emailx,
+                password: passwordx,
+              });
+              const requestOptions2 = {
+                method: methodLUO,
+                headers: myHeaders,
+                body: raw2,
+                redirect: "follow",
+              };
+              fetch(`${process.env.REACT_APP_ZAVE_URL}/login/${endpointL}`, requestOptions2)
+                .then(async (res) => {
+                  const aToken = res.headers.get("token-1");
+                  localStorage.setItem("rexxdex", aToken);
+                  return res.json();
+                })
+                .then(() => {
+                  setOpened(false);
+                  MySwal.fire({
+                    title: result.status,
+                    type: "success",
+                    text: result.message,
+                  }).then(() => {
+                    navigate("/authentication/sign-in", { replace: true });
+                  });
+                });
+            });
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   /* return <Select options={options} value={value} onChange={changeHandler} />
