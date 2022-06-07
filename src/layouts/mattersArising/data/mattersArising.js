@@ -288,7 +288,7 @@ export default function MattersArisingTable() {
                 <Dropdown.Item onClick={() => handleEscalateMatter(value)}>
                   Escalate Matter To Another User
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => handleUpdate(value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleUpdate(value)}>View/Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClose(value)}>Close</Dropdown.Item>
               </Dropdown.Menu>
