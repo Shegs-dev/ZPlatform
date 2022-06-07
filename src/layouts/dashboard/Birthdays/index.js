@@ -28,7 +28,9 @@ import BirthdaysData from "layouts/dashboard/Birthdays/data/birthdaysData";
 
 function Birthdays() {
   const { columns: pColumns, rows: pRows } = BirthdaysData();
-
+  console.log(pColumns);
+  console.log(pRows);
+  console.log(`col - ${pColumns.length} row - ${pRows.length}`);
   return (
     <Card>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
