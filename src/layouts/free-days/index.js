@@ -101,75 +101,6 @@ function FreeDay() {
     };
   }, []);
 
-  const handleAddEvent = (e) => {
-    setOpened(true);
-    const end = new Date(newEvent.time);
-    end.setHours(23, 59, 59, 999);
-    const eventTime = end.getTime();
-    const eventName = newEvent.title;
-    const CurTime = new Date().getTime();
-    setAllEvents([...allEvents, newEvent]);
-
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
-
-    const raw = JSON.stringify([
-      {
-        orgID: orgIDs,
-        name: eventName,
-        freeDate: eventTime,
-      },
-    ]);
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    if (eventTime < CurTime) {
-      MySwal.fire({
-        title: "Invalid Date",
-        type: "error",
-        text: "Please Enter A Date From The Future",
-      });
-    } else {
-      fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/add`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          setOpened(false);
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
-          });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
-        });
-    }
-  };
-
   const handleOnTitleKeys = () => {
     const letters = /^[a-zA-Z0-9 -']+$/;
     if (!newEvent.title.match(letters)) {
@@ -188,6 +119,78 @@ function FreeDay() {
       document.getElementById("title").innerHTML = "Title is required<br>";
     }
     setEnabled(checkedName === true);
+  };
+
+  const handleAddEvent = (e) => {
+    handleOnTitleKeys();
+    if (enabled) {
+      setOpened(true);
+      const end = new Date(newEvent.time);
+      end.setHours(23, 59, 59, 999);
+      const eventTime = end.getTime();
+      const eventName = newEvent.title;
+      const CurTime = new Date().getTime();
+      setAllEvents([...allEvents, newEvent]);
+
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const orgIDs = data11.orgID;
+
+      const raw = JSON.stringify([
+        {
+          orgID: orgIDs,
+          name: eventName,
+          freeDate: eventTime,
+        },
+      ]);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      if (eventTime < CurTime) {
+        MySwal.fire({
+          title: "Invalid Date",
+          type: "error",
+          text: "Please Enter A Date From The Future",
+        });
+      } else {
+        fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/add`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((result) => {
+            setOpened(false);
+            if (result.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (result.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (result.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            setOpened(false);
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    }
   };
 
   return (
@@ -272,7 +275,6 @@ function FreeDay() {
               <MDButton
                 variant="gradient"
                 onClick={handleAddEvent}
-                disabled={!enabled}
                 color="info"
                 width="50%"
                 align="left"

@@ -4,7 +4,7 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import { Container, Form } from "react-bootstrap";
+import { Container, Form, Dropdown } from "react-bootstrap";
 // import Icon from "@mui/material/Icon";
 import DataTable from "examples/Tables/DataTable";
 import DatePicker from "react-datepicker";
@@ -24,6 +24,8 @@ import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import IHeaders from "imgHeader";
+import Icon from "@mui/material/Icon";
 
 function UserProfile() {
   const { nCountries: WCountries } = NCountry();
@@ -94,6 +96,7 @@ function UserProfile() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allIHeaders: iiHeaders } = IHeaders();
 
   useEffect(() => {
     setOpened(true);
@@ -408,6 +411,7 @@ function UserProfile() {
           navigate("/authentication/forbiddenPage");
         }
         if (isMounted) {
+          console.log(result);
           setItems(result);
         }
       })
@@ -423,6 +427,107 @@ function UserProfile() {
       isMounted = false;
     };
   }, []);
+
+  const handleGenReceipt = (value) => {
+    const headers = miHeaders;
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const paymentHisValue = value;
+
+    fetch(`${process.env.REACT_APP_TANTA_URL}/payroll/generatePaySlip/${paymentHisValue}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((resx) => {
+        if (resx.status === "SUCCESS") {
+          if (resx.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+          }
+          if (resx.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+          }
+          if (resx.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
+          console.log(resx);
+          fetch(
+            `${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/${orgIDs}/${resx.data.receiptNo}`,
+            {
+              headers,
+            }
+          )
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resxx) => {
+              if (resxx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+              }
+              if (resxx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+              }
+              if (resxx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+              }
+
+              const raw1 = JSON.stringify({
+                name: resxx.name,
+              });
+              console.log(raw1);
+              const requestOptions1 = {
+                method: "POST",
+                headers: iiHeaders,
+                body: raw1,
+                redirect: "follow",
+              };
+
+              fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/download`, requestOptions1)
+                .then((res) => res.blob())
+                .then((resx1) => {
+                  const objectURL = URL.createObjectURL(resx1);
+                  console.log(objectURL);
+
+                  // (C2) TO "FORCE DOWNLOAD"
+                  const anchor = document.createElement("a");
+                  anchor.href = objectURL;
+                  anchor.download = resxx.name;
+                  anchor.click();
+
+                  // (C3) CLEAN UP
+                  window.URL.revokeObjectURL(objectURL);
+
+                  MySwal.fire({
+                    title: "SUCCESS",
+                    type: "success",
+                    text: "Download Successful",
+                  });
+                })
+                .catch((error) => {
+                  MySwal.fire({
+                    title: error.status,
+                    type: "error",
+                    text: error.message,
+                  });
+                });
+            });
+        }
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
 
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
@@ -475,6 +580,33 @@ function UserProfile() {
       accessor: "payroll.terminatedTime",
       Cell: ({ cell: { value } }) => changeDate(value),
       align: "left",
+    },
+    {
+      Header: "actions",
+      accessor: "payroll.id",
+      // eslint-disable-next-line react/prop-types
+      Cell: ({ cell: { value } }) => (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#dadada",
+            borderRadius: "2px",
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleGenReceipt(value)}>
+                Generate Receipt
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
+      align: "center",
     },
   ];
 

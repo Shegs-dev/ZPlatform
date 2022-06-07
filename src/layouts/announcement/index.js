@@ -109,67 +109,6 @@ function Announcement() {
     };
   }, []);
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const personalIDs = data11.personalID;
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      title: titlex,
-      message: messagex,
-      groupID: groupidx,
-      announcementTypeID: annoucementTypeIDx,
-      createdBy: personalIDs,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/add`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
-  const handleOnChangeAnnounceType = (e) => {
-    setAnnoucementTypeID(e.target.value);
-  };
-
   const handleOnTitleKeys = () => {
     const letters = /^[a-zA-Z ('") ]+$/;
     if (titlex.match(letters)) {
@@ -182,6 +121,70 @@ function Announcement() {
       document.getElementById("title").innerHTML = "Title is required<br>";
     }
     setEnabled(checkedTitle === true);
+  };
+
+  const handleClick = (e) => {
+    handleOnTitleKeys();
+    if (enabled) {
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+
+      const orgIDs = data11.orgID;
+      const personalIDs = data11.personalID;
+      const raw = JSON.stringify({
+        orgID: orgIDs,
+        title: titlex,
+        message: messagex,
+        groupID: groupidx,
+        announcementTypeID: annoucementTypeIDx,
+        createdBy: personalIDs,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/add`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
+  };
+
+  const handleOnChangeAnnounceType = (e) => {
+    setAnnoucementTypeID(e.target.value);
   };
 
   return (
@@ -308,13 +311,7 @@ function Announcement() {
               </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
-                color="info"
-                width="50%"
-              >
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>

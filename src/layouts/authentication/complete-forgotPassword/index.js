@@ -56,57 +56,6 @@ function ComForgotPass() {
   const [checkedRTNPass, setCheckedRTNPass] = useState("");
   const [enabled, setEnabled] = useState("");
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    setOpened(true);
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const email = urlParams.get("email");
-    const emailValue = email;
-
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const raw = JSON.stringify({
-      username: emailValue,
-      npassword: newPasswordx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/completeforgotpassword`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        setOpened(false);
-        if (result.status === "SUCCESS") {
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            navigate("/authentication/sign-in", { replace: true });
-          });
-        } else {
-          MySwal.fire({
-            title: result.status,
-            type: "error",
-            text: result.message,
-          });
-        }
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
   const handleOnNPasswordKeys = () => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
     if (!retypeNewPassword.match(passwordValidate)) {
@@ -145,6 +94,61 @@ function ComForgotPass() {
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
+  };
+
+  const handleClick = (e) => {
+    handleOnNPasswordKeys();
+    handleOnRTNPasswordKeys();
+    if (enabled) {
+      e.preventDefault();
+      setOpened(true);
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const email = urlParams.get("email");
+      const emailValue = email;
+
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const raw = JSON.stringify({
+        username: emailValue,
+        npassword: newPasswordx,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/login/completeforgotpassword`, requestOptions)
+        .then((res) => res.json())
+        .then((result) => {
+          setOpened(false);
+          if (result.status === "SUCCESS") {
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              navigate("/authentication/sign-in", { replace: true });
+            });
+          } else {
+            MySwal.fire({
+              title: result.status,
+              type: "error",
+              text: result.message,
+            });
+          }
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   return (
@@ -230,13 +234,7 @@ function ComForgotPass() {
               </Container>
             </MDBox>
             <MDBox mt={6} mb={1}>
-              <MDButton
-                variant="gradient"
-                color="info"
-                disabled={!enabled}
-                onClick={handleClick}
-                fullWidth
-              >
+              <MDButton variant="gradient" color="info" onClick={handleClick} fullWidth>
                 Save
               </MDButton>
             </MDBox>

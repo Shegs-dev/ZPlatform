@@ -306,110 +306,172 @@ function PaymentHis() {
   //     }
   //   };
 
+  const handleOnNameKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!namex.match(letters)) {
+      setCheckedName(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+    }
+    if (namex.match(letters)) {
+      setCheckedName(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "";
+    }
+    if (namex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("name").innerHTML = "Name is required<br>";
+    }
+    setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
+  };
+
+  const handleOnEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      setCheckedEmail(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      setCheckedEmail(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+    setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
+  };
+
+  const handleOnCityKeys = () => {
+    const letters = /^[-+]?[0-9]+.[0-9]+$/;
+    if (!amountx.match(letters)) {
+      setCheckedCity(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "Amount - input a valid Amount<br>";
+    }
+    if (amountx.match(letters)) {
+      setCheckedCity(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "";
+    }
+    if (amountx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "Amount is required<br>";
+    }
+    setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
+  };
+
   const honClose = (response) => {
-    setReferenceSKey(`${Math.floor(Math.random() * 1000000000 + 1)}`);
+    handleOnNameKeys();
+    handleOnEmailKeys();
+    handleOnCityKeys();
+    if (enabled) {
+      setReferenceSKey(`${Math.floor(Math.random() * 1000000000 + 1)}`);
 
-    if (response.paymentStatus === "PAID" && response.status === "SUCCESS") {
-      setOpened(true);
+      if (response.paymentStatus === "PAID" && response.status === "SUCCESS") {
+        setOpened(true);
 
-      let allPayandBonus = 0;
-      let mBonusAmount = 0;
-      // eslint-disable-next-line radix
-      const amountCOn = parseInt(amountx);
-      if (bonusCheck.length === 0) {
-        mBonusAmount = 0;
-        allPayandBonus = amountCOn;
-      } else {
-        // eslint-disable-next-line array-callback-return
-        bonusCheck.map((checkBonus) => {
-          if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else {
-            mBonusAmount = 0;
-            allPayandBonus = amountCOn;
-          }
-          // check = false;
-        });
-      }
-
-      const data11 = JSON.parse(localStorage.getItem("user1"));
-      const orgIDs = data11.orgID;
-      const raw = JSON.stringify({
-        orgID: orgIDs,
-        paidAmount: amountCOn,
-        bonusAmount: mBonusAmount,
-        totalAmount: allPayandBonus,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-          }
-          setOpened(false);
-
-          const raw1 = JSON.stringify({
-            orgID: orgIDs,
-            bonusSettingID: bonusSetID,
+        let allPayandBonus = 0;
+        let mBonusAmount = 0;
+        // eslint-disable-next-line radix
+        const amountCOn = parseInt(amountx);
+        if (bonusCheck.length === 0) {
+          mBonusAmount = 0;
+          allPayandBonus = amountCOn;
+        } else {
+          // eslint-disable-next-line array-callback-return
+          bonusCheck.map((checkBonus) => {
+            if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
+              mBonusAmount = checkBonus.bonusAmount;
+              setBonusSetID(checkBonus.id);
+              allPayandBonus = checkBonus.bonusAmount + amountCOn;
+            } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
+              mBonusAmount = checkBonus.bonusAmount;
+              setBonusSetID(checkBonus.id);
+              allPayandBonus = checkBonus.bonusAmount + amountCOn;
+            } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
+              mBonusAmount = checkBonus.bonusAmount;
+              setBonusSetID(checkBonus.id);
+              allPayandBonus = checkBonus.bonusAmount + amountCOn;
+            } else {
+              mBonusAmount = 0;
+              allPayandBonus = amountCOn;
+            }
+            // check = false;
           });
-          const requestOptions1 = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw1,
-            redirect: "follow",
-          };
-          if (mBonusAmount !== 0) {
-            fetch(
-              `${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`,
-              requestOptions1
-            ).then(async (res) => {
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex", aToken);
-              return res.json();
+        }
+
+        const data11 = JSON.parse(localStorage.getItem("user1"));
+        const orgIDs = data11.orgID;
+        const raw = JSON.stringify({
+          orgID: orgIDs,
+          paidAmount: amountCOn,
+          bonusAmount: mBonusAmount,
+          totalAmount: allPayandBonus,
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((result) => {
+            if (result.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (result.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (result.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            setOpened(false);
+
+            const raw1 = JSON.stringify({
+              orgID: orgIDs,
+              bonusSettingID: bonusSetID,
             });
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            window.location.reload();
+            const requestOptions1 = {
+              method: "POST",
+              headers: myHeaders,
+              body: raw1,
+              redirect: "follow",
+            };
+            if (mBonusAmount !== 0) {
+              fetch(
+                `${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`,
+                requestOptions1
+              ).then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              });
+            }
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            setOpened(false);
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
           });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
-        });
+      }
     }
   };
 
@@ -647,63 +709,6 @@ function PaymentHis() {
     },
   ];
 
-  const handleOnNameKeys = () => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
-      setCheckedName(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
-    }
-    if (namex.match(letters)) {
-      setCheckedName(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "";
-    }
-    if (namex.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name is required<br>";
-    }
-    setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
-  };
-
-  const handleOnEmailKeys = () => {
-    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
-    if (!emailx.match(letters)) {
-      setCheckedEmail(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
-    }
-    if (emailx.match(letters)) {
-      setCheckedEmail(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("email").innerHTML = "";
-    }
-    if (emailx.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("email").innerHTML = "Email is required<br>";
-    }
-    setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
-  };
-
-  const handleOnCityKeys = () => {
-    const letters = /^[-+]?[0-9]+.[0-9]+$/;
-    if (!amountx.match(letters)) {
-      setCheckedCity(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "Amount - input a valid Amount<br>";
-    }
-    if (amountx.match(letters)) {
-      setCheckedCity(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "";
-    }
-    if (amountx.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "Amount is required<br>";
-    }
-    setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
-  };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -888,7 +893,6 @@ function PaymentHis() {
                           <MDButton
                             variant="gradient"
                             onClick={() => initializePayment()}
-                            disabled={!enabled}
                             color="info"
                             width="50%"
                           >
