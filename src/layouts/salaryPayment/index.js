@@ -749,31 +749,25 @@ function SalaryPayment() {
             </MDBox>
             <MDBox component="form" role="form">
               <MDBox mb={2}>
-                <Container>
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <MDInput
-                        type="text"
-                        label="Title *"
-                        value={namex || ""}
-                        className="form-control"
-                        onChange={(e) => setName(e.target.value)}
-                        variant="standard"
-                        fullWidth
-                      />
-                    </div>
-                    <div className="col-sm-6">
-                      <MDInput
-                        type="text"
-                        value={descripx || ""}
-                        onChange={(e) => setDescrip(e.target.value)}
-                        label="Narration"
-                        variant="standard"
-                        fullWidth
-                      />
-                    </div>
-                  </div>
-                </Container>
+                <MDInput
+                  type="text"
+                  label="Title *"
+                  value={namex || ""}
+                  className="form-control"
+                  onChange={(e) => setName(e.target.value)}
+                  variant="standard"
+                  fullWidth
+                />
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput
+                  type="text"
+                  value={descripx || ""}
+                  onChange={(e) => setDescrip(e.target.value)}
+                  label="Narration"
+                  variant="standard"
+                  fullWidth
+                />
               </MDBox>
               <MDBox mb={2}>
                 <Container>

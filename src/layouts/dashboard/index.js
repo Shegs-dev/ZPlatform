@@ -19,20 +19,24 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-// import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-// import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-// import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+
+import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { Link } from 'react-router-dom';
 
+import "./index.css";
+
 // Data
-// import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-// import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
-// import Projects from "layouts/dashboard/components/Projects";
-// import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import Projects from "layouts/dashboard/components/Projects";
+
 import Birthdays from "layouts/dashboard/Birthdays";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -52,7 +56,9 @@ function Dashboard() {
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
 
-  // const { sales, tasks } = reportsLineChartData;
+  const { sales, tasks } = reportsLineChartData;
+
+  const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
 
   useEffect(() => {
     const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
@@ -231,142 +237,289 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      {showAnn ? (
-        <Card>
-          <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left" mt={1}>
-            &nbsp; Announcements
-          </MDTypography>
-          <Container>
-            <div className="row">
-              {card.map((api) => (
-                <div key={api.announcement.id} className="col-sm-6">
-                  <Accordion style={{ backgroundColor: api.announcementType.colorCode }}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
+      <MDBox py={3}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox>
+              {showAnn ? (
+                <Grid container spacing={0}>
+                  <Card sx={{ maxHeight: 350 }}>
+                    <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left">
+                      &nbsp; Announcements
+                    </MDTypography>
+                    <div
+                      className="scrollbar scrollbar-primary mt-2 mx-auto"
+                      style={scrollContainerStyle}
                     >
-                      <img src={api.announcementType.icon} alt="Icon" width="62" height="62" />
-                      &nbsp; &nbsp;
-                      <MDTypography
-                        variant="h4"
-                        fontWeight="medium"
-                        color="white"
-                        textAlign="left"
-                        mt={1}
-                      >
-                        {api.announcement.title}
-                      </MDTypography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <div style={{ color: "#f5f5f5" }}>{api.announcement.message}</div>
-                    </AccordionDetails>
-                  </Accordion>
-                  <br />
-                </div>
-              ))}
-            </div>
-          </Container>
-        </Card>
-      ) : (
-        <MDBox />
-      )}
-      &nbsp;{" "}
-      {showApp ? (
-        <Card style={{ backgroundColor: "#318CE7" }}>
-          <MDTypography variant="h4" fontWeight="bold" color="white" textAlign="left" mt={1}>
-            &nbsp; Appraisal
-          </MDTypography>
-          &nbsp;
-          <Container>
-            <div className="row">
-              {allApp.map((item) => (
-                <div key={item.id} className="col-sm-4">
-                  <Card sx={{ maxWidth: 345 }}>
-                    <CardContent>
-                      <MDTypography
-                        variant="h5"
-                        fontWeight="medium"
-                        fontSize="120%"
-                        color="info"
-                        textAlign="left"
-                        mt={1}
-                      >
-                        {item.name}
-                      </MDTypography>
-                      <MDTypography
-                        variant="h6"
-                        color="text"
-                        fontSize="75%"
-                        textAlign="left"
-                        mt={1}
-                      >
-                        You have been selected for this Appraisal
-                      </MDTypography>
-                      <MDTypography
-                        variant="h6"
-                        color="text"
-                        fontSize="75%"
-                        textAlign="left"
-                        mt={1}
-                      >
-                        Appraisee - {item.appraiseeName}
-                      </MDTypography>
-                      <MDTypography
-                        variant="h6"
-                        color="text"
-                        fontSize="75%"
-                        textAlign="left"
-                        mt={0}
-                      >
-                        Created By - {item.createdByName}
-                      </MDTypography>
-                    </CardContent>
-                    <CardActions>
-                      <div align="right">
-                        <MDButton
-                          variant="gradient"
-                          color="info"
-                          onClick={() => handleAppraise(item.id)}
-                          width="50%"
-                        >
-                          Appraise
-                        </MDButton>
-                      </div>
-                    </CardActions>
+                      <Container>
+                        <div className="row">
+                          {card.map((api) => (
+                            <Grid item xs={12} md={12} lg={12} key={api.announcement.id}>
+                              <div>
+                                <Accordion
+                                  style={{ backgroundColor: api.announcementType.colorCode }}
+                                >
+                                  <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                  >
+                                    <img
+                                      src={api.announcementType.icon}
+                                      alt="Icon"
+                                      width="62"
+                                      height="62"
+                                    />
+                                    &nbsp; &nbsp;
+                                    <MDTypography
+                                      variant="h4"
+                                      fontWeight="medium"
+                                      color="white"
+                                      textAlign="left"
+                                      mt={1}
+                                    >
+                                      {api.announcement.title}
+                                    </MDTypography>
+                                  </AccordionSummary>
+                                  <AccordionDetails>
+                                    <div style={{ color: "#f5f5f5" }}>
+                                      {api.announcement.message}
+                                    </div>
+                                  </AccordionDetails>
+                                </Accordion>
+                                <br />
+                              </div>
+                            </Grid>
+                          ))}
+                        </div>
+                      </Container>
+                    </div>
                   </Card>
-                  &nbsp;
+                </Grid>
+              ) : (
+                <MDBox />
+              )}
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mb={1.5}>
+              <ComplexStatisticsCard
+                color="success"
+                icon="store"
+                title="Revenue"
+                count="34k"
+                percentage={{
+                  color: "success",
+                  amount: "+1%",
+                  label: "than yesterday",
+                }}
+              />
+            </MDBox>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <MDBox mb={1.5}>
+              <ComplexStatisticsCard
+                color="success"
+                icon="store"
+                title="Revenue"
+                count="34k"
+                percentage={{
+                  color: "success",
+                  amount: "+1%",
+                  label: "than yesterday",
+                }}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
+        <MDBox mt={4.5}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={6}>
+              <MDBox mb={3}>
+                <ReportsBarChart
+                  color="info"
+                  title="website views"
+                  description="Last Campaign Performance"
+                  date="campaign sent 2 days ago"
+                  chart={reportsBarChartData}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={3}>
+                <ReportsLineChart
+                  color="success"
+                  title="daily sales"
+                  description={
+                    <>
+                      (<strong>+15%</strong>) increase in today sales.
+                    </>
+                  }
+                  date="updated 4 min ago"
+                  chart={sales}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={3}>
+                <ReportsLineChart
+                  color="dark"
+                  title="completed tasks"
+                  description="Last Campaign Performance"
+                  date="just updated"
+                  chart={tasks}
+                />
+              </MDBox>
+            </Grid>
+          </Grid>
+        </MDBox>
+        <MDBox>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Projects />
+            </Grid>
+            <Grid item xs={6} md={3} lg={3}>
+              <Card sx={{ maxHeight: 350 }}>
+                <div
+                  className="scrollbar scrollbar-primary mt-2 mx-auto"
+                  style={scrollContainerStyle}
+                >
+                  <MDBox mb={1.5}>
+                    <Container>
+                      <div className="row">
+                        {polls.map((api) => (
+                          <Grid container spacing={0}>
+                            <Grid item xs={12} md={12} lg={12} key={api.id}>
+                              <Link to={`/polls/vote-Polls?id=${api.id}`}>
+                                <Card style={{ backgroundColor: "#318CE7" }}>
+                                  <CardContent>
+                                    <MDTypography
+                                      variant="h4"
+                                      fontWeight="medium"
+                                      color="white"
+                                      textAlign="left"
+                                      mt={1}
+                                    >
+                                      Poll
+                                    </MDTypography>
+                                    <div style={{ color: "#f5f5f5" }}>{api.question}</div>
+                                  </CardContent>
+                                </Card>{" "}
+                                &nbsp; &nbsp;
+                              </Link>
+                            </Grid>
+                          </Grid>
+                        ))}
+                        {/* <MDBox mt={4} mb={1}>
+              <MDButton
+                variant="gradient"
+                onClick={(e) => handleUpdate(e)}
+                // disabled={!enabled}
+                color="info"
+                width="50%"
+                align="right"
+              >
+                Vote Poll
+              </MDButton>
+            </MDBox> */}
+                      </div>
+                    </Container>
+                  </MDBox>
                 </div>
-              ))}
-            </div>
-          </Container>
-          &nbsp;
-        </Card>
-      ) : (
-        <MDBox />
-      )}
-      &nbsp;
-      <Container>
-        <div className="row">
-          {polls.map((api) => (
-            <Link to={`/polls/vote-Polls?id=${api.id}`} key={api.id}>
-              <Card style={{ backgroundColor: "#318CE7" }}>
-                <CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} md={3} lg={3}>
+              {showApp ? (
+                <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
                   <MDTypography
                     variant="h4"
-                    fontWeight="medium"
+                    fontWeight="bold"
                     color="white"
                     textAlign="left"
                     mt={1}
                   >
-                    Poll
+                    &nbsp; Appraisal
                   </MDTypography>
-                  <div style={{ color: "#f5f5f5" }}>{api.question}</div>
-                </CardContent>
-              </Card>{" "}
-              &nbsp; &nbsp;
-            </Link>
-          ))}
+                  &nbsp;
+                  <div
+                    className="scrollbar scrollbar-primary mt-2 mx-auto"
+                    style={scrollContainerStyle}
+                  >
+                    <Container>
+                      <div className="row">
+                        {allApp.map((item) => (
+                          <Grid item xs={12} md={12} lg={12} key={item.id}>
+                            <Card sx={{ maxWidth: 345 }}>
+                              <CardContent>
+                                <MDTypography
+                                  variant="h5"
+                                  fontWeight="medium"
+                                  fontSize="120%"
+                                  color="info"
+                                  textAlign="left"
+                                  mt={1}
+                                >
+                                  {item.name}
+                                </MDTypography>
+                                <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={1}
+                                >
+                                  You have been selected for this Appraisal
+                                </MDTypography>
+                                <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={1}
+                                >
+                                  Appraisee - {item.appraiseeName}
+                                </MDTypography>
+                                <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={0}
+                                >
+                                  Created By - {item.createdByName}
+                                </MDTypography>
+                              </CardContent>
+                              <CardActions>
+                                <div align="right">
+                                  <MDButton
+                                    variant="gradient"
+                                    color="info"
+                                    onClick={() => handleAppraise(item.id)}
+                                    width="50%"
+                                  >
+                                    Appraise
+                                  </MDButton>
+                                </div>
+                              </CardActions>
+                            </Card>
+                            &nbsp;
+                          </Grid>
+                        ))}
+                      </div>
+                    </Container>
+                  </div>
+                  &nbsp;
+                </Card>
+              ) : (
+                <MDBox />
+              )}
+            </Grid>
+          </Grid>
+        </MDBox>
+      </MDBox>
+      &nbsp;
+      <Container>
+        <div className="row">
           {/* <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"

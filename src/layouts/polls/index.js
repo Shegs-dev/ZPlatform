@@ -101,55 +101,58 @@ function Polls() {
 
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
-    setOpened(true);
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    handleOnQuestionKeys();
+    if (enabled) {
+      setOpened(true);
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
 
-    const orgIDs = data11.orgID;
-    const raw = JSON.stringify({ orgID: orgIDs, groupID: groupidx, question: questionx });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
+      const orgIDs = data11.orgID;
+      const raw = JSON.stringify({ orgID: orgIDs, groupID: groupidx, question: questionx });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-    fetch(`${process.env.REACT_APP_KUBU_URL}/poll/add`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
+      fetch(`${process.env.REACT_APP_KUBU_URL}/poll/add`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
         });
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
+    }
   };
 
   return (
@@ -242,7 +245,6 @@ function Polls() {
               <MDButton
                 variant="gradient"
                 onClick={handleClick}
-                disabled={!enabled}
                 color="info"
                 width="50%"
                 align="left"
