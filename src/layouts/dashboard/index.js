@@ -9,6 +9,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import MDTypography from "components/MDTypography";
+import Icon from "@mui/material/Icon";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -47,6 +48,9 @@ import GHeaders from "getHeader";
 function Dashboard() {
   const MySwal = withReactContent(Swal);
   const [card, setItems] = useState([]);
+
+  const [noOfUsers, setNoOfUsers] = useState(0);
+  const [remPayDay, setRemPayDay] = useState(0);
   // const [groupGet, setGroupGet] = useState([]);
   const [polls, setPolls] = useState([]);
   const [allApp, setAllApp] = useState([]);
@@ -230,6 +234,122 @@ function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const personalIds = data11.personalID;
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/getForEmpDashboard/${orgIDs}/${personalIds}`,
+      { headers }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          if (result.length > 0) {
+            setShowAnn(true);
+          }
+          console.log(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getNoOfUsers/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setNoOfUsers(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationTime/getNext/${orgIDs}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          if (result.length > 0) {
+            setShowAnn(true);
+          }
+          const curDate = new Date();
+          const payDate = new Date(result.payTime);
+
+          const curDay = curDate.getDate();
+          const payDay = payDate.getDate();
+          const remDays = payDay - curDay;
+          setRemPayDay(remDays);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleAppraise = (value) => {
     navigate(`/Appraisal-Question-and-Answers?id=${value}`);
   };
@@ -244,9 +364,26 @@ function Dashboard() {
               {showAnn ? (
                 <Grid container spacing={0}>
                   <Card sx={{ maxHeight: 350 }}>
-                    <MDTypography variant="h5" fontWeight="bold" color="dark" textAlign="left">
-                      &nbsp; Announcements
-                    </MDTypography>
+                    <MDBox
+                      variant="gradient"
+                      bgColor="info"
+                      borderRadius="lg"
+                      coloredShadow="success"
+                      mt={2}
+                      mx={0}
+                      p={1}
+                      textAlign="left"
+                    >
+                      <MDTypography
+                        variant="h4"
+                        fontWeight="medium"
+                        color="white"
+                        textAlign="center"
+                        mt={1}
+                      >
+                        Announcements
+                      </MDTypography>
+                    </MDBox>
                     <div
                       className="scrollbar scrollbar-primary mt-2 mx-auto"
                       style={scrollContainerStyle}
@@ -302,18 +439,91 @@ function Dashboard() {
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
+            <MDBox mt={0} mb={0}>
+              <Card>
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mt={2}
+                  mx={0}
+                  p={1}
+                  textAlign="left"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    Number Of Staffs
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="white"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={2}
+                  p={2}
+                  mb={1}
+                  textAlign="left"
+                >
+                  <MDTypography variant="h1" fontWeight="medium" color="info" textAlign="center">
+                    <Icon fontSize="medium" color="inherit">
+                      people
+                    </Icon>
+                    {noOfUsers}
+                  </MDTypography>
+                </MDBox>
+              </Card>
+            </MDBox>
+            <MDBox mt={2} mb={0}>
+              <MDBox mt={0} mb={0}>
+                <Card>
+                  <MDBox
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="success"
+                    mt={2}
+                    mx={0}
+                    p={1}
+                    textAlign="left"
+                  >
+                    <MDTypography
+                      variant="h4"
+                      fontWeight="medium"
+                      color="white"
+                      textAlign="center"
+                      mt={1}
+                    >
+                      Daily Countdown To Pay Day
+                    </MDTypography>
+                  </MDBox>
+                  <MDBox
+                    variant="gradient"
+                    bgColor="white"
+                    borderRadius="lg"
+                    coloredShadow="success"
+                    mx={3}
+                    mt={2}
+                    p={2}
+                    mb={1}
+                    textAlign="left"
+                  >
+                    <MDTypography variant="h1" fontWeight="medium" color="info" textAlign="center">
+                      <Icon fontSize="medium" color="inherit">
+                        schedule
+                      </Icon>
+                      {remPayDay}
+                    </MDTypography>
+                  </MDBox>
+                </Card>
+              </MDBox>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
@@ -388,8 +598,8 @@ function Dashboard() {
                     <Container>
                       <div className="row">
                         {polls.map((api) => (
-                          <Grid container spacing={0}>
-                            <Grid item xs={12} md={12} lg={12} key={api.id}>
+                          <Grid container spacing={0} key={api.id}>
+                            <Grid item xs={12} md={12} lg={12}>
                               <Link to={`/polls/vote-Polls?id=${api.id}`}>
                                 <Card style={{ backgroundColor: "#318CE7" }}>
                                   <CardContent>
@@ -431,15 +641,26 @@ function Dashboard() {
             <Grid item xs={6} md={3} lg={3}>
               {showApp ? (
                 <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
-                  <MDTypography
-                    variant="h4"
-                    fontWeight="bold"
-                    color="white"
+                  <MDBox
+                    variant="gradient"
+                    bgColor="white"
+                    borderRadius="lg"
+                    coloredShadow="success"
+                    mt={2}
+                    mx={0}
+                    p={1}
                     textAlign="left"
-                    mt={1}
                   >
-                    &nbsp; Appraisal
-                  </MDTypography>
+                    <MDTypography
+                      variant="h4"
+                      fontWeight="medium"
+                      color="info"
+                      textAlign="center"
+                      mt={1}
+                    >
+                      Appraisals
+                    </MDTypography>
+                  </MDBox>
                   &nbsp;
                   <div
                     className="scrollbar scrollbar-primary mt-2 mx-auto"
