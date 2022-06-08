@@ -37,7 +37,7 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 
-import Birthdays from "layouts/dashboard/Birthdays";
+// import Birthdays from "layouts/dashboard/Birthdays";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate, Link } from "react-router-dom";
@@ -47,11 +47,15 @@ import GHeaders from "getHeader";
 function Dashboard() {
   const MySwal = withReactContent(Swal);
   const [card, setItems] = useState([]);
+  const [itemsx, setItemsx] = useState([]);
   // const [groupGet, setGroupGet] = useState([]);
   const [polls, setPolls] = useState([]);
   const [allApp, setAllApp] = useState([]);
   const [showApp, setShowApp] = useState(false);
   const [showAnn, setShowAnn] = useState(false);
+
+  const [resulty, setResult] = useState([]);
+  // console.log(resulty);
 
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
@@ -62,10 +66,12 @@ function Dashboard() {
 
   useEffect(() => {
     const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
+    console.log(birthStatus);
 
     const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
 
     const userFullName = `${userOData.personal.fname} ${userOData.personal.lname}`;
+    console.log(userFullName);
 
     let isMounted = true;
     if (isMounted) {
@@ -164,7 +170,7 @@ function Dashboard() {
                 return res.json();
               })
               .then((resultx) => {
-                if (result.message === "Expired Access") {
+                if (resultx.message === "Expired Access") {
                   navigate("/authentication/sign-in");
                   window.location.reload();
                 }
@@ -181,6 +187,49 @@ function Dashboard() {
                 }
               });
           }
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const personalIds = data11.id;
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_SHASHA_URL}/concern/getForEmpDashboard/${orgIDs}/${personalIds}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          // if (result.length > 0) {
+          //   setShowApp(true);
+          // }
+          setResult(result);
+          console.log(setResult);
         }
       });
     return () => {
@@ -223,6 +272,44 @@ function Dashboard() {
             setShowApp(true);
           }
           setAllApp(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    // const CurTime = new Date().getTime();
+    const Month = new Date().getMonth() + 1;
+    const Dates = new Date().getDate();
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/user/getBirthdaysToday/${orgIDs}/${Dates}/${Month}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setItemsx(result);
         }
       });
     return () => {
@@ -316,7 +403,61 @@ function Dashboard() {
               />
             </MDBox>
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={6} md={3} lg={3}>
+            <Card sx={{ maxHeight: 350 }}>
+              <div
+                className="scrollbar scrollbar-primary mt-2 mx-auto"
+                style={scrollContainerStyle}
+              >
+                <MDBox mb={1.5}>
+                  <Container>
+                    <div className="row">
+                      {resulty.map((api) => (
+                        <Grid container spacing={0}>
+                          <Grid item xs={12} md={12} lg={12} key={api.id}>
+                            <MDBox mb={2}>
+                              <Card style={{ backgroundColor: "#318CE7" }}>
+                                <CardContent>
+                                  <MDTypography
+                                    variant="h4"
+                                    fontWeight="medium"
+                                    color="white"
+                                    textAlign="left"
+                                    mt={1}
+                                  >
+                                    Matters Arising
+                                  </MDTypography>
+                                  <div style={{ color: "#f5f5f5" }}>{api.title}</div>
+                                </CardContent>
+                              </Card>{" "}
+                            </MDBox>
+                            {/* <Link to={`/polls/vote-Polls?id=${api.id}`}>
+                              <Card style={{ backgroundColor: "#318CE7" }}>
+                                <CardContent>
+                                  <MDTypography
+                                    variant="h4"
+                                    fontWeight="medium"
+                                    color="white"
+                                    textAlign="left"
+                                    mt={1}
+                                  >
+                                    Poll
+                                  </MDTypography>
+                                  <div style={{ color: "#f5f5f5" }}>{api.question}</div>
+                                </CardContent>
+                              </Card>{" "}
+                              &nbsp; &nbsp;
+                            </Link> */}
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </div>
+                  </Container>
+                </MDBox>
+              </div>
+            </Card>
+          </Grid>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
@@ -330,7 +471,7 @@ function Dashboard() {
                 }}
               />
             </MDBox>
-          </Grid>
+          </Grid> */}
         </Grid>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
@@ -645,8 +786,103 @@ function Dashboard() {
             <Grid item xs={12} md={6} lg={4}>
               <OrdersOverview />
             </Grid> */}
-            <Grid item xs={12} md={12} lg={12}>
+            {/* <Grid item xs={12} md={6} lg={6}>
               <Birthdays />
+            </Grid> */}
+            <Grid item xs={6} md={3} lg={3}>
+              {showApp ? (
+                <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="bold"
+                    color="white"
+                    textAlign="left"
+                    mt={1}
+                  >
+                    &nbsp; Birthdays
+                  </MDTypography>
+                  &nbsp;
+                  <div
+                    className="scrollbar scrollbar-primary mt-2 mx-auto"
+                    style={scrollContainerStyle}
+                  >
+                    <Container>
+                      <div className="row">
+                        {itemsx.map((item) => (
+                          <Grid item xs={12} md={12} lg={12} key={item.id}>
+                            <Card sx={{ maxWidth: 345 }}>
+                              <CardContent>
+                                <MDTypography
+                                  variant="h5"
+                                  fontWeight="medium"
+                                  fontSize="120%"
+                                  color="info"
+                                  textAlign="left"
+                                  mt={1}
+                                >
+                                  {item.personal.fname}
+                                </MDTypography>
+                                {/* <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={1}
+                                >
+                                  You have been selected for this Appraisal
+                                </MDTypography> */}
+                                <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={1}
+                                >
+                                  Phone Number - {item.personal.pno}
+                                </MDTypography>
+                                <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={0}
+                                >
+                                  Country - {item.personal.residentialCountry}
+                                </MDTypography>
+                                <MDTypography
+                                  variant="h6"
+                                  color="text"
+                                  fontSize="75%"
+                                  textAlign="left"
+                                  mt={0}
+                                >
+                                  Marital Status - {item.personal.maritalStatus}
+                                </MDTypography>
+                              </CardContent>
+                              {/* <CardActions>
+                                <div align="right">
+                                  <MDButton
+                                    variant="gradient"
+                                    color="info"
+                                    onClick={() => handleAppraise(item.id)}
+                                    width="50%"
+                                  >
+                                    Appraise
+                                  </MDButton>
+                                </div>
+                              </CardActions> */}
+                            </Card>
+                            &nbsp;
+                          </Grid>
+                        ))}
+                      </div>
+                    </Container>
+                  </div>
+                  &nbsp;
+                </Card>
+              ) : (
+                <MDBox />
+              )}
             </Grid>
           </Grid>
         </MDBox>
