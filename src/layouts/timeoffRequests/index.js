@@ -254,6 +254,7 @@ function TimeOff() {
                       if (resulty.message === "Unauthorized Access") {
                         navigate("/authentication/forbiddenPage");
                       }
+                      console.log(resulty);
                     });
                   window.location.reload();
                 })

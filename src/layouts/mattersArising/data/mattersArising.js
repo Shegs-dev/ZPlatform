@@ -11,20 +11,22 @@ export default function MattersArisingTable() {
   const MySwal = withReactContent(Swal);
 
   const [items, setItems] = useState([]);
+  const [userNamex, setUserNamex] = useState("");
 
   const navigate = useNavigate();
 
   const { allGHeaders: miHeaders } = GHeaders();
   // const { allPHeaders: myHeaders } = PHeaders();
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
-
-  const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
-  const userNamex = `${userOData.personal.fname} ${userOData.personal.lname}`;
   // const value = data11.id;
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+    const userNamexx = `${userOData.personal.fname} ${userOData.personal.lname}`;
+    setUserNamex(userNamexx);
     // const data11 = JSON.parse(localStorage.getItem("user1"));
     // const userOtherDets = JSON.parse(localStorage.getItem("userOtherDets"));
     let isMounted = true;
