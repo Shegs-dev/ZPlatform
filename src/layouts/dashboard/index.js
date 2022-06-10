@@ -60,7 +60,7 @@ function Dashboard() {
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
 
-  const { sales, tasks } = reportsLineChartData;
+  const { tasks } = reportsLineChartData;
 
   const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
 
@@ -557,17 +557,21 @@ function Dashboard() {
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
+                <Card>
+                  <MDBox mb={3}>
+                    <ComplexStatisticsCard
+                      color="success"
+                      icon="store"
+                      title="Number of Working Day(s)"
+                      count="12/31"
+                      percentage={{
+                        color: "success",
+                        amount: "+1%",
+                        label: "than yesterday",
+                      }}
+                    />
+                  </MDBox>
+                </Card>
               </MDBox>
             </Grid>
             <Grid item xs={12} md={6} lg={3}>
