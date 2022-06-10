@@ -209,7 +209,7 @@ export default function TimeOffRequestData() {
     // };
 
     MySwal.fire({
-      title: "Update Time-Off Request",
+      title: "Approve Time-Off Request",
       html: `<table><tr><td>
       <tr><td><label for="days">Days Requested</label></td>
       <td><input type="text" class="swal2-input" id="days" value="${daysx}" placeholder="Days Requested" disabled></td></tr><br>
