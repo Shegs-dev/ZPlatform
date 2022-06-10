@@ -272,7 +272,6 @@ export default function SalaryTimeData() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setItems(result);
         }
       });

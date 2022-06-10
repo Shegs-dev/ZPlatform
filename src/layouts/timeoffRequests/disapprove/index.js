@@ -36,7 +36,7 @@ function Disapprove() {
 
   // const [disapprove, setDisapprove] = useState("");
 
-  const handleApprove = () => {
+  const handleDisApprove = () => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     // const ids = data11.id;
     const personalIds = data11.id;
@@ -222,7 +222,7 @@ function Disapprove() {
               <MDBox mt={4} mb={1}>
                 <MDButton
                   variant="gradient"
-                  onClick={handleApprove}
+                  onClick={handleDisApprove}
                   color="info"
                   width="50%"
                   align="right"
