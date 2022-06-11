@@ -26,6 +26,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { Link } from 'react-router-dom';
+import PHeaders from "postHeader";
 
 import "./index.css";
 
@@ -54,8 +55,10 @@ function Dashboard() {
   const [resulty, setResult] = useState([]);
   // console.log(resulty);
   const [userNamex, setUserNamex] = useState("");
+  const [amountx, setAmount] = useState("");
 
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
   const navigate = useNavigate();
 
   const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
@@ -433,6 +436,67 @@ function Dashboard() {
     };
   }, []);
 
+  useEffect(() => {
+    // const headers = myHeaders;
+    // function getFirstDayOfMonth(year, month) {
+    //   return new Date(year, month, 1);
+    // }
+
+    // 👇️ First day of CURRENT MONTH
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const curDay = new Date(date.getFullYear(), date.getMonth()).getTime();
+    // const curDate = new Date();
+
+    // const curDay = curDate.getDate();
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const personalIds = data11.personalID;
+
+    const raw = JSON.stringify({
+      userID: personalIds,
+      orgID: orgIDs,
+      startTime: firstDay,
+      endTime: curDay,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/audit/getFilter`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setAmount(result);
+          console.log(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleAppraise = (value) => {
     navigate(`/Appraisal-Question-and-Answers?id=${value}`);
   };
@@ -461,14 +525,9 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="people"
-                title="No Of Users"
-                count={noOfUsers}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
+                icon="payments"
+                title="Amount Spent By The Users"
+                count={amountx}
               />
             </MDBox>
           </Grid>
