@@ -12,13 +12,14 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
 export default function ReportsPollData() {
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
+  const [resultx, setResult] = useState("");
 
   useEffect(() => {
     const headers = miHeaders;
@@ -51,7 +52,7 @@ export default function ReportsPollData() {
           window.location.reload();
         }
         if (isMounted) {
-          //  setItems(result);
+          setResult(result);
           console.log(result);
         }
       });
@@ -61,7 +62,7 @@ export default function ReportsPollData() {
   }, []);
 
   return {
-    labels: ["M", "T", "W", "T", "F", "S", "S"],
-    datasets: { label: "Sales", data: [50, 20, 10, 22, 50, 10, 40] },
+    labels: [resultx[0].response],
+    datasets: { label: "Sales", data: [resultx[0].number] },
   };
 }

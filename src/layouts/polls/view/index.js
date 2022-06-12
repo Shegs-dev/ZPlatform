@@ -55,6 +55,7 @@ function PollsView() {
         }
         if (isMounted) {
           setItems(result);
+          console.log(result);
         }
       });
     return () => {
