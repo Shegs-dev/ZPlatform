@@ -31,7 +31,7 @@ import PHeaders from "postHeader";
 import "./index.css";
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+import ReportsPollData from "layouts/dashboard/data/reportsBarChartData";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -40,6 +40,7 @@ import GHeaders from "getHeader";
 // import MDButton from "components/MDButton";
 
 function Dashboard() {
+  console.log(ReportsPollData);
   const MySwal = withReactContent(Swal);
   const [card, setItems] = useState([]);
   const [itemsx, setItemsx] = useState([]);
@@ -56,6 +57,7 @@ function Dashboard() {
   // console.log(resulty);
   const [userNamex, setUserNamex] = useState("");
   const [amountx, setAmount] = useState("");
+  const [numOfWork, setNumOfWork] = useState("");
 
   const { allGHeaders: miHeaders } = GHeaders();
   const { allPHeaders: myHeaders } = PHeaders();
@@ -65,12 +67,12 @@ function Dashboard() {
 
   useEffect(() => {
     const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
-    console.log(birthStatus);
+    // console.log(setNumOfWork);
 
     const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
 
     const userFullName = `${userOData.personal.fname} ${userOData.personal.lname}`;
-    console.log(userFullName);
+    // console.log(userFullName);
 
     let isMounted = true;
     if (isMounted) {
@@ -232,7 +234,7 @@ function Dashboard() {
           //   setShowApp(true);
           // }
           setResult(result);
-          console.log(setResult);
+          // console.log(setResult);
         }
       });
     return () => {
@@ -314,7 +316,98 @@ function Dashboard() {
           if (result.length > 0) {
             setShowAnn(true);
           }
-          console.log(result);
+          // console.log(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    // function getFirstDayOfMonth(year, month) {
+    //   return new Date(year, month, 1);
+    // }
+
+    // 👇️ First day of CURRENT MONTH
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime();
+    // console.log(lastDay);
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_NSUTANA_URL}/freedays/getBetween/${orgIDs}/${firstDay}/${lastDay}`,
+      { headers }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          const totalFreeDays = result.length;
+          const totalDays = (lastDay - firstDay) / 86400000;
+          const finalTotalDays = totalDays - totalFreeDays + 1;
+          // console.log(totalDays);
+          // console.log(totalFreeDays);
+
+          const clastDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+
+          // console.log(lastDayx);
+          // console.log(firstDays);
+          // console.log(date.getFullYear());
+          // console.log(clastDay);
+
+          fetch(
+            `${process.env.REACT_APP_NSUTANA_URL}/freedays/getBetween/${orgIDs}/${firstDay}/${clastDay}`,
+            { headers }
+          )
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((cresult) => {
+              if (cresult.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (cresult.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (cresult.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+                window.location.reload();
+              }
+              const ctotalFreeDays = cresult.length;
+              const ctotalDays = (clastDay - firstDay) / 86400000;
+              const cfinalTotalDays = ctotalDays - ctotalFreeDays + 1;
+              const now = `${cfinalTotalDays}/${finalTotalDays}`;
+              setNumOfWork(now);
+              // console.log(ctotalDays);
+              // console.log(ctotalFreeDays);
+
+              // console.log(firstDay);
+              // console.log(lastDay);
+              // console.log(clastDay);
+            });
         }
       });
     return () => {
@@ -550,13 +643,13 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="store"
-                title="Revenue"
-                count="34k"
+                icon="calendar_month"
+                title="Number of Working Day(s)"
+                count={numOfWork}
                 percentage={{
                   color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
+                  // amount: "+1%",
+                  // label: "than yesterday",
                 }}
               />
             </MDBox>
@@ -571,7 +664,7 @@ function Dashboard() {
                   title="website views"
                   description="Last Campaign Performance"
                   date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
+                  chart={ReportsPollData}
                 />
               </MDBox>
             </Grid>
