@@ -157,7 +157,7 @@ function Dashboard() {
               const idcheck = `${grp.group.id},`;
               groupIDs += idcheck;
             });
-            fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForGroup/${groupIDs}`, {
+            fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForDashboard/${groupIDs}`, {
               headers,
             })
               .then(async (res) => {
