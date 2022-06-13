@@ -20,6 +20,7 @@ export default function ReportsPollData() {
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
   const [resultx, setResult] = useState("");
+  console.log(resultx);
 
   useEffect(() => {
     const headers = miHeaders;
@@ -62,7 +63,7 @@ export default function ReportsPollData() {
   }, []);
 
   return {
-    labels: [resultx[0].response],
-    datasets: { label: "Sales", data: [resultx[0].number] },
+    labels: ["M", "T", "W", "T", "F", "S", "S"],
+    datasets: { label: "Sales", data: [50, 20, 10, 22, 50, 10, 40] },
   };
 }

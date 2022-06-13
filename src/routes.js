@@ -116,6 +116,7 @@ import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
 import PollsView from "layouts/polls/view";
+import UpdateAppraisalGrading from "layouts/appraisal/appraisalGrading/update";
 
 const routes = [
   {
@@ -335,6 +336,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Appraisal-Grading",
     component: <AppraisalGrade />,
+  },
+  {
+    name: "Update appraisal grading",
+    key: "updateappraisalgrading",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/appraisal/update",
+    component: <UpdateAppraisalGrading />,
   },
   {
     type: "divider",
