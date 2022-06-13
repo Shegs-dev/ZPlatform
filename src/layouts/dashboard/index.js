@@ -207,7 +207,7 @@ function Dashboard() {
               const idcheck = `${grp.group.id},`;
               groupIDs += idcheck;
             });
-            fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForGroup/${groupIDs}`, {
+            fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForDashboard/${groupIDs}`, {
               headers,
             })
               .then(async (res) => {
@@ -1392,21 +1392,22 @@ function Dashboard() {
                           {polls.map((api) => (
                             <Grid container spacing={0} key={api.id}>
                               <Grid item xs={12} md={12} lg={12}>
-                                {/* <Link to={`/polls/vote-Polls?id=${api.id}`}> */}
-                                <Card style={{ backgroundColor: "#318CE7" }}>
-                                  <CardContent>
-                                    <MDTypography
-                                      variant="h4"
-                                      fontWeight="medium"
-                                      color="white"
-                                      textAlign="left"
-                                      mt={1}
-                                    >
-                                      Poll
-                                    </MDTypography>
-                                    <div style={{ color: "#f5f5f5" }}>{api.question}</div>
-                                  </CardContent>
-                                </Card>{" "}
+                                <Link to={`/polls/vote-Polls?id=${api.id}`}>
+                                  <Card style={{ backgroundColor: "#318CE7" }}>
+                                    <CardContent>
+                                      <MDTypography
+                                        variant="h4"
+                                        fontWeight="medium"
+                                        color="white"
+                                        textAlign="left"
+                                        mt={1}
+                                      >
+                                        Poll
+                                      </MDTypography>
+                                      <div style={{ color: "#f5f5f5" }}>{api.question}</div>
+                                    </CardContent>
+                                  </Card>{" "}
+                                </Link>
                                 &nbsp; &nbsp;
                                 {/* </Link> */}
                               </Grid>
