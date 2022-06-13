@@ -26,11 +26,13 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import { Link } from 'react-router-dom';
+import Icon from "@mui/material/Icon";
+import PHeaders from "postHeader";
 
 import "./index.css";
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
+import ReportsPollData from "layouts/dashboard/data/reportsBarChartData";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -39,6 +41,7 @@ import GHeaders from "getHeader";
 // import MDButton from "components/MDButton";
 
 function Dashboard() {
+  console.log(ReportsPollData);
   const MySwal = withReactContent(Swal);
   const [card, setItems] = useState([]);
   const [itemsx, setItemsx] = useState([]);
@@ -48,26 +51,34 @@ function Dashboard() {
   // const [groupGet, setGroupGet] = useState([]);
   const [polls, setPolls] = useState([]);
   const [allApp, setAllApp] = useState([]);
+  const [empTOR, setEmpTOR] = useState([]);
+
   const [showApp, setShowApp] = useState(false);
+  const [showBirth, setShowBirth] = useState(false);
   const [showAnn, setShowAnn] = useState(false);
+  const [showTOR, setShowTOR] = useState(false);
+  const [showPolls, setShowPolls] = useState(false);
 
   const [resulty, setResult] = useState([]);
   // console.log(resulty);
   const [userNamex, setUserNamex] = useState("");
+  const [amountx, setAmount] = useState("");
+  const [numOfWork, setNumOfWork] = useState("");
 
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
   const navigate = useNavigate();
 
   const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
 
   useEffect(() => {
     const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
-    console.log(birthStatus);
+    // console.log(setNumOfWork);
 
     const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
 
     const userFullName = `${userOData.personal.fname} ${userOData.personal.lname}`;
-    console.log(userFullName);
+    // console.log(userFullName);
 
     let isMounted = true;
     if (isMounted) {
@@ -179,6 +190,9 @@ function Dashboard() {
                   window.location.reload();
                 }
                 if (isMounted) {
+                  if (result.length > 0) {
+                    setShowPolls(true);
+                  }
                   setPolls(resultx);
                 }
               });
@@ -229,7 +243,7 @@ function Dashboard() {
           //   setShowApp(true);
           // }
           setResult(result);
-          console.log(setResult);
+          // console.log(setResult);
         }
       });
     return () => {
@@ -309,9 +323,102 @@ function Dashboard() {
         }
         if (isMounted) {
           if (result.length > 0) {
-            setShowAnn(true);
+            setShowTOR(true);
           }
+          setEmpTOR(result);
           console.log(result);
+          // console.log(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    // function getFirstDayOfMonth(year, month) {
+    //   return new Date(year, month, 1);
+    // }
+
+    // 👇️ First day of CURRENT MONTH
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getTime();
+    // console.log(lastDay);
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_NSUTANA_URL}/freedays/getBetween/${orgIDs}/${firstDay}/${lastDay}`,
+      { headers }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          const totalFreeDays = result.length;
+          const totalDays = (lastDay - firstDay) / 86400000;
+          const finalTotalDays = totalDays - totalFreeDays + 1;
+          // console.log(totalDays);
+          // console.log(totalFreeDays);
+
+          const clastDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+
+          // console.log(lastDayx);
+          // console.log(firstDays);
+          // console.log(date.getFullYear());
+          // console.log(clastDay);
+
+          fetch(
+            `${process.env.REACT_APP_NSUTANA_URL}/freedays/getBetween/${orgIDs}/${firstDay}/${clastDay}`,
+            { headers }
+          )
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((cresult) => {
+              if (cresult.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (cresult.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (cresult.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+                window.location.reload();
+              }
+              const ctotalFreeDays = cresult.length;
+              const ctotalDays = (clastDay - firstDay) / 86400000;
+              const cfinalTotalDays = ctotalDays - ctotalFreeDays + 1;
+              const now = `${cfinalTotalDays}/${finalTotalDays}`;
+              setNumOfWork(now);
+              // console.log(ctotalDays);
+              // console.log(ctotalFreeDays);
+
+              // console.log(firstDay);
+              // console.log(lastDay);
+              // console.log(clastDay);
+            });
         }
       });
     return () => {
@@ -425,7 +532,71 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
+          if (result.length > 0) {
+            setShowBirth(true);
+          }
           setItemsx(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    // const headers = myHeaders;
+    // function getFirstDayOfMonth(year, month) {
+    //   return new Date(year, month, 1);
+    // }
+
+    // 👇️ First day of CURRENT MONTH
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const curDay = new Date(date.getFullYear(), date.getMonth()).getTime();
+    // const curDate = new Date();
+
+    // const curDay = curDate.getDate();
+
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const orgIDs = data11.orgID;
+    const personalIds = data11.personalID;
+
+    const raw = JSON.stringify({
+      userID: personalIds,
+      orgID: orgIDs,
+      startTime: firstDay,
+      endTime: curDay,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/audit/getFilter`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setAmount(result);
+          console.log(result);
         }
       });
     return () => {
@@ -444,31 +615,28 @@ function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="info"
-                icon="people"
-                title="No Of Users"
-                count={noOfUsers}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
-              />
+              <Link to="/user-Management">
+                <ComplexStatisticsCard
+                  color="info"
+                  icon="people"
+                  title="No Of Users"
+                  count={noOfUsers}
+                  percentage={{
+                    color: "success",
+                    amount: "+55%",
+                    label: "than lask week",
+                  }}
+                />
+              </Link>
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="people"
-                title="No Of Users"
-                count={noOfUsers}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
+                icon="payments"
+                title="Amount Spent By The Users"
+                count={amountx}
               />
             </MDBox>
           </Grid>
@@ -479,11 +647,6 @@ function Dashboard() {
                 icon="schedule"
                 title="Daily Countdown To Pay Day"
                 count={remPayDay}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
               />
             </MDBox>
           </Grid>
@@ -491,13 +654,13 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="store"
-                title="Revenue"
-                count="34k"
+                icon="calendar_month"
+                title="Number of Working Day(s)"
+                count={numOfWork}
                 percentage={{
                   color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
+                  // amount: "+1%",
+                  // label: "than yesterday",
                 }}
               />
             </MDBox>
@@ -512,12 +675,12 @@ function Dashboard() {
                   title="website views"
                   description="Last Campaign Performance"
                   date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
+                  chart={ReportsPollData}
                 />
               </MDBox>
             </Grid>
             <Grid item xs={6} md={3} lg={6}>
-              {showApp ? (
+              {showBirth ? (
                 <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
                   <MDTypography
                     variant="h4"
@@ -608,7 +771,25 @@ function Dashboard() {
                   &nbsp;
                 </Card>
               ) : (
-                <MDBox />
+                <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
+                  {" "}
+                  <MDTypography
+                    variant="h3"
+                    fontWeight="bold"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    No Birthdays Today
+                  </MDTypography>
+                  <Icon
+                    fontSize="medium"
+                    sx={{ fontSize: 100, alignSelf: "center" }}
+                    color="disabled"
+                  >
+                    sentiment_dissatisfied
+                  </Icon>
+                </Card>
               )}
             </Grid>
           </Grid>
@@ -690,59 +871,124 @@ function Dashboard() {
                     </Card>
                   </Grid>
                 ) : (
-                  <MDBox />
+                  <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
+                    {" "}
+                    <MDTypography
+                      variant="h3"
+                      fontWeight="bold"
+                      color="white"
+                      textAlign="center"
+                      mt={1}
+                    >
+                      No Announcement At The Moment
+                    </MDTypography>
+                    <Icon
+                      fontSize="medium"
+                      sx={{ fontSize: 100, alignSelf: "center" }}
+                      color="disabled"
+                    >
+                      sentiment_dissatisfied
+                    </Icon>
+                  </Card>
                 )}
               </MDBox>
             </Grid>
             <Grid item xs={6} md={3} lg={4}>
-              <Card sx={{ maxHeight: 350 }}>
-                <div
-                  className="scrollbar scrollbar-primary mt-2 mx-auto"
-                  style={scrollContainerStyle}
-                >
-                  <MDBox mb={1.5}>
-                    <Container>
-                      <div className="row">
-                        {polls.map((api) => (
-                          <Grid container spacing={0} key={api.id}>
-                            <Grid item xs={12} md={12} lg={12}>
-                              <Link to={`/polls/vote-Polls?id=${api.id}`}>
+              {showTOR ? (
+                <Card sx={{ maxHeight: 350 }}>
+                  <MDBox
+                    variant="gradient"
+                    bgColor="info"
+                    borderRadius="lg"
+                    coloredShadow="success"
+                    mt={2}
+                    mx={0}
+                    p={1}
+                    textAlign="left"
+                  >
+                    <MDTypography
+                      variant="h4"
+                      fontWeight="medium"
+                      color="white"
+                      textAlign="center"
+                      mt={1}
+                    >
+                      Time-Off Request
+                    </MDTypography>
+                  </MDBox>
+                  <div
+                    className="scrollbar scrollbar-primary mt-2 mx-auto"
+                    style={scrollContainerStyle}
+                  >
+                    <MDBox mb={1.5}>
+                      <Container>
+                        <div className="row">
+                          {empTOR.map((item) => (
+                            <Grid container spacing={0} key={item.id}>
+                              <Grid item xs={12} md={12} lg={12}>
+                                {/* <Link to={`/polls/vote-Polls?id=${api.id}`}> */}
                                 <Card style={{ backgroundColor: "#318CE7" }}>
                                   <CardContent>
                                     <MDTypography
-                                      variant="h4"
-                                      fontWeight="medium"
+                                      variant="h6"
                                       color="white"
+                                      fontSize="75%"
                                       textAlign="left"
                                       mt={1}
                                     >
-                                      Poll
+                                      Employee - {item.empName}
                                     </MDTypography>
-                                    <div style={{ color: "#f5f5f5" }}>{api.question}</div>
+                                    <MDTypography
+                                      variant="h6"
+                                      color="white"
+                                      fontSize="75%"
+                                      textAlign="left"
+                                      mt={0}
+                                    >
+                                      Date Requested - {item.noOfDaysRequested}
+                                    </MDTypography>
+                                    <MDTypography
+                                      variant="h6"
+                                      color="white"
+                                      fontSize="75%"
+                                      textAlign="left"
+                                      mt={0}
+                                    >
+                                      Reason - {item.purpose}
+                                    </MDTypography>
                                   </CardContent>
                                 </Card>{" "}
                                 &nbsp; &nbsp;
-                              </Link>
+                                {/* </Link> */}
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        ))}
-                        {/* <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                onClick={(e) => handleUpdate(e)}
-                // disabled={!enabled}
-                color="info"
-                width="50%"
-                align="right"
-              >
-                Vote Poll
-              </MDButton>
-            </MDBox> */}
-                      </div>
-                    </Container>
-                  </MDBox>
-                </div>
-              </Card>
+                          ))}
+                        </div>
+                      </Container>
+                    </MDBox>
+                  </div>
+                </Card>
+              ) : (
+                <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
+                  {" "}
+                  <MDTypography
+                    variant="h3"
+                    fontWeight="bold"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    No Time-Off Requests At The Moment
+                  </MDTypography>
+                  <Icon
+                    fontSize="medium"
+                    sx={{ fontSize: 100, alignSelf: "center" }}
+                    color="disabled"
+                  >
+                    sentiment_dissatisfied
+                  </Icon>
+                </Card>
+              )}
             </Grid>
             <Grid item xs={6} md={3} lg={4}>
               <Card sx={{ maxHeight: 350 }}>
@@ -1051,22 +1297,41 @@ function Dashboard() {
                   &nbsp;
                 </Card>
               ) : (
-                <MDBox />
+                <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
+                  {" "}
+                  <MDTypography
+                    variant="h3"
+                    fontWeight="bold"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    No Appraisal At The Moment
+                  </MDTypography>
+                  <Icon
+                    fontSize="medium"
+                    sx={{ fontSize: 100, alignSelf: "center" }}
+                    color="disabled"
+                  >
+                    sentiment_dissatisfied
+                  </Icon>
+                </Card>
               )}
             </Grid>
             <Grid item xs={6} md={6} lg={6}>
-              <Card sx={{ maxHeight: 350 }}>
-                <div
-                  className="scrollbar scrollbar-primary mt-2 mx-auto"
-                  style={scrollContainerStyle}
-                >
-                  <MDBox mb={1.5}>
-                    <Container>
-                      <div className="row">
-                        {polls.map((api) => (
-                          <Grid container spacing={0} key={api.id}>
-                            <Grid item xs={12} md={12} lg={12}>
-                              <Link to={`/polls/vote-Polls?id=${api.id}`}>
+              {showPolls ? (
+                <Card sx={{ maxHeight: 350 }}>
+                  <div
+                    className="scrollbar scrollbar-primary mt-2 mx-auto"
+                    style={scrollContainerStyle}
+                  >
+                    <MDBox mb={1.5}>
+                      <Container>
+                        <div className="row">
+                          {polls.map((api) => (
+                            <Grid container spacing={0} key={api.id}>
+                              <Grid item xs={12} md={12} lg={12}>
+                                {/* <Link to={`/polls/vote-Polls?id=${api.id}`}> */}
                                 <Card style={{ backgroundColor: "#318CE7" }}>
                                   <CardContent>
                                     <MDTypography
@@ -1082,15 +1347,36 @@ function Dashboard() {
                                   </CardContent>
                                 </Card>{" "}
                                 &nbsp; &nbsp;
-                              </Link>
+                                {/* </Link> */}
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        ))}
-                      </div>
-                    </Container>
-                  </MDBox>
-                </div>
-              </Card>
+                          ))}
+                        </div>
+                      </Container>
+                    </MDBox>
+                  </div>
+                </Card>
+              ) : (
+                <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
+                  {" "}
+                  <MDTypography
+                    variant="h3"
+                    fontWeight="bold"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    No Poll At The Moment
+                  </MDTypography>
+                  <Icon
+                    fontSize="medium"
+                    sx={{ fontSize: 100, alignSelf: "center" }}
+                    color="disabled"
+                  >
+                    sentiment_dissatisfied
+                  </Icon>
+                </Card>
+              )}
             </Grid>
           </Grid>
         </MDBox>
