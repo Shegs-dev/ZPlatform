@@ -6,7 +6,7 @@ import DataTable from "examples/Tables/DataTable";
 import AppraisalGradeData from "layouts/appraisal/appraisalGrading/data/appraisalGradingData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -284,7 +284,7 @@ function AppraisalGrade() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-8">
+                  {/* <div className="col-sm-6">
                     <MDTypography variant="button" fontWeight="regular" color="text">
                       Color:
                     </MDTypography>
@@ -294,6 +294,21 @@ function AppraisalGrade() {
                       style={{ width: "70%" }}
                       onChange={(e) => setColorCode(e.target.value)}
                     />
+                  </div> */}
+
+                  <div className="col-sm-6">
+                    <Form.Select
+                      aria-label="Default select example"
+                      width="50%"
+                      mx={34}
+                      onChange={(e) => setColorCode(e.target.value)}
+                    >
+                      <option>Select Color *</option>
+                      <option value="danger">Red</option>
+                      <option value="warning">Yellow</option>
+                      <option value="info">Blue</option>
+                      <option value="success">Green</option>
+                    </Form.Select>
                   </div>
                 </div>
               </Container>

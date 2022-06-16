@@ -12,13 +12,15 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
 export default function ReportsPollData() {
   const { allGHeaders: miHeaders } = GHeaders();
   const navigate = useNavigate();
+  const [resultx, setResult] = useState("");
+  console.log(resultx);
 
   useEffect(() => {
     const headers = miHeaders;
@@ -51,7 +53,7 @@ export default function ReportsPollData() {
           window.location.reload();
         }
         if (isMounted) {
-          //  setItems(result);
+          setResult(result);
           console.log(result);
         }
       });

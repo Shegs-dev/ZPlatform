@@ -80,7 +80,7 @@ function VuAppraisalQuestion() {
           setQuestion(result[0].question.question);
           setHint(result[0].question.hint);
           setInputType(result[0].question.inputType);
-          setCreatedDate(result[0].question.createdDate);
+          setCreatedDate(result[0].question.createdTime);
           setDeletedflag(result[0].question.deletedflag);
 
           if (result[0].question.inputType === "Option") {

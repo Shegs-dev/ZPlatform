@@ -20,7 +20,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+// import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 import { Container } from "react-bootstrap";
@@ -31,17 +31,16 @@ import PHeaders from "postHeader";
 
 import "./index.css";
 
-// Data
-import ReportsPollData from "layouts/dashboard/data/reportsBarChartData";
-
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate, Link } from "react-router-dom";
 import GHeaders from "getHeader";
 // import MDButton from "components/MDButton";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Dashboard() {
-  console.log(ReportsPollData);
   const MySwal = withReactContent(Swal);
   const [card, setItems] = useState([]);
   const [itemsx, setItemsx] = useState([]);
@@ -64,12 +63,56 @@ function Dashboard() {
   const [userNamex, setUserNamex] = useState("");
   const [amountx, setAmount] = useState("");
   const [numOfWork, setNumOfWork] = useState("");
+  const [grading, setGrading] = useState("");
 
   const { allGHeaders: miHeaders } = GHeaders();
   const { allPHeaders: myHeaders } = PHeaders();
   const navigate = useNavigate();
 
+  const [opened, setOpened] = useState(false);
+
   const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
+  // const grader = { grading };
+
+  useEffect(() => {
+    const headers = miHeaders;
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const orgIDs = data11.orgID;
+    const personalIds = data11.id;
+
+    let isMounted = true;
+    fetch(
+      `${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/result/getEmpAverageResult/${orgIDs}/${personalIds}`,
+      {
+        headers,
+      }
+    )
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setGrading(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
@@ -168,7 +211,7 @@ function Dashboard() {
               const idcheck = `${grp.group.id},`;
               groupIDs += idcheck;
             });
-            fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForGroup/${groupIDs}`, {
+            fetch(`${process.env.REACT_APP_KUBU_URL}/poll/getForDashboard/${groupIDs}`, {
               headers,
             })
               .then(async (res) => {
@@ -544,6 +587,9 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
+
+    console.log("first day");
     // const headers = myHeaders;
     // function getFirstDayOfMonth(year, month) {
     //   return new Date(year, month, 1);
@@ -552,7 +598,9 @@ function Dashboard() {
     // 👇️ First day of CURRENT MONTH
     const date = new Date();
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
-    const curDay = new Date(date.getFullYear(), date.getMonth()).getTime();
+    const curDay = new Date().getTime();
+    console.log(firstDay);
+    console.log(curDay);
     // const curDate = new Date();
 
     // const curDay = curDate.getDate();
@@ -565,8 +613,8 @@ function Dashboard() {
     const raw = JSON.stringify({
       userID: personalIds,
       orgID: orgIDs,
-      startTime: firstDay,
-      endTime: curDay,
+      startTime: 1655074800000,
+      endTime: 1655161200000,
     });
     const requestOptions = {
       method: "POST",
@@ -574,6 +622,7 @@ function Dashboard() {
       body: raw,
       redirect: "follow",
     };
+    console.log("second day");
     let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/audit/getFilter`, requestOptions)
       .then(async (res) => {
@@ -595,8 +644,19 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
-          setAmount(result);
+          setOpened(false);
+          let priceByUser = 0;
+          // eslint-disable-next-line array-callback-return
+          result.map((item) => {
+            if (item.price < 1) {
+              console.log(priceByUser);
+              priceByUser += item.price;
+            }
+          });
+          console.log("result");
           console.log(result);
+          console.log(priceByUser);
+          setAmount(priceByUser);
         }
       });
     return () => {
@@ -669,15 +729,38 @@ function Dashboard() {
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={ReportsPollData}
-                />
-              </MDBox>
+              <Card>
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mt={2}
+                  mb={5}
+                  mx={0}
+                  p={1}
+                  textAlign="left"
+                >
+                  <MDTypography
+                    variant="h4"
+                    fontWeight="medium"
+                    color="white"
+                    textAlign="center"
+                    mt={1}
+                  >
+                    Appraisal Score
+                  </MDTypography>
+                </MDBox>
+                &nbsp;
+                <MDBox mb={5}>
+                  <ProgressBar
+                    now={grading.score}
+                    variant={grading.colorCode}
+                    label={`${grading.score}%`}
+                  />
+                </MDBox>
+              </Card>
+              &nbsp;
             </Grid>
             <Grid item xs={6} md={3} lg={6}>
               {showBirth ? (
@@ -1381,6 +1464,9 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
       <Footer />
     </DashboardLayout>
   );

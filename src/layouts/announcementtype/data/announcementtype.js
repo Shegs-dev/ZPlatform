@@ -34,7 +34,7 @@ export default function data() {
       colorCode: colorCodex,
       descrip: descripx,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",

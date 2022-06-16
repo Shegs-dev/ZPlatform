@@ -9,7 +9,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Dropdown } from "react-bootstrap";
+import Icon from "@mui/material/Icon";
 import { useNavigate } from "react-router-dom";
 import DataTable from "examples/Tables/DataTable";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -46,18 +47,6 @@ function SalaryPayment() {
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
-
-  // Method to change date from timestamp
-  const changeDate = (timestamp) => {
-    if (timestamp === 0) {
-      return "No Date";
-      // eslint-disable-next-line no-else-return
-    } else {
-      const date = new Date(timestamp);
-      const retDate = date.toDateString();
-      return retDate;
-    }
-  };
 
   useEffect(() => {
     const userMap = [];
@@ -353,6 +342,64 @@ function SalaryPayment() {
       });
   };
 
+  // Method to handle diable
+  const handleTerminate = (value) => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+
+    const personalIDs = data11.personalID;
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const requestOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+
+        fetch(
+          `${process.env.REACT_APP_TANTA_URL}/payroll/terminate/${personalIDs}/${value}`,
+          requestOptions
+        )
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((resx) => {
+            if (resx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            MySwal.fire({
+              title: resx.status,
+              type: "success",
+              text: resx.message,
+            }).then(() => {
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    });
+  };
+
   // Method to change type
   const changeType = (status) => {
     if (status === 1) {
@@ -364,6 +411,39 @@ function SalaryPayment() {
       return "Payment Error";
     } else {
       return "Created";
+    }
+  };
+
+  // Method to change date from timestamp
+  const changeDateandTime = (timestamp) => {
+    if (timestamp === 0) {
+      return "No Date";
+      // eslint-disable-next-line no-else-return
+    } else {
+      const date = new Date(timestamp);
+      const retDate = date.toDateString();
+      let hour = "0";
+      let minutes = "0";
+      let seconds = "0";
+
+      if (date.getHours() < 10) {
+        hour += date.getHours();
+      } else {
+        hour = date.getHours();
+      }
+
+      if (date.getMinutes() < 10) {
+        minutes += date.getMinutes();
+      } else {
+        minutes = date.getMinutes();
+      }
+
+      if (date.getSeconds() < 10) {
+        seconds += date.getSeconds();
+      } else {
+        seconds = date.getSeconds();
+      }
+      return `${retDate} ${hour}:${minutes}:${seconds}`;
     }
   };
 
@@ -383,14 +463,39 @@ function SalaryPayment() {
     {
       Header: "Last Retried Time",
       accessor: "payroll.lastRetryTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
+      Cell: ({ cell: { value } }) => changeDateandTime(value),
       align: "left",
     },
     { Header: "Terminated By", accessor: "payroll.terminatedByName", align: "left" },
     {
       Header: "Terminated Time",
       accessor: "payroll.terminatedTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
+      Cell: ({ cell: { value } }) => changeDateandTime(value),
+      align: "left",
+    },
+    {
+      Header: "actions",
+      accessor: "payroll.id",
+      // eslint-disable-next-line react/prop-types
+      Cell: ({ cell: { value } }) => (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#dadada",
+            borderRadius: "2px",
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleTerminate(value)}>Terminate</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
       align: "left",
     },
   ];
