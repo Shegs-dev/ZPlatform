@@ -33,13 +33,14 @@ function Disapprove() {
   const [approvex, setApprovex] = useState("");
   const [adminx, setAdminx] = useState("");
   const [reasonx, setReasonx] = useState("");
+  const [dbreasonx, setDBReasonx] = useState("");
 
   // const [disapprove, setDisapprove] = useState("");
 
   const handleDisApprove = () => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     // const ids = data11.id;
-    const personalIds = data11.id;
+    const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
 
     if (approvex !== personalIds) {
@@ -48,15 +49,15 @@ function Disapprove() {
         type: "success",
         text: "You Are Not Permitted To Approve This Request",
       }).then(() => {
-        window.location.reload();
+        navigate("/Time-Off-Type");
       });
-    } else if (reasonx !== null && reasonx !== "") {
+    } else if (dbreasonx !== null && dbreasonx !== "") {
       MySwal.fire({
         title: "PROCESS_DENIED",
         type: "success",
         text: "Decision Already Made For This Request",
       }).then(() => {
-        window.location.reload();
+        navigate("/Time-Off-Type");
       });
     } else {
       const raw = JSON.stringify({
@@ -113,7 +114,7 @@ function Disapprove() {
             type: "success",
             text: result.message,
           }).then(() => {
-            window.location.reload();
+            navigate("/Time-Off-Type");
           });
         })
         .catch((error) => {
@@ -176,7 +177,7 @@ function Disapprove() {
             setDeletex(result[0].deleteFlag);
             setApprovex(result[0].approverID);
             setAdminx(result[0].adminID);
-            setReasonx(result[0].reasonForDisapproval);
+            setDBReasonx(result[0].reasonForDisapproval);
           } else {
             setIdx(null);
           }
