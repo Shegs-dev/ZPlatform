@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import DataTable from "examples/Tables/DataTable";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
@@ -29,7 +28,7 @@ function UpdateBonusOrDeduction() {
   const [currencyx, setCurrency] = useState("");
   const [setupTypex, setSetupTypex] = useState("");
   const [frequencyx, setFrequencyx] = useState("");
-  const [setup, setSetup] = useState({});
+  // const [setup, setSetup] = useState({});
 
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
@@ -110,7 +109,7 @@ function UpdateBonusOrDeduction() {
           window.location.reload();
         }
         if (isMounted) {
-          setSetup(result[0]);
+          // setSetup(result[0]);
           setName(result[0].name);
           setAmount(result[0].amount);
           setTypex(result[0].type);

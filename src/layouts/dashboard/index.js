@@ -365,8 +365,6 @@ function Dashboard() {
             setShowTOR(true);
           }
           setEmpTOR(result);
-          console.log(result);
-          // console.log(result);
         }
       });
     return () => {
@@ -634,7 +632,7 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
-          setAmount(result);
+          setAmount("0");
         }
       });
     return () => {
