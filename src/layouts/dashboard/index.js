@@ -369,8 +369,6 @@ function Dashboard() {
             setShowTOR(true);
           }
           setEmpTOR(result);
-          console.log(result);
-          // console.log(result);
         }
       });
     return () => {

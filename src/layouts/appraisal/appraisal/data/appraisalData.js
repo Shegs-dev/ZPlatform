@@ -63,7 +63,6 @@ export default function AppraisalData() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setItems(result);
         }
       });
@@ -73,19 +72,99 @@ export default function AppraisalData() {
   }, []);
 
   const handleView = (value) => {
-    navigate(`/View-Appraisals?id=${value}`);
+    const filteredItems = items.filter((item) => item.id === value);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    if (filteredItems.status !== 0 && filteredItems.status !== 1) {
+      MySwal.fire({
+        title: "APPRAISAL_CLOSED",
+        type: "error",
+        text: "This Appraisal Is Already Closed",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (filteredItems.createdBy !== data11.personalID) {
+      MySwal.fire({
+        title: "APPRAISAL_CONFLICT",
+        type: "error",
+        text: "This Appraisal Cannot Be Updated By You",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      navigate(`/View-Appraisals?id=${value}`);
+    }
   };
 
   const handleQuestions = (value) => {
-    navigate(`/Set-Appraisal-Questions?id=${value}`);
+    const filteredItems = items.filter((item) => item.id === value);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    if (filteredItems.status !== 0 && filteredItems.status !== 1) {
+      MySwal.fire({
+        title: "APPRAISAL_CLOSED",
+        type: "error",
+        text: "This Appraisal Is Already Closed",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (filteredItems.appraiseeID === data11.personalID) {
+      MySwal.fire({
+        title: "APPRAISAL_CONFLICT",
+        type: "error",
+        text: "This Questions Cannot Be Set By You",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      navigate(`/Set-Appraisal-Questions?id=${value}`);
+    }
   };
 
   const handleAppraisers = (value) => {
-    navigate(`/Set-Appraisal-Appraisers?id=${value}`);
+    const filteredItems = items.filter((item) => item.id === value);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    if (filteredItems.status !== 0 && filteredItems.status !== 1) {
+      MySwal.fire({
+        title: "APPRAISAL_CLOSED",
+        type: "error",
+        text: "This Appraisal Is Already Closed",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (filteredItems.appraiseeID === data11.personalID) {
+      MySwal.fire({
+        title: "APPRAISAL_CONFLICT",
+        type: "error",
+        text: "This Appraisers Cannot Be Set By You",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      navigate(`/Set-Appraisal-Appraisers?id=${value}`);
+    }
   };
 
   const handleGrading = (value) => {
-    navigate(`/Grade-Appraisal?id=${value}`);
+    const filteredItems = items.filter((item) => item.id === value);
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    if (filteredItems.status !== 0 && filteredItems.status !== 1) {
+      MySwal.fire({
+        title: "APPRAISAL_CLOSED",
+        type: "error",
+        text: "This Appraisal Is Already Closed",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else if (filteredItems.appraiseeID === data11.personalID) {
+      MySwal.fire({
+        title: "APPRAISAL_CONFLICT",
+        type: "error",
+        text: "This Appraisal Cannot Be Graded By You",
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      navigate(`/Grade-Appraisal?id=${value}`);
+    }
   };
 
   const handleOpen = (value) => {
@@ -112,7 +191,6 @@ export default function AppraisalData() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        console.log(result);
         MySwal.fire({
           title: result.status,
           type: "success",
@@ -154,7 +232,6 @@ export default function AppraisalData() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        console.log(result);
         MySwal.fire({
           title: result.status,
           type: "success",
