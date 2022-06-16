@@ -23,7 +23,8 @@ function TimeoffRequestUpdate() {
   const { allGHeaders: miHeaders } = GHeaders();
 
   const [idx, setIdx] = useState("");
-  const [empSetupIdx, setEmpSetupIdx] = useState("");
+  const [empSetup, setEmpSetup] = useState([]);
+  const [empSetupIdx, setEmpSetupId] = useState("");
   const [daysx, setDaysx] = useState("");
   const [daysapprovex, setDaysapprovex] = useState("");
   const [startx, setStartx] = useState("");
@@ -36,6 +37,7 @@ function TimeoffRequestUpdate() {
   const [approvex, setApprovex] = useState("");
   const [adminx, setAdminx] = useState("");
   const [reasonx, setReasonx] = useState("");
+  const [statusx, setStatusx] = useState("");
 
   const [user, setUser] = useState([]);
 
@@ -78,7 +80,7 @@ function TimeoffRequestUpdate() {
           // eslint-disable-next-line eqeqeq
           if (result.length != 0) {
             setIdx(result[0].id);
-            setEmpSetupIdx(result[0].empSetupID);
+            setEmpSetupId(result[0].empSetupID);
             setDaysx(result[0].noOfDaysRequested);
             setDaysapprovex(result[0].noOfDaysApproved);
             setStartx(result[0].startDate);
@@ -91,6 +93,7 @@ function TimeoffRequestUpdate() {
             setApprovex(result[0].approverID);
             setAdminx(result[0].adminID);
             setReasonx(result[0].reasonForDisapproval);
+            setStatusx(result[0].status);
           } else {
             setIdx(null);
           }
@@ -136,45 +139,21 @@ function TimeoffRequestUpdate() {
     };
   }, []);
 
-  const handleUpdate = () => {
+  useEffect(() => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
-    // const ids = data11.id;
-    const personalIds = data11.id;
+
     const orgIDs = data11.orgID;
-
-    const raw = JSON.stringify({
-      id: idx,
-      orgID: orgIDs,
-      empID: personalIds,
-      empSetupID: empSetupIdx,
-      noOfDaysRequested: daysx,
-      noOfDaysApproved: daysapprovex,
-      startDate: startx,
-      endDate: endx,
-      resumptionDate: resumex,
-      dutyRelieverID: dutyrelieverx,
-      createdDate: createdx,
-      purpose: purposex,
-      deleteFlag: deletex,
-      approverID: approvex,
-      adminID: adminx,
-      reasonForDisapproval: reasonx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`, requestOptions)
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_NSUTANA_URL}/employeetimeoffsetup/getAll/${orgIDs}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
         return res.json();
       })
       .then((result) => {
-        // setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
           window.location.reload();
@@ -187,22 +166,118 @@ function TimeoffRequestUpdate() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        // setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+        if (isMounted) {
+          setEmpSetup(result);
+        }
       });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleUpdate = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const ids = data11.id;
+    const personalIds = data11.id;
+    const orgIDs = data11.orgID;
+
+    const startCDate = new Date(startx).getTime();
+    const endCDate = new Date(endx).getTime();
+    const resumptionCDate = new Date(resumex).getTime();
+    const CurTime = new Date().getTime();
+
+    const raw = JSON.stringify({
+      id: idx,
+      orgID: orgIDs,
+      empID: personalIds,
+      empSetupID: empSetupIdx,
+      noOfDaysRequested: daysx,
+      noOfDaysApproved: daysapprovex,
+      startDate: startCDate,
+      endDate: endCDate,
+      resumptionDate: resumptionCDate,
+      dutyRelieverID: dutyrelieverx,
+      createdDate: createdx,
+      purpose: purposex,
+      deleteFlag: deletex,
+      approverID: approvex,
+      adminID: adminx,
+      reasonForDisapproval: reasonx,
+      status: statusx,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    let check = 0;
+    if (startCDate < CurTime) {
+      check = 1;
+      MySwal.fire({
+        title: "Invalid Date",
+        type: "error",
+        text: "Please Enter A Date From The Future",
+      });
+    }
+    if (check === 0 && endCDate < startCDate) {
+      check = 1;
+      MySwal.fire({
+        title: "Invalid Ending Date",
+        type: "error",
+        text: "Please Enter A Date From The Future",
+      });
+    }
+    if (check === 0 && resumptionCDate < endCDate) {
+      check = 1;
+      MySwal.fire({
+        title: "Invalid Resuming Date",
+        type: "error",
+        text: "Please Enter A Date From The Future",
+      });
+    }
+
+    if (check === 0) {
+      fetch(
+        `${process.env.REACT_APP_NSUTANA_URL}/employeetimeofftransaction/update`,
+        requestOptions
+      )
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          // setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          // setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   const handleOnPurposeKeys = () => {
@@ -269,7 +344,7 @@ function TimeoffRequestUpdate() {
                 <MDBox mb={2}>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-6">
+                      <div className="col-sm-5">
                         <MDBox mt={2}>
                           <MDTypography
                             variant="button"
@@ -292,10 +367,8 @@ function TimeoffRequestUpdate() {
                           />
                         </MDBox>
                       </div>
-
-                      {/* <div className="col-sm-2" /> */}
-
-                      <div className="col-sm-6">
+                      <div className="col-sm-2" />
+                      <div className="col-sm-5">
                         <MDBox mt={2}>
                           <MDTypography
                             variant="button"
@@ -323,7 +396,63 @@ function TimeoffRequestUpdate() {
                 <MDBox>
                   <Container>
                     <div className="row">
-                      <div className="col-sm-6">
+                      <div className="col-sm-5">
+                        <MDBox mt={2}>
+                          <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            fontSize="80%"
+                            align="left"
+                            color="text"
+                          >
+                            Resumption Date
+                          </MDTypography>
+                          <DatePicker
+                            placeholderText="Resumption Date"
+                            style={{ marginRight: "10px" }}
+                            selected={resumex}
+                            peekNextMonth
+                            showMonthDropdown
+                            showYearDropdown
+                            dropdownMode="select"
+                            onChange={(resumptiondate) => setResumex(resumptiondate)}
+                          />{" "}
+                        </MDBox>
+                      </div>
+                      <div className="col-sm-2" />
+                      <div className="col-sm-5">
+                        <MDBox mt={2}>
+                          <MDTypography
+                            variant="button"
+                            fontWeight="regular"
+                            fontSize="80%"
+                            align="left"
+                            color="text"
+                          >
+                            Time Off Category
+                          </MDTypography>
+                          <Form.Select
+                            onChange={(e) => setEmpSetupId(e.target.value)}
+                            aria-label="Default select example"
+                            value={empSetupIdx}
+                          >
+                            <option value="">Select Timeoff Category</option>
+                            {empSetup.map((api) => (
+                              <option key={api.setup.id} value={api.setup.id}>
+                                {api.timeOffTypeCondition.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                          <br />
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-5">
                         <MDBox mt={2}>
                           <MDTypography
                             variant="button"
@@ -359,14 +488,14 @@ function TimeoffRequestUpdate() {
                             align="left"
                             color="text"
                           >
-                            Select Approver
+                            Select Admin
                           </MDTypography>
                           <Form.Select
-                            value={approvex}
-                            onChange={(e) => setApprovex(e.target.value)}
+                            value={adminx || ""}
+                            onChange={(e) => setAdminx(e.target.value)}
                             aria-label="Default select example"
                           >
-                            <option value="">Select Approver</option>
+                            <option value="">Select Admin</option>
                             {user.map((api) => (
                               <option key={api.personal.id} value={api.personal.id}>
                                 {api.personal.fname} {api.personal.lname}
@@ -378,34 +507,34 @@ function TimeoffRequestUpdate() {
                       </div>
                     </div>
                   </Container>
-                  <MDBox>
-                    <Container>
-                      <div className="col-sm-12">
-                        <MDBox mt={2}>
-                          <MDInput
-                            type="text"
-                            value={purposex || ""}
-                            onChange={(e) => setPurposex(e.target.value)}
-                            label="Purpose"
-                            variant="standard"
-                            style={{ width: "100%" }}
-                          />
-                        </MDBox>
-                      </div>
-                    </Container>
-                  </MDBox>
-                  <MDBox mt={4} mb={1}>
-                    <MDButton
-                      variant="gradient"
-                      onClick={(e) => handleOnPurposeKeys(e)}
-                      // disabled={!enabled}
-                      color="info"
-                      width="50%"
-                      align="center"
-                    >
-                      Update
-                    </MDButton>
-                  </MDBox>
+                </MDBox>
+                <MDBox>
+                  <Container>
+                    <div className="col-sm-12">
+                      <MDBox mt={2}>
+                        <MDInput
+                          type="text"
+                          value={purposex || ""}
+                          onChange={(e) => setPurposex(e.target.value)}
+                          label="Purpose"
+                          variant="standard"
+                          style={{ width: "100%" }}
+                        />
+                      </MDBox>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mt={4} mb={1}>
+                  <MDButton
+                    variant="gradient"
+                    onClick={(e) => handleOnPurposeKeys(e)}
+                    // disabled={!enabled}
+                    color="info"
+                    width="50%"
+                    align="center"
+                  >
+                    Update
+                  </MDButton>
                 </MDBox>
               </MDBox>
             </MDBox>

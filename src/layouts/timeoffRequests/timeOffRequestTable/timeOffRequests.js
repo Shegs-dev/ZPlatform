@@ -38,7 +38,8 @@ export default function TimeOffRequestData() {
     deletex,
     approvex,
     adminx,
-    reasonx
+    reasonx,
+    statusx
   ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -78,6 +79,7 @@ export default function TimeOffRequestData() {
         approverID: approvex,
         adminID: adminx,
         reasonForDisapproval: reasonx,
+        status: statusx,
       });
       console.log(raw);
       const requestOptions = {
@@ -207,7 +209,7 @@ export default function TimeOffRequestData() {
     // };
 
     MySwal.fire({
-      title: "Update Time-Off Request",
+      title: "Approve Time-Off Request",
       html: `<table><tr><td>
       <tr><td><label for="days">Days Requested</label></td>
       <td><input type="text" class="swal2-input" id="days" value="${daysx}" placeholder="Days Requested" disabled></td></tr><br>
@@ -240,7 +242,8 @@ export default function TimeOffRequestData() {
             deletex,
             approvex,
             adminx,
-            reasonx
+            reasonx,
+            1
           );
         }
       },
@@ -303,16 +306,16 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    if (
-      filteredItems[0].reasonForDisapproval !== null &&
-      filteredItems[0].reasonForDisapproval !== ""
-    ) {
+    if (filteredItems[0].status === "2") {
+      return "Decision Made";
+    }
+    if (filteredItems[0].status === "1") {
       return "Decision Made";
       // eslint-disable-next-line no-else-return
-    } else if (filteredItems[0].empID !== personalIds) {
-      return "Requires Attention";
-    } else {
+    } else if (filteredItems[0].status === "0" && filteredItems[0].empID === personalIds) {
       return "Created";
+    } else {
+      return "Requires Attention";
     }
   };
 
@@ -320,16 +323,16 @@ export default function TimeOffRequestData() {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIds = data11.personalID;
     const filteredItems = items.filter((item) => item.id === status);
-    if (
-      filteredItems[0].reasonForDisapproval !== null &&
-      filteredItems[0].reasonForDisapproval !== ""
-    ) {
+    if (filteredItems[0].status === "2") {
+      return "#FAFA33";
+    }
+    if (filteredItems[0].status === "1") {
       return "#FAFA33";
       // eslint-disable-next-line no-else-return
-    } else if (filteredItems[0].empID !== personalIds) {
-      return "#FF0000";
-    } else {
+    } else if (filteredItems[0].status === "0" && filteredItems[0].empID === personalIds) {
       return "#0096FF";
+    } else {
+      return "#FF0000";
     }
   };
 

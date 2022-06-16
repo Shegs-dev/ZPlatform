@@ -108,12 +108,15 @@ import AppraisalAppraisers from "layouts/appraisal/appraisers";
 import AppraiseQandA from "layouts/appraisal/appaisalQandA";
 import GradeAppraisal from "layouts/appraisal/appraisalResult";
 
+import UpdateAnnouncement from "layouts/announcement/updateannouncement";
 import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
 import UpdatePolls from "layouts/polls/updatepolls";
 import Addpolloptions from "layouts/polls/addpolloptions";
 import Disapprove from "layouts/timeoffRequests/disapprove";
 import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
+import PollsView from "layouts/polls/view";
+import UpdateAppraisalGrading from "layouts/appraisal/appraisalGrading/update";
 
 const routes = [
   {
@@ -169,6 +172,13 @@ const routes = [
     route: "/Announcement",
     component: <Announcement />,
   },
+  {
+    name: "Update announcement",
+    key: "updateannouncement",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Update-Announcement",
+    component: <UpdateAnnouncement />,
+  },
   // {
   //   name: "View",
   //   key: "view",
@@ -221,11 +231,18 @@ const routes = [
     component: <Addpolloptions />,
   },
   {
-    name: "Vote polls",
-    key: "votepolls",
+    name: "View polls",
+    key: "viewpolls",
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/polls/vote-polls",
     component: <VotePolls />,
+  },
+  {
+    name: "Vote polls",
+    key: "votepolls",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/polls/view",
+    component: <PollsView />,
   },
   {
     name: "Edit Matters Arising",
@@ -319,6 +336,13 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Appraisal-Grading",
     component: <AppraisalGrade />,
+  },
+  {
+    name: "Update appraisal grading",
+    key: "updateappraisalgrading",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/appraisal/update",
+    component: <UpdateAppraisalGrading />,
   },
   {
     type: "divider",

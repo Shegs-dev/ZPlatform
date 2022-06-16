@@ -184,132 +184,6 @@ function RenewSub() {
   //     }
   //   };
 
-  const honClose = (response) => {
-    setReferenceSKey(`${Math.floor(Math.random() * 1000000000 + 1)}`);
-
-    if (response.paymentStatus === "PAID" && response.status === "SUCCESS") {
-      setOpened(true);
-
-      let allPayandBonus = 0;
-      let mBonusAmount = 0;
-      // eslint-disable-next-line radix
-      const amountCOn = parseInt(amountx);
-      if (bonusCheck.length === 0) {
-        mBonusAmount = 0;
-        allPayandBonus = amountCOn;
-      } else {
-        // eslint-disable-next-line array-callback-return
-        bonusCheck.map((checkBonus) => {
-          if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
-            mBonusAmount = checkBonus.bonusAmount;
-            setBonusSetID(checkBonus.id);
-            allPayandBonus = checkBonus.bonusAmount + amountCOn;
-          } else {
-            mBonusAmount = 0;
-            allPayandBonus = amountCOn;
-          }
-          // check = false;
-        });
-      }
-
-      const data11 = JSON.parse(localStorage.getItem("renewUser1"));
-      const orgIDs = data11.orgID;
-      const raw = JSON.stringify({
-        orgID: orgIDs,
-        paidAmount: amountCOn,
-        bonusAmount: mBonusAmount,
-        totalAmount: allPayandBonus,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-          }
-          setOpened(false);
-
-          const raw1 = JSON.stringify({
-            orgID: orgIDs,
-            bonusSettingID: bonusSetID,
-          });
-          const requestOptions1 = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw1,
-            redirect: "follow",
-          };
-          if (mBonusAmount !== 0) {
-            fetch(
-              `${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`,
-              requestOptions1
-            ).then(async (res) => {
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex", aToken);
-              return res.json();
-            });
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            // localStorage.clear();
-            navigate("/authentication/sign-in", { replace: true });
-            window.location.reload();
-          });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
-        });
-    }
-  };
-
-  const personalApiKey = "MK_TEST_JB2L9T7HMG";
-  const personalConCode = "6428086775";
-
-  const monNey = {
-    onClose: honClose,
-    amount: amountx,
-    currency: currencyx,
-    reference: referenceSKey,
-    customerFullName: namex,
-    customerEmail: emailx,
-    customerMobileNumber: pnox,
-    apiKey: personalApiKey,
-    contractCode: personalConCode,
-    paymentDescription: descripx,
-    isTestMode: true,
-  };
-
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
@@ -365,6 +239,137 @@ function RenewSub() {
       document.getElementById("city").innerHTML = "Amount is required<br>";
     }
     setEnabled(checkedEmail === true && checkedName === true && checkedCity === true);
+  };
+
+  const honClose = (response) => {
+    handleOnNameKeys();
+    handleOnEmailKeys();
+    handleOnCityKeys();
+    if (enabled) {
+      setReferenceSKey(`${Math.floor(Math.random() * 1000000000 + 1)}`);
+
+      if (response.paymentStatus === "PAID" && response.status === "SUCCESS") {
+        setOpened(true);
+
+        let allPayandBonus = 0;
+        let mBonusAmount = 0;
+        // eslint-disable-next-line radix
+        const amountCOn = parseInt(amountx);
+        if (bonusCheck.length === 0) {
+          mBonusAmount = 0;
+          allPayandBonus = amountCOn;
+        } else {
+          // eslint-disable-next-line array-callback-return
+          bonusCheck.map((checkBonus) => {
+            if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger >= amountCOn) {
+              mBonusAmount = checkBonus.bonusAmount;
+              setBonusSetID(checkBonus.id);
+              allPayandBonus = checkBonus.bonusAmount + amountCOn;
+            } else if (checkBonus.minTrigger === 0 && checkBonus.maxTrigger >= amountCOn) {
+              mBonusAmount = checkBonus.bonusAmount;
+              setBonusSetID(checkBonus.id);
+              allPayandBonus = checkBonus.bonusAmount + amountCOn;
+            } else if (checkBonus.minTrigger <= amountCOn && checkBonus.maxTrigger === 0) {
+              mBonusAmount = checkBonus.bonusAmount;
+              setBonusSetID(checkBonus.id);
+              allPayandBonus = checkBonus.bonusAmount + amountCOn;
+            } else {
+              mBonusAmount = 0;
+              allPayandBonus = amountCOn;
+            }
+            // check = false;
+          });
+        }
+
+        const data11 = JSON.parse(localStorage.getItem("renewUser1"));
+        const orgIDs = data11.orgID;
+        const raw = JSON.stringify({
+          orgID: orgIDs,
+          paidAmount: amountCOn,
+          bonusAmount: mBonusAmount,
+          totalAmount: allPayandBonus,
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/paymentHistory/add`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((result) => {
+            if (result.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+            }
+            if (result.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+            }
+            if (result.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            setOpened(false);
+
+            const raw1 = JSON.stringify({
+              orgID: orgIDs,
+              bonusSettingID: bonusSetID,
+            });
+            const requestOptions1 = {
+              method: "POST",
+              headers: myHeaders,
+              body: raw1,
+              redirect: "follow",
+            };
+            if (mBonusAmount !== 0) {
+              fetch(
+                `${process.env.REACT_APP_EKOATLANTIC_URL}/bonusHistory/add`,
+                requestOptions1
+              ).then(async (res) => {
+                const aToken = res.headers.get("token-1");
+                localStorage.setItem("rexxdex", aToken);
+                return res.json();
+              });
+            }
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              // localStorage.clear();
+              navigate("/authentication/sign-in", { replace: true });
+              window.location.reload();
+            });
+          })
+          .catch((error) => {
+            setOpened(false);
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
+    }
+  };
+
+  const personalApiKey = "MK_TEST_JB2L9T7HMG";
+  const personalConCode = "6428086775";
+
+  const monNey = {
+    onClose: honClose,
+    amount: amountx,
+    currency: currencyx,
+    reference: referenceSKey,
+    customerFullName: namex,
+    customerEmail: emailx,
+    customerMobileNumber: pnox,
+    apiKey: personalApiKey,
+    contractCode: personalConCode,
+    paymentDescription: descripx,
+    isTestMode: true,
   };
 
   return (
@@ -511,7 +516,6 @@ function RenewSub() {
                           <MDButton
                             variant="gradient"
                             onClick={() => initializePayment()}
-                            disabled={!enabled}
                             color="info"
                             width="50%"
                           >

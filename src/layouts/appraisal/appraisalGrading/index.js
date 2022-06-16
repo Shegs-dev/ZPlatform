@@ -6,7 +6,7 @@ import DataTable from "examples/Tables/DataTable";
 import AppraisalGradeData from "layouts/appraisal/appraisalGrading/data/appraisalGradingData";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -36,64 +36,6 @@ function AppraisalGrade() {
   const [enabled, setEnabled] = useState("");
   const [opened, setOpened] = useState(false);
   const { allPHeaders: myHeaders } = PHeaders();
-
-  const handleClick = (e) => {
-    setOpened(true);
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const raw = JSON.stringify({
-      orgID: orgIDs,
-      value: valuex,
-      grade: gradex,
-      colorCode: colorCodex,
-      minScore: minScorex,
-      maxScore: maxScorex,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/add`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        setOpened(false);
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        setOpened(false);
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
 
   const handleOnNameKeys = () => {
     const letters = /^[A-Z ]+$/;
@@ -167,6 +109,70 @@ function AppraisalGrade() {
       document.getElementById("city").innerHTML = "Maximum Score is required<br>";
     }
     setEnabled(checkedEmail === true && checkedName === true);
+  };
+
+  const handleClick = (e) => {
+    handleOnNameKeys();
+    handleOnEmailKeys();
+    handleOnStreetKeys();
+    handleOnCityKeys();
+    if (enabled) {
+      setOpened(true);
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+
+      const orgIDs = data11.orgID;
+      const raw = JSON.stringify({
+        orgID: orgIDs,
+        value: valuex,
+        grade: gradex,
+        colorCode: colorCodex,
+        minScore: minScorex,
+        maxScore: maxScorex,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      fetch(`${process.env.REACT_APP_SHASHA_URL}/appraisalGrading/add`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          setOpened(false);
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   return (
@@ -278,7 +284,7 @@ function AppraisalGrade() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-8">
+                  {/* <div className="col-sm-6">
                     <MDTypography variant="button" fontWeight="regular" color="text">
                       Color:
                     </MDTypography>
@@ -288,18 +294,27 @@ function AppraisalGrade() {
                       style={{ width: "70%" }}
                       onChange={(e) => setColorCode(e.target.value)}
                     />
+                  </div> */}
+
+                  <div className="col-sm-6">
+                    <Form.Select
+                      aria-label="Default select example"
+                      width="50%"
+                      mx={34}
+                      onChange={(e) => setColorCode(e.target.value)}
+                    >
+                      <option>Select Color *</option>
+                      <option value="danger">Red</option>
+                      <option value="warning">Yellow</option>
+                      <option value="info">Blue</option>
+                      <option value="success">Green</option>
+                    </Form.Select>
                   </div>
                 </div>
               </Container>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
-                color="info"
-                width="50%"
-              >
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>

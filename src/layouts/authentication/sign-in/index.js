@@ -98,6 +98,7 @@ function Basic() {
             navigate("/authentication/userlogin", { replace: true });
           } else {
             navigate("/dashboard", { replace: true });
+            window.location.reload();
           }
         } else {
           MySwal.fire({

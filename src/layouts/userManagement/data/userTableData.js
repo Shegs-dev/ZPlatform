@@ -252,14 +252,16 @@ export default function UserData() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleView(value)}>
+                    View/Add Office Details
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddTOT(value)}>
                     Add Time-Off Type
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAddsalary(value)}>User Salary</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleUpdateSystemRole(value)}>
-                    Change User System Role
+                    Change User&apos;s System Role
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handlePasswordReset(value)}>
                     Reset Password

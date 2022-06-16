@@ -3,7 +3,6 @@ import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
-import * as FontAwesome from "react-icons/fa";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import announcementtype from "layouts/announcementtype/data/announcementtype";
@@ -17,12 +16,63 @@ import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import { useNavigate } from "react-router-dom";
 
+// announcement images
+import AnnounceIcon from "assets/annoucement-images/AnnounceIcon.png";
+import ArrivalIcon from "assets/annoucement-images/ArrivalIcon.png";
+import CelebrateIcon from "assets/annoucement-images/CelebrateIcon.png";
+import DeathIcon from "assets/annoucement-images/DeathIcon.png";
+import DepartureIcon from "assets/annoucement-images/DepartureIcon.png";
+import ListIcon from "assets/annoucement-images/ListIcon.png";
+import MeetingIcon from "assets/annoucement-images/MeetingIcon.png";
+
 function Announcementtype() {
   const MySwal = withReactContent(Swal);
   const { columns: pColumns, rows: pRows } = announcementtype();
 
+  const allImages = [
+    {
+      id: "1",
+      image: AnnounceIcon,
+      name: "AnnounceIcon",
+    },
+    {
+      id: "2",
+      image: ArrivalIcon,
+      name: "ArrivalIcon",
+    },
+    {
+      id: "3",
+      image: CelebrateIcon,
+      name: "CelebrateIcon",
+    },
+    {
+      id: "4",
+      image: DeathIcon,
+      name: "DeathIcon",
+    },
+    {
+      id: "5",
+      image: DepartureIcon,
+      name: "DepartureIcon",
+    },
+    {
+      id: "6",
+      image: ListIcon,
+      name: "ListIcon",
+    },
+    {
+      id: "7",
+      image: MeetingIcon,
+      name: "MeetingIcon",
+    },
+  ];
+
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
+  const [curImage, setCurImage] = useState("/static/media/AnnounceIcon.0b47feac.png");
+  const [iconx, setIcon] = useState("AnnounceIcon");
+
+  const [showIcons, setShowIcons] = useState(false);
 
   const [checkedName, setCheckedName] = useState("");
   const [enabled, setEnabled] = useState("");
@@ -32,55 +82,6 @@ function Announcementtype() {
 
   const { allPHeaders: myHeaders } = PHeaders();
 
-  const handleClick = (e) => {
-    console.log(FontAwesome);
-    e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const raw = JSON.stringify({ orgID: orgIDs, name: namex, colorCode: color, descrip: descripx });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    console.log(raw);
-    fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/add`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
   const handleOnNameKeys = () => {
     const letters = /^[a-zA-Z ]+$/;
     if (!namex.match(letters)) {
@@ -98,6 +99,76 @@ function Announcementtype() {
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
     setEnabled(checkedName === true);
+  };
+
+  const handleClick = (e) => {
+    handleOnNameKeys();
+    if (enabled) {
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+
+      const orgIDs = data11.orgID;
+      const raw = JSON.stringify({
+        orgID: orgIDs,
+        name: namex,
+        colorCode: color,
+        descrip: descripx,
+        icon: curImage,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      fetch(`${process.env.REACT_APP_SHASHA_URL}/announcementtype/add`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((error) => {
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
+  };
+
+  const handleShowIcons = () => {
+    setShowIcons(true);
+  };
+
+  const handleCloseCard = () => {
+    setShowIcons(false);
+  };
+
+  const handleIcons = (image, imageCode) => {
+    setCurImage(imageCode);
+    setIcon(image);
   };
 
   return (
@@ -193,16 +264,64 @@ function Announcementtype() {
                     </MDBox>
                   </MDBox>
                 </div>
+                <div>
+                  {showIcons ? (
+                    <Card variant="gradient" color="info" sx={{ width: 760 }}>
+                      <Container>
+                        <div className="row">
+                          {allImages.map((apic) => (
+                            <div className="col-sm-3" key={apic.id}>
+                              <MDBox>
+                                <MDButton
+                                  onClick={() => handleIcons(apic.name, apic.image)}
+                                  variant={(apic.name === iconx && "gradient") || "text"}
+                                  width="80%"
+                                  color="info"
+                                >
+                                  <img src={apic.image} alt="Icon" width="96" height="96" />
+                                </MDButton>
+                              </MDBox>
+                            </div>
+                          ))}
+                        </div>
+                      </Container>
+                      <MDButton
+                        variant="gradient"
+                        onClick={handleCloseCard}
+                        color="error"
+                        width="50%"
+                      >
+                        Close
+                      </MDButton>
+                    </Card>
+                  ) : (
+                    <MDBox mt={2}>
+                      <Container>
+                        <div className="row">
+                          <div className="col-sm-2">
+                            <MDButton
+                              variant="gradient"
+                              onClick={handleShowIcons}
+                              color="info"
+                              width="50%"
+                            >
+                              Choose Icon
+                            </MDButton>
+                          </div>
+                          <div className="col-sm-6">
+                            <MDButton variant="outlined" color="info" width="50%">
+                              <img src={curImage} alt="Icon" width="78" height="78" />
+                            </MDButton>
+                          </div>
+                        </div>
+                      </Container>
+                    </MDBox>
+                  )}
+                </div>
               </div>
             </Container>
             <MDBox mt={2} mb={2}>
-              <MDButton
-                variant="gradient"
-                onClick={handleClick}
-                disabled={!enabled}
-                color="info"
-                width="50%"
-              >
+              <MDButton variant="gradient" onClick={handleClick} color="info" width="50%">
                 Save
               </MDButton>
             </MDBox>
