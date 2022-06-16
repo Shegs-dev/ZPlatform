@@ -49,7 +49,7 @@ function Disapprove() {
         type: "success",
         text: "You Are Not Permitted To Approve This Request",
       }).then(() => {
-        navigate("/Time-Off-Type");
+        navigate("/time-off-Requests");
       });
     } else if (dbreasonx !== null && dbreasonx !== "") {
       MySwal.fire({
@@ -57,7 +57,7 @@ function Disapprove() {
         type: "success",
         text: "Decision Already Made For This Request",
       }).then(() => {
-        navigate("/Time-Off-Type");
+        navigate("/time-off-Requests");
       });
     } else {
       const raw = JSON.stringify({
@@ -114,7 +114,7 @@ function Disapprove() {
             type: "success",
             text: result.message,
           }).then(() => {
-            navigate("/Time-Off-Type");
+            navigate("/time-off-Requests");
           });
         })
         .catch((error) => {
