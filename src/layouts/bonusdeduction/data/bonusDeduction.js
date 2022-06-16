@@ -269,6 +269,7 @@ export default function bonusdeductionData() {
   return {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
+      { Header: "employee", accessor: "empName", align: "left" },
       { Header: "amount", accessor: "amount", align: "left" },
       { Header: "frequency", accessor: "frequency", align: "left" },
       { Header: "type", accessor: "type", align: "left" },
