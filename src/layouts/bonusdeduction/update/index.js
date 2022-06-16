@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
 import DataTable from "examples/Tables/DataTable";
-import bonusdeductionData from "layouts/bonusdeduction/data/bonusDeduction";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
@@ -21,9 +20,8 @@ import GHeaders from "getHeader";
 
 import { useNavigate } from "react-router-dom";
 
-function bonusdeduction() {
+function UpdateBonusOrDeduction() {
   const MySwal = withReactContent(Swal);
-  const { columns: pColumns, rows: pRows } = bonusdeductionData();
 
   const [namex, setName] = useState("");
   const [amountx, setAmount] = useState("");
@@ -31,6 +29,7 @@ function bonusdeduction() {
   const [currencyx, setCurrency] = useState("");
   const [setupTypex, setSetupTypex] = useState("");
   const [frequencyx, setFrequencyx] = useState("");
+  const [setup, setSetup] = useState({});
 
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
@@ -73,6 +72,51 @@ function bonusdeduction() {
         }
         if (isMounted) {
           setUser(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setOpened(true);
+    const headers = miHeaders;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const ids = urlParams.get("id");
+
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/getByIds/${ids}`, {
+      headers,
+    })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          setSetup(result[0]);
+          setName(result[0].name);
+          setAmount(result[0].amount);
+          setTypex(result[0].type);
+          setCurrency(result[0].currency);
+          setSetupTypex(result[0].setupType);
+          setFrequencyx(result[0].frequency);
         }
       });
     return () => {
@@ -364,16 +408,6 @@ function bonusdeduction() {
           </MDBox>
         </MDBox>
       </Card>
-      <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
@@ -382,4 +416,4 @@ function bonusdeduction() {
   );
 }
 
-export default bonusdeduction;
+export default UpdateBonusOrDeduction;
