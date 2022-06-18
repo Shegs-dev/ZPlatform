@@ -44,7 +44,7 @@ export default function bonusdeductionData() {
       setupType: setupTypex,
       currency: currencyx,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",

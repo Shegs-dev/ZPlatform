@@ -70,7 +70,6 @@ function AppraisalUpdate() {
             setValuex(result[0].value);
             setGradex(result[0].grade);
             setColorCodex(result[0].colorCode);
-            console.log(result[0].minScore);
             setMinScorex(result[0].minScore);
             setMaxScorex(result[0].maxScore);
             setDeleteFlagx(result[0].deleteFlag);
@@ -78,7 +77,6 @@ function AppraisalUpdate() {
           } else {
             setIdx(null);
           }
-          console.log(result);
         }
       });
     return () => {
@@ -101,7 +99,7 @@ function AppraisalUpdate() {
       minScore: minScorex,
       maxScore: maxScorex,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",
@@ -272,6 +270,7 @@ function AppraisalUpdate() {
                       aria-label="Default select example"
                       width="50%"
                       mx={34}
+                      value={colorCodex}
                       onChange={(e) => setColorCodex(e.target.value)}
                     >
                       <option>Select Color *</option>

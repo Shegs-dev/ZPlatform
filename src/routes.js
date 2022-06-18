@@ -368,7 +368,7 @@ const routes = [
     name: "View User Prorate",
     key: "viewUserProrate",
     icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Update-Salary-Prorate",
+    route: "/view-Salary-Prorate",
     component: <VuUserProrate />,
   },
   {

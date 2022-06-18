@@ -74,8 +74,8 @@ function VuUserProrate() {
           setStatus(result[0].status);
           setNoOfDays(result[0].noOfDays);
           setTotalNumOfDays(result[0].totalNumberOfDays);
-          setCreatedDate(result[0].createdDate);
-          setDeletedflag(result[0].deletedflag);
+          setCreatedDate(result[0].createdTime);
+          setDeletedflag(result[0].deleteFlag);
         }
       });
     return () => {

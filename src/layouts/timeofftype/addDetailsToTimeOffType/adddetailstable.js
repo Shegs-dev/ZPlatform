@@ -32,7 +32,7 @@ export default function AddDetailsData() {
       type: typex,
       name: namex,
       value: valuex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",

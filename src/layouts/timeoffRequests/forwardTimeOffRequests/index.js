@@ -44,8 +44,8 @@ function ForwardTimeOff() {
     // const eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
-      employeeTimeOffTransactionID: currentHolder,
-      currentHolderID: currentholderID,
+      employeeTimeOffTransactionID: currentholderID,
+      currentHolderID: currentHolder,
     });
     const requestOptions = {
       method: "POST",
@@ -92,7 +92,7 @@ function ForwardTimeOff() {
             endDate: employeeRecord[0].endDate,
             resumptionDate: employeeRecord[0].resumptionDate,
             dutyRelieverID: employeeRecord[0].dutyRelieverID,
-            createdDate: employeeRecord[0].createdDate,
+            createdDate: employeeRecord[0].createdTime,
             purpose: employeeRecord[0].purpose,
             deleteFlag: employeeRecord[0].deleteFlag,
             approverID: currentHolder,

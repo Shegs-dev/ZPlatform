@@ -33,7 +33,7 @@ export default function FreeDaysData() {
       orgID: orgIDs,
       name: namex,
       freeDate: freeDatex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",
