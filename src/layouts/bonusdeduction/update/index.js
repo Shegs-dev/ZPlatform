@@ -113,6 +113,7 @@ function UpdateBonusOrDeduction() {
           setName(result[0].name);
           setAmount(result[0].amount);
           setTypex(result[0].type);
+          setUserIDx(result[0].empID);
           setCurrency(result[0].currency);
           setSetupTypex(result[0].setupType);
           setFrequencyx(result[0].frequency);

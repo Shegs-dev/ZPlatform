@@ -5,7 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
@@ -13,155 +12,9 @@ export default function bonusdeductionData() {
   const MySwal = withReactContent(Swal);
   const [items, setItems] = useState([]);
 
-  const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
   const navigate = useNavigate();
-  // Method to handle update
-  const handleUpdate = (
-    idx,
-    empIDx,
-    namex,
-    amountx,
-    frequencyx,
-    setupTypex,
-    typex,
-    currencyx,
-    createdTimex,
-    deleteFlagx
-  ) => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-
-    const orgIDs = data11.orgID;
-    const raw = JSON.stringify({
-      id: idx,
-      orgID: orgIDs,
-      empID: empIDx,
-      name: namex,
-      amount: amountx,
-      frequency: frequencyx,
-      type: typex,
-      setupType: setupTypex,
-      currency: currencyx,
-      createdTime: createdTimex,
-      deleteFlag: deleteFlagx,
-    });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(`${process.env.REACT_APP_TANTA_URL}/remunerationpackagesetup/update`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        return res.json();
-      })
-      .then((result) => {
-        if (result.message === "Expired Access") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Token Does Not Exist") {
-          navigate("/authentication/sign-in");
-          window.location.reload();
-        }
-        if (result.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-          window.location.reload();
-        }
-        MySwal.fire({
-          title: result.status,
-          type: "success",
-          text: result.message,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
-      });
-  };
-
-  // Method to filter departments
-  const handleShow = (filteredData, value) => {
-    let namex = "";
-    let empIDx = "";
-    let amountx = 0;
-    let currencyx = "";
-    let frequencyx = 0;
-    let setupTypex = 0;
-    let typex = "";
-    let createdTime = 0;
-    let deleteFlag = 0;
-    // Avoid filter for empty string
-    if (!value) {
-      namex = "";
-      empIDx = "";
-      amountx = 0;
-      frequencyx = 0;
-      setupTypex = 0;
-      typex = "";
-      currencyx = "";
-      createdTime = 0;
-      deleteFlag = 0;
-    } else {
-      const filteredItems = filteredData.filter((item) => item.id === value);
-
-      namex = filteredItems[0].name;
-      empIDx = filteredItems[0].empID;
-      amountx = filteredItems[0].amount;
-      frequencyx = filteredItems[0].frequency;
-      typex = filteredItems[0].type;
-      setupTypex = filteredItems[0].setupType;
-      currencyx = filteredItems[0].currency;
-      createdTime = filteredItems[0].createdTime;
-      deleteFlag = filteredItems[0].deleteFlag;
-    }
-
-    MySwal.fire({
-      title: "Update Bonus/Deduction",
-      html: `<tr><td>
-      <label for="name">Name</label></td>
-      <td><input type="text" id="name" value="${namex}" class="swal2-input" placeholder="Name"disabled></td></tr><br>
-            <tr><td><label for="value">Amount</label></td>
-      <td><input type="text" id="amount" value="${amountx}" class="swal2-input" placeholder="Amount"></td></tr><br>
-        <tr><td><label for="value">Type</label></td>
-     <td><input type="text" class="swal2-input" id="type" value="${typex}" placeholder="type"disabled></td></tr>`,
-      confirmButtonText: "Save",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      preConfirm: () => {
-        const name = Swal.getPopup().querySelector("#name").value;
-        const amount = Swal.getPopup().querySelector("#amount").value;
-        const type = Swal.getPopup().querySelector("#type").value;
-        const setupType = setupTypex;
-        const id = value;
-        if (!name) {
-          Swal.showValidationMessage(`Please enter name`);
-        }
-        handleUpdate(
-          id,
-          empIDx,
-          name,
-          amount,
-          frequencyx,
-          setupType,
-          type,
-          currencyx,
-          createdTime,
-          deleteFlag
-        );
-      },
-    });
-  };
 
   // Method to handle diable
   const handleDisable = (value) => {
@@ -220,6 +73,10 @@ export default function bonusdeductionData() {
 
   const handleClone = (value) => {
     navigate(`/Bonus-And-Deduction/Clone?id=${value}`);
+  };
+
+  const handleShow = (value) => {
+    navigate(`/Bonus-And-Deduction/Update?id=${value}`);
   };
 
   // Method to change date from timestamp
@@ -311,7 +168,7 @@ export default function bonusdeductionData() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleShow(items, value)}>Update</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleShow(value)}>Update</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleClone(value)}>Clone</Dropdown.Item>
                 <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
               </Dropdown.Menu>

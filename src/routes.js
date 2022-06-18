@@ -88,6 +88,7 @@ import SalaryPayment from "layouts/salaryPayment";
 
 import Bonusdeduction from "layouts/bonusdeduction";
 import CloneBonusDeduction from "layouts/bonusdeduction/clone";
+import UpdateBonusOrDeduction from "layouts/bonusdeduction/update";
 import Groups from "layouts/groups";
 import AppraisalQues from "layouts/appraisal/appraisalQuestions";
 import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
@@ -393,6 +394,13 @@ const routes = [
     icon: <Icon fontSize="small">meeting_room</Icon>,
     route: "/Bonus-And-Deduction/Clone",
     component: <CloneBonusDeduction />,
+  },
+  {
+    name: "Update Bonus or Deduction",
+    key: "updateBonusDeduction",
+    icon: <Icon fontSize="small">meeting_room</Icon>,
+    route: "/Bonus-And-Deduction/Update",
+    component: <UpdateBonusOrDeduction />,
   },
   {
     type: "collapse",
