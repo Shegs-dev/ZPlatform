@@ -101,7 +101,6 @@ function Announcement() {
         }
         if (isMounted) {
           setAllAnnouncementType(result);
-          console.log(result);
         }
       });
     return () => {
