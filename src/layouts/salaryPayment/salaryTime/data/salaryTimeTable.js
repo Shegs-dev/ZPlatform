@@ -27,7 +27,7 @@ export default function SalaryTimeData() {
       orgID: orgIDs,
       payTime: timex,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",

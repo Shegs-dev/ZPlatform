@@ -44,7 +44,7 @@ export default function bonusdeductionData() {
       setupType: setupTypex,
       currency: currencyx,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",
@@ -265,12 +265,26 @@ export default function bonusdeductionData() {
     };
   }, []);
 
+  // Method to change type
+  const changeType = (status) => {
+    if (status === 1) {
+      return "Once";
+    }
+    return "Always";
+  };
+
   // Return table
   return {
     columns: [
       { Header: "name", accessor: "name", align: "left" },
+      { Header: "employee", accessor: "empName", align: "left" },
       { Header: "amount", accessor: "amount", align: "left" },
-      { Header: "frequency", accessor: "frequency", align: "left" },
+      {
+        Header: "frequency",
+        accessor: "frequency",
+        Cell: ({ cell: { value } }) => changeType(value),
+        align: "left",
+      },
       { Header: "type", accessor: "type", align: "left" },
       { Header: "setupType", accessor: "setupType", align: "left" },
       {

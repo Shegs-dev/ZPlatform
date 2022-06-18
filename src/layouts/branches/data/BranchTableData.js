@@ -51,7 +51,7 @@ export default function Branchdata() {
       country: countryx,
       pno: pnox,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",

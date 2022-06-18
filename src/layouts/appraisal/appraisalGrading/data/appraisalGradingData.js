@@ -47,7 +47,7 @@ export default function AppraisalGradeData() {
   //     minScore: minScorex,
   //     maxScore: maxScorex,
   //     createdTime: createdTimex,
-  //     deletedFlag: deleteFlagx,
+  //     deleteFlag: deleteFlagx,
   //   });
   //   const requestOptions = {
   //     method: "POST",

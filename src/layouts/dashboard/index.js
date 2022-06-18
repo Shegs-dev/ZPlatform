@@ -37,6 +37,8 @@ import { useNavigate, Link } from "react-router-dom";
 import GHeaders from "getHeader";
 // import MDButton from "components/MDButton";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Dashboard() {
   const MySwal = withReactContent(Swal);
@@ -66,6 +68,8 @@ function Dashboard() {
   const { allGHeaders: miHeaders } = GHeaders();
   const { allPHeaders: myHeaders } = PHeaders();
   const navigate = useNavigate();
+
+  const [opened, setOpened] = useState(false);
 
   const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
   // const grader = { grading };
@@ -365,8 +369,6 @@ function Dashboard() {
             setShowTOR(true);
           }
           setEmpTOR(result);
-          console.log(result);
-          // console.log(result);
         }
       });
     return () => {
@@ -583,6 +585,9 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
+    setOpened(true);
+
+    console.log("first day");
     // const headers = myHeaders;
     // function getFirstDayOfMonth(year, month) {
     //   return new Date(year, month, 1);
@@ -591,7 +596,9 @@ function Dashboard() {
     // 👇️ First day of CURRENT MONTH
     const date = new Date();
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
-    const curDay = new Date(date.getFullYear(), date.getMonth()).getTime();
+    const curDay = new Date().getTime();
+    console.log(firstDay);
+    console.log(curDay);
     // const curDate = new Date();
 
     // const curDay = curDate.getDate();
@@ -604,8 +611,8 @@ function Dashboard() {
     const raw = JSON.stringify({
       userID: personalIds,
       orgID: orgIDs,
-      startTime: firstDay,
-      endTime: curDay,
+      startTime: 1655074800000,
+      endTime: 1655161200000,
     });
     const requestOptions = {
       method: "POST",
@@ -613,6 +620,7 @@ function Dashboard() {
       body: raw,
       redirect: "follow",
     };
+    console.log("second day");
     let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/audit/getFilter`, requestOptions)
       .then(async (res) => {
@@ -634,7 +642,19 @@ function Dashboard() {
           window.location.reload();
         }
         if (isMounted) {
-          setAmount(result);
+          setOpened(false);
+          let priceByUser = 0;
+          // eslint-disable-next-line array-callback-return
+          result.map((item) => {
+            if (item.price < 1) {
+              console.log(priceByUser);
+              priceByUser += item.price;
+            }
+          });
+          console.log("result");
+          console.log(result);
+          console.log(priceByUser);
+          setAmount(priceByUser);
         }
       });
     return () => {
@@ -1407,9 +1427,8 @@ function Dashboard() {
                                       <div style={{ color: "#f5f5f5" }}>{api.question}</div>
                                     </CardContent>
                                   </Card>{" "}
+                                  &nbsp; &nbsp;
                                 </Link>
-                                &nbsp; &nbsp;
-                                {/* </Link> */}
                               </Grid>
                             </Grid>
                           ))}
@@ -1443,6 +1462,9 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
       <Footer />
     </DashboardLayout>
   );

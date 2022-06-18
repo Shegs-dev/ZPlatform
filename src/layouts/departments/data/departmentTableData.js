@@ -28,7 +28,7 @@ export default function DepartmentData() {
       name: namex,
       descrip: descripx,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",

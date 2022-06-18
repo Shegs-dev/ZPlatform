@@ -32,7 +32,7 @@ export default function data() {
       orgID: orgIDs,
       name: namex,
       createdTime: createdTimex,
-      deletedFlag: deleteFlagx,
+      deleteFlag: deleteFlagx,
     });
     const requestOptions = {
       method: "POST",
