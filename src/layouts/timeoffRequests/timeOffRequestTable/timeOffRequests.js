@@ -39,7 +39,8 @@ export default function TimeOffRequestData() {
     approvex,
     adminx,
     reasonx,
-    statusx
+    statusx,
+    empIDx
   ) => {
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const orgIDs = data11.orgID;
@@ -65,7 +66,7 @@ export default function TimeOffRequestData() {
       const raw = JSON.stringify({
         id: idx,
         orgID: orgIDs,
-        empID: personalIds,
+        empID: empIDx,
         empSetupID: empSetupIdx,
         noOfDaysRequested: daysx,
         noOfDaysApproved: daysapprovex,
@@ -154,6 +155,7 @@ export default function TimeOffRequestData() {
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     let empSetupIdx = "";
+    let empIDx = "";
     let daysx = "";
     let daysapprovex = "";
     let startx = "";
@@ -169,6 +171,7 @@ export default function TimeOffRequestData() {
     // Avoid filter for empty string
     if (!value) {
       empSetupIdx = "";
+      empIDx = "";
       daysx = "";
       daysapprovex = "";
       startx = "";
@@ -184,6 +187,7 @@ export default function TimeOffRequestData() {
     } else {
       const filteredItems = filteredData.filter((item) => item.id === value);
       empSetupIdx = filteredItems[0].empSetupID;
+      empIDx = filteredItems[0].empID;
       daysx = filteredItems[0].noOfDaysRequested;
       daysapprovex = filteredItems[0].noOfDaysApproved;
       startx = filteredItems[0].startDate;
@@ -243,7 +247,8 @@ export default function TimeOffRequestData() {
             approvex,
             adminx,
             reasonx,
-            1
+            1,
+            empIDx
           );
         }
       },
@@ -308,6 +313,13 @@ export default function TimeOffRequestData() {
     const filteredItems = items.filter((item) => item.id === status);
     if (filteredItems[0].status === "2") {
       return "Decision Made";
+    }
+    if (filteredItems[0].status === "2") {
+      return MySwal.fire({
+        title: "Timeoff Request",
+        type: "success",
+        text: "Time off Request Approved",
+      });
     }
     if (filteredItems[0].status === "1") {
       return "Decision Made";

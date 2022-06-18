@@ -44,8 +44,8 @@ function ForwardTimeOff() {
     // const eTOTId = {};
     const raw = JSON.stringify({
       orgID: orgIDs,
-      employeeTimeOffTransactionID: currentHolder,
-      currentHolderID: currentholderID,
+      employeeTimeOffTransactionID: currentholderID,
+      currentHolderID: currentHolder,
     });
     const requestOptions = {
       method: "POST",

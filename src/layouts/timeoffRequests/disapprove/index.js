@@ -21,6 +21,7 @@ function Disapprove() {
 
   const [idx, setIdx] = useState("");
   const [empSetupIdx, setEmpSetupIdx] = useState("");
+  const [empIDx, setEmpIDx] = useState("");
   const [daysx, setDaysx] = useState("");
   // const [daysapprovex, setDaysapprovex] = useState("");
   const [startx, setStartx] = useState("");
@@ -62,7 +63,7 @@ function Disapprove() {
       const raw = JSON.stringify({
         id: idx,
         orgID: orgIDs,
-        empID: personalIds,
+        empID: empIDx,
         empSetupID: empSetupIdx,
         noOfDaysRequested: daysx,
         noOfDaysApproved: 0,
@@ -165,6 +166,7 @@ function Disapprove() {
           if (result.length != 0) {
             setIdx(result[0].id);
             setEmpSetupIdx(result[0].empSetupID);
+            setEmpIDx(result[0].empID);
             setDaysx(result[0].noOfDaysRequested);
             // setDaysapprovex(result[0].noOfDaysApproved);
             setStartx(result[0].startDate);
