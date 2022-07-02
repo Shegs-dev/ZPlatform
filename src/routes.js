@@ -118,6 +118,7 @@ import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
 import PollsView from "layouts/polls/view";
 import UpdateAppraisalGrading from "layouts/appraisal/appraisalGrading/update";
+import JobApplication from "layouts/JobApplication";
 
 const routes = [
   {
@@ -127,6 +128,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Job Application",
+    key: "JobApplication",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/Job-application",
+    component: <JobApplication />,
   },
   {
     type: "collapse",
