@@ -57,17 +57,11 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   };
 
   const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
-  let userRoleID = "";
+
   let userFullName = "";
   if (userOData !== null) {
     // eslint-disable-next-line prefer-template
     userFullName = userOData.personal.fname + " " + userOData.personal.lname;
-
-    if (userOData.role === null) {
-      userRoleID = "Admin";
-    } else {
-      userRoleID = userOData.role.name;
-    }
   }
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
@@ -195,8 +189,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             fontSize="70%"
           >
             {userFullName}
-            <br />
-            {userRoleID}
           </MDTypography>
         </MDBox>
       </MDBox>

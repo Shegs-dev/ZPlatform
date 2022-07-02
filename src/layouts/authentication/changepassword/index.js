@@ -114,7 +114,7 @@ function ChangePassword() {
         body: raw,
         redirect: "follow",
       };
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/changepass`, requestOptions)
         .then(async (res) => {
           const aToken = res.headers.get("token-1");
           localStorage.setItem("rexxdex", aToken);

@@ -118,6 +118,7 @@ import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
 import PollsView from "layouts/polls/view";
 import UpdateAppraisalGrading from "layouts/appraisal/appraisalGrading/update";
+import Skills from "layouts/skills";
 
 const routes = [
   {
@@ -135,6 +136,14 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "Skills",
+    key: "skills",
+    icon: <Icon fontSize="small">accessibility</Icon>,
+    route: "/skills",
+    component: <Skills />,
   },
   {
     name: "Add Time-Off Type To User",

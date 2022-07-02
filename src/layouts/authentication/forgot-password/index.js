@@ -58,7 +58,7 @@ function ForgotPass() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/forgotPassword`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/forgotPassword`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         setOpened(false);
