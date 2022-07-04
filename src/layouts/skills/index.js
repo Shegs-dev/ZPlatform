@@ -150,11 +150,10 @@ function Skills() {
   const handleClick = (e) => {
     handleOnNameKeys();
     if (enabled) {
-      console.log("first");
       setOpened(true);
       e.preventDefault();
       const data11 = JSON.parse(localStorage.getItem("user1"));
-
+      console.log(data11);
       const personalIDs = data11.id;
       const raw = JSON.stringify({ empID: personalIDs, name: namex, descrip: descripx });
       const requestOptions = {
@@ -163,18 +162,15 @@ function Skills() {
         body: raw,
         redirect: "follow",
       };
+      console.log(raw);
 
-      console.log("third1");
       fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/add`, requestOptions)
         .then(async (res) => {
-          console.log("third2");
           const aToken = res.headers.get("token-1");
           localStorage.setItem("rexxdex", aToken);
-          console.log("second");
           return res.json();
         })
         .then((result) => {
-          console.log("third");
           setOpened(false);
           if (result.message === "Expired Access") {
             navigate("/authentication/sign-in");

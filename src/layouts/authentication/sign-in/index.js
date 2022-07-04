@@ -90,7 +90,7 @@ function Basic() {
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
-          localStorage.setItem("user1", JSON.stringify(result.personal));
+          localStorage.setItem("user1", JSON.stringify(result.otherDetailsDTO.personal));
           localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
           localStorage.setItem("BirthDayStatus", JSON.stringify(result.wishBirthday));
 
