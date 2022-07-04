@@ -6,10 +6,11 @@ import MDTypography from "components/MDTypography";
 import TextField from "@mui/material/TextField";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
+import Icon from "@mui/material/Icon";
 // import Icon from "@mui/material/Icon";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Container, Form, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
+import { Container, Form, Row, Col, ButtonGroup, ToggleButton, Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 // import TimePicker from "react-bootstrap-time-picker";
@@ -65,6 +66,14 @@ function JobApplication() {
   };
 
   const { allPHeaders: myHeaders } = PHeaders();
+
+  const handleApply = (value) => {
+    navigate(`ManualApplication?id=${value}`);
+  };
+
+  const handleDelete = (value) => {
+    navigate(`ManualApplication?id=${value}`);
+  };
 
   const handleCreate = () => {
     const minCreatedx = new Date(minCreated).getTime();
@@ -138,31 +147,32 @@ function JobApplication() {
       Cell: ({ cell: { value } }) => changeEndDate(value),
       align: "left",
     },
-    // {
-    //   Header: "actions",
-    //   accessor: "id",
-    //   Cell: ({ cell: { value } }) => (
-    //     <div
-    //       style={{
-    //         width: "100%",
-    //         backgroundColor: "#f5f5f5",
-    //         borderRadius: "2px",
-    //       }}
-    //     >
-    //       <Dropdown>
-    //         <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-    //           <Icon sx={{ fontWeight: "light" }}>settings</Icon>
-    //         </Dropdown.Toggle>
+    {
+      Header: "actions",
+      accessor: "id",
+      // eslint-disable-next-line react/prop-types
+      Cell: ({ cell: value }) => (
+        <div
+          style={{
+            width: "100%",
+            backgroundColor: "#f5f5f5",
+            borderRadius: "2px",
+          }}
+        >
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
+            </Dropdown.Toggle>
 
-    //         <Dropdown.Menu>
-    //           <Dropdown.Item onClick={() => handleUpdate(items, value)}>Update</Dropdown.Item>
-    //           <Dropdown.Item onClick={() => handleDelete(value)}>Delete</Dropdown.Item>
-    //         </Dropdown.Menu>
-    //       </Dropdown>
-    //     </div>
-    //   ),
-    //   align: "left",
-    // },
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => handleApply(items, value)}>Apply Job</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleDelete(value)}>Delete</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
+      align: "left",
+    },
   ];
 
   return (
