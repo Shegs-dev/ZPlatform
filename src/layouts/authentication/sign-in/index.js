@@ -85,6 +85,7 @@ function Basic() {
         // console.log(res.headers);;;;
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex1", aToken);
+        console.log(aToken);
         return res.json();
       })
       .then((result) => {
@@ -231,7 +232,7 @@ function Basic() {
                 </MDTypography>
               </MDBox>
               <MDBox mb={1} mt={-1} textAlign="center">
-                <MDTypography
+                {/* <MDTypography
                   component={Link}
                   to="/authentication/renew-Login"
                   variant="button"
@@ -240,7 +241,7 @@ function Basic() {
                   textGradient
                 >
                   Renew Subscription
-                </MDTypography>
+                </MDTypography> */}
               </MDBox>
             </MDBox>
           </MDBox>

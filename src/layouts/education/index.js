@@ -8,7 +8,7 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import MDTypography from "components/MDTypography";
 import Backdrop from "@mui/material/Backdrop";
@@ -22,18 +22,44 @@ import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import AllDegrees from "./degree";
+import AllCourses from "./courses";
 
 function Education() {
   const MySwal = withReactContent(Swal);
+  const { allCourses: AlCourses } = AllCourses();
+  const { allDegrees: AlDegrees } = AllDegrees();
 
   const [namex, setName] = useState("");
-  const [descripx, setDescrip] = useState("");
+  const [specializationx, setSpecialization] = useState("");
+  const [gradex, setGrades] = useState("");
+
+  const [uidx, setUID] = useState("");
+  const [unamex, setUName] = useState("");
+  const [udegreex, setUDegreex] = useState("");
+  const [uspecializationx, setUSpecialization] = useState("");
+  const [ugradex, setUGrades] = useState("");
+  const [uempID, setUEmpID] = useState("");
+  const [ustartDate, setUStartDate] = useState("");
+  const [uendDate, setUEndDate] = useState("");
+  const [udeleteFlag, setUDeleteFlag] = useState("");
+  const [ucreatedTime, setUCreatedTime] = useState("");
+
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [uopened, setUOpened] = useState(false);
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const [degreex, setDegreex] = useState("");
 
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
 
   const [allApp, setAllApp] = useState([]);
-  const [showSkills, setShowSkills] = useState(false);
+  const [showLists, setShowLists] = useState(false);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -41,11 +67,24 @@ function Education() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
+  const changeDateandTime = (timestamp) => {
+    const date = new Date(timestamp);
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate !== null) {
+      dayx = date.getDate();
+      monthx = date.getMonth() + 1;
+      yearx = date.getFullYear();
+    }
+    return `${yearx}/${monthx}/${dayx}`;
+  };
+
   const handleGets = () => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
     const personalIDs = data11.id;
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/getForEmployee/${personalIDs}`, {
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/education/getForEmployee/${personalIDs}`, {
       headers,
     })
       .then(async (res) => {
@@ -67,7 +106,7 @@ function Education() {
           window.location.reload();
         }
         if (result.length > 0) {
-          setShowSkills(true);
+          setShowLists(true);
         }
         setAllApp(result);
       });
@@ -77,8 +116,8 @@ function Education() {
     let isMounted = true;
 
     if (isMounted) {
-      // fetches the table data
-      //   handleGets();
+      //   fetches the table data
+      handleGets();
     }
     return () => {
       isMounted = false;
@@ -91,7 +130,7 @@ function Education() {
       headers: miHeaders,
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/delete/${val}`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/education/delete/${val}`, requestOptions)
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -148,6 +187,8 @@ function Education() {
 
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
+    const startCDate = new Date(startDate).getTime();
+    const endCDate = new Date(endDate).getTime();
     handleOnNameKeys();
     if (enabled) {
       setOpened(true);
@@ -158,13 +199,13 @@ function Education() {
       const raw = JSON.stringify({
         empID: personalIDs,
         name: namex,
-        descrip: descripx,
-        startTime: 0,
-        endTime: 0,
-        degree: "string",
-        specialization: "string",
-        grade: "string",
+        startTime: startCDate,
+        endTime: endCDate,
+        degree: degreex,
+        specialization: specializationx,
+        grade: gradex,
       });
+      console.log(raw);
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
@@ -172,7 +213,7 @@ function Education() {
         redirect: "follow",
       };
 
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/add`, requestOptions)
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/education/add`, requestOptions)
         .then(async (res) => {
           const aToken = res.headers.get("token-1");
           localStorage.setItem("rexxdex", aToken);
@@ -199,7 +240,11 @@ function Education() {
           }).then(() => {
             handleGets();
             setName("");
-            setDescrip("");
+            setSpecialization("");
+            setGrades("");
+            setStartDate("");
+            setEndDate("");
+            setDegreex("");
           });
         })
         .catch((error) => {
@@ -211,6 +256,105 @@ function Education() {
           });
         });
     }
+  };
+
+  const handleUpdate = () => {
+    setOpened(true);
+    const startCDate = new Date(ustartDate).getTime();
+    const endCDate = new Date(uendDate).getTime();
+    const raw = JSON.stringify({
+      id: uidx,
+      name: unamex,
+      empID: uempID,
+      startTime: startCDate,
+      endTime: endCDate,
+      degree: udegreex,
+      specialization: uspecializationx,
+      grade: ugradex,
+      deleteFlag: udeleteFlag,
+      createdTime: ucreatedTime,
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/education/update`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        setUOpened(false);
+        setShowUpdate(false);
+        handleGets();
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          setUOpened(false);
+          setShowUpdate(false);
+          handleGets();
+        });
+      })
+      .catch((error) => {
+        setOpened(true);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  // Method to filter departments
+  const handleShow = (filteredData, value) => {
+    // "endTime":"2003-07-10T23:00:00.000Z"
+    // const changeDateandTime = (timestamp) => {
+    //   const date = new Date(timestamp);
+    //   let dayx = "";
+    //   let monthx = "";
+    //   let yearx = "";
+    //   if (startDate !== null) {
+    //     dayx = date.getDate();
+    //     monthx = date.getMonth() + 1;
+    //     yearx = date.getFullYear();
+    //   }
+    //   return `${yearx}-${monthx}-${dayx}T23:00:00.000Z`;
+    // };
+
+    const filteredItems = filteredData.filter((item) => item.id === value);
+    setUID(value);
+    setUName(filteredItems[0].name);
+    setUEmpID(filteredItems[0].empID);
+    setUDegreex(filteredItems[0].degree);
+    setUSpecialization(filteredItems[0].specialization);
+    setUGrades(filteredItems[0].grade);
+    setUStartDate(filteredItems[0].startTime);
+    setUEndDate(filteredItems[0].endTime);
+    setUCreatedTime(filteredItems[0].createdTime);
+    setUDeleteFlag(filteredItems[0].deleteFlag);
+
+    setUOpened(true);
+    setShowUpdate(true);
   };
 
   return (
@@ -259,7 +403,7 @@ function Education() {
                         <div className="col-sm-12">
                           <MDInput
                             type="text"
-                            label="Name *"
+                            label=" School's Name *"
                             value={namex || ""}
                             onKeyUp={handleOnNameKeys}
                             className="form-control"
@@ -334,10 +478,10 @@ function Education() {
                       onChange={(e) => setDegreex(e.target.value)}
                       aria-label="Default select example"
                     >
-                      <option value="">--Select User--</option>
-                      {degree.map((api) => (
-                        <option key={api.personal.id} value={api.personal.id}>
-                          {api.personal.fname} {api.personal.lname}
+                      <option value="">--Select Degree--</option>
+                      {AlDegrees.map((api) => (
+                        <option key={api.id} value={api.value}>
+                          {api.name}
                         </option>
                       ))}
                     </Form.Select>
@@ -353,10 +497,14 @@ function Education() {
                     >
                       Specialization
                     </MDTypography>
-                    <Form.Select aria-label="Default select example" onChange={handleOnChange}>
-                      <option>--Select Service--</option>
-                      {specialization.map((api) => (
-                        <option key={api.id} value={api.name}>
+                    <Form.Select
+                      aria-label="Default select example"
+                      value={specializationx}
+                      onChange={(e) => setSpecialization(e.target.value)}
+                    >
+                      <option>--Select Specialization--</option>
+                      {AlCourses.map((api) => (
+                        <option key={api.name} value={api.name}>
                           {api.name}
                         </option>
                       ))}
@@ -372,13 +520,16 @@ function Education() {
                     >
                       Grade
                     </MDTypography>
-                    <Form.Select aria-label="Default select example" onChange={handleOnGradeChange}>
-                      <option>--Select Permissions--</option>
-                      {grades.map((api) => (
-                        <option key={api.id} value={api.actionCall}>
-                          {api.displayName}
-                        </option>
-                      ))}
+                    <Form.Select
+                      aria-label="Default select example"
+                      value={gradex}
+                      onChange={(e) => setGrades(e.target.value)}
+                    >
+                      <option>--Select Grade--</option>
+                      <option value="First class">First class</option>
+                      <option value="Second class upper">Second class upper</option>
+                      <option value="Second class lower">Second class lower</option>
+                      <option value="Third class">Third class</option>
                     </Form.Select>
                   </MDBox>{" "}
                   <MDBox mt={4} mb={1}>
@@ -401,91 +552,118 @@ function Education() {
       <MDBox pt={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
-            {showSkills ? (
-              <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
-                <MDBox
-                  variant="gradient"
-                  bgColor="white"
-                  borderRadius="lg"
-                  coloredShadow="success"
-                  mt={2}
-                  mx={0}
-                  p={1}
-                  textAlign="left"
-                >
-                  <MDTypography
-                    variant="h4"
-                    fontWeight="medium"
-                    color="info"
-                    textAlign="center"
-                    mt={1}
-                  >
-                    Skills
-                  </MDTypography>
-                </MDBox>
-                &nbsp;
-                {/* <div
-                  className="scrollbar scrollbar-primary mt-2 mx-auto"
-                  style={scrollContainerStyle}
-                > */}
-                <Container>
-                  <div className="row">
-                    {allApp.map((item) => (
-                      <Grid item xs={3} md={3} lg={3} key={item.id}>
-                        <Card sx={{ maxWidth: 345 }}>
-                          <CardContent>
-                            <MDTypography
-                              variant="h5"
-                              fontWeight="medium"
-                              fontSize="120%"
-                              color="info"
-                              textAlign="left"
-                              mt={1}
+            {showLists ? (
+              <Container>
+                <div className="row">
+                  {allApp.map((item) => (
+                    <Grid item xs={6} md={6} lg={6} key={item.id}>
+                      <Card>
+                        <CardContent>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="120%"
+                            color="info"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            {item.name}
+                          </MDTypography>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            {item.specialization}
+                          </MDTypography>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            Degree: {item.degree}
+                          </MDTypography>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            Grade: {item.grade}
+                          </MDTypography>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            From {changeDateandTime(item.startTime)} to{" "}
+                            {changeDateandTime(item.endTime)}
+                          </MDTypography>
+                        </CardContent>
+                        <CardActions>
+                          <div align="right">
+                            <MDButton
+                              variant="gradient"
+                              color="white"
+                              onClick={() => handleDeleteSK(item.id)}
+                              width="50%"
+                              mt={-1}
                             >
-                              {item.name}
-                            </MDTypography>
-                            <MDTypography
-                              variant="h6"
-                              color="text"
-                              fontSize="75%"
-                              textAlign="left"
-                              mt={1}
-                            >
-                              {item.descrip}
-                            </MDTypography>
-                          </CardContent>
-                          <CardActions>
-                            <div align="right">
-                              <MDButton
-                                variant="gradient"
-                                color="white"
-                                onClick={() => handleDeleteSK(item.id)}
-                                width="50%"
+                              <Icon
+                                fontSize="medium"
+                                sx={{ fontSize: 100, alignSelf: "center" }}
+                                color="error"
                               >
-                                <Icon
-                                  fontSize="medium"
-                                  sx={{ fontSize: 100, alignSelf: "center" }}
-                                  color="error"
-                                >
-                                  delete
-                                </Icon>
-                              </MDButton>
-                            </div>
-                          </CardActions>
-                        </Card>
-                        &nbsp;
-                      </Grid>
-                    ))}
-                  </div>
-                </Container>
-                {/* </div> */}
-                &nbsp;
-              </Card>
+                                delete
+                              </Icon>
+                            </MDButton>
+                          </div>
+                          <div align="right">
+                            <MDButton
+                              variant="gradient"
+                              color="white"
+                              onClick={() => handleShow(allApp, item.id)}
+                              width="50%"
+                              mt={-1}
+                            >
+                              <Icon
+                                fontSize="medium"
+                                sx={{ fontSize: 100, alignSelf: "center" }}
+                                color="error"
+                              >
+                                edit
+                              </Icon>
+                            </MDButton>
+                          </div>
+                        </CardActions>
+                      </Card>
+                      &nbsp;
+                    </Grid>
+                  ))}
+                </div>
+                <br />
+              </Container>
             ) : (
               <Card>
                 {" "}
                 <MDTypography variant="h3" fontWeight="bold" color="text" textAlign="center" mt={1}>
-                  No Added Skill
+                  No Added Education
                 </MDTypography>
                 <Icon
                   fontSize="medium"
@@ -499,6 +677,207 @@ function Education() {
           </Grid>
         </Grid>
       </MDBox>
+      {showUpdate ? (
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
+          <Card>
+            <MDBox pt={4} pb={3} px={30}>
+              <MDBox
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="success"
+                mx={1}
+                mt={2}
+                p={2}
+                mb={1}
+                textAlign="left"
+              >
+                <MDTypography
+                  variant="h4"
+                  fontWeight="medium"
+                  color="white"
+                  textAlign="center"
+                  mt={1}
+                >
+                  Add Education
+                </MDTypography>
+              </MDBox>
+              <MDBox
+                variant="gradient"
+                bgColor="error"
+                borderRadius="lg"
+                coloredShadow="success"
+                mx={3}
+                mt={1}
+                p={1}
+                mb={1}
+                textAlign="center"
+              >
+                <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+                  {" "}
+                </MDTypography>
+              </MDBox>
+              <MDBox component="form" role="form">
+                <MDBox mb={2}>
+                  <Container>
+                    <div align="center">
+                      {" "}
+                      <MDBox mb={2}>
+                        <Container>
+                          <div className="row">
+                            <div className="col-sm-12">
+                              <MDInput
+                                type="text"
+                                label=" School's Name *"
+                                value={unamex || ""}
+                                onKeyUp={handleOnNameKeys}
+                                className="form-control"
+                                onChange={(e) => setUName(e.target.value)}
+                                variant="standard"
+                                fullWidth
+                              />
+                            </div>
+                          </div>
+                        </Container>
+                      </MDBox>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <MDBox mt={2}>
+                            <MDTypography
+                              variant="button"
+                              fontWeight="regular"
+                              fontSize="80%"
+                              align="left"
+                              color="text"
+                            >
+                              Start Date *
+                            </MDTypography>
+                            <DatePicker
+                              placeholderText="MM/DD/YY"
+                              style={{ marginRight: "10px" }}
+                              selected={ustartDate}
+                              peekNextMonth
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
+                              onChange={(time) => setUStartDate(time)}
+                            />{" "}
+                          </MDBox>{" "}
+                        </div>
+                        <div className="col-sm-6">
+                          <MDBox mt={2}>
+                            <MDTypography
+                              variant="button"
+                              fontWeight="regular"
+                              fontSize="80%"
+                              align="left"
+                              color="text"
+                            >
+                              End Date *
+                            </MDTypography>
+                            <DatePicker
+                              placeholderText="MM/DD/YY"
+                              style={{ marginRight: "10px" }}
+                              selected={uendDate}
+                              onChange={(time) => setUEndDate(time)}
+                              peekNextMonth
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
+                            />{" "}
+                          </MDBox>
+                        </div>
+                      </div>
+                      <MDBox mt={2}>
+                        <MDTypography
+                          variant="button"
+                          fontWeight="regular"
+                          fontSize="80%"
+                          align="left"
+                          color="text"
+                        >
+                          Degree
+                        </MDTypography>
+                        <Form.Select
+                          value={udegreex}
+                          onChange={(e) => setUDegreex(e.target.value)}
+                          aria-label="Default select example"
+                        >
+                          <option value="">--Select Degree--</option>
+                          {AlDegrees.map((api) => (
+                            <option key={api.id} value={api.value}>
+                              {api.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                        <br />
+                      </MDBox>
+                      <MDBox mt={-1}>
+                        <MDTypography
+                          variant="button"
+                          fontWeight="regular"
+                          fontSize="80%"
+                          align="left"
+                          color="text"
+                        >
+                          Specialization
+                        </MDTypography>
+                        <Form.Select
+                          aria-label="Default select example"
+                          value={uspecializationx}
+                          onChange={(e) => setUSpecialization(e.target.value)}
+                        >
+                          <option>--Select Specialization--</option>
+                          {AlCourses.map((api) => (
+                            <option key={api.name} value={api.name}>
+                              {api.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </MDBox>
+                      <MDBox mt={2}>
+                        <MDTypography
+                          variant="button"
+                          fontWeight="regular"
+                          fontSize="80%"
+                          align="left"
+                          color="text"
+                        >
+                          Grade
+                        </MDTypography>
+                        <Form.Select
+                          aria-label="Default select example"
+                          value={ugradex}
+                          onChange={(e) => setUGrades(e.target.value)}
+                        >
+                          <option>--Select Grade--</option>
+                          <option value="First class">First class</option>
+                          <option value="Second class upper">Second class upper</option>
+                          <option value="Second class lower">Second class lower</option>
+                          <option value="Third class">Third class</option>
+                        </Form.Select>
+                      </MDBox>{" "}
+                      <MDBox mt={4} mb={1}>
+                        <MDButton
+                          variant="gradient"
+                          onClick={handleUpdate}
+                          color="info"
+                          width="50%"
+                          align="center"
+                        >
+                          Save
+                        </MDButton>
+                      </MDBox>
+                    </div>
+                  </Container>
+                </MDBox>
+              </MDBox>
+            </MDBox>
+          </Card>
+        </Backdrop>
+      ) : (
+        <MDBox />
+      )}
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
