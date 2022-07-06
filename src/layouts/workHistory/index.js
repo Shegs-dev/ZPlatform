@@ -60,6 +60,19 @@ function WorkHistory() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
+  const changeDateandTime = (timestamp) => {
+    const date = new Date(timestamp);
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate !== null) {
+      dayx = date.getDate();
+      monthx = date.getMonth() + 1;
+      yearx = date.getFullYear();
+    }
+    return `${yearx}/${monthx}/${dayx}`;
+  };
+
   const handleGets = () => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -125,9 +138,10 @@ function WorkHistory() {
         // }
         if (resx.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-        } else {
-          navigate("/authentication/sign-in");
         }
+        // } else {
+        //   navigate("/authentication/sign-in");
+        // }
         MySwal.fire({
           title: resx.status,
           type: "success",
@@ -169,6 +183,8 @@ function WorkHistory() {
   const handleClick = (e) => {
     handleOnNameKeys();
     if (enabled) {
+      const startCDate = new Date(startDate).getTime();
+      const endCDate = new Date(endDate).getTime();
       setOpened(true);
       e.preventDefault();
       const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -178,8 +194,8 @@ function WorkHistory() {
         empID: personalIDs,
         name: namex,
         descrip: descripx,
-        startTime: startDate,
-        endTime: startDate,
+        startTime: startCDate,
+        endTime: endCDate,
         position: positionx,
       });
       const requestOptions = {
@@ -508,6 +524,18 @@ function WorkHistory() {
                             mb={0}
                           >
                             Position: {item.position}
+                          </MDTypography>{" "}
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            From {changeDateandTime(item.startTime)} to{" "}
+                            {changeDateandTime(item.endTime)}
                           </MDTypography>
                         </CardContent>
                         <CardActions>
@@ -557,7 +585,7 @@ function WorkHistory() {
               <Card>
                 {" "}
                 <MDTypography variant="h3" fontWeight="bold" color="text" textAlign="center" mt={1}>
-                  No Added Work History
+                  No Work History
                 </MDTypography>
                 <Icon
                   fontSize="medium"
@@ -574,7 +602,7 @@ function WorkHistory() {
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
           <Card>
-            <MDBox pt={4} pb={3} px={30}>
+            <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"
                 bgColor="info"

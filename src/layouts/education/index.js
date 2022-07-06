@@ -145,9 +145,10 @@ function Education() {
         // }
         if (resx.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-        } else {
-          navigate("/authentication/sign-in");
         }
+        // } else {
+        //   navigate("/authentication/sign-in");
+        // }
         MySwal.fire({
           title: resx.status,
           type: "success",
@@ -663,7 +664,7 @@ function Education() {
               <Card>
                 {" "}
                 <MDTypography variant="h3" fontWeight="bold" color="text" textAlign="center" mt={1}>
-                  No Added Education
+                  No Education
                 </MDTypography>
                 <Icon
                   fontSize="medium"
@@ -680,7 +681,7 @@ function Education() {
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
           <Card>
-            <MDBox pt={4} pb={3} px={30}>
+            <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"
                 bgColor="info"

@@ -35,17 +35,43 @@ function PositionHeld() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  const [uidx, setUID] = useState("");
+  const [unamex, setUName] = useState("");
+  const [uempID, setUEmpID] = useState("");
+  const [ustartDate, setUStartDate] = useState("");
+  const [uendDate, setUEndDate] = useState("");
+  const [udescripx, setUDescrip] = useState("");
+  const [uplacex, setUPlace] = useState("");
+  const [udeleteFlag, setUDeleteFlag] = useState("");
+  const [ucreatedTime, setUCreatedTime] = useState("");
+  const [showLists, setShowLists] = useState(false);
+
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [uopened, setUOpened] = useState(false);
+
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
 
   const [allApp, setAllApp] = useState([]);
-  const [showSkills, setShowSkills] = useState(false);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
+
+  const changeDateandTime = (timestamp) => {
+    const date = new Date(timestamp);
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate !== null) {
+      dayx = date.getDate();
+      monthx = date.getMonth() + 1;
+      yearx = date.getFullYear();
+    }
+    return `${yearx}/${monthx}/${dayx}`;
+  };
 
   const handleGets = () => {
     const headers = miHeaders;
@@ -73,9 +99,10 @@ function PositionHeld() {
           window.location.reload();
         }
         if (result.length > 0) {
-          setShowSkills(true);
+          setShowLists(true);
         }
         setAllApp(result);
+        console.log(result);
       });
   };
 
@@ -84,7 +111,7 @@ function PositionHeld() {
 
     if (isMounted) {
       // fetches the table data
-      //   handleGets();
+      handleGets();
     }
     return () => {
       isMounted = false;
@@ -112,9 +139,10 @@ function PositionHeld() {
         // }
         if (resx.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-        } else {
-          navigate("/authentication/sign-in");
         }
+        // } else {
+        //   navigate("/authentication/sign-in");
+        // }
         MySwal.fire({
           title: resx.status,
           type: "success",
@@ -158,6 +186,10 @@ function PositionHeld() {
     if (enabled) {
       setOpened(true);
       e.preventDefault();
+
+      const startCDate = new Date(startDate).getTime();
+      const endCDate = new Date(endDate).getTime();
+
       const data11 = JSON.parse(localStorage.getItem("user1"));
       console.log(data11);
       const personalIDs = data11.id;
@@ -165,8 +197,8 @@ function PositionHeld() {
         empID: personalIDs,
         name: namex,
         descrip: descripx,
-        startTime: startDate,
-        endTime: startDate,
+        startTime: startCDate,
+        endTime: endCDate,
         place: placex,
       });
       const requestOptions = {
@@ -218,6 +250,103 @@ function PositionHeld() {
           });
         });
     }
+  };
+
+  const handleUpdate = () => {
+    setOpened(true);
+    const startCDate = new Date(ustartDate).getTime();
+    const endCDate = new Date(uendDate).getTime();
+    const raw = JSON.stringify({
+      id: uidx,
+      name: unamex,
+      empID: uempID,
+      startTime: startCDate,
+      endTime: endCDate,
+      descrip: udescripx,
+      place: uplacex,
+      deleteFlag: udeleteFlag,
+      createdTime: ucreatedTime,
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/positionHeld/update`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        setUOpened(false);
+        setShowUpdate(false);
+        handleGets();
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          setUOpened(false);
+          setShowUpdate(false);
+          handleGets();
+        });
+      })
+      .catch((error) => {
+        setOpened(true);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  // Method to filter departments
+  const handleShow = (filteredData, value) => {
+    // "endTime":"2003-07-10T23:00:00.000Z"
+    // const changeDateandTime = (timestamp) => {
+    //   const date = new Date(timestamp);
+    //   let dayx = "";
+    //   let monthx = "";
+    //   let yearx = "";
+    //   if (startDate !== null) {
+    //     dayx = date.getDate();
+    //     monthx = date.getMonth() + 1;
+    //     yearx = date.getFullYear();
+    //   }
+    //   return `${yearx}-${monthx}-${dayx}T23:00:00.000Z`;
+    // };
+
+    const filteredItems = filteredData.filter((item) => item.id === value);
+    setUID(value);
+    setUName(filteredItems[0].name);
+    setUEmpID(filteredItems[0].empID);
+    setUDescrip(filteredItems[0].descrip);
+    setUPlace(filteredItems[0].place);
+    setUStartDate(filteredItems[0].startTime);
+    setUEndDate(filteredItems[0].endTime);
+    setUCreatedTime(filteredItems[0].createdTime);
+    setUDeleteFlag(filteredItems[0].deleteFlag);
+
+    setUOpened(true);
+    setShowUpdate(true);
   };
 
   return (
@@ -370,91 +499,96 @@ function PositionHeld() {
       <MDBox pt={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
-            {showSkills ? (
-              <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
-                <MDBox
-                  variant="gradient"
-                  bgColor="white"
-                  borderRadius="lg"
-                  coloredShadow="success"
-                  mt={2}
-                  mx={0}
-                  p={1}
-                  textAlign="left"
-                >
-                  <MDTypography
-                    variant="h4"
-                    fontWeight="medium"
-                    color="info"
-                    textAlign="center"
-                    mt={1}
-                  >
-                    Skills
-                  </MDTypography>
-                </MDBox>
-                &nbsp;
-                {/* <div
-                  className="scrollbar scrollbar-primary mt-2 mx-auto"
-                  style={scrollContainerStyle}
-                > */}
-                <Container>
-                  <div className="row">
-                    {allApp.map((item) => (
-                      <Grid item xs={3} md={3} lg={3} key={item.id}>
-                        <Card sx={{ maxWidth: 345 }}>
-                          <CardContent>
-                            <MDTypography
-                              variant="h5"
-                              fontWeight="medium"
-                              fontSize="120%"
-                              color="info"
-                              textAlign="left"
-                              mt={1}
+            {showLists ? (
+              <Container>
+                <div className="row">
+                  {allApp.map((item) => (
+                    <Grid item xs={6} md={6} lg={6} key={item.id}>
+                      <Card>
+                        <CardContent>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="120%"
+                            color="info"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            {item.name}
+                          </MDTypography>
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            Position: {item.place}
+                          </MDTypography>{" "}
+                          <MDTypography
+                            variant="h5"
+                            fontWeight="medium"
+                            fontSize="70%"
+                            color="text"
+                            textAlign="left"
+                            mt={1}
+                            mb={0}
+                          >
+                            From {changeDateandTime(item.startTime)} to{" "}
+                            {changeDateandTime(item.endTime)}
+                          </MDTypography>
+                        </CardContent>
+                        <CardActions>
+                          <div align="right">
+                            <MDButton
+                              variant="gradient"
+                              color="white"
+                              onClick={() => handleDeleteSK(item.id)}
+                              width="50%"
+                              mt={-1}
                             >
-                              {item.name}
-                            </MDTypography>
-                            <MDTypography
-                              variant="h6"
-                              color="text"
-                              fontSize="75%"
-                              textAlign="left"
-                              mt={1}
-                            >
-                              {item.descrip}
-                            </MDTypography>
-                          </CardContent>
-                          <CardActions>
-                            <div align="right">
-                              <MDButton
-                                variant="gradient"
-                                color="white"
-                                onClick={() => handleDeleteSK(item.id)}
-                                width="50%"
+                              <Icon
+                                fontSize="medium"
+                                sx={{ fontSize: 100, alignSelf: "center" }}
+                                color="error"
                               >
-                                <Icon
-                                  fontSize="medium"
-                                  sx={{ fontSize: 100, alignSelf: "center" }}
-                                  color="error"
-                                >
-                                  delete
-                                </Icon>
-                              </MDButton>
-                            </div>
-                          </CardActions>
-                        </Card>
-                        &nbsp;
-                      </Grid>
-                    ))}
-                  </div>
-                </Container>
-                {/* </div> */}
-                &nbsp;
-              </Card>
+                                delete
+                              </Icon>
+                            </MDButton>
+                          </div>
+                          <div align="right">
+                            <MDButton
+                              variant="gradient"
+                              color="white"
+                              onClick={() => handleShow(allApp, item.id)}
+                              width="50%"
+                              mt={-1}
+                            >
+                              <Icon
+                                fontSize="medium"
+                                sx={{ fontSize: 100, alignSelf: "center" }}
+                                color="error"
+                              >
+                                edit
+                              </Icon>
+                            </MDButton>
+                          </div>
+                        </CardActions>
+                      </Card>
+                      &nbsp;
+                    </Grid>
+                  ))}
+                </div>
+                <br />
+              </Container>
             ) : (
               <Card>
                 {" "}
                 <MDTypography variant="h3" fontWeight="bold" color="text" textAlign="center" mt={1}>
-                  No Added Position Held
+                  No Position Held
                 </MDTypography>
                 <Icon
                   fontSize="medium"
@@ -468,6 +602,162 @@ function PositionHeld() {
           </Grid>
         </Grid>
       </MDBox>
+      {showUpdate ? (
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
+          <Card>
+            <MDBox pt={4} pb={3} px={15}>
+              <MDBox
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="success"
+                mx={1}
+                mt={2}
+                p={2}
+                mb={1}
+                textAlign="left"
+              >
+                <MDTypography
+                  variant="h4"
+                  fontWeight="medium"
+                  color="white"
+                  textAlign="center"
+                  mt={1}
+                >
+                  Update Position Held
+                </MDTypography>
+              </MDBox>
+              <MDBox
+                variant="gradient"
+                bgColor="error"
+                borderRadius="lg"
+                coloredShadow="success"
+                mx={3}
+                mt={1}
+                p={1}
+                mb={1}
+                textAlign="center"
+              >
+                <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+                  {" "}
+                </MDTypography>
+              </MDBox>
+              <MDBox component="form" role="form">
+                <MDBox mb={2}>
+                  <Container>
+                    <div align="center">
+                      {" "}
+                      <MDBox mb={2}>
+                        <Container>
+                          <div className="row">
+                            <div className="col-sm-6">
+                              <MDInput
+                                type="text"
+                                label=" Company Name *"
+                                value={unamex || ""}
+                                onKeyUp={handleOnNameKeys}
+                                className="form-control"
+                                onChange={(e) => setUName(e.target.value)}
+                                variant="standard"
+                                fullWidth
+                              />
+                            </div>
+                            <div className="col-sm-6">
+                              <MDInput
+                                type="text"
+                                label="Description *"
+                                value={udescripx || ""}
+                                className="form-control"
+                                onChange={(e) => setUDescrip(e.target.value)}
+                                variant="standard"
+                                fullWidth
+                              />
+                            </div>
+                          </div>
+                        </Container>
+                      </MDBox>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <MDBox mt={2}>
+                            <MDTypography
+                              variant="button"
+                              fontWeight="regular"
+                              fontSize="80%"
+                              align="left"
+                              color="text"
+                            >
+                              Start Date *
+                            </MDTypography>
+                            <DatePicker
+                              placeholderText="MM/DD/YY"
+                              style={{ marginRight: "10px" }}
+                              selected={ustartDate}
+                              peekNextMonth
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
+                              onChange={(time) => setUStartDate(time)}
+                            />{" "}
+                          </MDBox>{" "}
+                        </div>
+                        <div className="col-sm-6">
+                          <MDBox mt={2}>
+                            <MDTypography
+                              variant="button"
+                              fontWeight="regular"
+                              fontSize="80%"
+                              align="left"
+                              color="text"
+                            >
+                              End Date *
+                            </MDTypography>
+                            <DatePicker
+                              placeholderText="MM/DD/YY"
+                              style={{ marginRight: "10px" }}
+                              selected={uendDate}
+                              onChange={(time) => setUEndDate(time)}
+                              peekNextMonth
+                              showMonthDropdown
+                              showYearDropdown
+                              dropdownMode="select"
+                            />{" "}
+                          </MDBox>
+                        </div>
+                      </div>
+                      <MDBox mt={2}>
+                        <div className="col-sm-12">
+                          <MDInput
+                            type="text"
+                            label="Place *"
+                            value={uplacex || ""}
+                            className="form-control"
+                            onChange={(e) => setUPlace(e.target.value)}
+                            variant="standard"
+                            fullWidth
+                          />
+                        </div>
+                      </MDBox>
+                      <MDBox mt={4} mb={1}>
+                        <MDButton
+                          variant="gradient"
+                          onClick={handleUpdate}
+                          color="info"
+                          width="50%"
+                          align="center"
+                        >
+                          Save
+                        </MDButton>
+                      </MDBox>
+                    </div>
+                  </Container>
+                </MDBox>
+              </MDBox>
+            </MDBox>
+          </Card>
+        </Backdrop>
+      ) : (
+        <MDBox />
+      )}
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />

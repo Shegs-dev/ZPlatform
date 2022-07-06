@@ -442,7 +442,7 @@ function Skills() {
               <Card>
                 {" "}
                 <MDTypography variant="h3" fontWeight="bold" color="text" textAlign="center" mt={1}>
-                  No Added Skill
+                  No Skill
                 </MDTypography>
                 <Icon
                   fontSize="medium"
@@ -459,7 +459,7 @@ function Skills() {
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
           <Card>
-            <MDBox pt={4} pb={3} px={30}>
+            <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"
                 bgColor="info"
