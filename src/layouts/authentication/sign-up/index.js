@@ -46,9 +46,12 @@ import withReactContent from "sweetalert2-react-content";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
+import GHeaders from "getHeader";
+
 function Cover() {
   const [passwordShown, setPasswordShown] = useState(false);
 
+  const { allGHeaders: miHeaders } = GHeaders();
   // Password toggle handler
   const togglePassword = () => {
     // When the handler is invoked
@@ -72,7 +75,6 @@ function Cover() {
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
-  const [emaily, setOemail] = useState("");
   const [nationalityx, setNationality] = useState("");
   const [residentialStreetx, setResidentialStreet] = useState("");
   const [residentialCityx, setResidentialCity] = useState("");
@@ -190,22 +192,6 @@ function Cover() {
     );
   };
 
-  const handleOnOEmailKeys = () => {
-    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
-    if (!emaily.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
-    }
-    if (emaily.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("email").innerHTML = "";
-    }
-    if (emaily.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("email").innerHTML = "Email is required<br>";
-    }
-  };
-
   const handleOnStreetKeys = () => {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[a-zA-Z0-9 ,-]+$/;
@@ -292,7 +278,6 @@ function Cover() {
     handleOnLastKeys();
     handleOnOtherKeys();
     handleOnPEmailKeys();
-    handleOnOEmailKeys();
     handleOnStreetKeys();
     handleOnCityKeys();
     handleOnPasswordKeys();
@@ -333,8 +318,7 @@ function Cover() {
         body: raw,
         redirect: "follow",
       };
-      localStorage.setItem("pass1", passwordx);
-      localStorage.setItem("email1", emaily);
+      // localStorage.setItem("pass1", passwordx);
 
       if (passwordx === retypePasswordx) {
         fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
@@ -347,8 +331,29 @@ function Cover() {
                 type: "success",
                 text: result.message,
               }).then(() => {
-                localStorage.setItem("user", JSON.stringify(result.data));
-                navigate("/authentication/company-Registration", { replace: true });
+                const raw2 = JSON.stringify({
+                  empID: result.data.id,
+                  username: result.data.email,
+                  password: passwordx,
+                });
+                const requestOptions2 = {
+                  method: "POST",
+                  headers: myHeaders,
+                  body: raw2,
+                  redirect: "follow",
+                };
+                fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/add`, requestOptions2)
+                  .then((res) => res.json())
+                  .then((resultIL) => {
+                    MySwal.fire({
+                      title: resultIL.status,
+                      type: "success",
+                      text: resultIL.message,
+                    }).then(() => {
+                      localStorage.setItem("user", JSON.stringify(result.data));
+                      navigate("/authentication/sign-in", { replace: true });
+                    });
+                  });
               });
             } else {
               MySwal.fire({
@@ -367,6 +372,32 @@ function Cover() {
             });
           });
       }
+    }
+  };
+
+  const getPersonalInformation = (e) => {
+    const headers = miHeaders;
+    setEmail(e.target.value);
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    const emailpersonal = e.target.value;
+    if (emailpersonal.length === 0 || !emailpersonal.match(letters)) {
+      // Email Invalid
+    } else {
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/teptvv@gmail.com`, { headers })
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          console.log(result);
+          if (result.id !== null) {
+            console.log(result);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -487,24 +518,7 @@ function Cover() {
                       label="Personal Email"
                       value={emailx || ""}
                       onKeyUp={handleOnPEmailKeys}
-                      onChange={(e) => setEmail(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                </div>
-              </div>
-            </Container>
-            <Container>
-              <div className="row">
-                <div className="col-sm-10">
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="email"
-                      label="Official Email"
-                      value={emaily || ""}
-                      onKeyUp={handleOnOEmailKeys}
-                      onChange={(e) => setOemail(e.target.value)}
+                      onChange={getPersonalInformation}
                       variant="standard"
                       fullWidth
                     />

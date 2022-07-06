@@ -118,7 +118,9 @@ import VotePolls from "layouts/polls/votePolls";
 import EscalateMatter from "layouts/mattersArising/escalateMatter";
 import PollsView from "layouts/polls/view";
 import UpdateAppraisalGrading from "layouts/appraisal/appraisalGrading/update";
+import Skills from "layouts/skills";
 import JobApplication from "layouts/JobApplication";
+import ApplyJob from "layouts/JobApplication/applyjobmanually";
 
 const routes = [
   {
@@ -138,12 +140,27 @@ const routes = [
     component: <JobApplication />,
   },
   {
+    name: "Job Application",
+    key: "ApplyJobManually",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/applyjobmanually",
+    component: <ApplyJob />,
+  },
+  {
     type: "collapse",
     name: "User Management",
     key: "userManagement",
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "Skills",
+    key: "skills",
+    icon: <Icon fontSize="small">accessibility</Icon>,
+    route: "/skills",
+    component: <Skills />,
   },
   {
     name: "Add Time-Off Type To User",

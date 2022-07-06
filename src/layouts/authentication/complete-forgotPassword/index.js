@@ -120,7 +120,10 @@ function ComForgotPass() {
         redirect: "follow",
       };
 
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/login/completeforgotpassword`, requestOptions)
+      fetch(
+        `${process.env.REACT_APP_ZAVE_URL}/individualLogin/completeforgotpassword`,
+        requestOptions
+      )
         .then((res) => res.json())
         .then((result) => {
           setOpened(false);

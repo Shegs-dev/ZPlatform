@@ -80,7 +80,7 @@ function Basic() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/dologin`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/dologin`, requestOptions)
       .then(async (res) => {
         // console.log(res.headers);;;;
         const aToken = res.headers.get("token-1");
@@ -90,7 +90,7 @@ function Basic() {
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
-          localStorage.setItem("user1", JSON.stringify(result.data));
+          localStorage.setItem("user1", JSON.stringify(result.otherDetailsDTO.personal));
           localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
           localStorage.setItem("BirthDayStatus", JSON.stringify(result.wishBirthday));
 
