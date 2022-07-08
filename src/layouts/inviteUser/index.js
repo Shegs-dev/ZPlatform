@@ -436,11 +436,15 @@ function InviteUser() {
           };
 
           fetch(`${process.env.REACT_APP_ZAVE_URL}/personalcompany/${endpointPC}`, requestOptions1)
-            .then(async (res) => {
-              const aToken = res.headers.get("token-1");
-              localStorage.setItem("rexxdex", aToken);
-              return res.json();
-            })
+              .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
+      })
             .then((resultx) => {
               console.log(resultx);
               localStorage.setItem("company", JSON.stringify(resultx.data));

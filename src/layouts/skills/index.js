@@ -49,6 +49,19 @@ function Skills() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    overflow: "scroll",
+    height: "100%",
+    display: "block",
+  };
+
   const handleGets = () => {
     const headers = miHeaders;
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -59,7 +72,11 @@ function Skills() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((result) => {
         if (result.message === "Expired Access") {
@@ -104,7 +121,11 @@ function Skills() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((resx) => {
         // if (resx.message === "Expired Access") {
@@ -235,7 +256,11 @@ function Skills() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((result) => {
         setOpened(false);
@@ -458,7 +483,7 @@ function Skills() {
       </MDBox>
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
-          <Card>
+          <Card style={style}>
             <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"

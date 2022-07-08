@@ -77,19 +77,20 @@ function ComForgotPass() {
   };
 
   const handleOnRTNPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!retypeNewPassword.match(passwordValidate)) {
-      setCheckedRTNPass(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML =
-        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
-    }
+    const passwordValidate = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
+    );
     if (retypeNewPassword.match(passwordValidate)) {
       setCheckedRTNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "";
     }
-    if (retypeNewPassword !== newPasswordx) {
+    if (retypeNewPassword === newPasswordx) {
+      setCheckedRTNPass(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("retypepassword").innerHTML = "";
+    } else {
+      setCheckedRTNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
