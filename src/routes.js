@@ -69,6 +69,8 @@ import RenewSub from "layouts/authentication/renewSubscription";
 
 import Groups from "layouts/groups";
 import Skills from "layouts/skills";
+import JobApplication from "layouts/JobApplication";
+import ApplyJob from "layouts/JobApplication/applyjobmanually";
 import Education from "layouts/education";
 import WorkHistory from "layouts/workHistory";
 import PositionHeld from "layouts/positionHeld";
@@ -81,6 +83,21 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Job Application",
+    key: "JobApplication",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/Job-application",
+    component: <JobApplication />,
+  },
+  {
+    name: "Job Application",
+    key: "ApplyJobManually",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/applyjobmanually",
+    component: <ApplyJob />,
   },
   {
     type: "collapse",
