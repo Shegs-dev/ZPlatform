@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
+import MDInput from "components/MDInput";
+import MDAvatar from "components/MDAvatar";
+import MDTypography from "components/MDTypography";
+import MDButton from "components/MDButton";
+import team1 from "assets/images/team-1.jpg";
+import Card from "@mui/material/Card";
+import { Container, Form } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Grid from "@mui/material/Grid";
 // // import Icon from "@mui/material/Icon";
-import MDButton from "components/MDButton";
 import Paper from "@mui/material/Paper";
-import "bootstrap/dist/css/bootstrap.min.css";
-import MDTypography from "components/MDTypography";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Divider } from "@mui/material";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
@@ -20,22 +28,49 @@ import html2canvas from "html2canvas";
 import Avatar from "@mui/material/Avatar";
 import Icon from "@mui/material/Icon";
 import Stack from "@mui/material/Stack";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+// imports for the drawer
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import DeleteIcon from "@mui/icons-material/Delete";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 
 function UserProfile() {
+  const MySwal = withReactContent(Swal);
+
+  const [state, setState] = React.useState({
+    right: false,
+  });
+
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
   const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
   const [phonex, setPhone] = useState("");
-  // const [nationalityx, setNationality] = useState("");
-  // const [residentialStreetx, setResidentialStreet] = useState("");
+  const [nationalityx, setNationality] = useState("");
+  const [residentialStreetx, setResidentialStreet] = useState("");
   const [residentialCityx, setResidentialCity] = useState("");
   const [residentialStatex, setResidentialState] = useState("");
   const [residentialCountryx, setResidentialCountry] = useState("");
-  // const [deleteFlagx, setDeleteFlag] = useState("");
-  // const [sysStatusx, setSysStatus] = useState("");
-  // const [createdTimex, setCreatedTime] = useState("");
-  // const [startDate, setStartDate] = useState();
+  const [maritalStatusx, setMaritalStatus] = useState("");
+  const [deleteFlagx, setDeleteFlag] = useState("");
+  const [sysStatusx, setSysStatus] = useState("");
+  const [createdTimex, setCreatedTime] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [allStates, setAllStates] = useState([]);
+
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
   const [skillsx, setSkills] = useState([]);
   const [educationx, setEducation] = useState([]);
@@ -47,6 +82,7 @@ function UserProfile() {
   const navigate = useNavigate();
 
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
 
   const changeDateandTime = (stimestamp, etimestamp) => {
     const sdate = new Date(stimestamp);
@@ -108,18 +144,25 @@ function UserProfile() {
           //   setDayOfBirth(resultp[0].dayOfBirth);
           //   setMonthOfBirth(resultp[0].monthOfBirth);
           //   setYearOfBirth(resultp[0].yearOfBirth);
-          // setNationality(resultp[0].nationality);
-          // setResidentialStreet(resultp[0].residentialStreet);
+          const filteredItems = AlCountry.filter(
+            (item) => item.name === resultp[0].residentialCountry
+          );
+          setAllStates(filteredItems[0].states);
+          setNationality(resultp[0].nationality);
+          setResidentialStreet(resultp[0].residentialStreet);
           setResidentialCity(resultp[0].residentialCity);
           setResidentialState(resultp[0].residentialState);
           setResidentialCountry(resultp[0].residentialCountry);
-          // setDeleteFlag(resultp[0].deleteFlag);
-          // setSysStatus(resultp[0].sysStatus);
-          // setCreatedTime(resultp[0].createdTime);
+          setMaritalStatus(resultp[0].maritalStatus);
+          setDeleteFlag(resultp[0].deleteFlag);
+          setSysStatus(resultp[0].sysStatus);
+          setCreatedTime(resultp[0].createdTime);
 
-          // setStartDate(
-          //   `${resultp[0].monthOfBirth}/${resultp[0].dayOfBirth}/${resultp[0].yearOfBirth}`
-          // );
+          setStartDate(
+            new Date(
+              `${resultp[0].monthOfBirth}/${resultp[0].dayOfBirth}/${resultp[0].yearOfBirth}`
+            )
+          );
         }
       });
     return () => {
@@ -187,235 +230,910 @@ function UserProfile() {
     });
   };
 
+  const handleUpdate = () => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIDs = data11.id;
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate != null) {
+      dayx = startDate.getDate();
+      monthx = startDate.getMonth() + 1;
+      yearx = startDate.getFullYear();
+    }
+
+    const raw = JSON.stringify({
+      id: personalIDs,
+      fname: fnamex,
+      lname: lnamex,
+      oname: onamex,
+      email: emailx,
+      pno: phonex,
+      nationality: nationalityx,
+      residentialStreet: residentialStreetx,
+      residentialCity: residentialCityx,
+      residentialState: residentialStatex,
+      residentialCountry: residentialCountryx,
+      dayOfBirth: dayx,
+      monthOfBirth: monthx,
+      yearOfBirth: yearx,
+      maritalStatus: maritalStatusx,
+      sysStatus: sysStatusx,
+      deleteFlag: deleteFlagx,
+      createdTime: createdTimex,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/update`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleOnChangeRCCountry = (e) => {
+    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
+    setAllStates(filteredItems[0].states);
+    setResidentialCountry(e.target.value);
+  };
+
+  const handleOnChangeRCState = (e) => {
+    setResidentialState(e.target.value);
+  };
+
+  const handleOnChangeNationality = (e) => {
+    setNationality(e.target.value);
+  };
+
+  const handleOnFirstKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML =
+        "First Name - input only capital and small letters<br>";
+    }
+    if (fnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "";
+    }
+    if (fnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("first").innerHTML = "First Name is required<br>";
+    }
+  };
+
+  const handleOnLastKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML =
+        "Last Name - input only capital and small letters<br>";
+    }
+    if (lnamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "";
+    }
+    if (lnamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("last").innerHTML = "Last Name is required<br>";
+    }
+  };
+
+  const handleOnOtherKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML =
+        "Other Name - input only capital and small letters<br>";
+    }
+    if (onamex.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "";
+    }
+    if (onamex.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("other").innerHTML = "Other Name is required<br>";
+    }
+  };
+
+  const handleOnPEmailKeys = () => {
+    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
+    if (!emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email - input a valid email<br>";
+    }
+    if (emailx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "";
+    }
+    if (emailx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("email").innerHTML = "Email is required<br>";
+    }
+  };
+
+  const handleOnStreetKeys = () => {
+    // eslint-disable-next-line no-invalid-regexp
+    const letters = /^[a-zA-Z0-9 .,-]+$/;
+    if (!residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street - use only [ - . , ] as symbols<br>";
+    }
+    if (residentialStreetx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "";
+    }
+    if (residentialStreetx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("street").innerHTML = "Street is required<br>";
+    }
+  };
+
+  const handleOnCityKeys = () => {
+    const letters = /^[a-zA-Z ]+$/;
+    if (!residentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
+    }
+    if (residentialCityx.match(letters)) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "";
+    }
+    if (residentialCityx.length === 0) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("city").innerHTML = "City is required<br>";
+    }
+  };
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <MDBox mt={3}>
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <UploadFileIcon />
+              </ListItemIcon>
+              <ListItemText primary="Upload" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+        </List>
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <ChangeCircleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Change" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+        </List>
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText primary="Remove" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+        </List>
+      </MDBox>
+    </Box>
+  );
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox>
-        <MDBox mt={4} mb={1}>
-          <MDButton
-            variant="gradient"
-            onClick={printDocument}
-            color="info"
-            width="50%"
-            align="left"
-          >
-            Download
-          </MDButton>
-        </MDBox>
-        <Paper
-          id="divToPrint"
-          sx={{
-            display: "flex",
-            "& > :not(style)": {
-              width: 2480,
-              height: 3508,
-              maxWidth: 2480,
-              maxHeight: 3508,
-            },
-          }}
-          variant="outlined"
-          square
-        >
-          <Paper
-            style={{
-              backgroundColor: "info",
-              width: 720,
-              height: 3508,
-              maxWidth: 720,
-              maxHeight: 3508,
-            }}
-            variant="outlined"
-            square
-          >
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={12} lg={12}>
-                <MDTypography variant="h3" fontWeight="medium" color="text" ml={2} mt={3} mb={-3}>
-                  {`${fnamex} ${lnamex} ${onamex}`}
-                  <Divider />
-                </MDTypography>
-              </Grid>
-            </Grid>
-            <br />
-            <MDBox id="personalInfo">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={12} lg={12}>
-                  <Stack direction="row" spacing={1} ml={2} mb={-4}>
-                    <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                      <Icon fontSize="medium">person</Icon>
-                    </Avatar>
-                    <MDTypography variant="h4" fontWeight="medium" color="text">
-                      Personal Information
-                      <Divider />
-                    </MDTypography>
-                  </Stack>
-                </Grid>
-              </Grid>
-              <br />
-              <MDBox>
-                <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={1}>
-                  Email
-                </MDTypography>
-                <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                  {emailx}{" "}
+      <Grid container spacing={3}>
+        <Grid item xs={4} md={4} lg={4}>
+          <Card>
+            <div align="center">
+              <div>
+                {["right"].map((anchor) => (
+                  <React.Fragment key={anchor}>
+                    <Button onClick={toggleDrawer(anchor, true)}>
+                      <MDBox mt={-4} mx={2} p={0}>
+                        <MDAvatar src={team1} alt="name" size="xxl" />
+                      </MDBox>
+                    </Button>
+                    <Drawer
+                      anchor={anchor}
+                      open={state[anchor]}
+                      onClose={toggleDrawer(anchor, false)}
+                    >
+                      {list(anchor)}
+                    </Drawer>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+            <div align="center">
+              <MDBox
+                variant="gradient"
+                bgColor="info"
+                borderRadius="sm"
+                coloredShadow="info"
+                mt={2}
+                mx={0}
+                p={1}
+                textAlign="center"
+              >
+                <MDTypography
+                  variant="h4"
+                  fontWeight="medium"
+                  fontFamily="Helvetica"
+                  fontSize="120%"
+                  color="white"
+                >
+                  {fnamex} {onamex} {lnamex}
                 </MDTypography>
               </MDBox>
-              <MDBox>
-                <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                  Phone
-                </MDTypography>
-                <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                  {phonex}{" "}
-                </MDTypography>
-              </MDBox>
-              <MDBox>
-                <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                  Residental Area
-                </MDTypography>
-                <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                  {`${residentialCityx} ${residentialStatex}, ${residentialCountryx}`}{" "}
-                </MDTypography>
+            </div>
+            <div align="center">
+              <MDTypography
+                variant="h7"
+                fontWeight="medium"
+                fontFamily="Century Gothic"
+                fontSize="70%"
+                color="dark"
+                mt={0}
+              >
+                {emailx}
+              </MDTypography>
+            </div>
+            <div align="center">
+              <MDTypography
+                variant="h5"
+                fontWeight="light"
+                fontSize="70%"
+                fontFamily="Helvetica"
+                color="dark"
+                mt={0}
+              >
+                {phonex}
+              </MDTypography>
+            </div>
+            <div align="center">
+              <MDTypography
+                variant="h6"
+                fontWeight="medium"
+                fontFamily="Helvetica"
+                fontSize="80%"
+                color="dark"
+                mt={0}
+              >
+                {residentialStreetx}&#44; {residentialCityx}&#44; {residentialStatex}
+              </MDTypography>
+
+              <MDTypography
+                variant="h6"
+                fontWeight="medium"
+                fontFamily="Helvetica"
+                color="dark"
+                mt={0}
+                mb={5}
+              >
+                {residentialCountryx}
+              </MDTypography>
+            </div>
+          </Card>
+          &nbsp;
+          <Card>
+            <MDBox pt={4} pb={3} px={3}>
+              <MDBox component="form" role="form">
+                <MDBox
+                  variant="gradient"
+                  bgColor="info"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={2}
+                  mt={-6}
+                  p={2}
+                  mb={1}
+                  textAlign="center"
+                >
+                  <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+                    BASIC INFO
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  variant="gradient"
+                  bgColor="error"
+                  borderRadius="lg"
+                  coloredShadow="success"
+                  mx={3}
+                  mt={1}
+                  p={1}
+                  mb={5}
+                  textAlign="center"
+                >
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="first">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="last">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="other">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
+                    {" "}
+                  </MDTypography>
+                  <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
+                    {" "}
+                  </MDTypography>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="First Name"
+                          value={fnamex || ""}
+                          onKeyUp={handleOnFirstKeys}
+                          onChange={(e) => setFname(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Last Name"
+                          value={lnamex || ""}
+                          onKeyUp={handleOnLastKeys}
+                          onChange={(e) => setLname(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="text"
+                          label="Other Name"
+                          value={onamex || ""}
+                          onKeyUp={handleOnOtherKeys}
+                          onChange={(e) => setOname(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="email"
+                          label="Personal Email"
+                          disabled
+                          value={emailx || ""}
+                          onKeyUp={handleOnPEmailKeys}
+                          onChange={(e) => setEmail(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text">
+                          Phone Number
+                        </MDTypography>
+                        <PhoneInput
+                          value={phonex}
+                          inputStyle={{ width: "100%" }}
+                          buttonStyle={{}}
+                          onChange={setPhone}
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                        Marital Status
+                      </MDTypography>
+                      <MDBox mb={2}>
+                        <Form.Select
+                          onChange={(e) => setMaritalStatus(e.target.value)}
+                          value={maritalStatusx || ""}
+                          aria-label="Default select example"
+                        >
+                          <option>---Marital Status---</option>
+                          <option value="Single">Single</option>
+                          <option value="Married">Married</option>
+                          <option value="Divorced">Divorced</option>
+                        </Form.Select>
+                      </MDBox>
+                    </div>
+                  </div>
+                </Container>
+
+                <Container>
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <MDBox mb={0} mt={0} textAlign="left">
+                        <MDTypography
+                          variant="button"
+                          fontWeight="regular"
+                          color="text"
+                          mt={1}
+                          textAlign="left"
+                        >
+                          Date Of Birth
+                        </MDTypography>
+                      </MDBox>
+                      <MDBox mb={4} mt={0} textAlign="left">
+                        <div>
+                          <style>
+                            {`.date-picker input {
+                      width: 50%
+                      align: left
+                 }`}
+                          </style>
+                          <DatePicker
+                            date={startDate}
+                            wrapperClassName="date-picker"
+                            placeholder="Select Birth Date"
+                            dateFormat="MM/dd/yyyy"
+                            confirmBtnText="Confirm"
+                            showCancelButton="true"
+                            customStyles={{
+                              placeholderText: {
+                                fontSize: 5,
+                              },
+                              dateIcon: {
+                                height: 0,
+                                width: 0,
+                              },
+                              dateText: {
+                                color: "#b3b4b5",
+                                fontSize: 16,
+                              },
+                              dateInput: {
+                                borderWidth: 0,
+                              },
+                            }}
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            peekNextMonth
+                            showMonthDropdown
+                            showYearDropdown
+                            dropdownMode="select"
+                          />
+                        </div>
+                      </MDBox>
+                    </div>
+                  </div>
+                </Container>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          Nationality
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={nationalityx || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeNationality}
+                          >
+                            <option>--Select Country--</option>
+                            {AlCountry.map((apic) => (
+                              <option key={apic.code3} value={apic.name}>
+                                {apic.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDInput
+                          type="text"
+                          label="Street"
+                          value={residentialStreetx || ""}
+                          onKeyUp={handleOnStreetKeys}
+                          onChange={(e) => setResidentialStreet(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-4">
+                        <MDInput
+                          type="text"
+                          label="City"
+                          value={residentialCityx || ""}
+                          onKeyUp={handleOnCityKeys}
+                          onChange={(e) => setResidentialCity(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          Country
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={residentialCountryx || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeRCCountry}
+                          >
+                            <option>--Select Country--</option>
+                            {AlCountry.map((apic) => (
+                              <option key={apic.code3} value={apic.name}>
+                                {apic.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                          State
+                        </MDTypography>
+                        <MDBox textAlign="right">
+                          <Form.Select
+                            value={residentialStatex || ""}
+                            aria-label="Default select example"
+                            onChange={handleOnChangeRCState}
+                          >
+                            <option>--Select State--</option>
+                            {allStates.map((apis) => (
+                              <option key={apis.code} value={apis.name}>
+                                {apis.name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </MDBox>
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <div align="center">
+                  <MDBox mt={4} mb={1}>
+                    <MDButton variant="gradient" onClick={handleUpdate} color="info" width="50%">
+                      Save
+                    </MDButton>
+                  </MDBox>
+                </div>
               </MDBox>
             </MDBox>
-            <br />
-            <MDBox id="skills">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={12} lg={12}>
-                  <Stack direction="row" spacing={1} ml={2} mb={-2}>
-                    <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                      <Icon fontSize="medium">accessibility</Icon>
-                    </Avatar>
-                    <MDTypography variant="h4" fontWeight="medium" color="text">
-                      Skills
+          </Card>
+          &nbsp;
+        </Grid>
+        <Grid item xs={8} md={8} lg={8}>
+          <MDBox>
+            <MDBox mt={4} mb={1}>
+              <MDButton
+                variant="gradient"
+                onClick={printDocument}
+                color="info"
+                width="50%"
+                align="left"
+              >
+                Download
+              </MDButton>
+            </MDBox>
+            <Paper
+              id="divToPrint"
+              sx={{
+                display: "flex",
+                "& > :not(style)": {
+                  width: 2480,
+                  height: 3508,
+                  maxWidth: 2480,
+                  maxHeight: 3508,
+                },
+              }}
+              variant="outlined"
+              square
+            >
+              <Paper
+                style={{
+                  backgroundColor: "info",
+                  width: 720,
+                  height: 3508,
+                  maxWidth: 720,
+                  maxHeight: 3508,
+                }}
+                variant="outlined"
+                square
+              >
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <MDTypography
+                      variant="h3"
+                      fontWeight="medium"
+                      color="text"
+                      ml={2}
+                      mt={3}
+                      mb={-3}
+                    >
+                      {`${fnamex} ${lnamex} ${onamex}`}
                       <Divider />
                     </MDTypography>
-                  </Stack>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <MDBox ml={2}>
-                {skillsx.map((item) => (
-                  <MDBox key={item.id}>
-                    <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                      {item.name}{" "}
+                <br />
+                <MDBox id="personalInfo">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={12} lg={12}>
+                      <Stack direction="row" spacing={1} ml={2} mb={-4}>
+                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                          <Icon fontSize="medium">person</Icon>
+                        </Avatar>
+                        <MDTypography variant="h4" fontWeight="medium" color="text">
+                          Personal Information
+                          <Divider />
+                        </MDTypography>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                  <br />
+                  <MDBox>
+                    <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={1}>
+                      Email
                     </MDTypography>
                     <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {item.descrip}{" "}
+                      {emailx}{" "}
                     </MDTypography>
                   </MDBox>
-                ))}
-              </MDBox>
-            </MDBox>
-            <br />
-            <MDBox mb={5}> &nbsp;</MDBox>
-          </Paper>
-          <Paper
-            style={{ color: "318CE7", width: 1760, height: 3508, maxWidth: 1760, maxHeight: 3508 }}
-            variant="outlined"
-            square
-          >
-            <MDBox id="workHistory">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={12} lg={12}>
-                  <Stack direction="row" spacing={1} ml={2} mb={-2} mt={13}>
-                    <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                      <Icon fontSize="medium">work_history</Icon>
-                    </Avatar>
-                    <MDTypography variant="h4" fontWeight="medium" color="text">
-                      Work History
-                      <Divider />
-                    </MDTypography>
-                  </Stack>
-                </Grid>
-              </Grid>
-              <MDBox ml={2}>
-                {workHistoryx.map((item) => (
-                  <MDBox key={item.id}>
+                  <MDBox>
                     <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                      {item.name}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
-                      {item.position}{" "}
+                      Phone
                     </MDTypography>
                     <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {item.descrip}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {changeDateandTime(item.startTime, item.endTime)}
+                      {phonex}{" "}
                     </MDTypography>
                   </MDBox>
-                ))}
-              </MDBox>
-            </MDBox>
-            <MDBox id="education">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={12} lg={12}>
-                  <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                    <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                      <Icon fontSize="medium">school</Icon>
-                    </Avatar>
-                    <MDTypography variant="h4" fontWeight="medium" color="text">
-                      Education
-                      <Divider />
-                    </MDTypography>
-                  </Stack>
-                </Grid>
-              </Grid>
-              <MDBox ml={2}>
-                {educationx.map((item) => (
-                  <MDBox key={item.id}>
+                  <MDBox>
                     <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                      {item.specialization}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
-                      {item.name}{" "}
+                      Residental Area
                     </MDTypography>
                     <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {item.degree} {item.grade}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {changeDateandTime(item.startTime, item.endTime)}{" "}
+                      {`${residentialCityx} ${residentialStatex}, ${residentialCountryx}`}{" "}
                     </MDTypography>
                   </MDBox>
-                ))}
-              </MDBox>
-            </MDBox>
-            <MDBox id="positionHeld">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={12} lg={12}>
-                  <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                    <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                      <Icon fontSize="medium">person_outline</Icon>
-                    </Avatar>
-                    <MDTypography variant="h4" fontWeight="medium" color="text">
-                      Position Held
-                      <Divider />
-                    </MDTypography>
-                  </Stack>
-                </Grid>
-              </Grid>
-              <br />
-              <MDBox ml={2}>
-                {positionHeldx.map((item) => (
-                  <MDBox key={item.id}>
-                    <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                      {item.name}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
-                      {item.place}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {item.descrip}{" "}
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {changeDateandTime(item.startTime, item.endTime)}{" "}
-                    </MDTypography>
+                </MDBox>
+                <br />
+                <MDBox id="skills">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={12} lg={12}>
+                      <Stack direction="row" spacing={1} ml={2} mb={-2}>
+                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                          <Icon fontSize="medium">accessibility</Icon>
+                        </Avatar>
+                        <MDTypography variant="h4" fontWeight="medium" color="text">
+                          Skills
+                          <Divider />
+                        </MDTypography>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                  <MDBox ml={2}>
+                    {skillsx.map((item) => (
+                      <MDBox key={item.id}>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                          {item.name}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {item.descrip}{" "}
+                        </MDTypography>
+                      </MDBox>
+                    ))}
                   </MDBox>
-                ))}
-              </MDBox>
-            </MDBox>
-            <MDBox mb={5} />
-          </Paper>
-        </Paper>
-      </MDBox>
+                </MDBox>
+                <br />
+                <MDBox mb={5}> &nbsp;</MDBox>
+              </Paper>
+              <Paper
+                style={{
+                  color: "318CE7",
+                  width: 1760,
+                  height: 3508,
+                  maxWidth: 1760,
+                  maxHeight: 3508,
+                }}
+                variant="outlined"
+                square
+              >
+                <MDBox id="workHistory">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={12} lg={12}>
+                      <Stack direction="row" spacing={1} ml={2} mb={-2} mt={13}>
+                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                          <Icon fontSize="medium">work_history</Icon>
+                        </Avatar>
+                        <MDTypography variant="h4" fontWeight="medium" color="text">
+                          Work History
+                          <Divider />
+                        </MDTypography>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                  <MDBox ml={2}>
+                    {workHistoryx.map((item) => (
+                      <MDBox key={item.id}>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                          {item.name}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                          {item.position}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {item.descrip}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {changeDateandTime(item.startTime, item.endTime)}
+                        </MDTypography>
+                      </MDBox>
+                    ))}
+                  </MDBox>
+                </MDBox>
+                <MDBox id="education">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={12} lg={12}>
+                      <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
+                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                          <Icon fontSize="medium">school</Icon>
+                        </Avatar>
+                        <MDTypography variant="h4" fontWeight="medium" color="text">
+                          Education
+                          <Divider />
+                        </MDTypography>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                  <MDBox ml={2}>
+                    {educationx.map((item) => (
+                      <MDBox key={item.id}>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                          {item.specialization}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                          {item.name}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {item.degree} {item.grade}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {changeDateandTime(item.startTime, item.endTime)}{" "}
+                        </MDTypography>
+                      </MDBox>
+                    ))}
+                  </MDBox>
+                </MDBox>
+                <MDBox id="positionHeld">
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={12} lg={12}>
+                      <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
+                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                          <Icon fontSize="medium">person_outline</Icon>
+                        </Avatar>
+                        <MDTypography variant="h4" fontWeight="medium" color="text">
+                          Position Held
+                          <Divider />
+                        </MDTypography>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                  <br />
+                  <MDBox ml={2}>
+                    {positionHeldx.map((item) => (
+                      <MDBox key={item.id}>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                          {item.name}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                          {item.place}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {item.descrip}{" "}
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {changeDateandTime(item.startTime, item.endTime)}{" "}
+                        </MDTypography>
+                      </MDBox>
+                    ))}
+                  </MDBox>
+                </MDBox>
+                <MDBox mb={5} />
+              </Paper>
+            </Paper>
+          </MDBox>
+        </Grid>
+      </Grid>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
