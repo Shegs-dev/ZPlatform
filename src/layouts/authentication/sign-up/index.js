@@ -266,10 +266,14 @@ function Cover() {
     if (retypePasswordx === passwordx) {
       setCheckedPass(true);
     }
-    if (retypePasswordx !== passwordx) {
+    if (retypePasswordx === passwordx) {
+      setCheckedPass(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("retypepassword").innerHTML = "";
+    } else {
       setCheckedPass(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
+      document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
   };
 
