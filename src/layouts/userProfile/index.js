@@ -4,7 +4,7 @@ import MDInput from "components/MDInput";
 import MDAvatar from "components/MDAvatar";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import team1 from "assets/images/team-1.jpg";
+import dummyUser from "assets/images/dummy-user.png";
 import Card from "@mui/material/Card";
 import { Container, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
@@ -45,9 +45,16 @@ import ListItemText from "@mui/material/ListItemText";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+// imports for modal
+import Modal from "@mui/material/Modal";
 
 function UserProfile() {
   const MySwal = withReactContent(Swal);
+
+  const [openn, setOpenn] = React.useState(false);
+  const handleOpen = () => setOpenn(true);
+  const handleClose = () => setOpenn(false);
+  const [files, setFiles] = useState();
 
   const [state, setState] = React.useState({
     right: false,
@@ -78,6 +85,12 @@ function UserProfile() {
   const [positionHeldx, setPositionHeld] = useState([]);
 
   const [opened, setOpened] = useState(false);
+
+  const [showUser, setShowUser] = useState(false);
+  const [showSkills, setShowSkills] = useState(false);
+  const [showWorkHistory, setShowWorkHistory] = useState(false);
+  const [showEducation, setShowEducation] = useState(false);
+  const [showPositionHeld, setShowPositionHeld] = useState(false);
 
   const navigate = useNavigate();
 
@@ -136,6 +149,9 @@ function UserProfile() {
         }
         if (isMounted) {
           console.log(resultp);
+          if (resultp.length > 0) {
+            setShowUser(true);
+          }
           setFname(resultp[0].fname);
           setLname(resultp[0].lname);
           setOname(resultp[0].oname);
@@ -210,6 +226,18 @@ function UserProfile() {
             setWorkHistory(result.workHistories);
             setEducation(result.educations);
             setPositionHeld(result.positionHelds);
+          }
+          if (result.skills.length > 0) {
+            setShowSkills(true);
+          }
+          if (result.workHistories.length > 0) {
+            setShowWorkHistory(true);
+          }
+          if (result.educations.length > 0) {
+            setShowEducation(true);
+          }
+          if (result.positionHelds.length > 0) {
+            setShowPositionHeld(true);
           }
         }
       });
@@ -419,6 +447,184 @@ function UserProfile() {
     }
   };
 
+  // modal
+  const style = {
+    position: "relative",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "#ffffff",
+    // border: "2px solid #000",
+    boxShadow: 24,
+    borderRadius: 3,
+    p: 4,
+  };
+
+  useEffect(() => {
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIDs = data11.id;
+    const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+    const headers = miHeaders;
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/0/${imgKey}`, { headers })
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        if (isMounted) {
+          console.log(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleImageUpload = (e) => {
+    handleClose();
+    console.log(files);
+    if (files === undefined) {
+      MySwal.fire({
+        title: "INVALID_INPUT",
+        type: "error",
+        text: "Please input a file",
+      }).then(() => {
+        handleOpen();
+      });
+    } else {
+      setOpened(true);
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("user1"));
+      console.log(data11);
+      const personalIDs = data11.id;
+      const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+      const formData = new FormData();
+      formData.append("myFile", files[0]);
+      formData.append("fileName", files[0].name);
+
+      const raw = JSON.stringify({
+        mediaDTO: {
+          multipartFile: formData,
+          key: imgKey,
+          type: files[0].type,
+        },
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      console.log(raw);
+
+      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/upload`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          console.log(result);
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            if (result.status !== "SUCCESS") {
+              handleOpen();
+            }
+            console.log("SUCCESS");
+          });
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          }).then(() => {
+            handleOpen();
+          });
+        });
+    }
+  };
+
+  const handleDeleteImage = () => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: miHeaders,
+    };
+    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const personalIDs = data11.id;
+    const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete//${imgKey}`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
+      })
+      .then((resx) => {
+        // if (resx.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        // }
+        // if (resx.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        // }
+        if (resx.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        // } else {
+        //   navigate("/authentication/sign-in");
+        // }
+        MySwal.fire({
+          title: resx.status,
+          type: "success",
+          text: resx.message,
+        }).then(() => {
+          console.log("SUCCESS");
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
       return;
@@ -437,7 +643,7 @@ function UserProfile() {
       <MDBox mt={3}>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={handleOpen}>
               <ListItemIcon>
                 <UploadFileIcon />
               </ListItemIcon>
@@ -448,7 +654,7 @@ function UserProfile() {
         </List>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={handleOpen}>
               <ListItemIcon>
                 <ChangeCircleIcon />
               </ListItemIcon>
@@ -459,7 +665,7 @@ function UserProfile() {
         </List>
         <List>
           <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={handleDeleteImage}>
               <ListItemIcon>
                 <DeleteIcon />
               </ListItemIcon>
@@ -475,6 +681,37 @@ function UserProfile() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
+      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
+        <CircularProgress color="info" />
+      </Backdrop>
+      {/* modal for file upload */}
+      <div>
+        <Modal
+          open={openn}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <MDBox sx={style}>
+            <MDTypography id="modal-modal-title" variant="h6" component="h2">
+              Upload Image
+            </MDTypography>
+            <MDInput type="file" files={files} onChange={(e) => setFiles(e.target.files)} />
+            <MDBox mt={4} mb={1}>
+              <MDButton
+                variant="gradient"
+                onClick={handleImageUpload}
+                color="info"
+                width="50%"
+                align="left"
+              >
+                Upload
+              </MDButton>
+            </MDBox>
+          </MDBox>
+        </Modal>
+      </div>
+
       <Grid container spacing={3}>
         <Grid item xs={4} md={4} lg={4}>
           <Card>
@@ -484,7 +721,7 @@ function UserProfile() {
                   <React.Fragment key={anchor}>
                     <Button onClick={toggleDrawer(anchor, true)}>
                       <MDBox mt={-4} mx={2} p={0}>
-                        <MDAvatar src={team1} alt="name" size="xxl" />
+                        <MDAvatar src={dummyUser} alt="name" size="xxl" />
                       </MDBox>
                     </Button>
                     <Drawer
@@ -570,7 +807,7 @@ function UserProfile() {
           </Card>
           &nbsp;
           <Card>
-            <MDBox pt={4} pb={3} px={3}>
+            <MDBox pt={4} pb={3} px={0}>
               <MDBox component="form" role="form">
                 <MDBox
                   variant="gradient"
@@ -930,91 +1167,109 @@ function UserProfile() {
                 variant="outlined"
                 square
               >
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={12} lg={12}>
-                    <MDTypography
-                      variant="h3"
-                      fontWeight="medium"
-                      color="text"
-                      ml={2}
-                      mt={3}
-                      mb={-3}
-                    >
-                      {`${fnamex} ${lnamex} ${onamex}`}
-                      <Divider />
-                    </MDTypography>
-                  </Grid>
-                </Grid>
-                <br />
-                <MDBox id="personalInfo">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <Stack direction="row" spacing={1} ml={2} mb={-4}>
-                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                          <Icon fontSize="medium">person</Icon>
-                        </Avatar>
-                        <MDTypography variant="h4" fontWeight="medium" color="text">
-                          Personal Information
+                {showUser ? (
+                  <MDBox>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} md={12} lg={12}>
+                        <MDTypography
+                          variant="h3"
+                          fontWeight="medium"
+                          color="text"
+                          ml={2}
+                          mt={3}
+                          mb={-3}
+                        >
+                          {`${fnamex} ${lnamex} ${onamex}`}
                           <Divider />
                         </MDTypography>
-                      </Stack>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <br />
-                  <MDBox>
-                    <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={1}>
-                      Email
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {emailx}{" "}
-                    </MDTypography>
-                  </MDBox>
-                  <MDBox>
-                    <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                      Phone
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {phonex}{" "}
-                    </MDTypography>
-                  </MDBox>
-                  <MDBox>
-                    <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                      Residental Area
-                    </MDTypography>
-                    <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                      {`${residentialCityx} ${residentialStatex}, ${residentialCountryx}`}{" "}
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
-                <br />
-                <MDBox id="skills">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <Stack direction="row" spacing={1} ml={2} mb={-2}>
-                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                          <Icon fontSize="medium">accessibility</Icon>
-                        </Avatar>
-                        <MDTypography variant="h4" fontWeight="medium" color="text">
-                          Skills
-                          <Divider />
-                        </MDTypography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                  <MDBox ml={2}>
-                    {skillsx.map((item) => (
-                      <MDBox key={item.id}>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                          {item.name}{" "}
+                    <br />
+                    <MDBox id="personalInfo">
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Stack direction="row" spacing={1} ml={2} mb={-4}>
+                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                              <Icon fontSize="medium">person</Icon>
+                            </Avatar>
+                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                              Personal Information
+                              <Divider />
+                            </MDTypography>
+                          </Stack>
+                        </Grid>
+                      </Grid>
+                      <br />
+                      <MDBox>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={1}>
+                          Email
                         </MDTypography>
                         <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {item.descrip}{" "}
+                          {emailx}{" "}
                         </MDTypography>
                       </MDBox>
-                    ))}
+                      <MDBox>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                          Phone
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {phonex}{" "}
+                        </MDTypography>
+                      </MDBox>
+                      <MDBox>
+                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                          Residental Area
+                        </MDTypography>
+                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                          {`${residentialCityx} ${residentialStatex}, ${residentialCountryx}`}{" "}
+                        </MDTypography>
+                      </MDBox>
+                    </MDBox>
+                    <br />
                   </MDBox>
-                </MDBox>
-                <br />
+                ) : (
+                  <MDBox />
+                )}
+                {showSkills ? (
+                  <MDBox>
+                    <MDBox id="skills">
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Stack direction="row" spacing={1} ml={2} mb={-2}>
+                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                              <Icon fontSize="medium">accessibility</Icon>
+                            </Avatar>
+                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                              Skills
+                              <Divider />
+                            </MDTypography>
+                          </Stack>
+                        </Grid>
+                      </Grid>
+                      <MDBox ml={2}>
+                        {skillsx.map((item) => (
+                          <MDBox key={item.id}>
+                            <MDTypography
+                              variant="h5"
+                              fontWeight="medium"
+                              color="text"
+                              ml={2}
+                              mt={2}
+                            >
+                              {item.name}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {item.descrip}{" "}
+                            </MDTypography>
+                          </MDBox>
+                        ))}
+                      </MDBox>
+                    </MDBox>
+                    <br />
+                  </MDBox>
+                ) : (
+                  <MDBox />
+                )}
                 <MDBox mb={5}> &nbsp;</MDBox>
               </Paper>
               <Paper
@@ -1028,106 +1283,143 @@ function UserProfile() {
                 variant="outlined"
                 square
               >
-                <MDBox id="workHistory">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <Stack direction="row" spacing={1} ml={2} mb={-2} mt={13}>
-                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                          <Icon fontSize="medium">work_history</Icon>
-                        </Avatar>
-                        <MDTypography variant="h4" fontWeight="medium" color="text">
-                          Work History
-                          <Divider />
-                        </MDTypography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                  <MDBox ml={2}>
-                    {workHistoryx.map((item) => (
-                      <MDBox key={item.id}>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                          {item.name}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
-                          {item.position}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {item.descrip}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {changeDateandTime(item.startTime, item.endTime)}
-                        </MDTypography>
+                <MDBox ml={2} mb={-2} mt={8} />
+                {showWorkHistory ? (
+                  <MDBox>
+                    <MDBox id="workHistory">
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
+                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                              <Icon fontSize="medium">work_history</Icon>
+                            </Avatar>
+                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                              Work History
+                              <Divider />
+                            </MDTypography>
+                          </Stack>
+                        </Grid>
+                      </Grid>
+                      <MDBox ml={2}>
+                        {workHistoryx.map((item) => (
+                          <MDBox key={item.id}>
+                            <MDTypography
+                              variant="h5"
+                              fontWeight="medium"
+                              color="text"
+                              ml={2}
+                              mt={2}
+                            >
+                              {item.name}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                              {item.position}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {item.descrip}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {changeDateandTime(item.startTime, item.endTime)}
+                            </MDTypography>
+                          </MDBox>
+                        ))}
                       </MDBox>
-                    ))}
+                    </MDBox>
                   </MDBox>
-                </MDBox>
-                <MDBox id="education">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                          <Icon fontSize="medium">school</Icon>
-                        </Avatar>
-                        <MDTypography variant="h4" fontWeight="medium" color="text">
-                          Education
-                          <Divider />
-                        </MDTypography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                  <MDBox ml={2}>
-                    {educationx.map((item) => (
-                      <MDBox key={item.id}>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                          {item.specialization}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
-                          {item.name}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {item.degree} {item.grade}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {changeDateandTime(item.startTime, item.endTime)}{" "}
-                        </MDTypography>
+                ) : (
+                  <MDBox />
+                )}
+                {showEducation ? (
+                  <MDBox>
+                    <MDBox id="education">
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
+                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                              <Icon fontSize="medium">school</Icon>
+                            </Avatar>
+                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                              Education
+                              <Divider />
+                            </MDTypography>
+                          </Stack>
+                        </Grid>
+                      </Grid>
+                      <MDBox ml={2}>
+                        {educationx.map((item) => (
+                          <MDBox key={item.id}>
+                            <MDTypography
+                              variant="h5"
+                              fontWeight="medium"
+                              color="text"
+                              ml={2}
+                              mt={2}
+                            >
+                              {item.specialization}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                              {item.name}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {item.degree} {item.grade}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {changeDateandTime(item.startTime, item.endTime)}{" "}
+                            </MDTypography>
+                          </MDBox>
+                        ))}
                       </MDBox>
-                    ))}
+                    </MDBox>
                   </MDBox>
-                </MDBox>
-                <MDBox id="positionHeld">
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={12} lg={12}>
-                      <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                        <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                          <Icon fontSize="medium">person_outline</Icon>
-                        </Avatar>
-                        <MDTypography variant="h4" fontWeight="medium" color="text">
-                          Position Held
-                          <Divider />
-                        </MDTypography>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                  <br />
-                  <MDBox ml={2}>
-                    {positionHeldx.map((item) => (
-                      <MDBox key={item.id}>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
-                          {item.name}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
-                          {item.place}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {item.descrip}{" "}
-                        </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
-                          {changeDateandTime(item.startTime, item.endTime)}{" "}
-                        </MDTypography>
+                ) : (
+                  <MDBox />
+                )}
+                {showPositionHeld ? (
+                  <MDBox>
+                    <MDBox id="positionHeld">
+                      <Grid container spacing={3}>
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
+                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
+                              <Icon fontSize="medium">person_outline</Icon>
+                            </Avatar>
+                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                              Position Held
+                              <Divider />
+                            </MDTypography>
+                          </Stack>
+                        </Grid>
+                      </Grid>
+                      <br />
+                      <MDBox ml={2}>
+                        {positionHeldx.map((item) => (
+                          <MDBox key={item.id}>
+                            <MDTypography
+                              variant="h5"
+                              fontWeight="medium"
+                              color="text"
+                              ml={2}
+                              mt={2}
+                            >
+                              {item.name}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                              {item.place}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {item.descrip}{" "}
+                            </MDTypography>
+                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                              {changeDateandTime(item.startTime, item.endTime)}{" "}
+                            </MDTypography>
+                          </MDBox>
+                        ))}
                       </MDBox>
-                    ))}
+                    </MDBox>
                   </MDBox>
-                </MDBox>
+                ) : (
+                  <MDBox />
+                )}
                 <MDBox mb={5} />
               </Paper>
             </Paper>
@@ -1135,9 +1427,6 @@ function UserProfile() {
         </Grid>
       </Grid>
       <Footer />
-      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
-        <CircularProgress color="info" />
-      </Backdrop>
     </DashboardLayout>
   );
 }
