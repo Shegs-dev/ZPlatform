@@ -1,158 +1,163 @@
-Agriculture,
-Agricultural Economics,
-Agricultural Extension,
-Agronomy,
-Animal Science,
-Crop Science
-Food Science and Technology
-Fisheries
-Forest Resources Management (Forestry)
-Home Science, Nutrition and Dietetics
-Soil Science
-Arts
-Archeology and Tourism
-Arabic and Islamic Studies
-Christian Religious Studies
-English and Literary Studies
-Fine and Applied Arts (Creatiuve Arts)
-Foreign Languages and Literature
-History and International Studies
-Linguistics and Nigerian Languages
-Mass Communication (Communication and Language Arts)
-Music
-Theatre and Film Studies
-Biological Sciences
-Biochemistry
-Botany
-Microbiology
-Marine Biology
-Cell Biology & Genetics
-Zoology
-Administration
-Accountancy
-Acturial Science
-Business Administration
-Business Management
-Banking and Finance
-Hospitality and Tourism
-Marketing
-Insurance
-Industrial Relations and Personnel Management
-Dentistry
-Child Dental Health
-Oral and Maxillofacial Surgery
-Preventive Dentistry
-Restorative Dentistry
-Education
-Adult Education and Extra-Mural Studies
-Arts Education
-Education & Accountancy
-Education & Computer Science
-Education & Economics
-Education & Mathematics
-Education & Physics
-Education & Religious Studies
-Education & Social Science
-Education And Biology
-Education And Chemistry
-Education And English Language
-Education And French
-Education And Geography/Physics
-Education And Political Science
-Educational Foundations
-Educational / Psychology Guidance And Counselling
-Health and Physical Education
-Library and Information Science
-Science Education
-Social Sciences Education
-Vocational Teacher Education (Technical Education)
-Religion
-Igbo Linguistics
-Engineering
-Agricultural and Bioresources Engineering
-Civil Engineering
-Chemical Engineering
-Computer Engineering
-Electrical Engineering
-Electronic Engineering
-Marine Engineering
-Mechanical Engineering
-Metallurgical and Materials Engineering
-Petroleum and Gas Engineering
-Systems Engineering
-Structural Engineering
-Production and Industrial Engineering
-Environmental Sciences
-Architecture
-Estate Management
-Quantity Surveying
-Building
-Geoinformatics and Surveying
-Urban and Regional Planning
-Health Sciences & Technology
-Health Administration and Management
-Medical Laboratory Sciences
-Medical Radiography and Radiological Sciences
-Medical Rehabilitation
-Nursing Sciences
-Law
-Commercial and Property Law
-International and Jurisprudence
-Private and Public Law
-Medical Sciences
-Anatomy
-Anesthesia
-Chemical Pathology
-Community Medicine
-Dermatology
-Hematology and Immunology
-Medical Biochemistry
-Medical Microbiology
-Medicine
-Morbid Anatomy
-Obstetrics and Gynecology
-Ophthalmology
-Otolaryngology
-Pediatrics
-Pharmacology and Therapeutics
-Physiology
-Radiation Medicine
-Surgery
-Psychological Medicine
-Child Dental Health
-Pharmaceutical Sciences
-Clinical Pharmacy and Pharmacy Management
-Pharmaceutical Chemistry and Industrial Pharmacy
-Pharmaceutical Technology and Industrial Pharmacy
-Pharmaceutics
-Pharmacognosy
-Department of Pharmacology and Toxicology
-Physical Sciences
-Computer Science
-Geology
-Mathematics
-Physics and Astronomy
-Geophysics
-Pure and Industrial Chemistry
-Statistics
-Social Sciences
-Economics
-Geography
-Philosophy
-Political Science
-Psychology
-Public Administration and Local Government
-Religion
-Social Work
-Sociology/Anthropology
-Veterinary Medicine
-Veterinary Physiology/Pharmacology
-Veterinary Anatomy
-Animal Health and Production
-Veterinary Parasitology and Entomology
-Veterinary Pathology and Microbiology
-Veterinary Public Health and Preventive Medicine
-Veterinary Surgery
-Veterinary Medicine
-Veterinary Obstetrics and Reproductive Diseases
-Veterinary Teaching Hospital
+function AllCourses() {
+  return {
+    allCourses: [
+      { name: "Agriculture" },
+      { name: "Agricultural Economics" },
+      { name: "Agricultural Extension" },
+      { name: "Agronomy" },
+      { name: "Animal Science" },
+      { name: "Crop Science" },
+      { name: "Food Science and Technology" },
+      { name: "Fisheries" },
+      { name: "Forest Resources Management  (Forestry)" },
+      { name: "Home Science, Nutrition and Dietetics" },
+      { name: "Soil Science" },
+      { name: "Arts" },
+      { name: "Archeology and Tourism" },
+      { name: "Arabic and Islamic Studies" },
+      { name: "Christian Religious Studies" },
+      { name: "English and Literary Studies" },
+      { name: "Fine and Applied Arts  (Creative Arts)" },
+      { name: "Foreign Languages and Literature" },
+      { name: "History and International Studies" },
+      { name: "Linguistics and Nigerian Languages" },
+      { name: "Mass Communication  (Communication and Language Arts )" },
+      { name: "Music" },
+      { name: "Theatre and Film Studies" },
+      { name: "Biological Sciences" },
+      { name: "Biochemistry" },
+      { name: "Botany" },
+      { name: "Microbiology" },
+      { name: "Marine Biology" },
+      { name: "Cell Biology & Genetics" },
+      { name: "Zoology" },
+      { name: "Administration" },
+      { name: -"Accountancy" },
+      { name: "Acturial Science" },
+      { name: "Business Administration" },
+      { name: "Business Management" },
+      { name: "Banking and Finance" },
+      { name: "Hospitality and Tourism" },
+      { name: "Marketing" },
+      { name: "Insurance" },
+      { name: "Industrial Relations and Personnel Management" },
+      { name: "Dentistry" },
+      { name: "Child Dental Health" },
+      { name: "Oral and Maxillofacial Surgery" },
+      { name: "Preventive Dentistry" },
+      { name: "Restorative Dentistry" },
+      { name: "Education" },
+      { name: "Adult Education and Extra-Mural Studies" },
+      { name: "Arts Education" },
+      { name: "Education  & Accountancy" },
+      { name: "Education  & Computer Science" },
+      { name: "Education  & Economics" },
+      { name: "Education  & Mathematics" },
+      { name: "Education  & Physics" },
+      { name: "Education  & Religious Studies" },
+      { name: "Education  & Social Science" },
+      { name: "Education And Biology" },
+      { name: "Education And Chemistry" },
+      { name: "Education And English Language" },
+      { name: "Education And French" },
+      { name: "Education And Geography/Physics" },
+      { name: "Education And Political Science" },
+      { name: "Educational Foundations" },
+      { name: "Educational / Psychology Guidance And Counselling" },
+      { name: "Health and Physical Education" },
+      { name: "Library and Information Science" },
+      { name: "Science Education" },
+      { name: "Social Sciences Education" },
+      { name: "Vocational Teacher Education  (Technical Education )" },
+      { name: "Religion" },
+      { name: "Igbo Linguistics" },
+      { name: "Engineering" },
+      { name: "Agricultural and Bioresources Engineering" },
+      { name: "Civil Engineering" },
+      { name: "Chemical Engineering" },
+      { name: "Computer Engineering" },
+      { name: "Electrical Engineering" },
+      { name: "Electronic Engineering" },
+      { name: "Marine Engineering" },
+      { name: "Mechanical Engineering" },
+      { name: "Metallurgical and Materials Engineering" },
+      { name: "Petroleum and Gas Engineering" },
+      { name: "Systems Engineering" },
+      { name: "Structural Engineering" },
+      { name: "Production and Industrial Engineering" },
+      { name: "Environmental Sciences" },
+      { name: "Architecture" },
+      { name: "Estate Management" },
+      { name: "Quantity Surveying" },
+      { name: "Building" },
+      { name: "Geoinformatics and Surveying" },
+      { name: "Urban and Regional Planning" },
+      { name: "Health Sciences  & Technology" },
+      { name: "Health Administration and Management" },
+      { name: "Medical Laboratory Sciences" },
+      { name: "Medical Radiography and Radiological Sciences" },
+      { name: "Medical Rehabilitation" },
+      { name: "Nursing Sciences" },
+      { name: "Law" },
+      { name: "Commercial and Property Law" },
+      { name: "International and Jurisprudence" },
+      { name: "Private and Public Law" },
+      { name: "Medical Sciences" },
+      { name: "Anatomy" },
+      { name: "Anesthesia" },
+      { name: "Chemical Pathology" },
+      { name: "Community Medicine" },
+      { name: "Dermatology" },
+      { name: "Hematology and Immunology" },
+      { name: "Medical Biochemistry" },
+      { name: "Medical Microbiology" },
+      { name: "Medicine" },
+      { name: "Morbid Anatomy" },
+      { name: "Obstetrics and Gynecology" },
+      { name: "Ophthalmology" },
+      { name: "Otolaryngology" },
+      { name: "Pediatrics" },
+      { name: "Pharmacology and Therapeutics" },
+      { name: "Physiology" },
+      { name: "Radiation Medicine" },
+      { name: "Surgery" },
+      { name: "Psychological Medicine" },
+      { name: "Pharmaceutical Sciences" },
+      { name: "Clinical Pharmacy and Pharmacy Management" },
+      { name: "Pharmaceutical Chemistry and Industrial Pharmacy" },
+      { name: "Pharmaceutical Technology and Industrial Pharmacy" },
+      { name: "Pharmaceutics" },
+      { name: "Pharmacognosy" },
+      { name: "Department of Pharmacology and Toxicology" },
+      { name: "Physical Sciences" },
+      { name: "Computer Science" },
+      { name: "Geology" },
+      { name: "Mathematics" },
+      { name: "Physics and Astronomy" },
+      { name: "Geophysics" },
+      { name: "Pure and Industrial Chemistry" },
+      { name: "Statistics" },
+      { name: "Social Sciences" },
+      { name: "Economics" },
+      { name: "Geography" },
+      { name: "Philosophy" },
+      { name: "Political Science" },
+      { name: "Psychology" },
+      { name: "Public Administration and Local Government" },
+      { name: "Social Work" },
+      { name: "Sociology/Anthropology" },
+      { name: "Veterinary Physiology/Pharmacology" },
+      { name: "Veterinary Anatomy" },
+      { name: "Animal Health and Production" },
+      { name: "Veterinary Parasitology and Entomology" },
+      { name: "Veterinary Pathology and Microbiology" },
+      { name: "Veterinary Public Health and Preventive Medicine" },
+      { name: "Veterinary Surgery" },
+      { name: "Veterinary Medicine" },
+      { name: "Veterinary Obstetrics and Reproductive Diseases" },
+      { name: "Veterinary Teaching Hospital " },
+    ],
+  };
+}
+
+export default AllCourses;

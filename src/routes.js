@@ -47,78 +47,34 @@ import Position from "layouts/position";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Departments from "layouts/departments";
-import Roles from "layouts/companyroles";
-import Status from "layouts/companystatustype";
-import Announcement from "layouts/announcement";
 import AnnouncementType from "layouts/announcementtype";
-import Steps from "layouts/companysteps";
 import Branches from "layouts/branches/index";
-import CompanyReg from "layouts/authentication/companyRegistration";
 import SysRoles from "layouts/systemRoles";
 import RolesAndPerms from "layouts/systemRoles/addRolesAndPerms";
-import TimeOffType from "layouts/timeofftype";
 import UserManagement from "layouts/userManagement";
 import UserProfile from "layouts/userProfile";
-import CompanyProfile from "layouts/companiesProfile";
 import ViewUser from "layouts/userManagement/viewUser";
 import Groupview from "layouts/groupview";
 import ForgotPass from "layouts/authentication/forgot-password";
 import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import UserAudit from "layouts/userHistory";
 import InviteUser from "layouts/inviteUser";
-import FreeDay from "layouts/free-days";
 import Checklists from "layouts/checklists";
-import UserTOT from "layouts/userManagement/userTimeOffType";
 
-import TimeOffRequests from "layouts/timeoffRequests";
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
-import AddTimeOffType from "layouts/timeofftype/addDetailsToTimeOffType";
-import AddUserpayment from "layouts/userManagement/addUserSalaryToUserManagement";
 import PaymentHis from "layouts/paymentHistory";
 
-import Birthdays from "layouts/birthdays/data/birthdays";
-import TimeOffRequestJourney from "layouts/timeoffRequests/timeOffRequestJourney";
-import ForwardTimeOff from "layouts/timeoffRequests/forwardTimeOffRequests";
-import MattersArising from "layouts/mattersArising";
-import EditMattersArising from "layouts/mattersArising/update";
-import ChatApp from "layouts/mattersArising/viewMatter/App";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
-import SalaryPayment from "layouts/salaryPayment";
 
-import Bonusdeduction from "layouts/bonusdeduction";
-import CloneBonusDeduction from "layouts/bonusdeduction/clone";
-import UpdateBonusOrDeduction from "layouts/bonusdeduction/update";
 import Groups from "layouts/groups";
-import AppraisalQues from "layouts/appraisal/appraisalQuestions";
-import VuAppraisalQuestion from "layouts/appraisal/appraisalQuestions/viewAppraisalQues";
-import AppraisalGrade from "layouts/appraisal/appraisalGrading";
-// import View from "layouts/timeoffRequests/view";
-import TimeoffRequestUpdate from "layouts/timeoffRequests/update";
-import SalaryTime from "layouts/salaryPayment/salaryTime";
-import SalaryProrate from "layouts/salaryPayment/salaryProrate";
-import VuUserProrate from "layouts/salaryPayment/salaryProrate/viewUserProrate";
-import SalaryAdvance from "layouts/salary-advance";
-import UpdateSalaryAdvance from "layouts/salary-advance/update-salary-advance";
-
-import Appraisal from "layouts/appraisal/appraisal";
-import ViewAppraisal from "layouts/appraisal/appraisal/viewAppraisal";
-import Polls from "layouts/polls";
-import SetAppraisalQuestion from "layouts/appraisal/appraisal/questions";
-import AppraisalAppraisers from "layouts/appraisal/appraisers";
-import AppraiseQandA from "layouts/appraisal/appaisalQandA";
-import GradeAppraisal from "layouts/appraisal/appraisalResult";
-
-import UpdateAnnouncement from "layouts/announcement/updateannouncement";
-import UpdateSystemRole from "layouts/userManagement/updatesystemrole";
-import UpdatePolls from "layouts/polls/updatepolls";
-import Addpolloptions from "layouts/polls/addpolloptions";
-import Disapprove from "layouts/timeoffRequests/disapprove";
-import VotePolls from "layouts/polls/votePolls";
-import EscalateMatter from "layouts/mattersArising/escalateMatter";
-import PollsView from "layouts/polls/view";
-import UpdateAppraisalGrading from "layouts/appraisal/appraisalGrading/update";
 import Skills from "layouts/skills";
+import JobApplication from "layouts/JobApplication";
+import ApplyJob from "layouts/JobApplication/applyjobmanually";
+import Education from "layouts/education";
+import WorkHistory from "layouts/workHistory";
+import PositionHeld from "layouts/positionHeld";
+import ApplicationSettings from "layouts/applicationSettings";
 
 const routes = [
   {
@@ -128,6 +84,21 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "Job Application",
+    key: "JobApplication",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/Job-application",
+    component: <JobApplication />,
+  },
+  {
+    name: "Job Application",
+    key: "ApplyJobManually",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/applyjobmanually",
+    component: <ApplyJob />,
   },
   {
     type: "collapse",
@@ -142,348 +113,32 @@ const routes = [
     name: "Skills",
     key: "skills",
     icon: <Icon fontSize="small">accessibility</Icon>,
-    route: "/skills",
+    route: "/Skills",
     component: <Skills />,
   },
   {
-    name: "Add Time-Off Type To User",
-    key: "userTimeOffType",
-    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/user-TimeOff-Type",
-    component: <UserTOT />,
-  },
-  {
-    name: "Update User System Role",
-    key: "userSystemRole",
-    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/update-system-role",
-    component: <UpdateSystemRole />,
+    type: "collapse",
+    name: "Education",
+    key: "education",
+    icon: <Icon fontSize="small">school</Icon>,
+    route: "/Education",
+    component: <Education />,
   },
   {
     type: "collapse",
-    name: "Birthdays",
-    key: "birthdays",
-    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/birthdays",
-    component: <Birthdays />,
-  },
-  {
-    name: "User Salary",
-    key: "userSalary",
-    icon: <Icon fontSize="small">supervised_user_circle</Icon>,
-    route: "/user-Management/user-Salary",
-    component: <AddUserpayment />,
+    name: "Work History",
+    key: "workHistory",
+    icon: <Icon fontSize="small">work_history</Icon>,
+    route: "/Work-History",
+    component: <WorkHistory />,
   },
   {
     type: "collapse",
-    name: "Announcement",
-    key: "announcement",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Announcement",
-    component: <Announcement />,
-  },
-  {
-    name: "Update announcement",
-    key: "updateannouncement",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Update-Announcement",
-    component: <UpdateAnnouncement />,
-  },
-  // {
-  //   name: "View",
-  //   key: "view",
-  //   icon: <Icon fontSize="small">meeting_room</Icon>,
-  //   route: "/timeoffRequests/view",
-  //   component: <View />,
-  // },
-  {
-    type: "collapse",
-    name: "Matters Arising",
-    key: "mattersarising",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/matters-Arising",
-    component: <MattersArising />,
-  },
-  {
-    name: "Escalate Matter",
-    key: "escalatematter",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/matters-Arising/escalateMatter",
-    component: <EscalateMatter />,
-  },
-  {
-    name: "Chats",
-    key: "viewMatter",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/view-Matter",
-    component: <ChatApp />,
-  },
-  {
-    type: "collapse",
-    name: "Polls",
-    key: "polls",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/polls",
-    component: <Polls />,
-  },
-  {
-    name: "Update polls",
-    key: "updatepolls",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Update-Poll",
-    component: <UpdatePolls />,
-  },
-  {
-    name: "Add Poll Option",
-    key: "editaddpolloption",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/polls/Option",
-    component: <Addpolloptions />,
-  },
-  {
-    name: "View polls",
-    key: "viewpolls",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/polls/vote-polls",
-    component: <VotePolls />,
-  },
-  {
-    name: "Vote polls",
-    key: "votepolls",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/polls/view",
-    component: <PollsView />,
-  },
-  {
-    name: "Edit Matters Arising",
-    key: "editmattersarising",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/matters-Arising/update",
-    component: <EditMattersArising />,
-  },
-  // {
-  //   type: "collapse",
-  //   name: "Chats",
-  //   key: "chats",
-  //   icon: <Icon fontSize="small">meeting_room</Icon>,
-  //   route: "/matters-Arising/viewChats",
-  //   component: <App />,
-  // },
-  {
-    type: "divider",
-    name: "",
-    key: "div3",
-    route: "",
-  },
-  {
-    type: "title",
-    title: "Appraisal",
-    key: "tit3",
-    route: "",
-  },
-  {
-    type: "collapse",
-    name: "Appraisals",
-    key: "appraisalz",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Appraisals",
-    component: <Appraisal />,
-  },
-  {
-    name: "View Appraisal",
-    key: "viewAppraisal",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/View-Appraisals",
-    component: <ViewAppraisal />,
-  },
-  {
-    name: "Set Appraisal Questions",
-    key: "setAppraisalQuestions",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Set-Appraisal-Questions",
-    component: <SetAppraisalQuestion />,
-  },
-  {
-    name: "Grade Appraisal",
-    key: "gradeAppraisal",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Grade-Appraisal",
-    component: <GradeAppraisal />,
-  },
-  {
-    name: "Set Appraisal Appraisers",
-    key: "setAppraisalAppraisers",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Set-Appraisal-Appraisers",
-    component: <AppraisalAppraisers />,
-  },
-  {
-    type: "collapse",
-    name: "Appraisal Questions",
-    key: "appraisalQuestions",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Appraisal-Questions",
-    component: <AppraisalQues />,
-  },
-  {
-    name: "Appraisal Answers",
-    key: "appraisalQandA",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Appraisal-Question-and-Answers",
-    component: <AppraiseQandA />,
-  },
-  {
-    name: "Update Appraisal Questions",
-    key: "viewAppraisalQues",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Update-Appraisal-Questions",
-    component: <VuAppraisalQuestion />,
-  },
-  {
-    type: "collapse",
-    name: "Appraisal Grading",
-    key: "appraisalGrading",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Appraisal-Grading",
-    component: <AppraisalGrade />,
-  },
-  {
-    name: "Update appraisal grading",
-    key: "updateappraisalgrading",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/appraisal/update",
-    component: <UpdateAppraisalGrading />,
-  },
-  {
-    type: "divider",
-    name: "",
-    key: "div4",
-    route: "",
-  },
-  {
-    type: "title",
-    title: "Salary Management",
-    key: "tit4",
-    route: "",
-  },
-  {
-    type: "collapse",
-    name: "Salary Prorate",
-    key: "salaryProrate",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/salary-Prorate",
-    component: <SalaryProrate />,
-  },
-  {
-    name: "View User Prorate",
-    key: "viewUserProrate",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/view-Salary-Prorate",
-    component: <VuUserProrate />,
-  },
-  {
-    type: "collapse",
-    name: "Salary Time Settings",
-    key: "salaryTime",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/salary-Time-Settings",
-    component: <SalaryTime />,
-  },
-  {
-    type: "collapse",
-    name: "Bonus/Deduction",
-    key: "bonusdeduction",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus-And-Deduction",
-    component: <Bonusdeduction />,
-  },
-  {
-    name: "Clone Bonus/Deduction",
-    key: "cloneBonusDeduction",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus-And-Deduction/Clone",
-    component: <CloneBonusDeduction />,
-  },
-  {
-    name: "Update Bonus or Deduction",
-    key: "updateBonusDeduction",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Bonus-And-Deduction/Update",
-    component: <UpdateBonusOrDeduction />,
-  },
-  {
-    type: "collapse",
-    name: "Salary Payment",
-    key: "salaryPayment",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Salary-Payment",
-    component: <SalaryPayment />,
-  },
-  {
-    type: "collapse",
-    name: "Salary Advance",
-    key: "salaryAdvance",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Salary-Advance",
-    component: <SalaryAdvance />,
-  },
-  {
-    name: "Update Salary Advance",
-    key: "updateSalaryAdvance",
-    icon: <Icon fontSize="small">meeting_room</Icon>,
-    route: "/Salary-Advance/Update",
-    component: <UpdateSalaryAdvance />,
-  },
-  {
-    type: "divider",
-    name: "",
-    key: "div2",
-    route: "",
-  },
-  {
-    type: "title",
-    title: "Leave Management",
-    key: "tit2",
-    route: "",
-  },
-  {
-    type: "collapse",
-    name: "Free Days",
-    key: "free-days",
-    icon: <Icon fontSize="small">today</Icon>,
-    route: "/free-days",
-    component: <FreeDay />,
-  },
-  {
-    type: "collapse",
-    name: "Time-Off Type",
-    key: "timeofftype",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Time-Off-Type",
-    component: <TimeOffType />,
-  },
-  {
-    type: "collapse",
-    name: "Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests",
-    component: <TimeOffRequests />,
-  },
-  {
-    name: "disapprove Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoff-Requests/disapprove",
-    component: <Disapprove />,
-  },
-  {
-    // type: "collapse",
-    name: "update Time Off Requests",
-    key: "timeOffRequest",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/time-off-Requests/update-time-off-Requests",
-    component: <TimeoffRequestUpdate />,
+    name: "Position Held",
+    key: "positionHeld",
+    icon: <Icon fontSize="small">perm_identity</Icon>,
+    route: "/Position-Held",
+    component: <PositionHeld />,
   },
   {
     type: "divider",
@@ -504,6 +159,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Announcement-Type",
     component: <AnnouncementType />,
+  },
+  {
+    type: "collapse",
+    name: "Job Application Settings",
+    key: "applicationSettings",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Application-Settings",
+    component: <ApplicationSettings />,
   },
   {
     type: "collapse",
@@ -536,30 +199,6 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/position",
     component: <Position />,
-  },
-  {
-    type: "collapse",
-    name: "Company Roles",
-    key: "companyroles",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Company-Roles",
-    component: <Roles />,
-  },
-  {
-    type: "collapse",
-    name: "Status Types",
-    key: "companystatus",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Company-Status",
-    component: <Status />,
-  },
-  {
-    type: "collapse",
-    name: "Company Steps",
-    key: "companysteps",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/Company-Steps",
-    component: <Steps />,
   },
   {
     name: "Add Roles And Permissions",
@@ -628,25 +267,11 @@ const routes = [
     component: <UserProfile />,
   },
   {
-    name: "Company Profile",
-    key: "companyProfile",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/company-Profile",
-    component: <CompanyProfile />,
-  },
-  {
     name: "User Info",
     key: "viewUser",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/user-Management/view-User",
     component: <ViewUser />,
-  },
-  {
-    name: "Company Regitration",
-    key: "companyRegistration",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/company-Registration",
-    component: <CompanyReg />,
   },
   {
     name: "Sign In",
@@ -684,32 +309,11 @@ const routes = [
     component: <InviteUser />,
   },
   {
-    name: "Time Off Requests Journey",
-    key: "timeOffRequestjourney",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoff-Requests/timeOff-Request-Journey",
-    component: <TimeOffRequestJourney />,
-  },
-  {
-    name: "Time Off Requests Journey",
-    key: "timeOffRequestjourney",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoff-Requests/forward-TimeOff-Requests",
-    component: <ForwardTimeOff />,
-  },
-  {
     name: "Reset Password",
     key: "forgot-password",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/forgot-password",
     component: <ForgotPass />,
-  },
-  {
-    name: "Add Details To Time Off Type",
-    key: "adddetailtotimeofftype",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/timeoff-type/add-Details-To-Time-Off-Type",
-    component: <AddTimeOffType />,
   },
   {
     name: "Complete Reset Password",

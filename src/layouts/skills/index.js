@@ -29,13 +29,21 @@ function Skills() {
   const [namex, setName] = useState("");
   const [descripx, setDescrip] = useState("");
 
+  const [uidx, setUID] = useState("");
+  const [unamex, setUName] = useState("");
+  const [udescripx, setUDescrip] = useState("");
+  const [uempID, setUEmpID] = useState("");
+
   const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
 
   const [allApp, setAllApp] = useState([]);
-  const [showSkills, setShowSkills] = useState(false);
+  const [showLists, setShowLists] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
 
   const [opened, setOpened] = useState(false);
+  const [uopened, setUOpened] = useState(false);
+
   const navigate = useNavigate();
 
   const { allPHeaders: myHeaders } = PHeaders();
@@ -67,8 +75,9 @@ function Skills() {
           window.location.reload();
         }
         if (result.length > 0) {
-          setShowSkills(true);
+          setShowLists(true);
         }
+        console.log(result);
         setAllApp(result);
       });
   };
@@ -78,7 +87,7 @@ function Skills() {
 
     if (isMounted) {
       // fetches the table data
-      //   handleGets();
+      handleGets();
     }
     return () => {
       isMounted = false;
@@ -106,9 +115,10 @@ function Skills() {
         // }
         if (resx.message === "Unauthorized Access") {
           navigate("/authentication/forbiddenPage");
-        } else {
-          navigate("/authentication/sign-in");
         }
+        // } else {
+        //   navigate("/authentication/sign-in");
+        // }
         MySwal.fire({
           title: resx.status,
           type: "success",
@@ -205,6 +215,77 @@ function Skills() {
     }
   };
 
+  const handleUpdate = () => {
+    setOpened(true);
+    const raw = JSON.stringify({
+      id: uidx,
+      name: unamex,
+      descrip: udescripx,
+      empID: uempID,
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/update`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        setUOpened(false);
+        setShowUpdate(false);
+        handleGets();
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          setUOpened(false);
+          setShowUpdate(false);
+          handleGets();
+        });
+      })
+      .catch((error) => {
+        setOpened(true);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  // Method to filter departments
+  const handleShow = (filteredData, value) => {
+    const filteredItems = filteredData.filter((item) => item.id === value);
+    setUID(value);
+    setUName(filteredItems[0].name);
+    setUDescrip(filteredItems[0].descrip);
+    setUEmpID(filteredItems[0].empID);
+
+    setUOpened(true);
+    setShowUpdate(true);
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -286,28 +367,8 @@ function Skills() {
       <MDBox pt={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12} lg={12}>
-            {showSkills ? (
-              <Card style={{ backgroundColor: "#318CE7", maxHeight: 350 }}>
-                <MDBox
-                  variant="gradient"
-                  bgColor="white"
-                  borderRadius="lg"
-                  coloredShadow="success"
-                  mt={2}
-                  mx={0}
-                  p={1}
-                  textAlign="left"
-                >
-                  <MDTypography
-                    variant="h4"
-                    fontWeight="medium"
-                    color="info"
-                    textAlign="center"
-                    mt={1}
-                  >
-                    Skills
-                  </MDTypography>
-                </MDBox>
+            {showLists ? (
+              <Card style={{ backgroundColor: "white" }}>
                 &nbsp;
                 {/* <div
                   className="scrollbar scrollbar-primary mt-2 mx-auto"
@@ -317,7 +378,7 @@ function Skills() {
                   <div className="row">
                     {allApp.map((item) => (
                       <Grid item xs={3} md={3} lg={3} key={item.id}>
-                        <Card sx={{ maxWidth: 345 }}>
+                        <Card>
                           <CardContent>
                             <MDTypography
                               variant="h5"
@@ -326,17 +387,9 @@ function Skills() {
                               color="info"
                               textAlign="left"
                               mt={1}
+                              mb={-3.5}
                             >
                               {item.name}
-                            </MDTypography>
-                            <MDTypography
-                              variant="h6"
-                              color="text"
-                              fontSize="75%"
-                              textAlign="left"
-                              mt={1}
-                            >
-                              {item.descrip}
                             </MDTypography>
                           </CardContent>
                           <CardActions>
@@ -346,6 +399,7 @@ function Skills() {
                                 color="white"
                                 onClick={() => handleDeleteSK(item.id)}
                                 width="50%"
+                                mt={-1}
                               >
                                 <Icon
                                   fontSize="medium"
@@ -353,6 +407,23 @@ function Skills() {
                                   color="error"
                                 >
                                   delete
+                                </Icon>
+                              </MDButton>
+                            </div>
+                            <div align="right">
+                              <MDButton
+                                variant="gradient"
+                                color="white"
+                                onClick={() => handleShow(allApp, item.id)}
+                                width="50%"
+                                mt={-1}
+                              >
+                                <Icon
+                                  fontSize="medium"
+                                  sx={{ fontSize: 100, alignSelf: "center" }}
+                                  color="error"
+                                >
+                                  edit
                                 </Icon>
                               </MDButton>
                             </div>
@@ -365,12 +436,13 @@ function Skills() {
                 </Container>
                 {/* </div> */}
                 &nbsp;
+                <br />
               </Card>
             ) : (
               <Card>
                 {" "}
                 <MDTypography variant="h3" fontWeight="bold" color="text" textAlign="center" mt={1}>
-                  No Added Skill
+                  No Skill
                 </MDTypography>
                 <Icon
                   fontSize="medium"
@@ -384,6 +456,87 @@ function Skills() {
           </Grid>
         </Grid>
       </MDBox>
+      {showUpdate ? (
+        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
+          <Card>
+            <MDBox pt={4} pb={3} px={15}>
+              <MDBox
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="info"
+                mx={2}
+                mt={-3}
+                p={2}
+                mb={1}
+                textAlign="center"
+              >
+                <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                  Update Skill
+                </MDTypography>
+              </MDBox>
+              <MDBox
+                variant="gradient"
+                bgColor="error"
+                borderRadius="lg"
+                coloredShadow="success"
+                mx={3}
+                mt={1}
+                p={1}
+                mb={1}
+                textAlign="center"
+              >
+                <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
+                  {" "}
+                </MDTypography>
+              </MDBox>
+              <MDBox component="form" role="form">
+                <MDBox mb={2}>
+                  <Container>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          label="Name *"
+                          value={unamex || ""}
+                          onKeyUp={handleOnNameKeys}
+                          className="form-control"
+                          onChange={(e) => setUName(e.target.value)}
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="col-sm-6">
+                        <MDInput
+                          type="text"
+                          value={udescripx || ""}
+                          onChange={(e) => setUDescrip(e.target.value)}
+                          label="Description"
+                          variant="standard"
+                          fullWidth
+                        />
+                      </div>
+                    </div>
+                  </Container>
+                </MDBox>
+                <MDBox mt={4} mb={1}>
+                  <MDButton
+                    variant="gradient"
+                    onClick={handleUpdate}
+                    color="info"
+                    width="50%"
+                    align="left"
+                  >
+                    Save
+                  </MDButton>
+                </MDBox>
+              </MDBox>
+            </MDBox>
+          </Card>
+        </Backdrop>
+      ) : (
+        <MDBox />
+      )}
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
