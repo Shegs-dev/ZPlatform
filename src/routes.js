@@ -75,6 +75,8 @@ import Education from "layouts/education";
 import WorkHistory from "layouts/workHistory";
 import PositionHeld from "layouts/positionHeld";
 import ApplicationSettings from "layouts/applicationSettings";
+import ApplicationHistory from "layouts/applicationHistory";
+import ViewApplicationHistory from "layouts/applicationHistory/view";
 
 const routes = [
   {
@@ -107,6 +109,21 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "Application History",
+    key: "applicationHistory",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Application-History",
+    component: <ApplicationHistory />,
+  },
+  {
+    name: "View Application History",
+    key: "ViewApplicationHistory",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Application-History/view",
+    component: <ViewApplicationHistory />,
   },
   {
     type: "collapse",
