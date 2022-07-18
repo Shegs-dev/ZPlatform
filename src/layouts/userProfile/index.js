@@ -467,7 +467,9 @@ function UserProfile() {
     const imgKey = `PROF_PIC_EMP-${personalIDs}`;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/0/${imgKey}`, { headers })
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/Mono/${imgKey}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
@@ -509,28 +511,42 @@ function UserProfile() {
     } else {
       setOpened(true);
       e.preventDefault();
+      // Headers for upload image
+      const GenToken = localStorage.getItem("rexxdex1");
+      const apiiToken = localStorage.getItem("rexxdex");
+
+      if (apiiToken !== "null" && apiiToken !== null) {
+        localStorage.setItem("rexxdex1", apiiToken);
+      }
+      const iiHeaders = new Headers();
+      iiHeaders.append("Content-Type", "multipart/form-data");
+      iiHeaders.append("Token-1", GenToken);
+
       const data11 = JSON.parse(localStorage.getItem("user1"));
       console.log(data11);
       const personalIDs = data11.id;
       const imgKey = `PROF_PIC_EMP-${personalIDs}`;
-      const formData = new FormData();
-      formData.append("myFile", files[0]);
-      formData.append("fileName", files[0].name);
+      console.log(imgKey);
 
-      const raw = JSON.stringify({
-        mediaDTO: {
-          multipartFile: formData,
-          key: imgKey,
-          type: files[0].type,
-        },
-      });
+      const formData = new FormData();
+      formData.append("file", files[0]);
+
+      const raw = formData;
+      console.log(raw);
+
+      // const raw = JSON.stringify({
+      //   mediaDTO: {
+      //     multipartFile: formData,
+      //     key: imgKey,
+      //     type: files[0].type,
+      //   },
+      // });
       const requestOptions = {
         method: "POST",
-        headers: myHeaders,
+        headers: iiHeaders,
         body: raw,
         redirect: "follow",
       };
-      console.log(raw);
 
       fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/upload`, requestOptions)
         .then(async (res) => {
