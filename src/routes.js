@@ -74,6 +74,7 @@ import ApplyJob from "layouts/JobApplication/applyjobmanually";
 import Education from "layouts/education";
 import WorkHistory from "layouts/workHistory";
 import PositionHeld from "layouts/positionHeld";
+import ViewJobPost from "layouts/JobApplication/ManualApplication/View";
 
 const routes = [
   {
@@ -98,6 +99,13 @@ const routes = [
     icon: <Icon fontSize="small">JobApplication</Icon>,
     route: "/applyjobmanually",
     component: <ApplyJob />,
+  },
+  {
+    name: "View This Job",
+    key: "ViewThisJob",
+    icon: <Icon fontSize="small">JobApplication</Icon>,
+    route: "/jobApplication/ManualApplication/View",
+    component: <ViewJobPost />,
   },
   {
     type: "collapse",
