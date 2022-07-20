@@ -67,17 +67,40 @@ function Education() {
   const { allPHeaders: myHeaders } = PHeaders();
   const { allGHeaders: miHeaders } = GHeaders();
 
-  const changeDateandTime = (timestamp) => {
-    const date = new Date(timestamp);
-    let dayx = "";
-    let monthx = "";
-    let yearx = "";
-    if (startDate !== null) {
-      dayx = date.getDate();
-      monthx = date.getMonth() + 1;
-      yearx = date.getFullYear();
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    overflow: "scroll",
+    height: "100%",
+    display: "block",
+  };
+
+  const changeDateandTime = (stimestamp, etimestamp) => {
+    const sdate = new Date(stimestamp);
+    let sdayx = "";
+    let smonthx = "";
+    let syearx = "";
+    if (sdate !== null) {
+      sdayx = sdate.getDate();
+      smonthx = sdate.getMonth() + 1;
+      syearx = sdate.getFullYear();
     }
-    return `${yearx}/${monthx}/${dayx}`;
+
+    const edate = new Date(etimestamp);
+    let edayx = "";
+    let emonthx = "";
+    let eyearx = "";
+    if (edate !== null) {
+      edayx = edate.getDate();
+      emonthx = edate.getMonth() + 1;
+      eyearx = edate.getFullYear();
+    }
+    return `From ${syearx}/${smonthx}/${sdayx} to ${eyearx}/${emonthx}/${edayx}`;
   };
 
   const handleGets = () => {
@@ -90,7 +113,11 @@ function Education() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((result) => {
         if (result.message === "Expired Access") {
@@ -134,7 +161,11 @@ function Education() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((resx) => {
         // if (resx.message === "Expired Access") {
@@ -287,7 +318,11 @@ function Education() {
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((result) => {
         setOpened(false);
@@ -613,8 +648,7 @@ function Education() {
                             mt={1}
                             mb={0}
                           >
-                            From {changeDateandTime(item.startTime)} to{" "}
-                            {changeDateandTime(item.endTime)}
+                            {changeDateandTime(item.startTime, item.endTime)}
                           </MDTypography>
                         </CardContent>
                         <CardActions>
@@ -680,7 +714,7 @@ function Education() {
       </MDBox>
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
-          <Card>
+          <Card style={style}>
             <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"
@@ -700,7 +734,7 @@ function Education() {
                   textAlign="center"
                   mt={1}
                 >
-                  Add Education
+                  Update Education
                 </MDTypography>
               </MDBox>
               <MDBox

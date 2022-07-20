@@ -39,7 +39,12 @@
     "eslint-plugin-prettier": "3.4.0",
     "express": "^4.17.3",
     "fetch-intercept": "^2.4.0",
+<<<<<<< HEAD
     "mdb-react-ui-kit": "^4.1.0",
+=======
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+>>>>>>> a29691fced2f91829ee859998208854c33711d53
     "nodemon": "^2.0.15",
     "prop-types": "15.7.2",
     "react": "^17.0.2",

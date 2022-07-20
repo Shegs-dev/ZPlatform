@@ -599,7 +599,11 @@ function PaymentHis() {
             .then(async (res) => {
               const aToken = res.headers.get("token-1");
               localStorage.setItem("rexxdex", aToken);
-              return res.json();
+              const result = await res.text();
+              if (result === null || result === undefined || result === "") {
+                return {};
+              }
+              return JSON.parse(result);
             })
             .then((resxx) => {
               if (resxx.message === "Expired Access") {

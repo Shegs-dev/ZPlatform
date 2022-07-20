@@ -74,7 +74,13 @@ import ApplyJob from "layouts/JobApplication/applyjobmanually";
 import Education from "layouts/education";
 import WorkHistory from "layouts/workHistory";
 import PositionHeld from "layouts/positionHeld";
+<<<<<<< HEAD
 import ViewJobPost from "layouts/JobApplication/ManualApplication/View";
+=======
+import ApplicationSettings from "layouts/applicationSettings";
+import ApplicationHistory from "layouts/applicationHistory";
+import ViewApplicationHistory from "layouts/applicationHistory/view";
+>>>>>>> a29691fced2f91829ee859998208854c33711d53
 
 const routes = [
   {
@@ -114,6 +120,21 @@ const routes = [
     icon: <Icon fontSize="small">supervised_user_circle</Icon>,
     route: "/user-Management",
     component: <UserManagement />,
+  },
+  {
+    type: "collapse",
+    name: "Application History",
+    key: "applicationHistory",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Application-History",
+    component: <ApplicationHistory />,
+  },
+  {
+    name: "View Application History",
+    key: "ViewApplicationHistory",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Application-History/view",
+    component: <ViewApplicationHistory />,
   },
   {
     type: "collapse",
@@ -166,6 +187,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/Announcement-Type",
     component: <AnnouncementType />,
+  },
+  {
+    type: "collapse",
+    name: "Job Application Settings",
+    key: "applicationSettings",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/Application-Settings",
+    component: <ApplicationSettings />,
   },
   {
     type: "collapse",

@@ -89,15 +89,19 @@ function userlogin() {
     const passwordValidate = new RegExp(
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
     );
-    if (retypepasswordx !== npasswordx) {
-      setCheckedRTNPass(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
-    }
     if (retypepasswordx.match(passwordValidate)) {
       setCheckedRTNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "";
+    }
+    if (retypepasswordx === npasswordx) {
+      setCheckedRTNPass(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("retypepassword").innerHTML = "";
+    } else {
+      setCheckedRTNPass(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
     setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
