@@ -1,44 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
-import DataTable from "examples/Tables/DataTable";
 import MDTypography from "components/MDTypography";
 import TextField from "@mui/material/TextField";
 import MDButton from "components/MDButton";
 import Card from "@mui/material/Card";
-import Icon from "@mui/material/Icon";
 import Grid from "@mui/material/Grid";
 import Backdrop from "@mui/material/Backdrop";
-import TextWrapper from "react-text-wrapper";
 import CircularProgress from "@mui/material/CircularProgress";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
+// import Accordion from "@mui/material/Accordion";
+// import AccordionSummary from "@mui/material/AccordionSummary";
+// import AccordionDetails from "@mui/material/AccordionDetails";/
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import {
-  Container,
-  Form,
-  Row,
-  Col,
-  ButtonGroup,
-  ToggleButton,
-  Dropdown,
-  Button,
-} from "react-bootstrap";
+import { Container, Form, Row, Col, ButtonGroup, ToggleButton } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import TimePicker from "react-bootstrap-time-picker";
 import DatePicker from "react-datepicker";
 // import Swal from "sweetalert2";
+import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText } from "mdb-react-ui-kit";
 // import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 // import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-// import Button from "assets/theme/components/button";
 // import Button from "assets/theme/components/button";
 
 function JobApplication() {
@@ -59,6 +48,7 @@ function JobApplication() {
   const [selclose, setSelclose] = useState(true);
   const [sellopen, setSellopen] = useState(false);
   const [items, setItems] = useState([]);
+  const { allPHeaders: myHeaders } = PHeaders();
   // const [organization, setOrganization] = useState({});
 
   // useEffect(() => {
@@ -100,16 +90,100 @@ function JobApplication() {
   //   };
   // }, []);
 
-  const changeDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
-  const changeEndDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const retDate = date.toDateString();
-    return retDate;
-  };
+  useEffect(() => {
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
+    const maxCreatedx = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    setOpened(true);
+
+    const raw = JSON.stringify({
+      createdTimeStartTime: firstDay,
+      createdTimeEndTime: maxCreatedx,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_RAGA_URL}/jobPost/getFiltered`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+
+        if (isMounted) {
+          setItems(result);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  // useEffect(() => {
+  //   const minCreatedx = new Date(minCreated).getTime();
+  //   const maxCreatedx = new Date().getTime();
+  //   const isopen = selopen;
+  //   setOpened(true);
+
+  //   const raw = JSON.stringify({
+  //     title: titlex,
+  //     location: locationx,
+  //     closingDateStartTime: minClosex,
+  //     closingDateEndTime: maxClosex,
+  //     createdTimeEndTime: maxCreatedx,
+  //     jobStatus: statusx,
+  //     industry: industryx,
+  //     opened: isopen,
+  //   });
+  //   console.log(raw);
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: myHeaders,
+  //     body: raw,
+  //     redirect: "follow",
+  //   };
+
+  //   fetch(`${process.env.REACT_APP_RAGA_URL}/jobPost/getFiltered`, requestOptions)
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       console.log(res);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       console.log(result);
+  //       if (result.message === "Expired Access") {
+  //         navigate("/authentication/sign-in");
+  //       }
+  //       if (result.message === "Token Does Not Exist") {
+  //         navigate("/authentication/sign-in");
+  //       }
+  //       if (result.message === "Unauthorized Access") {
+  //         navigate("/authentication/forbiddenPage");
+  //       }
+  //       setItems(result);
+  //       console.log(items);
+  //       setOpened(false);
+  //     })
+  //     .catch((error) => {
+  //       alert(`Error ${error.length} : In Posting.`);
+  //     });
+  // });
 
   const handleOpened = () => {
     setSelopen(true);
@@ -124,13 +198,19 @@ function JobApplication() {
     console.log(selopen);
   };
 
-  const { allPHeaders: myHeaders } = PHeaders();
-
-  const handleDelete = (value) => {
-    navigate(`ManualApplication?id=${value}`);
+  const handleView = (value) => {
+    console.log("hear");
+    console.log(value);
+    navigate(`/jobApplication/ManualApplication/View?id=${value}`);
   };
 
-  // eslint-disable-next-line consistent-return
+  // Method to change date from timestamp
+  const changeDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const retDate = date.toDateString();
+    return retDate;
+  };
+
   const handleApply = (value) => {
     setOpened(true);
     const data11 = JSON.parse(localStorage.getItem("user1"));
@@ -245,137 +325,87 @@ function JobApplication() {
         alert(`Error ${error.length} : In Posting.`);
       });
   };
-  const pColumns = [
-    { Header: "Title", accessor: "title", align: "left" },
-    { Header: "orgID", accessor: "orgID", align: "left" },
-    { Header: "Job status", accessor: "jobStatus", align: "left" },
-    { Header: "Location", accessor: "", align: "left" },
-    { Header: "Industry", accessor: "Industry", align: "left" },
-    {
-      Header: "Created",
-      accessor: "createdTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
-      align: "left",
-    },
-    {
-      Header: "Ending",
-      accessor: "closingTime",
-      Cell: ({ cell: { value } }) => changeEndDate(value),
-      align: "left",
-    },
-    {
-      Header: "actions",
-      accessor: "id",
-      // eslint-disable-next-line react/prop-types
-      Cell: ({ cell: value }) => (
-        <div
-          style={{
-            width: "100%",
-            backgroundColor: "#f5f5f5",
-            borderRadius: "2px",
-          }}
-        >
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleApply(items, value)}>Apply Job</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleDelete(value)}>Delete</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      ),
-      align: "left",
-    },
-  ];
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Grid container spacing={3}>
         <Grid item xs={9} md={9} lg={9}>
-          <MDBox textAlign="center" p={5}>
-            <MDButton
-              textAlign="center"
-              color="success"
+          <Container>
+            {/* <Card> */}
+            <MDBox
               variant="gradient"
-              onClick={handleCreate}
-              size="large"
+              bgColor="info"
+              borderRadius="lg"
+              coloredShadow="info"
+              mx={3}
+              mt={5}
+              p={2}
+              mb={1}
+              textAlign="center"
             >
-              JOBS
-            </MDButton>
-          </MDBox>
-          <div>
-            {items.map((item) => (
-              <div key={item.id}>
-                <Accordion>
-                  {/* <Row>
-                    <Col>
-                      <Button>Organization</Button>
-                    </Col>
-                    <Col>
-                      <Button>Location</Button>
-                    </Col>
-                    <Col>
-                      <Button>Job Status</Button>
-                    </Col>
-                  </Row> */}
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Row>
-                      <Col>
-                        <Typography>
-                          <b>{item.orgName}</b>
-                          <br />
-                          <TextWrapper width={300} content={item.description} />
-                        </Typography>
-                      </Col>
-                      <Col>
-                        <Typography>{item.location}</Typography>
-                      </Col>
-                      <Col>
-                        <Typography>{item.jobStatus}</Typography>
-                      </Col>
-                      <Col>
-                        <Button onClick={() => handleApply(item.id)}>Apply</Button>
-                      </Col>
-                    </Row>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography>{item.description}</Typography>
-                  </AccordionDetails>
-                </Accordion>
-              </div>
-            ))}
-            {/* <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel2a-content"
-                id="panel2a-header"
-              >
-                <Typography>Accordion 2</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-                  lacus ex, sit amet blandit leo lobortis eget.
-                </Typography>
-              </AccordionDetails>
-            </Accordion> */}
-            {/* <Accordion disabled>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel3a-content"
-                id="panel3a-header"
-              >
-                <Typography>Disabled Accordion</Typography>
-              </AccordionSummary>
-            </Accordion> */}
-          </div>
+              <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                Jobs
+              </MDTypography>
+            </MDBox>
+            <MDBox>
+              <Container>
+                <div className="row">
+                  {items.map((item) => (
+                    <div className="col-sm-4" key={item.id}>
+                      <MDBCard style={{ width: "18rem" }}>
+                        <MDBCardBody>
+                          <MDBCardTitle>
+                            <Col>
+                              <Typography>{item.title}</Typography>
+                            </Col>
+                          </MDBCardTitle>
+                          <MDBCardText>
+                            <Col>
+                              <Typography>
+                                <b>{item.orgName}</b>
+                              </Typography>
+                            </Col>
+                            <Col>
+                              <Typography>{item.location}</Typography>
+                            </Col>
+                            <Col>
+                              <Typography>
+                                <span>
+                                  <h5>{changeDate(item.openingTime)}</h5>
+                                </span>
+                              </Typography>
+                            </Col>
+                          </MDBCardText>
+                          <div>
+                            <MDButton
+                              variant="gradient"
+                              onClick={() => handleApply(item.id)}
+                              color="info"
+                              width="50%"
+                              align="left"
+                            >
+                              Apply
+                            </MDButton>
+                            &nbsp; &nbsp;
+                            <MDButton
+                              variant="gradient"
+                              onClick={() => handleView(item.id)}
+                              color="info"
+                              width="50%"
+                              align="left"
+                            >
+                              View
+                            </MDButton>
+                          </div>
+                        </MDBCardBody>
+                      </MDBCard>
+                    </div>
+                  ))}
+                </div>
+              </Container>
+            </MDBox>
+            {/* </Card> */}
+          </Container>
         </Grid>
         <Grid item xs={3} md={3} lg={3}>
           <Container>
@@ -427,24 +457,12 @@ function JobApplication() {
               </MDBox>
               <hr />
               <MDBox textAlign="center">
-                <MDTypography
-                  variant="p"
-                  textAlign="center"
-                  fontWeight="light"
-                  color="secondary"
-                  fontSize="60%"
-                >
+                <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="60%">
                   Created Date
                 </MDTypography>
                 <Row>
                   <Col>
-                    <MDTypography
-                      variant="p"
-                      textAlign="center"
-                      fontWeight="light"
-                      color="secondary"
-                      fontSize="70%"
-                    >
+                    <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="70%">
                       Lowest Created Date Range
                     </MDTypography>
                     <Container>
@@ -461,13 +479,7 @@ function JobApplication() {
                     </Container>
                   </Col>
                   <Col>
-                    <MDTypography
-                      variant="p"
-                      textAlign="center"
-                      fontWeight="light"
-                      color="secondary"
-                      fontSize="70%"
-                    >
+                    <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="70%">
                       Highest Created Date Range
                     </MDTypography>
                     <Container>
@@ -488,24 +500,12 @@ function JobApplication() {
               </MDBox>
               <hr />
               <MDBox textAlign="center">
-                <MDTypography
-                  variant="p"
-                  textAlign="center"
-                  fontWeight="light"
-                  color="secondary"
-                  fontSize="60%"
-                >
+                <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="60%">
                   Closing Time
                 </MDTypography>
                 <Row>
                   <Col>
-                    <MDTypography
-                      variant="p"
-                      textAlign="center"
-                      fontWeight="light"
-                      color="secondary"
-                      fontSize="70%"
-                    >
+                    <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="70%">
                       Lowest Closing Date Range
                     </MDTypography>
                     <Container>
@@ -522,13 +522,7 @@ function JobApplication() {
                     </Container>
                   </Col>
                   <Col>
-                    <MDTypography
-                      variant="p"
-                      textalign="center"
-                      fontWeight="light"
-                      color="secondary"
-                      fontSize="70%"
-                    >
+                    <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="70%">
                       Highest Closing Date Range
                     </MDTypography>
                     <Container>
@@ -551,25 +545,13 @@ function JobApplication() {
               <MDBox textAlign="center" mb={10}>
                 <MDBox textAlign="center">
                   <Row>
-                    <MDTypography
-                      variant="p"
-                      textalign="center"
-                      fontWeight="light"
-                      color="secondary"
-                      fontSize="60%"
-                    >
+                    <MDTypography variant="p" fontWeight="light" color="secondary" fontSize="60%">
                       Salary Expectation Range
                     </MDTypography>
                     <br />
                     <br />
                     <Col>
-                      <MDTypography
-                        variant="p"
-                        textalign="center"
-                        fontWeight="bold"
-                        color="secondary"
-                        fontSize="70%"
-                      >
+                      <MDTypography variant="p" fontWeight="bold" color="secondary" fontSize="70%">
                         Minimum Salary Expectation(₦): <br />
                         <TextField
                           label="Amount "
@@ -580,13 +562,7 @@ function JobApplication() {
                       </MDTypography>
                     </Col>
                     <Col>
-                      <MDTypography
-                        variant="p"
-                        textalign="center"
-                        fontWeight="bold"
-                        color="secondary"
-                        fontSize="70%"
-                      >
+                      <MDTypography variant="p" fontWeight="bold" color="secondary" fontSize="70%">
                         Maximum Salary Expectation(₦): <br />
                         <TextField
                           label="Amount "
@@ -607,7 +583,6 @@ function JobApplication() {
                         <Container>
                           <MDTypography
                             variant="p"
-                            textAlign="center"
                             fontWeight="regular"
                             color="secondary"
                             fontSize="90%"
@@ -633,7 +608,6 @@ function JobApplication() {
                     <Col>
                       <MDTypography
                         variant="p"
-                        textAlign="center"
                         fontWeight="regular"
                         color="secondary"
                         fontSize="90%"
@@ -721,16 +695,7 @@ function JobApplication() {
                 </MDButton>
               </MDBox>
             </Card>
-            <MDBox>
-              <DataTable
-                table={{ columns: pColumns, rows: items }}
-                isSorted
-                entriesPerPage
-                showTotalEntries
-                noEndBorder
-                canSearch
-              />
-            </MDBox>
+
             <Backdrop
               sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
               open={opened}
