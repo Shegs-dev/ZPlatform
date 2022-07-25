@@ -44,6 +44,15 @@ function ViewJobApplication() {
     return "Automatic";
   };
 
+  // Method to set rescinded
+  const setRescinded = (value) => {
+    if (value) {
+      return "True";
+    }
+
+    return "False";
+  };
+
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
@@ -135,7 +144,10 @@ function ViewJobApplication() {
                           textAlign="left"
                           mt={0}
                         >
-                          {application[0].jobPost.description}
+                          <div
+                            // eslint-disable-next-line react/no-danger
+                            dangerouslySetInnerHTML={{ __html: application[0].jobPost.description }}
+                          />
                         </MDTypography>
                         <MDTypography
                           variant="h4"
@@ -207,7 +219,7 @@ function ViewJobApplication() {
                           textAlign="left"
                           mt={0}
                         >
-                          Is Application Rescinded?: {application[0].rescinded}
+                          Is Application Rescinded?: {setRescinded(application[0].rescinded)}
                         </MDTypography>
                       </CardContent>
                     </Card>
