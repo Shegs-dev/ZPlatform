@@ -83,7 +83,7 @@ function ViewUser() {
   // save all changes
   const handleOfficeSave = () => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -142,7 +142,7 @@ function ViewUser() {
 
   useEffect(() => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -390,7 +390,7 @@ function ViewUser() {
 
   useEffect(() => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -429,7 +429,7 @@ function ViewUser() {
 
   useEffect(() => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
@@ -461,7 +461,7 @@ function ViewUser() {
 
   const handleGetPersonalID = () => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -574,7 +574,7 @@ function ViewUser() {
 
   useEffect(() => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
@@ -610,7 +610,7 @@ function ViewUser() {
 
   useEffect(() => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIds = data11.personalID;
     const headers = miHeaders;
     let isMounted = true;
@@ -693,7 +693,7 @@ function ViewUser() {
 
   const handleRoleSteps = (e) => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     setCompanyx(e.target.value);
     const headers = miHeaders;

@@ -61,7 +61,7 @@ function FreeDay() {
     const eventList = [];
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_NSUTANA_URL}/freedays/getAll/${orgIDs}`, { headers })
@@ -133,7 +133,7 @@ function FreeDay() {
       setAllEvents([...allEvents, newEvent]);
 
       e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const orgIDs = data11.orgID;
 
       const raw = JSON.stringify([

@@ -36,7 +36,7 @@ function VotePolls() {
 
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
 
@@ -134,7 +134,7 @@ function VotePolls() {
     const urlParams = new URLSearchParams(queryString);
     const groupids = urlParams.get("id");
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const personalIds = data11.id;

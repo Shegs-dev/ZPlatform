@@ -37,7 +37,7 @@ export default function Branchdata() {
     createdTimex,
     deleteFlagx
   ) => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const raw = JSON.stringify({
@@ -264,7 +264,7 @@ export default function Branchdata() {
   // };
   // Method to fetch all Branch
   useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const headers = miHeaders;

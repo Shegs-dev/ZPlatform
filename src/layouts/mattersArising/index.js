@@ -74,7 +74,7 @@ function MattersArising() {
     handleOnMessageKeys();
     if (enabled) {
       e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const orgIDs = data11.orgID;
       const ids = data11.personalID;
 
@@ -133,7 +133,7 @@ function MattersArising() {
   useEffect(() => {
     const headers = miHeaders;
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;

@@ -133,7 +133,7 @@ function JobApplication() {
   // eslint-disable-next-line consistent-return
   const handleApply = (value) => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     console.log(data11);
     const personalIDs = data11.id;
     const raw = JSON.stringify({

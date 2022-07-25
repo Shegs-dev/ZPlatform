@@ -40,7 +40,7 @@ function Announcement() {
   useEffect(() => {
     const headers = miHeaders;
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
@@ -75,7 +75,7 @@ function Announcement() {
   // Method to fetch all announcementtype
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
@@ -126,7 +126,7 @@ function Announcement() {
     handleOnTitleKeys();
     if (enabled) {
       e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
       const orgIDs = data11.orgID;
       const personalIDs = data11.personalID;

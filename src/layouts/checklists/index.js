@@ -23,7 +23,7 @@ function Checkbox() {
 
   const [opened, setOpened] = useState(false);
 
-  const data11 = JSON.parse(localStorage.getItem("user1"));
+  const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
   const orgIDs = data11.orgID;
 

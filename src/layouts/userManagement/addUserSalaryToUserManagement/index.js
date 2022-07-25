@@ -42,7 +42,7 @@ function AddUserpayment() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const uid = urlParams.get("id");
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
@@ -87,7 +87,7 @@ function AddUserpayment() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
 
     let isMounted = true;
@@ -125,7 +125,7 @@ function AddUserpayment() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const uid = urlParams.get("id");
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     let allRaw = null;
     const raw = JSON.stringify({
       orgID: data11.orgID,

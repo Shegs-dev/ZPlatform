@@ -25,7 +25,7 @@ export default function SysRole() {
 
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, deleteFlagx, createdTimex) => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
 
@@ -184,7 +184,7 @@ export default function SysRole() {
   // Method to fetch all companyroles
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`, { headers })

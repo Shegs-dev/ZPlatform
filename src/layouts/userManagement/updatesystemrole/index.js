@@ -30,7 +30,7 @@ function updatesystemrole() {
     const headers = miHeaders;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
 
@@ -71,7 +71,7 @@ function updatesystemrole() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
 

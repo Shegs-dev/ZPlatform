@@ -67,11 +67,11 @@ function ChangePassword() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("npassword").innerHTML = "";
     }
-    if (npasswordx !== 0) {
+    if (npasswordx.length !== 0) {
       if (retypepasswordx !== npasswordx) {
-        setCheckedRTNPass(false);
+        setCheckedNPass(false);
         // eslint-disable-next-line no-unused-expressions
-        document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
+        document.getElementById("npassword").innerHTML = "Passwords don't match<br>";
       }
     }
     if (npasswordx.length === 0) {
@@ -109,7 +109,7 @@ function ChangePassword() {
     if (enabled) {
       setOpened(true);
       e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const emailCh = data11.email;
       const raw = JSON.stringify({ username: emailCh, password: passwordx, npassword: npasswordx });
       const requestOptions = {

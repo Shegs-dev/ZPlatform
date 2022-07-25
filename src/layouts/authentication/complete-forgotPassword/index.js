@@ -69,6 +69,13 @@ function ComForgotPass() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
     }
+    if (newPasswordx.length !== 0) {
+      if (retypeNewPassword !== newPasswordx) {
+        setCheckedNPass(false);
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("password").innerHTML = "Passwords don't match<br>";
+      }
+    }
     if (newPasswordx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Password is required<br>";

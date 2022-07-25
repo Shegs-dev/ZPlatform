@@ -40,7 +40,7 @@ function ApplicationSettings() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
 
     let isMounted = true;
@@ -111,7 +111,7 @@ function ApplicationSettings() {
         text: "Matching Percentage Should Be Greater Than 40%",
       });
     } else {
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const personalIDs = data11.id;
 
       const raw = JSON.stringify({

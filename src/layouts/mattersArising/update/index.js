@@ -49,7 +49,7 @@ function EditMattersArising() {
     const ids = urlParams.get("id");
     // const ids = JSON.parse([id]);
 
-    // const data11 = JSON.parse(localStorage.getItem("user1"));
+    // const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     // const ids = data11.id;
     let isMounted = true;
@@ -99,7 +99,7 @@ function EditMattersArising() {
   }, []);
 
   const handleUpdate = () => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     // const ids = data11.id;
     // const personalIds = data11.personalID;
     const orgIDs = data11.orgID;
@@ -164,7 +164,7 @@ function EditMattersArising() {
   useEffect(() => {
     const headers = miHeaders;
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;

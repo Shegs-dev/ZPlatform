@@ -22,13 +22,13 @@ export default function MattersArisingTable() {
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
-    const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+    const userOData = JSON.parse(localStorage.getItem("MonoUserOtherDets"));
     const userNamexx = `${userOData.personal.fname} ${userOData.personal.lname}`;
     setUserNamex(userNamexx);
-    // const data11 = JSON.parse(localStorage.getItem("user1"));
-    // const userOtherDets = JSON.parse(localStorage.getItem("userOtherDets"));
+    // const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    // const MonoUserOtherDets = JSON.parse(localStorage.getItem("MonoUserOtherDets"));
     let isMounted = true;
     const orgIDs = data11.orgID;
     const headers = miHeaders;

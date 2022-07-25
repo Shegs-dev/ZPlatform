@@ -17,8 +17,11 @@ import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Icon from "@mui/material/Icon";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 function JobApplications() {
+  const MySwal = withReactContent(Swal);
   const [applications, setApplications] = useState([]);
 
   const [opened, setOpened] = useState(false);
@@ -41,25 +44,37 @@ function JobApplications() {
     return "Automatic";
   };
 
+  // Method to change type
+  const changeIsRescinded = (value) => {
+    if (value === true) {
+      return "True";
+    }
+
+    return "False";
+  };
+
   // Method to handle view
   const handleView = (value) => {
     navigate(`/Application-History/view?id=${value}`);
   };
 
-  useEffect(() => {
+  const handleGets = () => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalID = data11.id;
 
-    let isMounted = true;
     fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/getUserHistory/${personalID}`, {
       headers,
     })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((result) => {
         setOpened(false);
@@ -75,10 +90,62 @@ function JobApplications() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        if (isMounted) {
-          setApplications(result);
-        }
+        setApplications(result);
       });
+  };
+
+  const handleDisable = (val) => {
+    const requestOptions = {
+      method: "DELETE",
+      headers: miHeaders,
+    };
+
+    fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/rescind/${val}`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
+      })
+      .then((resx) => {
+        // if (resx.message === "Expired Access") {
+        //   navigate("/authentication/sign-in");
+        // }
+        // if (resx.message === "Token Does Not Exist") {
+        //   navigate("/authentication/sign-in");
+        // }
+        if (resx.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        // } else {
+        //   navigate("/authentication/sign-in");
+        // }
+        MySwal.fire({
+          title: resx.status,
+          type: "success",
+          text: resx.message,
+        }).then(() => {
+          handleGets();
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      //   fetches the table data
+      handleGets();
+    }
     return () => {
       isMounted = false;
     };
@@ -96,6 +163,12 @@ function JobApplications() {
       align: "left",
     },
     {
+      Header: "Is Rescinded?",
+      accessor: "rescinded",
+      Cell: ({ cell: { value } }) => changeIsRescinded(value),
+      align: "left",
+    },
+    {
       Header: "Date Applied",
       accessor: "applicationTime",
       Cell: ({ cell: { value } }) => changeDate(value),
@@ -103,7 +176,7 @@ function JobApplications() {
     },
     {
       Header: "actions",
-      accessor: "jobPost.id",
+      accessor: "id",
       // eslint-disable-next-line react/prop-types
       Cell: ({ cell: { value } }) => (
         <div
@@ -120,6 +193,7 @@ function JobApplications() {
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleDisable(value)}>Disable</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
