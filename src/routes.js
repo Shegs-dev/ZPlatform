@@ -74,13 +74,10 @@ import ApplyJob from "layouts/JobApplication/applyjobmanually";
 import Education from "layouts/education";
 import WorkHistory from "layouts/workHistory";
 import PositionHeld from "layouts/positionHeld";
-<<<<<<< HEAD
 import ViewJobPost from "layouts/JobApplication/ManualApplication/View";
-=======
 import ApplicationSettings from "layouts/applicationSettings";
 import ApplicationHistory from "layouts/applicationHistory";
 import ViewApplicationHistory from "layouts/applicationHistory/view";
->>>>>>> a29691fced2f91829ee859998208854c33711d53
 
 const routes = [
   {
