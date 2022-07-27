@@ -42,7 +42,7 @@ function UserTOT() {
     setOpened(true);
     const headers = miHeaders;
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
@@ -78,7 +78,7 @@ function UserTOT() {
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
 
     const queryString = window.location.search;

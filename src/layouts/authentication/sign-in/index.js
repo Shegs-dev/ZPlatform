@@ -61,7 +61,7 @@ function Basic() {
     let isMounted = true;
     if (isMounted) {
       localStorage.removeItem("rexxdex");
-      localStorage.removeItem("user1");
+      localStorage.removeItem("MonoUser1");
     }
     return () => {
       isMounted = false;
@@ -90,9 +90,9 @@ function Basic() {
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
-          localStorage.setItem("user1", JSON.stringify(result.otherDetailsDTO.personal));
-          localStorage.setItem("userOtherDets", JSON.stringify(result.otherDetailsDTO));
-          localStorage.setItem("BirthDayStatus", JSON.stringify(result.wishBirthday));
+          localStorage.setItem("MonoUser1", JSON.stringify(result.otherDetailsDTO.personal));
+          localStorage.setItem("MonoUserOtherDets", JSON.stringify(result.otherDetailsDTO));
+          localStorage.setItem("MonoBirthDayStatus", JSON.stringify(result.wishBirthday));
 
           if (result.otherDetailsDTO.autopass === 1) {
             navigate("/authentication/userlogin", { replace: true });

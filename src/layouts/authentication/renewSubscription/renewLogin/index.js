@@ -59,7 +59,7 @@ function RenewLog() {
 
   useEffect(() => {
     localStorage.removeItem("rexxdex");
-    localStorage.removeItem("user1");
+    localStorage.removeItem("MonoUser1");
   }, []);
 
   const handleClick = (e) => {
@@ -85,7 +85,7 @@ function RenewLog() {
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
-          localStorage.setItem("renewUser1", JSON.stringify(result.data));
+          localStorage.setItem("renewMonoUser1", JSON.stringify(result.data));
           navigate("/authentication/renew-Subscription", { replace: true });
         } else {
           MySwal.fire({

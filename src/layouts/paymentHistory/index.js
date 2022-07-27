@@ -71,7 +71,7 @@ function PaymentHis() {
   useEffect(() => {
     setOpened(true);
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
@@ -114,7 +114,7 @@ function PaymentHis() {
   useEffect(() => {
     setOpened(true);
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const headers = miHeaders;
     let isMounted = true;
@@ -224,7 +224,7 @@ function PaymentHis() {
   //     console.log(response); // card charged successfully, get reference here
   //     if (response.paymentStatus === "PAID" && response.status === "SUCCESS") {
   //       setOpened(true);
-  //       const data11 = JSON.parse(localStorage.getItem("user1"));
+  //       const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
   //       //   bonusAmount: 10
   //       //   createdTime: 1649875827073
   //       //   deleteFlag: 0
@@ -403,7 +403,7 @@ function PaymentHis() {
           });
         }
 
-        const data11 = JSON.parse(localStorage.getItem("user1"));
+        const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
         const orgIDs = data11.orgID;
         const raw = JSON.stringify({
           orgID: orgIDs,
@@ -495,7 +495,7 @@ function PaymentHis() {
   const handleClick = (e) => {
     setOpened(true);
     e.preventDefault();
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const auditConSDate = new Date(auditSDate).getTime();
@@ -555,7 +555,7 @@ function PaymentHis() {
       receiptNumber = filteredItems[0].receiptNo;
     }
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const paymentHisValue = value;

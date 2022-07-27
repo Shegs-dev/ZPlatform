@@ -56,7 +56,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     window.location.reload();
   };
 
-  const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+  const userOData = JSON.parse(localStorage.getItem("MonoUserOtherDets"));
 
   let userFullName = "";
   if (userOData !== null) {

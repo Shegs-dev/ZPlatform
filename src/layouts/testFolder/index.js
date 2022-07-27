@@ -54,15 +54,15 @@ function Dashboard() {
 
   const { sales, tasks } = reportsLineChartData;
 
-  const birthStatus = JSON.parse(localStorage.getItem("BirthDayStatus"));
+  const birthStatus = JSON.parse(localStorage.getItem("MonoBirthDayStatus"));
 
-  const userOData = JSON.parse(localStorage.getItem("userOtherDets"));
+  const userOData = JSON.parse(localStorage.getItem("MonoUserOtherDets"));
 
   const userFullName = `${userOData.personal.fname} ${userOData.personal.lname}`;
 
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_SHASHA_URL}/announcement/getCurrent/${orgIDs}`, { headers })

@@ -238,6 +238,13 @@ function Cover() {
       document.getElementById("password").innerHTML = "";
       setCheckedPass(true);
     }
+    if (passwordx.length !== 0) {
+      if (retypePasswordx !== passwordx) {
+        setCheckedPass(false);
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("password").innerHTML = "Passwords don't match<br>";
+      }
+    }
     if (passwordx.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Password is required<br>";
@@ -265,15 +272,12 @@ function Cover() {
     }
     if (retypePasswordx === passwordx) {
       setCheckedPass(true);
-    }
-    if (retypePasswordx === passwordx) {
-      setCheckedPass(true);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML = "";
+      document.getElementById("rtPassword").innerHTML = "";
     } else {
       setCheckedPass(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
+      document.getElementById("rtPassword").innerHTML = "Passwords don't match<br>";
     }
   };
 
@@ -324,58 +328,56 @@ function Cover() {
       };
       // localStorage.setItem("pass1", passwordx);
 
-      if (passwordx === retypePasswordx) {
-        fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
-          .then((res) => res.json())
-          .then((result) => {
-            setOpened(false);
-            if (result.status === "SUCCESS") {
-              MySwal.fire({
-                title: result.status,
-                type: "success",
-                text: result.message,
-              }).then(() => {
-                const raw2 = JSON.stringify({
-                  empID: result.data.id,
-                  username: result.data.email,
-                  password: passwordx,
-                });
-                const requestOptions2 = {
-                  method: "POST",
-                  headers: myHeaders,
-                  body: raw2,
-                  redirect: "follow",
-                };
-                fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/add`, requestOptions2)
-                  .then((res) => res.json())
-                  .then((resultIL) => {
-                    MySwal.fire({
-                      title: resultIL.status,
-                      type: "success",
-                      text: resultIL.message,
-                    }).then(() => {
-                      localStorage.setItem("user", JSON.stringify(result.data));
-                      navigate("/authentication/sign-in", { replace: true });
-                    });
-                  });
-              });
-            } else {
-              MySwal.fire({
-                title: result.status,
-                type: "error",
-                text: result.message,
-              });
-            }
-          })
-          .catch((error) => {
-            setOpened(false);
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
+        .then((res) => res.json())
+        .then((result) => {
+          setOpened(false);
+          if (result.status === "SUCCESS") {
             MySwal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              const raw2 = JSON.stringify({
+                empID: result.data.id,
+                username: result.data.email,
+                password: passwordx,
+              });
+              const requestOptions2 = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw2,
+                redirect: "follow",
+              };
+              fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/add`, requestOptions2)
+                .then((res) => res.json())
+                .then((resultIL) => {
+                  MySwal.fire({
+                    title: resultIL.status,
+                    type: "success",
+                    text: resultIL.message,
+                  }).then(() => {
+                    localStorage.setItem("user", JSON.stringify(result.data));
+                    navigate("/authentication/sign-in", { replace: true });
+                  });
+                });
             });
+          } else {
+            MySwal.fire({
+              title: result.status,
+              type: "error",
+              text: result.message,
+            });
+          }
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
           });
-      }
+        });
     }
   };
 

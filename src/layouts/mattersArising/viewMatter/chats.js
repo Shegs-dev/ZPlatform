@@ -97,7 +97,7 @@ function Chat({ socket, username, room }) {
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage("");
 
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const orgIDs = data11.orgID;
       const personalIDs = data11.personalID;
 

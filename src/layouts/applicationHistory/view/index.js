@@ -5,9 +5,11 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import MDBox from "components/MDBox";
+import CardContent from "@mui/material/CardContent";
+// import CardActions from "@mui/material/CardActions";
 import MDTypography from "components/MDTypography";
 import Card from "@mui/material/Card";
-import { Table, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -19,7 +21,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function ViewJobApplication() {
-  const [application, setApplication] = useState({});
+  const [application, setApplication] = useState([]);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -42,9 +44,14 @@ function ViewJobApplication() {
     return "Automatic";
   };
 
-  console.log(changeDate);
-  console.log(application);
-  console.log(changeType);
+  // Method to set rescinded
+  const setRescinded = (value) => {
+    if (value) {
+      return "True";
+    }
+
+    return "False";
+  };
 
   useEffect(() => {
     setOpened(true);
@@ -75,8 +82,7 @@ function ViewJobApplication() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
-          setApplication(result[0]);
+          setApplication(result);
         }
       });
     return () => {
@@ -107,89 +113,118 @@ function ViewJobApplication() {
           </MDBox>
           <MDBox>
             <Container>
-              <div align="center">
-                <Table striped bordered hover variant="info">
-                  {/* <tr>
-                    <td>
-                      <b>Job Title</b>
-                    </td>
-                    <td>{application.jobPost.title}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Location</b>
-                    </td>
-                    <td>{application.jobPost.location}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Description</b>
-                    </td>
-                    <td>{application.jobPost.description}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Opening Time</b>
-                    </td>
-                    <td>
-                      <span>{changeDate(application.jobPost.openingTime)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Closing Time</b>
-                    </td>
-                    <td>
-                      <span>{changeDate(application.jobPost.openingTime)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Salary Expectation</b>
-                    </td>
-                    <td>{application.jobPost.salaryExpectation}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Job Status</b>
-                    </td>
-                    <td>{application.jobPost.jobStatus}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Industry</b>
-                    </td>
-                    <td>{application.jobPost.industry}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Application Type</b>
-                    </td>
-                    <td>
-                      <span>{changeType(application.type)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Application Time</b>
-                    </td>
-                    <td>
-                      <span>{changeDate(application.applicationTime)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Application Status</b>
-                    </td>
-                    <td>{application.status}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Is Application Rescinded?</b>
-                    </td>
-                    <td>{application.isRescinded}</td>
-                  </tr> */}
-                </Table>
+              <div className="row">
+                <div className="col-sm-12">
+                  {application.length > 0 && (
+                    <Card sx={{ maxWidth: 500 }}>
+                      <CardContent>
+                        <MDTypography
+                          variant="h3"
+                          fontWeight="medium"
+                          fontSize="120%"
+                          color="info"
+                          textAlign="left"
+                          mt={1}
+                        >
+                          {application[0].jobPost.title}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={1}
+                        >
+                          {application[0].jobPost.location}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          <div
+                            // eslint-disable-next-line react/no-danger
+                            dangerouslySetInnerHTML={{ __html: application[0].jobPost.description }}
+                          />
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Opening Time: {changeDate(application[0].jobPost.openingTime)}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Closing Time: {changeDate(application[0].jobPost.closingTime)}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Minimum Salary Expectation: NGN {application[0].jobPost.salaryExpectation}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Job Status: {application[0].jobPost.jobStatus}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Industry: {application[0].jobPost.industry}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Application Type: {changeType(application[0].type)}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Applied On: {changeDate(application[0].applicationTime)}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Is Application Rescinded?: {setRescinded(application[0].rescinded)}
+                        </MDTypography>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
               </div>
             </Container>
           </MDBox>

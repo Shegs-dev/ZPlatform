@@ -19,7 +19,7 @@ export default function DepartmentData() {
   const navigate = useNavigate();
   // Method to handle update
   const handleUpdate = (idx, namex, descripx, createdTimex, deleteFlagx) => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const raw = JSON.stringify({
@@ -177,7 +177,7 @@ export default function DepartmentData() {
   // env.environments
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;

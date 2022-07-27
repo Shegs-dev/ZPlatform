@@ -122,7 +122,8 @@ function UserProfile() {
 
   useEffect(() => {
     setOpened(true);
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    console.log(data11);
     const personalIDs = data11.id;
     const headers = miHeaders;
     let isMounted = true;
@@ -189,7 +190,7 @@ function UserProfile() {
   useEffect(() => {
     const headers = miHeaders;
     let isMounted = true;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/resume/getForEmployee/${personalIDs}`, { headers })
       .then(async (res) => {
@@ -259,7 +260,7 @@ function UserProfile() {
   };
 
   const handleUpdate = () => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
     let dayx = "";
     let monthx = "";
@@ -462,16 +463,22 @@ function UserProfile() {
   };
 
   useEffect(() => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
     const imgKey = `PROF_PIC_EMP-${personalIDs}`;
     const headers = miHeaders;
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/0/${imgKey}`, { headers })
+    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/Mono/${imgKey}`, {
+      headers,
+    })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        return res.json();
+        const result = await res.text();
+        if (result === null || result === undefined || result === "") {
+          return {};
+        }
+        return JSON.parse(result);
       })
       .then((result) => {
         if (result.message === "Expired Access") {
@@ -486,9 +493,35 @@ function UserProfile() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        if (isMounted) {
-          console.log(result);
-        }
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getS3Urls/${result.name}`, {
+          headers,
+        })
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            const resultres = await res.text();
+            if (resultres === null || resultres === undefined || resultres === "") {
+              return {};
+            }
+            return JSON.parse(resultres);
+          })
+          .then((resultxx) => {
+            if (resultxx.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (resultxx.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (resultxx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+              window.location.reload();
+            }
+            if (isMounted) {
+              console.log(resultxx);
+            }
+          });
       });
     return () => {
       isMounted = false;
@@ -498,6 +531,7 @@ function UserProfile() {
   const handleImageUpload = (e) => {
     handleClose();
     console.log(files);
+    console.log(files[0]);
     if (files === undefined) {
       MySwal.fire({
         title: "INVALID_INPUT",
@@ -509,30 +543,48 @@ function UserProfile() {
     } else {
       setOpened(true);
       e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      // Headers for upload image
+      const GenToken = localStorage.getItem("rexxdex1");
+      const apiiToken = localStorage.getItem("rexxdex");
+
+      if (apiiToken !== "null" && apiiToken !== null) {
+        localStorage.setItem("rexxdex1", apiiToken);
+      }
+      const iiHeaders = new Headers();
+      iiHeaders.append("Token-1", GenToken);
+
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       console.log(data11);
       const personalIDs = data11.id;
       const imgKey = `PROF_PIC_EMP-${personalIDs}`;
-      const formData = new FormData();
-      formData.append("myFile", files[0]);
-      formData.append("fileName", files[0].name);
+      console.log(imgKey);
 
-      const raw = JSON.stringify({
-        mediaDTO: {
-          multipartFile: formData,
-          key: imgKey,
-          type: files[0].type,
-        },
-      });
+      const mOrgID = "Mono";
+
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("orgID", mOrgID);
+      formData.append("key", imgKey);
+      formData.append("type", "png");
+
+      const raw = formData;
+      console.log(raw);
+
+      // const raw = JSON.stringify({
+      //   mediaDTO: {
+      //     multipartFile: formData,
+      //     key: imgKey,
+      //     type: files[0].type,
+      //   },
+      // });
       const requestOptions = {
         method: "POST",
-        headers: myHeaders,
+        headers: iiHeaders,
         body: raw,
         redirect: "follow",
       };
-      console.log(raw);
 
-      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/upload`, requestOptions)
+      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/uploadFile`, requestOptions)
         .then(async (res) => {
           const aToken = res.headers.get("token-1");
           localStorage.setItem("rexxdex", aToken);
@@ -582,7 +634,7 @@ function UserProfile() {
       method: "DELETE",
       headers: miHeaders,
     };
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
     const imgKey = `PROF_PIC_EMP-${personalIDs}`;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete//${imgKey}`, requestOptions)
@@ -596,6 +648,7 @@ function UserProfile() {
         return JSON.parse(result);
       })
       .then((resx) => {
+        console.log(resx);
         // if (resx.message === "Expired Access") {
         //   navigate("/authentication/sign-in");
         // }

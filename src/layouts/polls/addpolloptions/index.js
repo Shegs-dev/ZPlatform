@@ -36,7 +36,7 @@ function Addpolloptions() {
     const urlParams = new URLSearchParams(queryString);
     const ids = urlParams.get("id");
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     const raw = JSON.stringify([
       {
@@ -93,7 +93,7 @@ function Addpolloptions() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     const queryString = window.location.search;

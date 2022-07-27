@@ -42,7 +42,7 @@ function UserManagement() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDz = data11.orgID;
     // const idVal = JSON.parse([orgIDz]);
     let isMounted = true;
@@ -147,7 +147,7 @@ function UserManagement() {
       });
       return false;
     }
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDz = data11.orgID;
     const raw = JSON.stringify({
       roleID: roleIDs,
@@ -190,7 +190,7 @@ function UserManagement() {
   useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
     let isMounted = true;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/roles/getForOrganization/${orgIDs}`, { headers })

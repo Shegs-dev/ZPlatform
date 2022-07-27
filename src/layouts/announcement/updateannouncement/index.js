@@ -42,7 +42,7 @@ function UpdateAnnouncement() {
   useEffect(() => {
     const headers = miHeaders;
 
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
@@ -77,7 +77,7 @@ function UpdateAnnouncement() {
   // Method to fetch all announcementtype
   useEffect(() => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
 
     const orgIDs = data11.orgID;
     let isMounted = true;
@@ -172,7 +172,7 @@ function UpdateAnnouncement() {
   };
 
   const handleUpdate = () => {
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     // const ids = data11.id;
     // const personalIds = data11.id;
     const orgIDs = data11.orgID;

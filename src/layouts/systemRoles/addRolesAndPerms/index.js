@@ -206,7 +206,7 @@ function RolesAndPerms() {
     if (checks) {
       isChecked = 1;
     }
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const orgIDs = data11.orgID;
 
     const permCall = apix.actionCall;
@@ -263,7 +263,7 @@ function RolesAndPerms() {
         isChecked = 1;
       }
 
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const orgIDs = data11.orgID;
 
       const headers = miHeaders;

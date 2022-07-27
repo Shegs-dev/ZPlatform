@@ -102,7 +102,7 @@ function RenewSub() {
   //     console.log(response); // card charged successfully, get reference here
   //     if (response.paymentStatus === "PAID" && response.status === "SUCCESS") {
   //       setOpened(true);
-  //       const data11 = JSON.parse(localStorage.getItem("user1"));
+  //       const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
   //       //   bonusAmount: 10
   //       //   createdTime: 1649875827073
   //       //   deleteFlag: 0
@@ -281,7 +281,7 @@ function RenewSub() {
           });
         }
 
-        const data11 = JSON.parse(localStorage.getItem("renewUser1"));
+        const data11 = JSON.parse(localStorage.getItem("renewMonoUser1"));
         const orgIDs = data11.orgID;
         const raw = JSON.stringify({
           orgID: orgIDs,

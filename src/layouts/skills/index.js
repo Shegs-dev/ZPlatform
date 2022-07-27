@@ -64,7 +64,7 @@ function Skills() {
 
   const handleGets = () => {
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
     fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/getForEmployee/${personalIDs}`, {
       headers,
@@ -183,7 +183,7 @@ function Skills() {
     if (enabled) {
       setOpened(true);
       e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("user1"));
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       console.log(data11);
       const personalIDs = data11.id;
       const raw = JSON.stringify({ empID: personalIDs, name: namex, descrip: descripx });
