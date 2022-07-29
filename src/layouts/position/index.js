@@ -20,7 +20,7 @@
 // import testDocx from "./test-doc.doc";
 // import testPpt from "./test-ppt.pptx";
 
-<<<<<<< HEAD
+// eslint-disable-next-line no-unused-vars
 function Positions() {
   console.log("Tight");
   //   const [files, setFiles] = useState();
@@ -124,7 +124,6 @@ function Positions() {
   //     </DashboardLayout>
   //   );
 }
-=======
 // function Positions() {
 //   const [files, setFiles] = useState();
 
@@ -239,6 +238,5 @@ function Positions() {
 //     </DashboardLayout>
 //   );
 // }
->>>>>>> ab82012b74759161553ebb25a232af508c6f8265
 
 // export default Positions;
