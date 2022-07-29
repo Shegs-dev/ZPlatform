@@ -61,7 +61,7 @@ function ViewJobApplication() {
     const ids = urlParams.get("id");
 
     let isMounted = true;
-    fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/getForPost/${ids}`, { headers })
+    fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/getByIds/${ids}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
