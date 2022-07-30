@@ -82,6 +82,7 @@ function ViewJobApplication() {
           window.location.reload();
         }
         if (isMounted) {
+          console.log(result);
           setApplication(result);
         }
       });

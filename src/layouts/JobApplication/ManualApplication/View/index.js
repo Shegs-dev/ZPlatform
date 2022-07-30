@@ -63,6 +63,7 @@ function ViewJobPost() {
           window.location.reload();
         }
         if (isMounted) {
+          console.log(result);
           setJobPost(result);
         }
       });
@@ -107,9 +108,7 @@ function ViewJobPost() {
                         >
                           <div
                             // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={{
-                              __html: jobPost[0].jobPost.description,
-                            }}
+                            dangerouslySetInnerHTML={{ __html: jobPost[0].description }}
                           />
                         </MDTypography>
                         <MDTypography
@@ -119,7 +118,16 @@ function ViewJobPost() {
                           textAlign="left"
                           mt={0}
                         >
-                          Closing Time: {changeDate(jobPost[0].jobPost.closingTime)}
+                          Job status: {jobPost[0].jobStatus}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          orgName: {jobPost[0].orgName}
                         </MDTypography>
                         <MDTypography
                           variant="h4"
@@ -128,7 +136,7 @@ function ViewJobPost() {
                           textAlign="left"
                           mt={0}
                         >
-                          Job Status: {jobPost[0].jobPost.jobStatus}
+                          Job Status: {jobPost[0].jobStatus}
                         </MDTypography>
                         <MDTypography
                           variant="h4"
@@ -137,7 +145,43 @@ function ViewJobPost() {
                           textAlign="left"
                           mt={0}
                         >
-                          Industry: {jobPost[0].jobPost.industry}
+                          Industry: {jobPost[0].industry}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Location: {jobPost[0].location}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          salary Expectation: {jobPost[0].salaryExpectation}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          createdTime: {changeDate(jobPost[0].createdTime)}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          ClosingTime: {changeDate(jobPost[0].closingTime)}
                         </MDTypography>
                       </CardContent>
                     </Card>
