@@ -21,6 +21,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
+// import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -32,8 +33,8 @@ function PositionHeld() {
   const [descripx, setDescrip] = useState("");
   const [placex, setPlace] = useState("");
 
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(0);
+  const [endDate, setEndDate] = useState(0);
 
   const [uidx, setUID] = useState("");
   const [unamex, setUName] = useState("");
@@ -69,8 +70,21 @@ function PositionHeld() {
     boxShadow: 24,
     p: 4,
     overflow: "scroll",
-    height: "100%",
+    height: "auto",
     display: "block",
+    "&::-webkit-scrollbar": {
+      width: "6px",
+      height: "2px",
+    },
+    "&::-webkit-scrollbar-track": {
+      boxShadow: "inset 0 0 1px rgba(0,0,0,0.00)",
+      webkitBoxShadow: "inset 0 0 1px rgba(0,0,0,0.00)",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#4285F4",
+      borderRadius: "10px",
+      webkitBoxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.1)",
+    },
   };
 
   const changeDateandTime = (stimestamp, etimestamp) => {
@@ -197,7 +211,8 @@ function PositionHeld() {
     if (!namex.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+      document.getElementById("name").innerHTML =
+        "Position Name - input only capital and small letters<br>";
     }
     if (namex.match(letters)) {
       setCheckedName(true);
@@ -206,7 +221,7 @@ function PositionHeld() {
     }
     if (namex.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name is required<br>";
+      document.getElementById("name").innerHTML = "Position Name is required<br>";
     }
     setEnabled(checkedName === true);
   };
@@ -215,71 +230,80 @@ function PositionHeld() {
   const handleClick = (e) => {
     handleOnNameKeys();
     if (enabled) {
-      setOpened(true);
-      e.preventDefault();
-
       const startCDate = new Date(startDate).getTime();
       const endCDate = new Date(endDate).getTime();
-
-      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-      console.log(data11);
-      const personalIDs = data11.id;
-      const raw = JSON.stringify({
-        empID: personalIDs,
-        name: namex,
-        descrip: descripx,
-        startTime: startCDate,
-        endTime: endCDate,
-        place: placex,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/positionHeld/add`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          setOpened(false);
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-            window.location.reload();
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            handleGets();
-            setName("");
-            setDescrip("");
-            setPlace("");
-            setStartDate("");
-            setEndDate("");
-          });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
+      const currDate = new Date().getTime();
+      if (startCDate > currDate || endCDate < startCDate || startCDate === 0 || endCDate === 0) {
+        MySwal.fire({
+          title: "INVALID_DATE",
+          type: "error",
+          text: "Please put a Start Date from the Past and an End Date after the Start Date ",
         });
+      } else {
+        setOpened(true);
+        e.preventDefault();
+        const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+        console.log(data11);
+        const personalIDs = data11.id;
+        const raw = JSON.stringify({
+          empID: personalIDs,
+          name: namex,
+          descrip: descripx,
+          startTime: startCDate,
+          endTime: endCDate,
+          place: placex,
+        });
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        fetch(`${process.env.REACT_APP_ZAVE_URL}/positionHeld/add`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((result) => {
+            setOpened(false);
+            if (result.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (result.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (result.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+              window.location.reload();
+            }
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              if (result.status === "SUCCESS") {
+                handleGets();
+                setName("");
+                setDescrip("");
+                setPlace("");
+                setStartDate("");
+                setEndDate("");
+              }
+            });
+          })
+          .catch((error) => {
+            setOpened(false);
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            });
+          });
+      }
     }
   };
 
@@ -638,7 +662,7 @@ function PositionHeld() {
       </MDBox>
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
-          <Card style={style}>
+          <Card sx={style}>
             <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"
@@ -780,6 +804,15 @@ function PositionHeld() {
                           align="center"
                         >
                           Save
+                        </MDButton>{" "}
+                        <MDButton
+                          variant="gradient"
+                          onClick={() => setShowUpdate(false)}
+                          color="error"
+                          width="50%"
+                          align="center"
+                        >
+                          Cancel
                         </MDButton>
                       </MDBox>
                     </div>

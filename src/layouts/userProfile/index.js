@@ -52,8 +52,11 @@ function UserProfile() {
   const MySwal = withReactContent(Swal);
 
   const [openn, setOpenn] = React.useState(false);
+  const [copenn, setCOpenn] = React.useState(false);
   const handleOpen = () => setOpenn(true);
   const handleClose = () => setOpenn(false);
+  const handleCOpen = () => setCOpenn(true);
+  const handleCClose = () => setCOpenn(false);
   const [files, setFiles] = useState();
 
   const [state, setState] = React.useState({
@@ -76,6 +79,8 @@ function UserProfile() {
   const [createdTimex, setCreatedTime] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [allStates, setAllStates] = useState([]);
+
+  const [imageUrl, setImageUrl] = useState("");
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
@@ -520,6 +525,7 @@ function UserProfile() {
             }
             if (isMounted) {
               console.log(resultxx);
+              setImageUrl(resultxx);
             }
           });
       });
@@ -530,152 +536,315 @@ function UserProfile() {
 
   const handleImageUpload = (e) => {
     handleClose();
-    console.log(files);
-    console.log(files[0]);
-    if (files === undefined) {
+    if (imageUrl) {
       MySwal.fire({
-        title: "INVALID_INPUT",
+        title: "INVALID_ACTION",
         type: "error",
-        text: "Please input a file",
-      }).then(() => {
-        handleOpen();
+        text: "You can't upload a picture again, please change the image",
       });
     } else {
-      setOpened(true);
-      e.preventDefault();
-      // Headers for upload image
-      const GenToken = localStorage.getItem("rexxdex1");
-      const apiiToken = localStorage.getItem("rexxdex");
-
-      if (apiiToken !== "null" && apiiToken !== null) {
-        localStorage.setItem("rexxdex1", apiiToken);
-      }
-      const iiHeaders = new Headers();
-      iiHeaders.append("Token-1", GenToken);
-
-      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-      console.log(data11);
-      const personalIDs = data11.id;
-      const imgKey = `PROF_PIC_EMP-${personalIDs}`;
-      console.log(imgKey);
-
-      const mOrgID = "Mono";
-
-      const formData = new FormData();
-      formData.append("file", files[0]);
-      formData.append("orgID", mOrgID);
-      formData.append("key", imgKey);
-      formData.append("type", "png");
-
-      const raw = formData;
-      console.log(raw);
-
-      // const raw = JSON.stringify({
-      //   mediaDTO: {
-      //     multipartFile: formData,
-      //     key: imgKey,
-      //     type: files[0].type,
-      //   },
-      // });
-      const requestOptions = {
-        method: "POST",
-        headers: iiHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/uploadFile`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          setOpened(false);
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-            window.location.reload();
-          }
-          console.log(result);
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            if (result.status !== "SUCCESS") {
-              handleOpen();
-            }
-            console.log("SUCCESS");
-          });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          }).then(() => {
-            handleOpen();
-          });
+      console.log(files);
+      if (!files) {
+        MySwal.fire({
+          title: "INVALID_INPUT",
+          type: "error",
+          text: "Please input a file",
+        }).then(() => {
+          handleOpen();
         });
+      } else {
+        console.log(files[0]);
+        setOpened(true);
+        e.preventDefault();
+        // Headers for upload image
+        const GenToken = localStorage.getItem("rexxdex1");
+        const apiiToken = localStorage.getItem("rexxdex");
+
+        if (apiiToken !== "null" && apiiToken !== null) {
+          localStorage.setItem("rexxdex1", apiiToken);
+        }
+        const iiHeaders = new Headers();
+        iiHeaders.append("Token-1", GenToken);
+
+        const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+        console.log(data11);
+        const personalIDs = data11.id;
+        const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+        console.log(imgKey);
+
+        const mOrgID = "Mono";
+
+        const formData = new FormData();
+        formData.append("file", files[0]);
+        formData.append("orgID", mOrgID);
+        formData.append("key", imgKey);
+        formData.append("type", "png");
+
+        const raw = formData;
+        console.log(raw);
+
+        // const raw = JSON.stringify({
+        //   mediaDTO: {
+        //     multipartFile: formData,
+        //     key: imgKey,
+        //     type: files[0].type,
+        //   },
+        // });
+        const requestOptions = {
+          method: "POST",
+          headers: iiHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/uploadFile`, requestOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            return res.json();
+          })
+          .then((result) => {
+            setOpened(false);
+            if (result.message === "Expired Access") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (result.message === "Token Does Not Exist") {
+              navigate("/authentication/sign-in");
+              window.location.reload();
+            }
+            if (result.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+              window.location.reload();
+            }
+            console.log(result);
+            MySwal.fire({
+              title: result.status,
+              type: "success",
+              text: result.message,
+            }).then(() => {
+              if (result.status !== "SUCCESS") {
+                handleOpen();
+              }
+              console.log("SUCCESS");
+            });
+          })
+          .catch((error) => {
+            setOpened(false);
+            MySwal.fire({
+              title: error.status,
+              type: "error",
+              text: error.message,
+            }).then(() => {
+              handleOpen();
+            });
+          });
+      }
+    }
+  };
+
+  const handleImageChange = (e) => {
+    handleCClose();
+    if (!imageUrl) {
+      MySwal.fire({
+        title: "INVALID_IMAGE",
+        type: "error",
+        text: "Sorry there is no image to change",
+      });
+    } else {
+      console.log(files);
+      if (!files) {
+        MySwal.fire({
+          title: "INVALID_INPUT",
+          type: "error",
+          text: "Please input a file",
+        }).then(() => {
+          handleCOpen();
+        });
+      } else {
+        console.log(files[0]);
+        const requestDelOptions = {
+          method: "DELETE",
+          headers: miHeaders,
+        };
+        const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+        const personalIDs = data11.id;
+        const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete/${imgKey}`, requestDelOptions)
+          .then(async (res) => {
+            const aToken = res.headers.get("token-1");
+            localStorage.setItem("rexxdex", aToken);
+            const result = await res.text();
+            if (result === null || result === undefined || result === "") {
+              return {};
+            }
+            return JSON.parse(result);
+          })
+          .then((resx) => {
+            console.log(resx);
+            // if (resx.message === "Expired Access") {
+            //   navigate("/authentication/sign-in");
+            // }
+            // if (resx.message === "Token Does Not Exist") {
+            //   navigate("/authentication/sign-in");
+            // }
+            if (resx.message === "Unauthorized Access") {
+              navigate("/authentication/forbiddenPage");
+            }
+            // } else {
+            //   navigate("/authentication/sign-in");
+            // }
+            if (resx.status !== "SUCCESS") {
+              MySwal.fire({
+                title: "CHANGE_UNSUCCESSFUL",
+                type: "error",
+                text: "Changing of image was unsuccessful",
+              }).then(() => {
+                handleOpen();
+              });
+            } else {
+              setOpened(true);
+              e.preventDefault();
+              // Headers for upload image
+              const GenToken = localStorage.getItem("rexxdex1");
+              const apiiToken = localStorage.getItem("rexxdex");
+
+              if (apiiToken !== "null" && apiiToken !== null) {
+                localStorage.setItem("rexxdex1", apiiToken);
+              }
+              const iiHeaders = new Headers();
+              iiHeaders.append("Token-1", GenToken);
+
+              const mOrgID = "Mono";
+
+              const formData = new FormData();
+              formData.append("file", files[0]);
+              formData.append("orgID", mOrgID);
+              formData.append("key", imgKey);
+              formData.append("type", "png");
+
+              const raw = formData;
+              console.log(raw);
+
+              // const raw = JSON.stringify({
+              //   mediaDTO: {
+              //     multipartFile: formData,
+              //     key: imgKey,
+              //     type: files[0].type,
+              //   },
+              // });
+              const requestOptions = {
+                method: "POST",
+                headers: iiHeaders,
+                body: raw,
+                redirect: "follow",
+              };
+
+              fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/uploadFile`, requestOptions)
+                .then(async (res) => {
+                  const aToken = res.headers.get("token-1");
+                  localStorage.setItem("rexxdex", aToken);
+                  return res.json();
+                })
+                .then((result) => {
+                  setOpened(false);
+                  if (result.message === "Expired Access") {
+                    navigate("/authentication/sign-in");
+                    window.location.reload();
+                  }
+                  if (result.message === "Token Does Not Exist") {
+                    navigate("/authentication/sign-in");
+                    window.location.reload();
+                  }
+                  if (result.message === "Unauthorized Access") {
+                    navigate("/authentication/forbiddenPage");
+                    window.location.reload();
+                  }
+                  console.log(result);
+                  MySwal.fire({
+                    title: result.status,
+                    type: "success",
+                    text: result.message,
+                  }).then(() => {
+                    if (result.status !== "SUCCESS") {
+                      handleCOpen();
+                    }
+                    console.log("SUCCESS");
+                  });
+                })
+                .catch((error) => {
+                  setOpened(false);
+                  MySwal.fire({
+                    title: error.status,
+                    type: "error",
+                    text: error.message,
+                  }).then(() => {
+                    handleCOpen();
+                  });
+                });
+            }
+          });
+      }
     }
   };
 
   const handleDeleteImage = () => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: miHeaders,
-    };
-    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-    const personalIDs = data11.id;
-    const imgKey = `PROF_PIC_EMP-${personalIDs}`;
-    fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete//${imgKey}`, requestOptions)
-      .then(async (res) => {
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex", aToken);
-        const result = await res.text();
-        if (result === null || result === undefined || result === "") {
-          return {};
-        }
-        return JSON.parse(result);
-      })
-      .then((resx) => {
-        console.log(resx);
-        // if (resx.message === "Expired Access") {
-        //   navigate("/authentication/sign-in");
-        // }
-        // if (resx.message === "Token Does Not Exist") {
-        //   navigate("/authentication/sign-in");
-        // }
-        if (resx.message === "Unauthorized Access") {
-          navigate("/authentication/forbiddenPage");
-        }
-        // } else {
-        //   navigate("/authentication/sign-in");
-        // }
-        MySwal.fire({
-          title: resx.status,
-          type: "success",
-          text: resx.message,
-        }).then(() => {
-          console.log("SUCCESS");
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: error.status,
-          type: "error",
-          text: error.message,
-        });
+    if (!imageUrl) {
+      MySwal.fire({
+        title: "INVALID_IMAGE",
+        type: "error",
+        text: "Sorry there is no image to delete",
+      }).then(() => {
+        handleOpen();
       });
+    } else {
+      const requestOptions = {
+        method: "DELETE",
+        headers: miHeaders,
+      };
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+      const personalIDs = data11.id;
+      const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete/${imgKey}`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          const result = await res.text();
+          if (result === null || result === undefined || result === "") {
+            return {};
+          }
+          return JSON.parse(result);
+        })
+        .then((resx) => {
+          console.log(resx);
+          // if (resx.message === "Expired Access") {
+          //   navigate("/authentication/sign-in");
+          // }
+          // if (resx.message === "Token Does Not Exist") {
+          //   navigate("/authentication/sign-in");
+          // }
+          if (resx.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+          }
+          // } else {
+          //   navigate("/authentication/sign-in");
+          // }
+          MySwal.fire({
+            title: resx.status,
+            type: "success",
+            text: resx.message,
+          }).then(() => {
+            console.log("SUCCESS");
+          });
+        })
+        .catch((error) => {
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
   };
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -707,7 +876,7 @@ function UserProfile() {
         </List>
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={handleOpen}>
+            <ListItemButton onClick={handleCOpen}>
               <ListItemIcon>
                 <ChangeCircleIcon />
               </ListItemIcon>
@@ -765,6 +934,34 @@ function UserProfile() {
         </Modal>
       </div>
 
+      {/* modal for file upload */}
+      <div>
+        <Modal
+          open={copenn}
+          onClose={handleCClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <MDBox sx={style}>
+            <MDTypography id="modal-modal-title" variant="h6" component="h2">
+              Change Image
+            </MDTypography>
+            <MDInput type="file" files={files} onChange={(e) => setFiles(e.target.files)} />
+            <MDBox mt={4} mb={1}>
+              <MDButton
+                variant="gradient"
+                onClick={handleImageChange}
+                color="info"
+                width="50%"
+                align="left"
+              >
+                Change
+              </MDButton>
+            </MDBox>
+          </MDBox>
+        </Modal>
+      </div>
+
       <Grid container spacing={3}>
         <Grid item xs={4} md={4} lg={4}>
           <Card>
@@ -774,7 +971,7 @@ function UserProfile() {
                   <React.Fragment key={anchor}>
                     <Button onClick={toggleDrawer(anchor, true)}>
                       <MDBox mt={-4} mx={2} p={0}>
-                        <MDAvatar src={dummyUser} alt="name" size="xxl" />
+                        <MDAvatar src={imageUrl || dummyUser} alt="name" size="xxl" />
                       </MDBox>
                     </Button>
                     <Drawer
