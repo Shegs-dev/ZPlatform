@@ -58,8 +58,21 @@ function Skills() {
     boxShadow: 24,
     p: 4,
     overflow: "scroll",
-    height: "100%",
+    height: "auto",
     display: "block",
+    "&::-webkit-scrollbar": {
+      width: "6px",
+      height: "2px",
+    },
+    "&::-webkit-scrollbar-track": {
+      boxShadow: "inset 0 0 1px rgba(0,0,0,0.00)",
+      webkitBoxShadow: "inset 0 0 1px rgba(0,0,0,0.00)",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#4285F4",
+      borderRadius: "10px",
+      webkitBoxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.1)",
+    },
   };
 
   const handleGets = () => {
@@ -483,7 +496,7 @@ function Skills() {
       </MDBox>
       {showUpdate ? (
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={uopened}>
-          <Card style={style}>
+          <Card sx={style}>
             <MDBox pt={4} pb={3} px={15}>
               <MDBox
                 variant="gradient"
@@ -553,6 +566,15 @@ function Skills() {
                     align="left"
                   >
                     Save
+                  </MDButton>
+                  <MDButton
+                    variant="gradient"
+                    onClick={() => setShowUpdate(false)}
+                    color="error"
+                    width="50%"
+                    align="center"
+                  >
+                    Cancel
                   </MDButton>
                 </MDBox>
               </MDBox>
