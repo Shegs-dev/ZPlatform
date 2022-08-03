@@ -45,7 +45,7 @@ function JobApplication() {
   const [industryx, setIndustryx] = useState("");
   const navigate = useNavigate();
   const [selopen, setSelopen] = useState(false);
-  const [selclose, setSelclose] = useState(true);
+  // const [selclose, setSelclose] = useState(true);
   const [sellopen, setSellopen] = useState(false);
   const [items, setItems] = useState([]);
   const { allPHeaders: myHeaders } = PHeaders();
@@ -188,15 +188,15 @@ function JobApplication() {
   const handleOpened = () => {
     setSelopen(true);
     setSellopen(true);
-    setSelclose(false);
+    // setSelclose(false);
     console.log(selopen);
   };
-  const handleClosed = () => {
-    setSelopen(false);
-    setSelclose(true);
-    setSellopen(false);
-    console.log(selopen);
-  };
+  // const handleClosed = () => {
+  //   setSelopen(false);
+  //   setSelclose(true);
+  //   setSellopen(false);
+  //   console.log(selopen);
+  // };
 
   const handleView = (value) => {
     console.log("hear");
@@ -670,15 +670,6 @@ function JobApplication() {
                       checked={sellopen}
                     >
                       Opened
-                    </ToggleButton>
-                    <ToggleButton
-                      value={selopen}
-                      onClick={handleClosed}
-                      variant="outline-danger"
-                      checked={selclose}
-                      type="checkbox"
-                    >
-                      Closed
                     </ToggleButton>
                   </ButtonGroup>
                 </Container>

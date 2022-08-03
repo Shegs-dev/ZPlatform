@@ -1,11 +1,15 @@
 // @mui material components
 
 // Soft UI Dashboard React components
+// Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import MDBox from "components/MDBox";
-import { Dropdown } from "react-bootstrap";
+import CardContent from "@mui/material/CardContent";
+// import CardActions from "@mui/material/CardActions";
+import MDTypography from "components/MDTypography";
+import Card from "@mui/material/Card";
+import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import DataTable from "examples/Tables/DataTable";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -14,13 +18,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import Icon from "@mui/material/Icon";
-// import Swal from "sweetalert2";
-// import withReactContent from "sweetalert2-react-content";
 
 function ViewJobPost() {
   //   const MySwal = withReactContent(Swal);
-  const [applications, setApplications] = useState([]);
+  const [jobPost, setJobPost] = useState([]);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
@@ -33,47 +34,19 @@ function ViewJobPost() {
     return retDate;
   };
 
-  // Method to change type
-  const changeType = (value) => {
-    if (value === 0) {
-      return "Manual";
-    }
-
-    return "Automatic";
-  };
-
-  // Method to change type
-  const changeIsRescinded = (value) => {
-    if (value === true) {
-      return "True";
-    }
-
-    return "False";
-  };
-
-  // Method to handle view
-  const handleView = (value) => {
-    navigate(`/jobApplication/ManualApplication/View?id=${value}`);
-  };
-
-  const handleGets = () => {
+  useEffect(() => {
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-    const personalID = data11.id;
-    console.log(data11);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const ids = urlParams.get("id");
 
-    fetch(`${process.env.REACT_APP_RAGA_URL}//jobPost/getByIds/${personalID}`, {
-      headers,
-    })
+    let isMounted = true;
+    fetch(`${process.env.REACT_APP_RAGA_URL}/jobPost/getByIds/${ids}`, { headers })
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
-        const result = await res.text();
-        if (result === null || result === undefined || result === "") {
-          return {};
-        }
-        return JSON.parse(result);
+        return res.json();
       })
       .then((result) => {
         setOpened(false);
@@ -89,87 +62,136 @@ function ViewJobPost() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
-        console.log(result);
-        setApplications(result);
+        if (isMounted) {
+          console.log(result);
+          setJobPost(result);
+        }
       });
-  };
-
-  useEffect(() => {
-    let isMounted = true;
-
-    if (isMounted) {
-      //   fetches the table data
-      handleGets();
-    }
     return () => {
       isMounted = false;
     };
   }, []);
 
-  const pColumns = [
-    { Header: "Job Title", accessor: "jobPost.title", align: "left" },
-    { Header: "Location", accessor: "jobPost.location", align: "left" },
-    { Header: "Status", accessor: "status", align: "left" },
-    { Header: "Industry", accessor: "jobPost.industry", align: "left" },
-    {
-      Header: "Type",
-      accessor: "type",
-      Cell: ({ cell: { value } }) => changeType(value),
-      align: "left",
-    },
-    {
-      Header: "Is Rescinded?",
-      accessor: "rescinded",
-      Cell: ({ cell: { value } }) => changeIsRescinded(value),
-      align: "left",
-    },
-    {
-      Header: "Date Applied",
-      accessor: "applicationTime",
-      Cell: ({ cell: { value } }) => changeDate(value),
-      align: "left",
-    },
-    {
-      Header: "actions",
-      accessor: "id",
-      // eslint-disable-next-line react/prop-types
-      Cell: ({ cell: { value } }) => (
-        <div
-          style={{
-            width: "100%",
-            backgroundColor: "#dadada",
-            borderRadius: "2px",
-          }}
-        >
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              <Icon sx={{ fontWeight: "light" }}>settings</Icon>
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleView(value)}>View</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      ),
-      align: "left",
-    },
-  ];
-
-  // Return table
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox>
-        <DataTable
-          table={{ columns: pColumns, rows: applications }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
-      </MDBox>
+      <Card>
+        <MDBox pt={4} pb={3} px={30}>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="success"
+            mx={1}
+            mt={2}
+            p={2}
+            mb={1}
+            textAlign="left"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" textAlign="center" mt={1}>
+              View Job Post
+            </MDTypography>
+          </MDBox>
+          <MDBox>
+            <Container>
+              <div className="row">
+                <div className="col-sm-12">
+                  {jobPost.length > 0 && (
+                    <Card sx={{ maxWidth: 500 }}>
+                      <CardContent>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          <div
+                            // eslint-disable-next-line react/no-danger
+                            dangerouslySetInnerHTML={{ __html: jobPost[0].description }}
+                          />
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Job status: {jobPost[0].jobStatus}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          orgName: {jobPost[0].orgName}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Job Status: {jobPost[0].jobStatus}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h4"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Industry: {jobPost[0].industry}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          Location: {jobPost[0].location}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          salary Expectation: {jobPost[0].salaryExpectation}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          createdTime: {changeDate(jobPost[0].createdTime)}
+                        </MDTypography>
+                        <MDTypography
+                          variant="h6"
+                          color="text"
+                          fontSize="75%"
+                          textAlign="left"
+                          mt={0}
+                        >
+                          ClosingTime: {changeDate(jobPost[0].closingTime)}
+                        </MDTypography>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
+            </Container>
+          </MDBox>
+        </MDBox>
+      </Card>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
         <CircularProgress color="info" />
