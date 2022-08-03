@@ -107,7 +107,7 @@ const routes = [
     name: "View This Job",
     key: "ViewThisJob",
     icon: <Icon fontSize="small">JobApplication</Icon>,
-    route: "/jobApplication/ManualApplication/View",
+    route: "/job-Application/Manual-Application/View",
     component: <ViewJobPost />,
   },
   {
