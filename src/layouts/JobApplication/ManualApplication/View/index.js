@@ -62,6 +62,7 @@ function ViewJobPost() {
     };
 
     fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/add`, requestOptions)
+    console.log("doski");
       .then(async (res) => {
         const aToken = res.headers.get("token-1");
         localStorage.setItem("rexxdex", aToken);
