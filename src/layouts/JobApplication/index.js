@@ -201,7 +201,7 @@ function JobApplication() {
   const handleView = (value) => {
     console.log("hear");
     console.log(value);
-    navigate(`/jobApplication/ManualApplication/View?id=${value}`);
+    navigate(`/job-Application/Manual-Application/View?id=${value}`);
   };
 
   // Method to change date from timestamp
@@ -219,7 +219,7 @@ function JobApplication() {
     const raw = JSON.stringify({
       empID: personalIDs,
       jobPostID: value,
-      type: 1,
+      type: 0,
       status: "Applied",
     });
     console.log(raw);

@@ -4,6 +4,8 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import MDBox from "components/MDBox";
+
+// import MDBox from "components/MDBox";
 import CardContent from "@mui/material/CardContent";
 // import CardActions from "@mui/material/CardActions";
 import MDTypography from "components/MDTypography";
@@ -11,27 +13,91 @@ import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import withReactContent from "sweetalert2-react-content";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import MDButton from "components/MDButton";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import "react-datepicker/dist/react-datepicker.css";
 import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
+import Swal from "sweetalert2";
+import PHeaders from "postHeader";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function ViewJobPost() {
   //   const MySwal = withReactContent(Swal);
   const [jobPost, setJobPost] = useState([]);
-
+  const MySwal = withReactContent(Swal);
   const [opened, setOpened] = useState(false);
+  // const [items, setItems] = useState([]);
   const navigate = useNavigate();
   const { allGHeaders: miHeaders } = GHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
 
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
     const date = new Date(timestamp);
     const retDate = date.toDateString();
     return retDate;
+  };
+
+  const handleApply = (value) => {
+    setOpened(true);
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    console.log(data11);
+    const personalIDs = data11.id;
+    const raw = JSON.stringify({
+      empID: personalIDs,
+      jobPostID: value,
+      type: 0,
+      status: "Applied",
+    });
+    console.log(raw);
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/add`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        console.log("doski");
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
   };
 
   useEffect(() => {
@@ -97,12 +163,12 @@ function ViewJobPost() {
               <div className="row">
                 <div className="col-sm-12">
                   {jobPost.length > 0 && (
-                    <Card sx={{ maxWidth: 500 }}>
+                    <Card sx={{ maxWidth: 800 }}>
                       <CardContent>
                         <MDTypography
                           variant="h4"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
@@ -114,25 +180,25 @@ function ViewJobPost() {
                         <MDTypography
                           variant="h6"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
-                          Job status: {jobPost[0].jobStatus}
+                          Job Status: {jobPost[0].jobStatus}
                         </MDTypography>
                         <MDTypography
                           variant="h6"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
-                          orgName: {jobPost[0].orgName}
+                          Company Name: {jobPost[0].orgName}
                         </MDTypography>
                         <MDTypography
                           variant="h4"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
@@ -141,7 +207,7 @@ function ViewJobPost() {
                         <MDTypography
                           variant="h4"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
@@ -150,7 +216,7 @@ function ViewJobPost() {
                         <MDTypography
                           variant="h6"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
@@ -159,30 +225,39 @@ function ViewJobPost() {
                         <MDTypography
                           variant="h6"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
-                          salary Expectation: {jobPost[0].salaryExpectation}
+                          Salary Expectation: {jobPost[0].salaryExpectation}
                         </MDTypography>
                         <MDTypography
                           variant="h6"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
-                          createdTime: {changeDate(jobPost[0].createdTime)}
+                          Created Time: {changeDate(jobPost[0].createdTime)}
                         </MDTypography>
                         <MDTypography
                           variant="h6"
                           color="text"
-                          fontSize="75%"
+                          fontSize="120%"
                           textAlign="left"
                           mt={0}
                         >
-                          ClosingTime: {changeDate(jobPost[0].closingTime)}
+                          Closing Time: {changeDate(jobPost[0].closingTime)}
                         </MDTypography>
+                        <MDButton
+                          variant="gradient"
+                          onClick={() => handleApply(jobPost[0].id)}
+                          color="info"
+                          width="50%"
+                          align="left"
+                        >
+                          Apply
+                        </MDButton>
                       </CardContent>
                     </Card>
                   )}
