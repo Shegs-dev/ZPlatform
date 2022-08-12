@@ -563,7 +563,7 @@ function Education() {
                       value={specializationx}
                       onChange={(e) => setSpecialization(e.target.value)}
                     >
-                      <option>--Select Specialization--</option>
+                      <option value="">--Select Specialization--</option>
                       {AlCourses.map((api) => (
                         <option key={api.name} value={api.name}>
                           {api.name}
@@ -586,7 +586,7 @@ function Education() {
                       value={gradex}
                       onChange={(e) => setGrades(e.target.value)}
                     >
-                      <option>--Select Grade--</option>
+                      <option value="">--Select Grade--</option>
                       <option value="First class">First class</option>
                       <option value="Second class upper">Second class upper</option>
                       <option value="Second class lower">Second class lower</option>
@@ -887,7 +887,7 @@ function Education() {
                           value={uspecializationx}
                           onChange={(e) => setUSpecialization(e.target.value)}
                         >
-                          <option>--Select Specialization--</option>
+                          <option value="">--Select Specialization--</option>
                           {AlCourses.map((api) => (
                             <option key={api.name} value={api.name}>
                               {api.name}
@@ -910,7 +910,7 @@ function Education() {
                           value={ugradex}
                           onChange={(e) => setUGrades(e.target.value)}
                         >
-                          <option>--Select Grade--</option>
+                          <option value="">--Select Grade--</option>
                           <option value="First class">First class</option>
                           <option value="Second class upper">Second class upper</option>
                           <option value="Second class lower">Second class lower</option>

@@ -50,49 +50,50 @@ function ComForgotPass() {
 
   const [newPasswordx, setNewPassword] = useState("");
   const [retypeNewPassword, setRetypeNewPassword] = useState("");
-  const MySwal = withReactContent(Swal);
-
   const [checkedNPass, setCheckedNPass] = useState("");
   const [checkedRTNPass, setCheckedRTNPass] = useState("");
-  const [enabled, setEnabled] = useState("");
+  const MySwal = withReactContent(Swal);
 
-  const handleOnNPasswordKeys = () => {
+  const handleOnNPasswordKeys = (value) => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!retypeNewPassword.match(passwordValidate)) {
+    if (!value.match(passwordValidate)) {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
         "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
     }
-    if (newPasswordx.match(passwordValidate)) {
+    if (value.match(passwordValidate)) {
       setCheckedNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
     }
-    if (newPasswordx.length !== 0) {
-      if (retypeNewPassword !== newPasswordx) {
-        setCheckedNPass(false);
+    if (retypeNewPassword.length !== 0) {
+      if (retypeNewPassword !== value) {
+        setCheckedRTNPass(false);
         // eslint-disable-next-line no-unused-expressions
-        document.getElementById("password").innerHTML = "Passwords don't match<br>";
+        document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
+      } else {
+        setCheckedRTNPass(true);
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("retypepassword").innerHTML = "";
       }
     }
-    if (newPasswordx.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Password is required<br>";
     }
-    setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
 
-  const handleOnRTNPasswordKeys = () => {
+  const handleOnRTNPasswordKeys = (value) => {
     const passwordValidate = new RegExp(
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
     );
-    if (retypeNewPassword.match(passwordValidate)) {
+    if (value.match(passwordValidate)) {
       setCheckedRTNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "";
     }
-    if (retypeNewPassword === newPasswordx) {
+    if (value === newPasswordx) {
       setCheckedRTNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "";
@@ -101,64 +102,65 @@ function ComForgotPass() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
-    setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
 
   const handleClick = (e) => {
-    handleOnNPasswordKeys();
-    handleOnRTNPasswordKeys();
-    if (enabled) {
-      e.preventDefault();
-      setOpened(true);
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const email = urlParams.get("email");
-      const emailValue = email;
+    e.preventDefault();
+    setOpened(true);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const email = urlParams.get("email");
+    const emailValue = email;
 
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      const raw = JSON.stringify({
-        username: emailValue,
-        npassword: newPasswordx,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const raw = JSON.stringify({
+      username: emailValue,
+      npassword: newPasswordx,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
 
-      fetch(
-        `${process.env.REACT_APP_ZAVE_URL}/individualLogin/completeforgotpassword`,
-        requestOptions
-      )
-        .then((res) => res.json())
-        .then((result) => {
-          setOpened(false);
-          if (result.status === "SUCCESS") {
-            MySwal.fire({
-              title: result.status,
-              type: "success",
-              text: result.message,
-            }).then(() => {
-              navigate("/authentication/sign-in", { replace: true });
-            });
-          } else {
-            MySwal.fire({
-              title: result.status,
-              type: "error",
-              text: result.message,
-            });
-          }
-        })
-        .catch((error) => {
-          setOpened(false);
+    fetch(
+      `${process.env.REACT_APP_ZAVE_URL}/individualLogin/completeforgotpassword`,
+      requestOptions
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        setOpened(false);
+        if (result.status === "SUCCESS") {
           MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            navigate("/authentication/sign-in", { replace: true });
           });
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
         });
+      });
+  };
+
+  const handleValidate = (e) => {
+    if (checkedNPass && checkedRTNPass === true) {
+      handleClick(e);
     }
   };
 
@@ -245,7 +247,7 @@ function ComForgotPass() {
               </Container>
             </MDBox>
             <MDBox mt={6} mb={1}>
-              <MDButton variant="gradient" color="info" onClick={handleClick} fullWidth>
+              <MDButton variant="gradient" color="info" onClick={handleValidate} fullWidth>
                 Save
               </MDButton>
             </MDBox>

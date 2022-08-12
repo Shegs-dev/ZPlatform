@@ -27,7 +27,6 @@ function userlogin() {
   const [retypepasswordx, setretypepassword] = useState("");
   const [checkedNPass, setCheckedNPass] = useState("");
   const [checkedRTNPass, setCheckedRTNPass] = useState("");
-  const [enabled, setEnabled] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
 
   const [opened, setOpened] = useState(false);
@@ -53,48 +52,42 @@ function userlogin() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
     }
-    setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
 
-  const handleOnNPasswordKeys = () => {
+  const handleOnNPasswordKeys = (value) => {
     const passwordValidate = new RegExp(
       "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
     );
-    if (!npasswordx.match(passwordValidate)) {
+    if (!value.match(passwordValidate)) {
       setCheckedNPass(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("npassword").innerHTML =
         "New Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
     }
-    if (npasswordx.match(passwordValidate)) {
+    if (value.match(passwordValidate)) {
       setCheckedNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("npassword").innerHTML = "";
     }
-    if (npasswordx !== 0) {
-      if (retypepasswordx !== npasswordx) {
+    if (retypepasswordx.length !== 0) {
+      if (retypepasswordx !== value) {
         setCheckedRTNPass(false);
         // eslint-disable-next-line no-unused-expressions
         document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
+      } else {
+        setCheckedRTNPass(true);
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("retypepassword").innerHTML = "";
       }
     }
-    if (npasswordx.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("npassword").innerHTML = "New Password is required<br>";
     }
-    setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
 
-  const handleOnRTNPasswordKeys = () => {
-    const passwordValidate = new RegExp(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.,])(?=.{8,})"
-    );
-    if (retypepasswordx.match(passwordValidate)) {
-      setCheckedRTNPass(true);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("retypepassword").innerHTML = "";
-    }
-    if (retypepasswordx === npasswordx) {
+  const handleOnRTNPasswordKeys = (value) => {
+    if (value === npasswordx) {
       setCheckedRTNPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "";
@@ -103,61 +96,61 @@ function userlogin() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("retypepassword").innerHTML = "Passwords don't match<br>";
     }
-    setEnabled(checkedNPass === true && checkedRTNPass === true);
   };
 
   const handleClick = (e) => {
-    handleOnNPasswordKeys();
-    handleOnPasswordKeys();
-    handleOnRTNPasswordKeys();
-    if (enabled) {
-      setOpened(true);
-      e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-      const emailCh = data11.email;
-      const raw = JSON.stringify({ username: emailCh, password: passwordx, npassword: npasswordx });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          setOpened(false);
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
+    setOpened(true);
+    e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    const emailCh = data11.email;
+    const raw = JSON.stringify({ username: emailCh, password: passwordx, npassword: npasswordx });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/login/changepass`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+        }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          if (result.status === "SUCCESS") {
+            navigate("/dashboard", { replace: true });
+            window.location.reload();
           }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            if (result.status === "SUCCESS") {
-              navigate("/dashboard", { replace: true });
-              window.location.reload();
-            }
-          });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
         });
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleValidate = (e) => {
+    if (checkedNPass && checkedRTNPass === true) {
+      handleClick(e);
     }
   };
 
@@ -227,7 +220,7 @@ function userlogin() {
                       <MDInput
                         type={passwordShown ? "text" : "password"}
                         value={npasswordx || ""}
-                        onKeyUp={handleOnNPasswordKeys}
+                        onKeyUp={(e) => handleOnNPasswordKeys(e.target.value)}
                         onChange={(e) => setnpassword(e.target.value)}
                         label="New Password"
                         variant="standard"
@@ -244,7 +237,7 @@ function userlogin() {
                       <MDInput
                         type={passwordShown ? "text" : "password"}
                         value={retypepasswordx || ""}
-                        onKeyUp={handleOnRTNPasswordKeys}
+                        onKeyUp={(e) => handleOnRTNPasswordKeys(e.target.value)}
                         onChange={(e) => setretypepassword(e.target.value)}
                         label="Retype Password"
                         variant="standard"
@@ -265,7 +258,7 @@ function userlogin() {
                 </Container>
               </MDBox>
               <MDBox mt={4} mb={1}>
-                <MDButton variant="gradient" onClick={handleClick} color="info" width="40%">
+                <MDButton variant="gradient" onClick={handleValidate} color="info" width="40%">
                   Save
                 </MDButton>
               </MDBox>
