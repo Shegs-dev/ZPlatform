@@ -68,7 +68,6 @@ function ViewJobPost() {
         return res.json();
       })
       .then((result) => {
-        console.log("doski");
         setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
