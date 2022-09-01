@@ -156,6 +156,7 @@ function AllCourses() {
       { name: "Veterinary Medicine" },
       { name: "Veterinary Obstetrics and Reproductive Diseases" },
       { name: "Veterinary Teaching Hospital " },
+      { name: "Others" },
     ],
   };
 }

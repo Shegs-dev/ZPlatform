@@ -18,7 +18,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Checkbox from "@mui/material/Checkbox";
 import { Container, Form } from "react-bootstrap";
 
 // Material Dashboard 2 React components
@@ -64,7 +63,7 @@ function Cover() {
   const [checkedPass, setCheckedPass] = useState("");
   const [checkedFirst, setCheckedFirst] = useState("");
   const [checkedLast, setCheckedLast] = useState("");
-  const [enabled, setEnabled] = useState("");
+
   const navigate = useNavigate();
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
@@ -101,176 +100,144 @@ function Cover() {
     setNationality(e.target.value);
   };
 
-  const handleOnFirstKeys = () => {
+  const handleOnFirstKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!fnamex.match(letters)) {
+    if (!value.match(letters)) {
       setCheckedFirst(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML =
         "First Name - input only capital and small letters<br>";
     }
-    if (fnamex.match(letters)) {
+    if (value.match(letters)) {
       setCheckedFirst(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML = "";
     }
-    if (fnamex.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("first").innerHTML = "First Name is required<br>";
     }
-    setEnabled(
-      checkedPemail === true &&
-        checkedPass === true &&
-        checkedFirst === true &&
-        checkedLast === true
-    );
   };
 
-  const handleOnLastKeys = () => {
+  const handleOnLastKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!lnamex.match(letters)) {
+    if (!value.match(letters)) {
       setCheckedLast(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML =
         "Last Name - input only capital and small letters<br>";
     }
-    if (lnamex.match(letters)) {
+    if (value.match(letters)) {
       setCheckedLast(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML = "";
     }
-    if (lnamex.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("last").innerHTML = "Last Name is required<br>";
     }
-    setEnabled(
-      checkedPemail === true &&
-        checkedPass === true &&
-        checkedFirst === true &&
-        checkedLast === true
-    );
   };
 
-  const handleOnOtherKeys = () => {
+  const handleOnOtherKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!onamex.match(letters)) {
+    if (!value.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("other").innerHTML =
         "Other Name - input only capital and small letters<br>";
     }
-    if (onamex.match(letters)) {
+    if (value.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("other").innerHTML = "";
     }
-    if (onamex.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("other").innerHTML = "Other Name is required<br>";
     }
   };
 
-  const handleOnPEmailKeys = () => {
+  const handleOnPEmailKeys = (value) => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
-    if (!emailx.match(letters)) {
+    if (!value.match(letters)) {
       setCheckedPEmail(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email - input a valid email<br>";
     }
-    if (emailx.match(letters)) {
+    if (value.match(letters)) {
       setCheckedPEmail(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "";
     }
-    if (emailx.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("email").innerHTML = "Email is required<br>";
     }
-    setEnabled(
-      checkedPemail === true &&
-        checkedPass === true &&
-        checkedFirst === true &&
-        checkedLast === true
-    );
   };
 
-  const handleOnStreetKeys = () => {
+  const handleOnStreetKeys = (value) => {
     // eslint-disable-next-line no-invalid-regexp
     const letters = /^[a-zA-Z0-9 ,-]+$/;
-    if (!residentialStreetx.match(letters)) {
+    if (!value.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Street - use only [ - , ] as symbols<br>";
     }
-    if (residentialStreetx.match(letters)) {
+    if (value.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "";
     }
-    if (residentialStreetx.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("street").innerHTML = "Street is required<br>";
     }
   };
 
-  const handleOnCityKeys = () => {
+  const handleOnCityKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!residentialCityx.match(letters)) {
+    if (!value.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
     }
-    if (residentialCityx.match(letters)) {
+    if (value.match(letters)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "";
     }
-    if (residentialCityx.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("city").innerHTML = "City is required<br>";
     }
   };
 
-  const handleOnPasswordKeys = () => {
+  const handleOnPasswordKeys = (value) => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!passwordx.match(passwordValidate)) {
+    if (!value.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML =
         "Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
       setCheckedPass(false);
     }
-    if (passwordx.match(passwordValidate)) {
+    if (value.match(passwordValidate)) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
       setCheckedPass(true);
     }
-    if (passwordx.length !== 0) {
-      if (retypePasswordx !== passwordx) {
+    if (retypePasswordx.length !== 0) {
+      if (retypePasswordx !== value) {
         setCheckedPass(false);
         // eslint-disable-next-line no-unused-expressions
         document.getElementById("password").innerHTML = "Passwords don't match<br>";
+      } else {
+        setCheckedPass(true);
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("password").innerHTML = "";
       }
     }
-    if (passwordx.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "Password is required<br>";
     }
-    setEnabled(
-      checkedPemail === true &&
-        checkedPass === true &&
-        checkedFirst === true &&
-        checkedLast === true
-    );
   };
 
-  const handleOnRTPasswordKeys = () => {
-    const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    if (!retypePasswordx.match(passwordValidate)) {
-      setCheckedPass(false);
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("password").innerHTML =
-        "Retype Password - Password must be at least 8 characters, must include a capital letter, small letter, a number and any of these symbol (!@#$%^&*.,)<br>";
-    }
-    if (retypePasswordx.match(passwordValidate)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("rtPassword").innerHTML = "";
-      setCheckedPass(true);
-    }
-    if (retypePasswordx === passwordx) {
+  const handleOnRTPasswordKeys = (value) => {
+    if (value === passwordx) {
       setCheckedPass(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("rtPassword").innerHTML = "";
@@ -282,102 +249,98 @@ function Cover() {
   };
 
   const handleClick = (e) => {
-    handleOnFirstKeys();
-    handleOnLastKeys();
-    handleOnOtherKeys();
-    handleOnPEmailKeys();
-    handleOnStreetKeys();
-    handleOnCityKeys();
-    handleOnPasswordKeys();
-    handleOnRTPasswordKeys();
-    if (enabled) {
-      setOpened(true);
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+    setOpened(true);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-      let dayx = "";
-      let monthx = "";
-      let yearx = "";
-      if (startDate != null) {
-        dayx = startDate.getDate();
-        monthx = startDate.getMonth() + 1;
-        yearx = startDate.getFullYear();
-      }
-      e.preventDefault();
-      const raw = JSON.stringify({
-        fname: fnamex,
-        lname: lnamex,
-        oname: onamex,
-        email: emailx,
-        pno: phonex,
-        nationality: nationalityx,
-        residentialStreet: residentialStreetx,
-        residentialCity: residentialCityx,
-        residentialState: residentialStatex,
-        residentialCountry: residentialCountryx,
-        dayOfBirth: dayx,
-        monthOfBirth: monthx,
-        yearOfBirth: yearx,
-        maritalStatus: maritalStatusx,
-      });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      // localStorage.setItem("pass1", passwordx);
+    let dayx = "";
+    let monthx = "";
+    let yearx = "";
+    if (startDate != null) {
+      dayx = startDate.getDate();
+      monthx = startDate.getMonth() + 1;
+      yearx = startDate.getFullYear();
+    }
+    e.preventDefault();
+    const raw = JSON.stringify({
+      fname: fnamex,
+      lname: lnamex,
+      oname: onamex,
+      email: emailx,
+      pno: phonex,
+      nationality: nationalityx,
+      residentialStreet: residentialStreetx,
+      residentialCity: residentialCityx,
+      residentialState: residentialStatex,
+      residentialCountry: residentialCountryx,
+      dayOfBirth: dayx,
+      monthOfBirth: monthx,
+      yearOfBirth: yearx,
+      maritalStatus: maritalStatusx,
+    });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    // localStorage.setItem("pass1", passwordx);
 
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
-        .then((res) => res.json())
-        .then((result) => {
-          setOpened(false);
-          if (result.status === "SUCCESS") {
-            MySwal.fire({
-              title: result.status,
-              type: "success",
-              text: result.message,
-            }).then(() => {
-              const raw2 = JSON.stringify({
-                empID: result.data.id,
-                username: result.data.email,
-                password: passwordx,
-              });
-              const requestOptions2 = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw2,
-                redirect: "follow",
-              };
-              fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/add`, requestOptions2)
-                .then((res) => res.json())
-                .then((resultIL) => {
-                  MySwal.fire({
-                    title: resultIL.status,
-                    type: "success",
-                    text: resultIL.message,
-                  }).then(() => {
-                    localStorage.setItem("user", JSON.stringify(result.data));
-                    navigate("/authentication/sign-in", { replace: true });
-                  });
-                });
-            });
-          } else {
-            MySwal.fire({
-              title: result.status,
-              type: "error",
-              text: result.message,
-            });
-          }
-        })
-        .catch((error) => {
-          setOpened(false);
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
+      .then((res) => res.json())
+      .then((result) => {
+        setOpened(false);
+        if (result.status === "SUCCESS") {
           MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            const raw2 = JSON.stringify({
+              empID: result.data.id,
+              username: result.data.email,
+              password: passwordx,
+            });
+            const requestOptions2 = {
+              method: "POST",
+              headers: myHeaders,
+              body: raw2,
+              redirect: "follow",
+            };
+            fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/add`, requestOptions2)
+              .then((res) => res.json())
+              .then((resultIL) => {
+                MySwal.fire({
+                  title: resultIL.status,
+                  type: "success",
+                  text: resultIL.message,
+                }).then(() => {
+                  localStorage.setItem("user", JSON.stringify(result.data));
+                  navigate("/authentication/sign-in", { replace: true });
+                });
+              });
           });
+        } else {
+          MySwal.fire({
+            title: result.status,
+            type: "error",
+            text: result.message,
+          });
+        }
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
         });
+      });
+  };
+
+  const handleValidate = (e) => {
+    if (checkedFirst && checkedLast && checkedPemail && checkedPass === true) {
+      handleClick(e);
     }
   };
 
@@ -478,7 +441,7 @@ function Cover() {
                       type="text"
                       label="First Name"
                       value={fnamex || ""}
-                      onKeyUp={handleOnFirstKeys}
+                      onKeyUp={(e) => handleOnFirstKeys(e.target.value)}
                       onChange={(e) => setFname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -489,7 +452,7 @@ function Cover() {
                       type="text"
                       label="Last Name"
                       value={lnamex || ""}
-                      onKeyUp={handleOnLastKeys}
+                      onKeyUp={(e) => handleOnLastKeys(e.target.value)}
                       onChange={(e) => setLname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -506,7 +469,7 @@ function Cover() {
                       type="text"
                       label="Other Name"
                       value={onamex || ""}
-                      onKeyUp={handleOnOtherKeys}
+                      onKeyUp={(e) => handleOnOtherKeys(e.target.value)}
                       onChange={(e) => setOname(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -523,7 +486,7 @@ function Cover() {
                       type="email"
                       label="Personal Email"
                       value={emailx || ""}
-                      onKeyUp={handleOnPEmailKeys}
+                      onKeyUp={(e) => handleOnPEmailKeys(e.target.value)}
                       onChange={getPersonalInformation}
                       variant="standard"
                       fullWidth
@@ -684,7 +647,7 @@ function Cover() {
                       type="text"
                       label="Street"
                       value={residentialStreetx || ""}
-                      onKeyUp={handleOnStreetKeys}
+                      onKeyUp={(e) => handleOnStreetKeys(e.target.value)}
                       onChange={(e) => setResidentialStreet(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -695,7 +658,7 @@ function Cover() {
                       type="text"
                       label="City"
                       value={residentialCityx || ""}
-                      onKeyUp={handleOnCityKeys}
+                      onKeyUp={(e) => handleOnCityKeys(e.target.value)}
                       onChange={(e) => setResidentialCity(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -793,7 +756,7 @@ function Cover() {
                       type={passwordShown ? "text" : "password"}
                       label="Password"
                       value={passwordx || ""}
-                      onKeyUp={handleOnPasswordKeys}
+                      onKeyUp={(e) => handleOnPasswordKeys(e.target.value)}
                       onChange={(e) => setPassword(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -810,7 +773,7 @@ function Cover() {
                       type={passwordShown ? "text" : "password"}
                       label="Retype Password"
                       value={retypePasswordx || ""}
-                      onKeyUp={handleOnRTPasswordKeys}
+                      onKeyUp={(e) => handleOnRTPasswordKeys(e.target.value)}
                       onChange={(e) => setRetypePassword(e.target.value)}
                       variant="standard"
                       fullWidth
@@ -829,29 +792,8 @@ function Cover() {
                 </div>
               </Container>
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Checkbox />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;I agree the&nbsp;
-              </MDTypography>
-              <MDTypography
-                component="a"
-                href="#"
-                variant="button"
-                fontWeight="bold"
-                color="info"
-                textGradient
-              >
-                Terms and Conditions
-              </MDTypography>
-            </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
+              <MDButton variant="gradient" onClick={handleValidate} color="info" fullWidth>
                 Create Account
               </MDButton>
             </MDBox>

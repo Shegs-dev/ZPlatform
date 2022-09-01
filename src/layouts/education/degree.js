@@ -131,6 +131,21 @@ function AllDegrees() {
         name: "Juris Doctor (JD)",
         value: "Juris Doctor (JD)",
       },
+      {
+        id: 26,
+        name: "National Diploma (ND)",
+        value: "National Diploma (ND)",
+      },
+      {
+        id: 27,
+        name: "Higher National Diploma (HND)",
+        value: "Higher National Diploma (HND)",
+      },
+      {
+        id: 28,
+        name: "Others",
+        value: "Others",
+      },
     ],
   };
 }

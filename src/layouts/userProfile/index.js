@@ -81,6 +81,8 @@ function UserProfile() {
   const [allStates, setAllStates] = useState([]);
 
   const [imageUrl, setImageUrl] = useState("");
+  const [imgChanged, setImgChanged] = useState(false);
+  const [selectedImage, setSelectedImage] = useState();
 
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
@@ -467,12 +469,11 @@ function UserProfile() {
     p: 4,
   };
 
-  useEffect(() => {
+  const handleGetImage = () => {
     const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
     const personalIDs = data11.id;
     const imgKey = `PROF_PIC_EMP-${personalIDs}`;
     const headers = miHeaders;
-    let isMounted = true;
     fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/Mono/${imgKey}`, {
       headers,
     })
@@ -523,12 +524,19 @@ function UserProfile() {
               navigate("/authentication/forbiddenPage");
               window.location.reload();
             }
-            if (isMounted) {
-              console.log(resultxx);
-              setImageUrl(resultxx);
-            }
+            console.log(resultxx[0]);
+            setImageUrl(resultxx[0]);
           });
       });
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      // fetches the table data
+      handleGetImage();
+    }
     return () => {
       isMounted = false;
     };
@@ -625,6 +633,8 @@ function UserProfile() {
             }).then(() => {
               if (result.status !== "SUCCESS") {
                 handleOpen();
+              } else {
+                handleGetImage();
               }
               console.log("SUCCESS");
             });
@@ -669,8 +679,12 @@ function UserProfile() {
         };
         const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
         const personalIDs = data11.id;
+        const mOrgID = "Mono";
         const imgKey = `PROF_PIC_EMP-${personalIDs}`;
-        fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete/${imgKey}`, requestDelOptions)
+        fetch(
+          `${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete/${mOrgID}/${imgKey}`,
+          requestDelOptions
+        )
           .then(async (res) => {
             const aToken = res.headers.get("token-1");
             localStorage.setItem("rexxdex", aToken);
@@ -714,8 +728,6 @@ function UserProfile() {
               }
               const iiHeaders = new Headers();
               iiHeaders.append("Token-1", GenToken);
-
-              const mOrgID = "Mono";
 
               const formData = new FormData();
               formData.append("file", files[0]);
@@ -768,6 +780,8 @@ function UserProfile() {
                   }).then(() => {
                     if (result.status !== "SUCCESS") {
                       handleCOpen();
+                    } else {
+                      handleGetImage();
                     }
                     console.log("SUCCESS");
                   });
@@ -788,6 +802,70 @@ function UserProfile() {
     }
   };
 
+  const checkUImage = (e) => {
+    if (files[0].size > 522240) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "File should not exceed 500kb<br>";
+    } else if (
+      files[0].type !== "image/png" &&
+      files[0].type !== "image/jpg" &&
+      files[0].type !== "image/jpeg" &&
+      files[0].type !== "image/gif"
+    ) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML =
+        "use only JPG, JPEG, PNG, or GIF image formats<br>";
+    } else {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "";
+      handleImageUpload(e);
+    }
+  };
+  const checkCImage = (e) => {
+    if (files[0].size > 522240) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "File should not exceed 500kb<br>";
+    } else if (
+      files[0].type !== "image/png" &&
+      files[0].type !== "image/jpg" &&
+      files[0].type !== "image/jpeg" &&
+      files[0].type !== "image/gif"
+    ) {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML =
+        "use only JPG, JPEG, PNG, or GIF image formats<br>";
+    } else {
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "";
+      handleImageChange(e);
+    }
+  };
+
+  const previewImage = (e) => {
+    setFiles(e.target.files);
+    if (e.target.files[0].size > 522240) {
+      setImgChanged(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "File should not exceed 500kb<br>";
+    } else if (
+      e.target.files[0].type !== "image/png" &&
+      e.target.files[0].type !== "image/jpg" &&
+      e.target.files[0].type !== "image/jpeg" &&
+      e.target.files[0].type !== "image/gif"
+    ) {
+      setImgChanged(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML =
+        "use only JPG, JPEG, PNG, or GIF image formats<br>";
+    } else {
+      console.log(e.target.files[0]);
+      setSelectedImage(e.target.files[0]);
+      setImgChanged(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "";
+    }
+  };
+
   const handleDeleteImage = () => {
     if (!imageUrl) {
       MySwal.fire({
@@ -804,8 +882,12 @@ function UserProfile() {
       };
       const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
       const personalIDs = data11.id;
+      const mOrgID = "Mono";
       const imgKey = `PROF_PIC_EMP-${personalIDs}`;
-      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete/${imgKey}`, requestOptions)
+      fetch(
+        `${process.env.REACT_APP_EKOATLANTIC_URL}/media/delete/${mOrgID}/${imgKey}`,
+        requestOptions
+      )
         .then(async (res) => {
           const aToken = res.headers.get("token-1");
           localStorage.setItem("rexxdex", aToken);
@@ -835,6 +917,7 @@ function UserProfile() {
             text: resx.message,
           }).then(() => {
             console.log("SUCCESS");
+            handleGetImage();
           });
         })
         .catch((error) => {
@@ -918,11 +1001,24 @@ function UserProfile() {
             <MDTypography id="modal-modal-title" variant="h6" component="h2">
               Upload Image
             </MDTypography>
-            <MDInput type="file" files={files} onChange={(e) => setFiles(e.target.files)} />
+            <MDInput type="file" files={files} onChange={previewImage} />
+            <p id="imageVal" style={{ color: "red", fontSize: 13 }}>
+              <i> </i>
+            </p>
+
+            {imgChanged ? (
+              <img
+                src={URL.createObjectURL(selectedImage)}
+                style={{ maxWidth: "25%", maxHeight: 80, borderRadius: 20 }}
+                alt="Thumb"
+              />
+            ) : (
+              <div />
+            )}
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleImageUpload}
+                onClick={checkUImage}
                 color="info"
                 width="50%"
                 align="left"
@@ -933,7 +1029,6 @@ function UserProfile() {
           </MDBox>
         </Modal>
       </div>
-
       {/* modal for file upload */}
       <div>
         <Modal
@@ -946,11 +1041,24 @@ function UserProfile() {
             <MDTypography id="modal-modal-title" variant="h6" component="h2">
               Change Image
             </MDTypography>
-            <MDInput type="file" files={files} onChange={(e) => setFiles(e.target.files)} />
+            <MDInput type="file" files={files} onChange={previewImage} />
+            <p id="imageVal" style={{ color: "red", fontSize: 13 }}>
+              <i> </i>
+            </p>
+
+            {imgChanged ? (
+              <img
+                src={URL.createObjectURL(selectedImage)}
+                style={{ maxWidth: "25%", maxHeight: 80, borderRadius: 20 }}
+                alt="Thumb"
+              />
+            ) : (
+              <div />
+            )}
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleImageChange}
+                onClick={checkCImage}
                 color="info"
                 width="50%"
                 align="left"
