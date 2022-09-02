@@ -18,11 +18,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import DataTable from "examples/Tables/DataTable";
+// import DataTable from "examples/Tables/DataTable";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
 
-import CalendarData from "./data";
+// aimport CalendarData from "./data";
 
 const locales = {
   // eslint-disable-next-line global-require
@@ -38,26 +38,29 @@ const localizers = dateFnsLocalizer({
 
 function MyCalendar() {
   // eslint-disable-next-line prefer-const
-  const { columns: pColumns, rows: pRows } = CalendarData();
+  // const { columns: pColumns, rows: pRows } = CalendarData();
   const [allEvents, setAllEvents] = useState([]);
 
   const [opened, setOpened] = useState(false);
   const d = new Date(new Date().getFullYear(), 0, 1);
   const s = new Date(new Date().getFullYear(), 12, 1);
+  console.log(d);
+  console.log(s);
   const strt = d.getTime();
   const end = s.getTime();
+  console.log(strt);
+  console.log(end);
   const navigate = useNavigate();
   const { allGHeaders: miHeaders } = GHeaders();
   useEffect(() => {
     const eventList = [];
     setOpened(true);
     const headers = miHeaders;
-    const data11 = JSON.parse(localStorage.getItem("user1"));
-    const orgIDs = data11.orgID;
-    const perso = data11.personalID;
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    const myID = data11.id;
     let isMounted = true;
     fetch(
-      `${process.env.REACT_APP_RAGA_URL}/appointment/getMyCalendar/${orgIDs}/${perso}?startTime=${strt}&endTime=${end}`,
+      `${process.env.REACT_APP_RAGA_URL}/appointment/getMonoCalendar/${myID}?startTime=${strt}&endTime=${end}`,
       { headers }
     )
       .then(async (res) => {
@@ -140,14 +143,7 @@ function MyCalendar() {
         />
       </Card>
       <MDBox pt={3}>
-        <DataTable
-          table={{ columns: pColumns, rows: pRows }}
-          isSorted
-          entriesPerPage
-          showTotalEntries
-          noEndBorder
-          canSearch
-        />
+        <></>
       </MDBox>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
