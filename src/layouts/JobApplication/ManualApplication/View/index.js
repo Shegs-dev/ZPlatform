@@ -183,15 +183,6 @@ function ViewJobPost() {
                           textAlign="left"
                           mt={0}
                         >
-                          Job Status: {jobPost[0].jobStatus}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h6"
-                          color="text"
-                          fontSize="120%"
-                          textAlign="left"
-                          mt={0}
-                        >
                           Company Name: {jobPost[0].orgName}
                         </MDTypography>
                         <MDTypography
