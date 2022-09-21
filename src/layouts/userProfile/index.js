@@ -51,12 +51,6 @@ import Modal from "@mui/material/Modal";
 function UserProfile() {
   const MySwal = withReactContent(Swal);
 
-  const [openn, setOpenn] = React.useState(false);
-  const [copenn, setCOpenn] = React.useState(false);
-  const handleOpen = () => setOpenn(true);
-  const handleClose = () => setOpenn(false);
-  const handleCOpen = () => setCOpenn(true);
-  const handleCClose = () => setCOpenn(false);
   const [files, setFiles] = useState();
 
   const [state, setState] = React.useState({
@@ -84,6 +78,18 @@ function UserProfile() {
   const [imgChanged, setImgChanged] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
 
+  const [openn, setOpenn] = React.useState(false);
+  const [copenn, setCOpenn] = React.useState(false);
+  const handleOpen = () => setOpenn(true);
+  const handleClose = () => {
+    setSelectedImage();
+    setOpenn(false);
+  };
+  const handleCOpen = () => setCOpenn(true);
+  const handleCClose = () => {
+    setSelectedImage();
+    setCOpenn(false);
+  };
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
   const [skillsx, setSkills] = useState([]);
@@ -586,7 +592,7 @@ function UserProfile() {
         formData.append("file", files[0]);
         formData.append("orgID", mOrgID);
         formData.append("key", imgKey);
-        formData.append("type", "png");
+        formData.append("type", files[0].type);
 
         const raw = formData;
         console.log(raw);
@@ -733,7 +739,7 @@ function UserProfile() {
               formData.append("file", files[0]);
               formData.append("orgID", mOrgID);
               formData.append("key", imgKey);
-              formData.append("type", "png");
+              formData.append("type", files[0].type);
 
               const raw = formData;
               console.log(raw);
@@ -814,7 +820,7 @@ function UserProfile() {
     ) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("imageVal").innerHTML =
-        "use only JPG, JPEG, PNG, or GIF image formats<br>";
+        "use only JPG, JPEG, PNG, JFIF or GIF image formats<br>";
     } else {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("imageVal").innerHTML = "";
@@ -833,7 +839,7 @@ function UserProfile() {
     ) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("imageVal").innerHTML =
-        "use only JPG, JPEG, PNG, or GIF image formats<br>";
+        "use only JPG, JPEG, PNG, JFIF or GIF image formats<br>";
     } else {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("imageVal").innerHTML = "";
@@ -856,7 +862,7 @@ function UserProfile() {
       setImgChanged(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("imageVal").innerHTML =
-        "use only JPG, JPEG, PNG, or GIF image formats<br>";
+        "use only JPG, JPEG, PNG, JFIF or GIF image formats<br>";
     } else {
       console.log(e.target.files[0]);
       setSelectedImage(e.target.files[0]);
