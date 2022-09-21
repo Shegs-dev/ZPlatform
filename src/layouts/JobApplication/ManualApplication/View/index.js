@@ -68,7 +68,6 @@ function ViewJobPost() {
         return res.json();
       })
       .then((result) => {
-        console.log("doski");
         setOpened(false);
         if (result.message === "Expired Access") {
           navigate("/authentication/sign-in");
@@ -176,15 +175,6 @@ function ViewJobPost() {
                             // eslint-disable-next-line react/no-danger
                             dangerouslySetInnerHTML={{ __html: jobPost[0].description }}
                           />
-                        </MDTypography>
-                        <MDTypography
-                          variant="h6"
-                          color="text"
-                          fontSize="120%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Job Status: {jobPost[0].jobStatus}
                         </MDTypography>
                         <MDTypography
                           variant="h6"

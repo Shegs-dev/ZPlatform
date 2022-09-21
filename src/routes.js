@@ -63,7 +63,7 @@ import Checklists from "layouts/checklists";
 
 import ForbiddenPage from "layouts/authentication/forbiddenPage";
 import PaymentHis from "layouts/paymentHistory";
-
+import MyCalendar from "layouts/myCalendar";
 import RenewLog from "layouts/authentication/renewSubscription/renewLogin";
 import RenewSub from "layouts/authentication/renewSubscription";
 
@@ -87,6 +87,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+  },
+  {
+    type: "collapse",
+    name: "My Calendar",
+    key: "my-calendar",
+    icon: <Icon fontSize="small">today</Icon>,
+    route: "/my-calendar",
+    component: <MyCalendar />,
   },
   {
     type: "collapse",
