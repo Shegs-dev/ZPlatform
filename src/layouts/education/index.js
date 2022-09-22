@@ -55,7 +55,6 @@ function Education() {
 
   const [degreex, setDegreex] = useState("");
 
-  const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
 
   const [allApp, setAllApp] = useState([]);
@@ -211,23 +210,22 @@ function Education() {
   };
 
   // eslint-disable-next-line consistent-return
-  const handleOnNameKeys = () => {
+  const handleOnNameKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
+    if (!value.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
-    if (namex.match(letters)) {
+    if (value.match(letters)) {
       setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
-    if (namex.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
-    setEnabled(checkedName === true);
   };
 
   // eslint-disable-next-line consistent-return
@@ -236,82 +234,86 @@ function Education() {
     const endCDate = new Date(endDate).getTime();
     const currDate = new Date().getTime();
 
-    handleOnNameKeys();
-    if (enabled) {
-      if (startCDate > currDate || endCDate < startCDate || startCDate === 0 || endCDate === 0) {
-        MySwal.fire({
-          title: "INVALID_DATE",
-          type: "error",
-          text: "Please put a Start Date from the Past and an End Date after the Start Date ",
-        });
-      } else {
-        setOpened(true);
-        e.preventDefault();
-        const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-        console.log(data11);
-        const personalIDs = data11.id;
-        const raw = JSON.stringify({
-          empID: personalIDs,
-          name: namex,
-          startTime: startCDate,
-          endTime: endCDate,
-          degree: degreex,
-          specialization: specializationx,
-          grade: gradex,
-        });
-        console.log(raw);
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow",
-        };
+    if (startCDate > currDate || endCDate < startCDate || startCDate === 0 || endCDate === 0) {
+      MySwal.fire({
+        title: "INVALID_DATE",
+        type: "error",
+        text: "Please put a Start Date from the Past and an End Date after the Start Date ",
+      });
+    } else {
+      setOpened(true);
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+      console.log(data11);
+      const personalIDs = data11.id;
+      const raw = JSON.stringify({
+        empID: personalIDs,
+        name: namex,
+        startTime: startCDate,
+        endTime: endCDate,
+        degree: degreex,
+        specialization: specializationx,
+        grade: gradex,
+      });
+      console.log(raw);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-        fetch(`${process.env.REACT_APP_ZAVE_URL}/education/add`, requestOptions)
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
-          })
-          .then((result) => {
-            setOpened(false);
-            if (result.message === "Expired Access") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/education/add`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            if (result.status === "SUCCESS") {
+              handleGets();
+              setName("");
+              setSpecialization("");
+              setGrades("");
+              setStartDate("");
+              setEndDate("");
+              setDegreex("");
             }
-            if (result.message === "Token Does Not Exist") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
-            }
-            if (result.message === "Unauthorized Access") {
-              navigate("/authentication/forbiddenPage");
-              window.location.reload();
-            }
-            MySwal.fire({
-              title: result.status,
-              type: "success",
-              text: result.message,
-            }).then(() => {
-              if (result.status === "SUCCESS") {
-                handleGets();
-                setName("");
-                setSpecialization("");
-                setGrades("");
-                setStartDate("");
-                setEndDate("");
-                setDegreex("");
-              }
-            });
-          })
-          .catch((error) => {
-            setOpened(false);
-            MySwal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
           });
-      }
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
+  };
+
+  const handleValidate = (e) => {
+    handleOnNameKeys(namex);
+    if (checkedName === true) {
+      handleClick(e);
     }
   };
 
@@ -384,6 +386,13 @@ function Education() {
           text: error.message,
         });
       });
+  };
+
+  const handleUpdateVal = (e) => {
+    handleOnNameKeys(unamex);
+    if (checkedName === true) {
+      handleUpdate(e);
+    }
   };
 
   // Method to filter departments
@@ -466,7 +475,7 @@ function Education() {
                             type="text"
                             label=" School's Name *"
                             value={namex || ""}
-                            onKeyUp={handleOnNameKeys}
+                            onKeyUp={(e) => handleOnNameKeys(e.target.value)}
                             className="form-control"
                             onChange={(e) => setName(e.target.value)}
                             variant="standard"
@@ -596,7 +605,7 @@ function Education() {
                   <MDBox mt={4} mb={1}>
                     <MDButton
                       variant="gradient"
-                      onClick={handleClick}
+                      onClick={handleValidate}
                       color="info"
                       width="50%"
                       align="center"
@@ -790,7 +799,7 @@ function Education() {
                                 type="text"
                                 label=" School's Name *"
                                 value={unamex || ""}
-                                onKeyUp={handleOnNameKeys}
+                                onKeyUp={(e) => handleOnNameKeys(e.target.value)}
                                 className="form-control"
                                 onChange={(e) => setUName(e.target.value)}
                                 variant="standard"
@@ -920,7 +929,7 @@ function Education() {
                       <MDBox mt={4} mb={1}>
                         <MDButton
                           variant="gradient"
-                          onClick={handleUpdate}
+                          onClick={handleUpdateVal}
                           color="info"
                           width="50%"
                           align="center"

@@ -34,7 +34,6 @@ function Skills() {
   const [udescripx, setUDescrip] = useState("");
   const [uempID, setUEmpID] = useState("");
 
-  const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
 
   const [allApp, setAllApp] = useState([]);
@@ -171,81 +170,84 @@ function Skills() {
   };
 
   // eslint-disable-next-line consistent-return
-  const handleOnNameKeys = () => {
+  const handleOnNameKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
+    if (!value.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
     }
-    if (namex.match(letters)) {
+    if (value.match(letters)) {
       setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
-    if (namex.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "Name is required<br>";
     }
-    setEnabled(checkedName === true);
   };
 
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
-    handleOnNameKeys();
-    if (enabled) {
-      setOpened(true);
-      e.preventDefault();
-      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-      console.log(data11);
-      const personalIDs = data11.id;
-      const raw = JSON.stringify({ empID: personalIDs, name: namex, descrip: descripx });
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      console.log(raw);
+    setOpened(true);
+    e.preventDefault();
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    console.log(data11);
+    const personalIDs = data11.id;
+    const raw = JSON.stringify({ empID: personalIDs, name: namex, descrip: descripx });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    console.log(raw);
 
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/add`, requestOptions)
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          setOpened(false);
-          if (result.message === "Expired Access") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Token Does Not Exist") {
-            navigate("/authentication/sign-in");
-            window.location.reload();
-          }
-          if (result.message === "Unauthorized Access") {
-            navigate("/authentication/forbiddenPage");
-            window.location.reload();
-          }
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            handleGets();
-            setName("");
-            setDescrip("");
-          });
-        })
-        .catch((error) => {
-          setOpened(false);
-          MySwal.fire({
-            title: error.status,
-            type: "error",
-            text: error.message,
-          });
+    fetch(`${process.env.REACT_APP_ZAVE_URL}/skills/add`, requestOptions)
+      .then(async (res) => {
+        const aToken = res.headers.get("token-1");
+        localStorage.setItem("rexxdex", aToken);
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        if (result.message === "Expired Access") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Token Does Not Exist") {
+          navigate("/authentication/sign-in");
+          window.location.reload();
+        }
+        if (result.message === "Unauthorized Access") {
+          navigate("/authentication/forbiddenPage");
+          window.location.reload();
+        }
+        MySwal.fire({
+          title: result.status,
+          type: "success",
+          text: result.message,
+        }).then(() => {
+          handleGets();
+          setName("");
+          setDescrip("");
         });
+      })
+      .catch((error) => {
+        setOpened(false);
+        MySwal.fire({
+          title: error.status,
+          type: "error",
+          text: error.message,
+        });
+      });
+  };
+
+  const handleValidate = (e) => {
+    handleOnNameKeys(namex);
+    if (checkedName === true) {
+      handleClick(e);
     }
   };
 
@@ -312,6 +314,13 @@ function Skills() {
       });
   };
 
+  const handleUpdateVal = (e) => {
+    handleOnNameKeys(unamex);
+    if (checkedName === true) {
+      handleUpdate(e);
+    }
+  };
+
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     const filteredItems = filteredData.filter((item) => item.id === value);
@@ -368,7 +377,7 @@ function Skills() {
                       type="text"
                       label="Name *"
                       value={namex || ""}
-                      onKeyUp={handleOnNameKeys}
+                      onKeyUp={(e) => handleOnNameKeys(e.target.value)}
                       className="form-control"
                       onChange={(e) => setName(e.target.value)}
                       variant="standard"
@@ -391,7 +400,7 @@ function Skills() {
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
-                onClick={handleClick}
+                onClick={handleValidate}
                 color="info"
                 width="50%"
                 align="left"
@@ -537,7 +546,7 @@ function Skills() {
                           type="text"
                           label="Name *"
                           value={unamex || ""}
-                          onKeyUp={handleOnNameKeys}
+                          onKeyUp={(e) => handleOnNameKeys(e.target.value)}
                           className="form-control"
                           onChange={(e) => setUName(e.target.value)}
                           variant="standard"
@@ -560,7 +569,7 @@ function Skills() {
                 <MDBox mt={4} mb={1}>
                   <MDButton
                     variant="gradient"
-                    onClick={handleUpdate}
+                    onClick={handleUpdateVal}
                     color="info"
                     width="50%"
                     align="left"

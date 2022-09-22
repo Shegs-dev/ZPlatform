@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // react-router-dom components
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
@@ -39,13 +39,16 @@ import bgImage from "assets/images/plutospace-1.png";
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 
-// Material Dashboard 2 PRO React context
+import GHeaders from "getHeader";
 import {
   useMaterialUIController,
   setMiniSidenav,
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
+import defaulto from "./defaulto.png";
+
+// Material Dashboard 2 PRO React context
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const navigate = useNavigate();
@@ -155,6 +158,94 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     return returnValue;
   });
 
+  // useEffect for company image
+  const [link, setLink] = useState("");
+  const [isImg, setIsImg] = useState(false);
+  const { allGHeaders: miHeaders } = GHeaders();
+  const styles = {
+    image: { width: 150, height: 100, borderRadius: 20, marginBottom: 10, marginTop: 10 },
+  };
+
+  const handleGetImage = () => {
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    if (data11 !== null) {
+      const personalIDs = data11.id;
+      const imgKey = `PROF_PIC_EMP-${personalIDs}`;
+      const headers = miHeaders;
+      fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getByKey/Mono/${imgKey}`, {
+        headers,
+      })
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          const result = await res.text();
+          if (result === null || result === undefined || result === "") {
+            return {};
+          }
+          return JSON.parse(result);
+        })
+        .then((result) => {
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          fetch(`${process.env.REACT_APP_EKOATLANTIC_URL}/media/getS3Urls/${result.name}`, {
+            headers,
+          })
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              const resultres = await res.text();
+              if (resultres === null || resultres === undefined || resultres === "") {
+                return {};
+              }
+              return JSON.parse(resultres);
+            })
+            .then((resultxx) => {
+              if (resultxx.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (resultxx.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (resultxx.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+                window.location.reload();
+              }
+              console.log(resultxx[0]);
+              setLink(resultxx[0]);
+              if (resultxx.length === 0) {
+                setIsImg(false);
+              } else {
+                setIsImg(true);
+              }
+            });
+        });
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      // fetches the table data
+      handleGetImage();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <SidenavRoot
       {...rest}
@@ -179,7 +270,18 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           {brand && <MDBox component="img" src={bgImage} alt="Brand" width="10rem" />}
         </MDBox>
         <br />
-        <MDBox variant="gradient" bgColor="secondary" borderRadius="lg" coloredShadow="light">
+        <MDBox
+          variant="gradient"
+          bgColor="secondary"
+          borderRadius="lg"
+          coloredShadow="light"
+          onClick={() => navigate("/user-Profile")}
+        >
+          {isImg ? (
+            <img src={link} style={styles.image} alt="Thumb" />
+          ) : (
+            <img src={defaulto} style={styles.image} alt="default" />
+          )}
           <MDTypography
             color="white"
             display="block"

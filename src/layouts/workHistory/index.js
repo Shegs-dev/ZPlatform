@@ -35,8 +35,8 @@ function WorkHistory() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const [enabled, setEnabled] = useState("");
   const [checkedName, setCheckedName] = useState("");
+  const [checkedDescrip, setCheckedDescrip] = useState("");
 
   const [allApp, setAllApp] = useState([]);
 
@@ -204,103 +204,128 @@ function WorkHistory() {
   };
 
   // eslint-disable-next-line consistent-return
-  const handleOnNameKeys = () => {
+  const handleOnNameKeys = (value) => {
     const letters = /^[a-zA-Z ]+$/;
-    if (!namex.match(letters)) {
+    if (!value.match(letters)) {
       setCheckedName(false);
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name - input only capital and small letters<br>";
+      document.getElementById("name").innerHTML =
+        "Company Name - input only capital and small letters<br>";
     }
-    if (namex.match(letters)) {
+    if (value.match(letters)) {
       setCheckedName(true);
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("name").innerHTML = "";
     }
-    if (namex.length === 0) {
+    if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
-      document.getElementById("name").innerHTML = "Name is required<br>";
+      document.getElementById("name").innerHTML = "Company Name is required<br>";
     }
-    setEnabled(checkedName === true);
+  };
+
+  const handleOnMessageKeys = (value) => {
+    if (value.length === 0) {
+      setCheckedDescrip(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("message").innerHTML = "Description is required<br>";
+    } else {
+      setCheckedDescrip(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("message").innerHTML = "";
+    }
   };
 
   // eslint-disable-next-line consistent-return
   const handleClick = (e) => {
-    handleOnNameKeys();
-    if (enabled) {
-      const startCDate = new Date(startDate).getTime();
-      const endCDate = new Date(endDate).getTime();
-      const currDate = new Date().getTime();
+    const startCDate = new Date(startDate).getTime();
+    const endCDate = new Date(endDate).getTime();
+    const currDate = new Date().getTime();
 
-      if (startCDate > currDate || endCDate < startCDate || startCDate === 0 || endCDate === 0) {
-        MySwal.fire({
-          title: "INVALID_DATE",
-          type: "error",
-          text: "Please put a Start Date from the Past and an End Date after the Start Date ",
-        });
-      } else {
-        setOpened(true);
-        e.preventDefault();
-        const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
-        console.log(data11);
-        const personalIDs = data11.id;
-        const raw = JSON.stringify({
-          empID: personalIDs,
-          name: namex,
-          descrip: descripx,
-          startTime: startCDate,
-          endTime: endCDate,
-          position: positionx,
-        });
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow",
-        };
+    if (startCDate > currDate || endCDate < startCDate || startCDate === 0 || endCDate === 0) {
+      MySwal.fire({
+        title: "INVALID_DATE",
+        type: "error",
+        text: "Please put a Start Date from the Past and an End Date after the Start Date ",
+      });
+    } else {
+      setOpened(true);
+      e.preventDefault();
+      const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+      console.log(data11);
+      const personalIDs = data11.id;
+      const raw = JSON.stringify({
+        empID: personalIDs,
+        name: namex,
+        descrip: descripx,
+        startTime: startCDate,
+        endTime: endCDate,
+        position: positionx,
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
 
-        fetch(`${process.env.REACT_APP_ZAVE_URL}/workHistory/add`, requestOptions)
-          .then(async (res) => {
-            const aToken = res.headers.get("token-1");
-            localStorage.setItem("rexxdex", aToken);
-            return res.json();
-          })
-          .then((result) => {
-            setOpened(false);
-            if (result.message === "Expired Access") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
+      fetch(`${process.env.REACT_APP_ZAVE_URL}/workHistory/add`, requestOptions)
+        .then(async (res) => {
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          setOpened(false);
+          if (result.message === "Expired Access") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Token Does Not Exist") {
+            navigate("/authentication/sign-in");
+            window.location.reload();
+          }
+          if (result.message === "Unauthorized Access") {
+            navigate("/authentication/forbiddenPage");
+            window.location.reload();
+          }
+          MySwal.fire({
+            title: result.status,
+            type: "success",
+            text: result.message,
+          }).then(() => {
+            if (result.status === "SUCCESS") {
+              handleGets();
+              setName("");
+              setDescrip("");
+              setPosition("");
+              setStartDate("");
+              setEndDate("");
             }
-            if (result.message === "Token Does Not Exist") {
-              navigate("/authentication/sign-in");
-              window.location.reload();
-            }
-            if (result.message === "Unauthorized Access") {
-              navigate("/authentication/forbiddenPage");
-              window.location.reload();
-            }
-            MySwal.fire({
-              title: result.status,
-              type: "success",
-              text: result.message,
-            }).then(() => {
-              if (result.status === "SUCCESS") {
-                handleGets();
-                setName("");
-                setDescrip("");
-                setPosition("");
-                setStartDate("");
-                setEndDate("");
-              }
-            });
-          })
-          .catch((error) => {
-            setOpened(false);
-            MySwal.fire({
-              title: error.status,
-              type: "error",
-              text: error.message,
-            });
           });
+        })
+        .catch((error) => {
+          setOpened(false);
+          MySwal.fire({
+            title: error.status,
+            type: "error",
+            text: error.message,
+          });
+        });
+    }
+  };
+
+  const handleValidate = (e) => {
+    handleOnNameKeys(namex);
+    handleOnMessageKeys(descripx);
+    if (checkedName && checkedDescrip === true) {
+      if (positionx === "") {
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("message").innerHTML = "Position is Required";
+      } else {
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("message").innerHTML = "";
+
+        handleClick(e);
       }
     }
   };
@@ -375,6 +400,22 @@ function WorkHistory() {
       });
   };
 
+  const handleUpdateVal = (e) => {
+    handleOnNameKeys(unamex);
+    handleOnMessageKeys(udescripx);
+    if (checkedName && checkedDescrip === true) {
+      if (upositionx === "") {
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("message").innerHTML = "Position is Required";
+      } else {
+        // eslint-disable-next-line no-unused-expressions
+        document.getElementById("message").innerHTML = "";
+
+        handleUpdate(e);
+      }
+    }
+  };
+
   // Method to filter departments
   const handleShow = (filteredData, value) => {
     // "endTime":"2003-07-10T23:00:00.000Z"
@@ -440,6 +481,9 @@ function WorkHistory() {
             <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
               {" "}
             </MDTypography>
+            <MDTypography variant="gradient" fontSize="60%" color="white" id="message">
+              {" "}
+            </MDTypography>
           </MDBox>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
@@ -454,7 +498,7 @@ function WorkHistory() {
                             type="text"
                             label=" Company Name *"
                             value={namex || ""}
-                            onKeyUp={handleOnNameKeys}
+                            onKeyUp={(e) => handleOnNameKeys(e.target.value)}
                             className="form-control"
                             onChange={(e) => setName(e.target.value)}
                             variant="standard"
@@ -467,6 +511,7 @@ function WorkHistory() {
                             label="Description *"
                             value={descripx || ""}
                             className="form-control"
+                            onKeyUp={(e) => handleOnMessageKeys(e.target.value)}
                             onChange={(e) => setDescrip(e.target.value)}
                             variant="standard"
                             fullWidth
@@ -539,7 +584,7 @@ function WorkHistory() {
                   <MDBox mt={4} mb={1}>
                     <MDButton
                       variant="gradient"
-                      onClick={handleClick}
+                      onClick={handleValidate}
                       color="info"
                       width="50%"
                       align="center"
@@ -697,6 +742,9 @@ function WorkHistory() {
                 <MDTypography variant="gradient" fontSize="60%" color="white" id="name">
                   {" "}
                 </MDTypography>
+                <MDTypography variant="gradient" fontSize="60%" color="white" id="message">
+                  {" "}
+                </MDTypography>
               </MDBox>
               <MDBox component="form" role="form">
                 <MDBox mb={2}>
@@ -711,7 +759,7 @@ function WorkHistory() {
                                 type="text"
                                 label=" Company Name *"
                                 value={unamex || ""}
-                                onKeyUp={handleOnNameKeys}
+                                onKeyUp={(e) => handleOnNameKeys(e.target.value)}
                                 className="form-control"
                                 onChange={(e) => setUName(e.target.value)}
                                 variant="standard"
@@ -723,6 +771,7 @@ function WorkHistory() {
                                 type="text"
                                 label="Description *"
                                 value={udescripx || ""}
+                                onKeyUp={(e) => handleOnMessageKeys(e.target.value)}
                                 className="form-control"
                                 onChange={(e) => setUDescrip(e.target.value)}
                                 variant="standard"
@@ -796,7 +845,7 @@ function WorkHistory() {
                       <MDBox mt={4} mb={1}>
                         <MDButton
                           variant="gradient"
-                          onClick={handleUpdate}
+                          onClick={handleUpdateVal}
                           color="info"
                           width="50%"
                           align="center"

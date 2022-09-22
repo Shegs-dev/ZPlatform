@@ -82,12 +82,12 @@ function UserProfile() {
   const [copenn, setCOpenn] = React.useState(false);
   const handleOpen = () => setOpenn(true);
   const handleClose = () => {
-    setSelectedImage();
+    // setSelectedImage();
     setOpenn(false);
   };
   const handleCOpen = () => setCOpenn(true);
   const handleCClose = () => {
-    setSelectedImage();
+    // setSelectedImage();
     setCOpenn(false);
   };
   const { countriesAndStates: AlCountry } = AllCountriesAndStates();
@@ -640,7 +640,7 @@ function UserProfile() {
               if (result.status !== "SUCCESS") {
                 handleOpen();
               } else {
-                handleGetImage();
+                window.location.reload();
               }
               console.log("SUCCESS");
             });
@@ -787,7 +787,7 @@ function UserProfile() {
                     if (result.status !== "SUCCESS") {
                       handleCOpen();
                     } else {
-                      handleGetImage();
+                      window.location.reload();
                     }
                     console.log("SUCCESS");
                   });
