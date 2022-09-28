@@ -23,8 +23,10 @@ import Footer from "examples/Footer";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
+import html2PDF from "jspdf-html2canvas";
+
 import Avatar from "@mui/material/Avatar";
 import Icon from "@mui/material/Icon";
 import Stack from "@mui/material/Stack";
@@ -260,17 +262,30 @@ function UserProfile() {
     };
   }, []);
 
-  const printDocument = () => {
-    const input = document.getElementById("divToPrint");
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      // eslint-disable-next-line new-cap
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, "JPEG", 0, 0);
-      // pdf.output('dataurlnewwindow');
-      pdf.save("CV.pdf");
+  // const printDocument = () => {
+  //   const input = document.getElementById("divToPrint");
+  //   html2canvas(input).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+  //     // eslint-disable-next-line new-cap
+  //     const pdf = new jsPDF();
+  //     pdf.addImage(imgData, "JPEG", 0, 0);
+  //     // pdf.output('dataurlnewwindow');
+  //     pdf.save("CV.pdf");
+  //   });
+  // };
+
+  function printDoc() {
+    setOpened(true);
+    const page = document.getElementById("divToPrint");
+    html2PDF(page, {
+      jsPDF: {
+        format: "a4",
+      },
+      imageType: "image/jpeg",
+      output: `./CV.pdf`,
     });
-  };
+    setOpened(false);
+  }
 
   const handleUpdate = () => {
     const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
@@ -1496,13 +1511,7 @@ function UserProfile() {
         <Grid item xs={8} md={8} lg={8}>
           <MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton
-                variant="gradient"
-                onClick={printDocument}
-                color="info"
-                width="50%"
-                align="left"
-              >
+              <MDButton variant="gradient" onClick={printDoc} color="info" width="50%" align="left">
                 Download
               </MDButton>
             </MDBox>
@@ -1538,7 +1547,7 @@ function UserProfile() {
                         <MDTypography
                           variant="h3"
                           fontWeight="medium"
-                          color="text"
+                          color="black"
                           ml={2}
                           mt={3}
                           mb={-3}
@@ -1553,10 +1562,20 @@ function UserProfile() {
                       <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                           <Stack direction="row" spacing={1} ml={2} mb={-4}>
-                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                              <Icon fontSize="medium">person</Icon>
+                            <Avatar
+                              sx={{
+                                width: 32,
+                                height: 32,
+                              }}
+                              style={{
+                                backgroundColor: "black",
+                              }}
+                            >
+                              <Icon fontSize="medium" color="white">
+                                person
+                              </Icon>
                             </Avatar>
-                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                            <MDTypography variant="h4" fontWeight="medium" color="black">
                               Personal Information
                               <Divider />
                             </MDTypography>
@@ -1565,26 +1584,26 @@ function UserProfile() {
                       </Grid>
                       <br />
                       <MDBox>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={1}>
+                        <MDTypography variant="h5" fontWeight="medium" color="black" ml={2} mt={1}>
                           Email
                         </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                        <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                           {emailx}{" "}
                         </MDTypography>
                       </MDBox>
                       <MDBox>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                        <MDTypography variant="h5" fontWeight="medium" color="black" ml={2} mt={2}>
                           Phone
                         </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                        <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                           {phonex}{" "}
                         </MDTypography>
                       </MDBox>
                       <MDBox>
-                        <MDTypography variant="h5" fontWeight="medium" color="text" ml={2} mt={2}>
+                        <MDTypography variant="h5" fontWeight="medium" color="black" ml={2} mt={2}>
                           Residental Area
                         </MDTypography>
-                        <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                        <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                           {`${residentialCityx} ${residentialStatex}, ${residentialCountryx}`}{" "}
                         </MDTypography>
                       </MDBox>
@@ -1600,10 +1619,20 @@ function UserProfile() {
                       <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                           <Stack direction="row" spacing={1} ml={2} mb={-2}>
-                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                              <Icon fontSize="medium">accessibility</Icon>
+                            <Avatar
+                              sx={{
+                                width: 32,
+                                height: 32,
+                              }}
+                              style={{
+                                backgroundColor: "black",
+                              }}
+                            >
+                              <Icon fontSize="medium" color="white">
+                                accessibility
+                              </Icon>
                             </Avatar>
-                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                            <MDTypography variant="h4" fontWeight="medium" color="black">
                               Skills
                               <Divider />
                             </MDTypography>
@@ -1616,13 +1645,13 @@ function UserProfile() {
                             <MDTypography
                               variant="h5"
                               fontWeight="medium"
-                              color="text"
+                              color="black"
                               ml={2}
                               mt={2}
                             >
                               {item.name}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {item.descrip}{" "}
                             </MDTypography>
                           </MDBox>
@@ -1654,10 +1683,20 @@ function UserProfile() {
                       <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                           <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                              <Icon fontSize="medium">work_history</Icon>
+                            <Avatar
+                              sx={{
+                                width: 32,
+                                height: 32,
+                              }}
+                              style={{
+                                backgroundColor: "black",
+                              }}
+                            >
+                              <Icon fontSize="medium" color="white">
+                                work_history
+                              </Icon>
                             </Avatar>
-                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                            <MDTypography variant="h4" fontWeight="medium" color="black">
                               Work History
                               <Divider />
                             </MDTypography>
@@ -1670,19 +1709,19 @@ function UserProfile() {
                             <MDTypography
                               variant="h5"
                               fontWeight="medium"
-                              color="text"
+                              color="black"
                               ml={2}
                               mt={2}
                             >
                               {item.name}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="medium" color="black" ml={2}>
                               {item.position}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {item.descrip}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {changeDateandTime(item.startTime, item.endTime)}
                             </MDTypography>
                           </MDBox>
@@ -1699,10 +1738,20 @@ function UserProfile() {
                       <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                           <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                              <Icon fontSize="medium">school</Icon>
+                            <Avatar
+                              sx={{
+                                width: 32,
+                                height: 32,
+                              }}
+                              style={{
+                                backgroundColor: "black",
+                              }}
+                            >
+                              <Icon fontSize="medium" color="white">
+                                school
+                              </Icon>
                             </Avatar>
-                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                            <MDTypography variant="h4" fontWeight="medium" color="black">
                               Education
                               <Divider />
                             </MDTypography>
@@ -1715,19 +1764,19 @@ function UserProfile() {
                             <MDTypography
                               variant="h5"
                               fontWeight="medium"
-                              color="text"
+                              color="black"
                               ml={2}
                               mt={2}
                             >
                               {item.specialization}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="medium" color="black" ml={2}>
                               {item.name}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {item.degree} {item.grade}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {changeDateandTime(item.startTime, item.endTime)}{" "}
                             </MDTypography>
                           </MDBox>
@@ -1744,10 +1793,20 @@ function UserProfile() {
                       <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                           <Stack direction="row" spacing={1} ml={2} mb={-2} mt={5}>
-                            <Avatar sx={{ bgcolor: "primary", width: 32, height: 32 }}>
-                              <Icon fontSize="medium">person_outline</Icon>
+                            <Avatar
+                              sx={{
+                                width: 32,
+                                height: 32,
+                              }}
+                              style={{
+                                backgroundColor: "black",
+                              }}
+                            >
+                              <Icon fontSize="medium" color="white">
+                                person_outline
+                              </Icon>
                             </Avatar>
-                            <MDTypography variant="h4" fontWeight="medium" color="text">
+                            <MDTypography variant="h4" fontWeight="medium" color="black">
                               Position Held
                               <Divider />
                             </MDTypography>
@@ -1761,19 +1820,19 @@ function UserProfile() {
                             <MDTypography
                               variant="h5"
                               fontWeight="medium"
-                              color="text"
+                              color="black"
                               ml={2}
                               mt={2}
                             >
                               {item.name}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="medium" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="medium" color="black" ml={2}>
                               {item.place}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {item.descrip}{" "}
                             </MDTypography>
-                            <MDTypography variant="h6" fontWeight="light" color="text" ml={2}>
+                            <MDTypography variant="h6" fontWeight="light" color="black" ml={2}>
                               {changeDateandTime(item.startTime, item.endTime)}{" "}
                             </MDTypography>
                           </MDBox>
