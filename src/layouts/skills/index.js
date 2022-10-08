@@ -331,6 +331,7 @@ function Skills() {
 
     setUOpened(true);
     setShowUpdate(true);
+    handleOnNameKeys(filteredItems[0].name);
   };
 
   return (

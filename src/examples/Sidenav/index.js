@@ -31,6 +31,10 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
+import SearchIcon from "@mui/icons-material/Search";
+// import InputBase from "@mui/material/InputBase";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
 
 // Material Dashboard 2 React example components
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
@@ -101,62 +105,173 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     return () => window.removeEventListener("resize", handleMiniSidenav);
   }, [dispatch, location]);
 
-  // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
-    let returnValue;
+  const [newRenderRoutes, setNewRenderRoutes] = useState(routes);
+  // const [newRenderRoutes2, setNewRenderRoutes2] = useState(routes);
+  // const newRenderRoutes2 = routes;
+  // // Render all the routes from the routes.js (All the visible items on the Sidenav)
+  // const renderRoutes = newRenderRoutes.map(
+  //   ({ type, name, icon, title, noCollapse, key, href, route }) => {
+  //     let returnValue;
 
-    if (type === "collapse") {
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
-          <SidenavCollapse
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </Link>
-      ) : (
-        <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-        </NavLink>
-      );
-    } else if (type === "title") {
-      returnValue = (
-        <MDTypography
-          key={key}
-          color={textColor}
-          display="block"
-          variant="caption"
-          fontWeight="bold"
-          textTransform="uppercase"
-          pl={3}
-          mt={2}
-          mb={1}
-          ml={1}
-        >
-          {title}
-        </MDTypography>
-      );
-    } else if (type === "divider") {
-      returnValue = (
-        <Divider
-          key={key}
-          light={
-            (!darkMode && !whiteSidenav && !transparentSidenav) ||
-            (darkMode && !transparentSidenav && whiteSidenav)
-          }
-        />
-      );
+  //     if (type === "collapse") {
+  //       returnValue = href ? (
+  //         <Link
+  //           href={href}
+  //           key={key}
+  //           target="_blank"
+  //           rel="noreferrer"
+  //           sx={{ textDecoration: "none" }}
+  //         >
+  //           <SidenavCollapse
+  //             name={name}
+  //             icon={icon}
+  //             active={key === collapseName}
+  //             noCollapse={noCollapse}
+  //           />
+  //         </Link>
+  //       ) : (
+  //         <NavLink key={key} to={route}>
+  //           <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+  //         </NavLink>
+  //       );
+  //     } else if (type === "title") {
+  //       returnValue = (
+  //         <MDTypography
+  //           key={key}
+  //           color={textColor}
+  //           display="block"
+  //           variant="caption"
+  //           fontWeight="bold"
+  //           textTransform="uppercase"
+  //           pl={3}
+  //           mt={2}
+  //           mb={1}
+  //           ml={1}
+  //         >
+  //           {title}
+  //         </MDTypography>
+  //       );
+  //     } else if (type === "divider") {
+  //       returnValue = (
+  //         <Divider
+  //           key={key}
+  //           light={
+  //             (!darkMode && !whiteSidenav && !transparentSidenav) ||
+  //             (darkMode && !transparentSidenav && whiteSidenav)
+  //           }
+  //         />
+  //       );
+  //     }
+
+  //     return returnValue;
+  //   }
+  // );
+  // Function to search table
+  const searchFunc = (val) => {
+    // const input = document.getElementById("search").value;
+    // console.log(routes);
+    const input = val;
+    const filter = input.toUpperCase();
+    const jsonData = [];
+    const jsonData2 = [];
+    // eslint-disable-next-line array-callback-return
+    routes.map((item) => {
+      if (item.name) {
+        let docName = item.name;
+        if (docName == null) {
+          docName = "";
+        }
+        if (
+          item.name.toUpperCase().indexOf(filter) > -1 ||
+          docName.toUpperCase().indexOf(filter) > -1
+        ) {
+          jsonData.push(item);
+        }
+      }
+      // } else if (item.title) {
+      //   let docTitle = item.title;
+      //   if (docTitle == null) {
+      //     docTitle = "";
+      //   }
+      //   if (
+      //     docTitle.toUpperCase().indexOf(filter) > -1
+      //     item.title.toUpperCase().indexOf(filter) > -1 ||
+      //   ) {
+      //     jsonData.push(item);
+      //   }
+      // }
+    });
+    // eslint-disable-next-line array-callback-return
+    routes.map((item) => {
+      if (item.name) {
+        jsonData2.push(item);
+      }
+    });
+    if (jsonData2.length === jsonData.length) {
+      setNewRenderRoutes(routes);
+    } else {
+      setNewRenderRoutes(jsonData);
     }
+  };
 
-    return returnValue;
-  });
+  // Render all the routes from the routes.js (All the visible items on the Sidenav)
+  const renderRoutes = newRenderRoutes.map(
+    ({ type, name, icon, title, noCollapse, key, href, route }) => {
+      let returnValue;
+
+      if (type === "collapse") {
+        returnValue = href ? (
+          <Link
+            href={href}
+            key={key}
+            target="_blank"
+            rel="noreferrer"
+            sx={{ textDecoration: "none" }}
+          >
+            <SidenavCollapse
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
+          </Link>
+        ) : (
+          <NavLink key={key} to={route}>
+            <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          </NavLink>
+        );
+      } else if (type === "title") {
+        returnValue = (
+          <MDTypography
+            key={key}
+            color={textColor}
+            display="block"
+            variant="caption"
+            fontWeight="bold"
+            textTransform="uppercase"
+            pl={3}
+            mt={2}
+            mb={1}
+            ml={1}
+          >
+            {title}
+          </MDTypography>
+        );
+      } else if (type === "divider") {
+        returnValue = (
+          <Divider
+            key={key}
+            light={
+              (!darkMode && !whiteSidenav && !transparentSidenav) ||
+              (darkMode && !transparentSidenav && whiteSidenav)
+            }
+          />
+        );
+      }
+
+      return returnValue;
+    }
+  );
 
   // useEffect for company image
   const [link, setLink] = useState("");
@@ -293,6 +408,23 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             {userFullName}
           </MDTypography>
         </MDBox>
+      </MDBox>
+      <MDBox align="center" sx={{ align: "center" }}>
+        <TextField
+          id="outlined-search"
+          placeholder="Search"
+          type="search"
+          // sx={{ input: { backgroundColor: "white" } }}
+          onKeyUp={(e) => searchFunc(e.target.value)}
+          InputProps={{
+            style: { color: "red", backgroundColor: "white" },
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: "white" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
       </MDBox>
       <Divider
         light={
