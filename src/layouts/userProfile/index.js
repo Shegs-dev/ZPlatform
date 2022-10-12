@@ -23,9 +23,9 @@ import Footer from "examples/Footer";
 import PHeaders from "postHeader";
 import GHeaders from "getHeader";
 import { useNavigate } from "react-router-dom";
-// import jsPDF from "jspdf";
-// import html2canvas from "html2canvas";
-import html2PDF from "jspdf-html2canvas";
+import JsPDF from "jspdf";
+import html2canvas from "html2canvas";
+// import html2PDF from "jspdf-html2canvas";
 
 import Avatar from "@mui/material/Avatar";
 import Icon from "@mui/material/Icon";
@@ -274,18 +274,47 @@ function UserProfile() {
   //   });
   // };
 
-  function printDoc() {
-    setOpened(true);
-    const page = document.getElementById("divToPrint");
-    html2PDF(page, {
-      jsPDF: {
-        format: "a4",
-      },
-      imageType: "image/jpeg",
-      output: `./CV.pdf`,
-    });
-    setOpened(false);
-  }
+  // function printDoc() {
+  //   setOpened(true);
+  //   const page = document.getElementById("divToPrint");
+  //   html2PDF(page, {
+  //     jsPDF: {
+  //       format: "a4",
+  //     },
+  //     imageType: "image/jpeg",
+  //     output: `./CV.pdf`,
+  //   });
+  //   setOpened(false);
+  // }
+
+  const printDoc = () => {
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+      setTimeout(() => {
+        setOpened(true);
+      }, 100);
+      const divToPrint = document.querySelector("#divToPrint");
+      html2canvas(divToPrint).then((canvas) => {
+        const imgData = canvas.toDataURL("image/jpeg");
+        const imgWidth = 190;
+        const pageHeight = 290;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        const doc = new JsPDF("pt", "mm");
+        let position = 0;
+        doc.addImage(imgData, "PNG", 10, 0, imgWidth, imgHeight + 25);
+        heightLeft -= pageHeight;
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          doc.addPage();
+          doc.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight + 25);
+          heightLeft -= pageHeight;
+        }
+        doc.save(`${fnamex}_${onamex}_${lnamex}_Application.pdf`);
+        setOpened(false);
+      });
+    }, 1000);
+  };
 
   const handleUpdate = () => {
     const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
