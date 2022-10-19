@@ -5,8 +5,9 @@
 // Soft UI Dashboard React components
 import { useEffect, useState } from "react";
 import MDBox from "components/MDBox";
-import CardContent from "@mui/material/CardContent";
-// import CardActions from "@mui/material/CardActions";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import MDTypography from "components/MDTypography";
 import Card from "@mui/material/Card";
 import { Container } from "react-bootstrap";
@@ -19,6 +20,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
 
 function ViewJobApplication() {
   const [application, setApplication] = useState([]);
@@ -27,6 +29,14 @@ function ViewJobApplication() {
   const navigate = useNavigate();
 
   const { allGHeaders: miHeaders } = GHeaders();
+
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: "center",
+    color: "black",
+  }));
 
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
@@ -82,7 +92,6 @@ function ViewJobApplication() {
           window.location.reload();
         }
         if (isMounted) {
-          console.log(result);
           setApplication(result);
         }
       });
@@ -117,112 +126,83 @@ function ViewJobApplication() {
               <div className="row">
                 <div className="col-sm-12">
                   {application.length > 0 && (
-                    <Card sx={{ maxWidth: 500 }}>
-                      <CardContent>
-                        <MDTypography
-                          variant="h3"
-                          fontWeight="medium"
-                          fontSize="120%"
-                          color="info"
-                          textAlign="left"
-                          mt={1}
-                        >
-                          {application[0].jobPost.title}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h6"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={1}
-                        >
-                          {application[0].jobPost.location}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          <div
-                            // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={{ __html: application[0].jobPost.description }}
-                          />
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Opening Time: {changeDate(application[0].jobPost.openingTime)}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h6"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Closing Time: {changeDate(application[0].jobPost.closingTime)}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h6"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Minimum Salary Expectation: NGN {application[0].jobPost.salaryExpectation}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Job Status: {application[0].jobPost.jobStatus}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Industry: {application[0].jobPost.industry}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Application Type: {changeType(application[0].type)}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Applied On: {changeDate(application[0].applicationTime)}
-                        </MDTypography>
-                        <MDTypography
-                          variant="h4"
-                          color="text"
-                          fontSize="75%"
-                          textAlign="left"
-                          mt={0}
-                        >
-                          Is Application Rescinded?: {setRescinded(application[0].rescinded)}
-                        </MDTypography>
-                      </CardContent>
+                    <Card style={{ backgroundColor: "#A0CEF7" }}>
+                      <MDBox pt={4} pb={3} px={10}>
+                        {application.map((item) => (
+                          <Box sx={{ flexGrow: 1 }} key={item.id}>
+                            <Grid container spacing={2}>
+                              <Grid item xs={8}>
+                                <Item>
+                                  <h5>Title</h5> {item.jobPost.title}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  <h5>Location</h5> {item.jobPost.location}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Item>
+                                  <h5>Description</h5>
+                                  <div
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{
+                                      __html: item.jobPost.description,
+                                    }}
+                                  />
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  <h5>Opening Time</h5> {changeDate(item.jobPost.openingTime)}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  <h5>Closing Time</h5> {changeDate(item.jobPost.closingTime)}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  <h5>Minimum Salary Expectation (NGN)</h5>{" "}
+                                  {item.jobPost.salaryExpectation}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  <h5>Job Status</h5> {item.jobPost.jobStatus}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  {" "}
+                                  <h5>Industry</h5>
+                                  {item.jobPost.industry}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Item>
+                                  <h5>Application Type</h5>
+                                  {changeType(item.type)}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Item>
+                                  {" "}
+                                  <h5>Applied On</h5>
+                                  {changeDate(item.applicationTime)}
+                                </Item>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Item>
+                                  <h5>Is Application Rescinded?</h5>
+                                  {setRescinded(item.rescinded)}
+                                </Item>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        ))}
+                      </MDBox>
                     </Card>
                   )}
                 </div>
