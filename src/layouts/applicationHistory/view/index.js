@@ -19,14 +19,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import GHeaders from "getHeader";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Grid } from "@mui/material";
 
 function ViewJobApplication() {
   const [application, setApplication] = useState([]);
+  const [cbtResult, setCbtResult] = useState([]);
 
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
 
   const { allGHeaders: miHeaders } = GHeaders();
+
+  const scrollContainerStyle = { width: "100%", maxHeight: "60%" };
 
   // Method to change date from timestamp
   const changeDate = (timestamp) => {
@@ -60,6 +64,9 @@ function ViewJobApplication() {
     const urlParams = new URLSearchParams(queryString);
     const ids = urlParams.get("id");
 
+    const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+    const personalIds = data11.id;
+
     let isMounted = true;
     fetch(`${process.env.REACT_APP_RAGA_URL}/jobApplication/getByIds/${ids}`, { headers })
       .then(async (res) => {
@@ -81,6 +88,61 @@ function ViewJobApplication() {
           navigate("/authentication/forbiddenPage");
           window.location.reload();
         }
+        if (result.length !== 0) {
+          const orgid = result[0].jobPost.orgID;
+          console.log(result);
+          fetch(`${process.env.REACT_APP_RAGA_URL}/cbt/gets/${orgid}`, { headers })
+            .then(async (res) => {
+              const aToken = res.headers.get("token-1");
+              localStorage.setItem("rexxdex", aToken);
+              return res.json();
+            })
+            .then((resulty) => {
+              if (resulty.message === "Expired Access") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (resulty.message === "Token Does Not Exist") {
+                navigate("/authentication/sign-in");
+                window.location.reload();
+              }
+              if (resulty.message === "Unauthorized Access") {
+                navigate("/authentication/forbiddenPage");
+                window.location.reload();
+              }
+              console.log(result);
+              if (result.length !== 0 && result !== "") {
+                const idsx = result.id;
+                fetch(
+                  `${process.env.REACT_APP_RAGA_URL}/cbt/getCBTResultsForEmp/${idsx}/${personalIds}`,
+                  {
+                    headers,
+                  }
+                )
+                  .then(async (res) => {
+                    const aToken = res.headers.get("token-1");
+                    localStorage.setItem("rexxdex", aToken);
+                    return res.json();
+                  })
+                  .then((resultx) => {
+                    if (result.message === "Expired Access") {
+                      navigate("/authentication/sign-in");
+                      window.location.reload();
+                    }
+                    if (resultx.message === "Token Does Not Exist") {
+                      navigate("/authentication/sign-in");
+                      window.location.reload();
+                    }
+                    if (resultx.message === "Unauthorized Access") {
+                      navigate("/authentication/forbiddenPage");
+                      window.location.reload();
+                    }
+                    console.log(resultx);
+                    setCbtResult(resultx);
+                  });
+              }
+            });
+        }
         if (isMounted) {
           console.log(result);
           setApplication(result);
@@ -90,6 +152,82 @@ function ViewJobApplication() {
       isMounted = false;
     };
   }, []);
+
+  // useEffect(() => {
+  //   const headers = miHeaders;
+
+  //   const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
+
+  //   const orgIDs = data11.orgID;
+  //   // const empIdx = data11.personalID;
+  //   const personalIds = data11.id;
+  //   const personalID = data11.id;
+  //   console.log(personalIds);
+  //   console.log(personalID);
+  //   console.log(orgIDs);
+  //   console.log(jobx);
+  //   let isMounted = true;
+  //   fetch(`${process.env.REACT_APP_RAGA_URL}/cbt/gets/${}`, { headers })
+  //     .then(async (res) => {
+  //       const aToken = res.headers.get("token-1");
+  //       localStorage.setItem("rexxdex", aToken);
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       if (result.message === "Expired Access") {
+  //         navigate("/authentication/sign-in");
+  //         window.location.reload();
+  //       }
+  //       if (result.message === "Token Does Not Exist") {
+  //         navigate("/authentication/sign-in");
+  //         window.location.reload();
+  //       }
+  //       if (result.message === "Unauthorized Access") {
+  //         navigate("/authentication/forbiddenPage");
+  //         window.location.reload();
+  //       }
+  //       console.log(personalIds);
+  //       console.log(orgIDs);
+  //       console.log(result);
+  //       if (result.length !== 0 && result !== "") {
+  //         const ids = result.id;
+  //         fetch(`${process.env.REACT_APP_RAGA_URL}/cbt/getCBTResultsForEmp/${ids}/${personalIds}`, {
+  //           headers,
+  //         })
+  //           .then(async (res) => {
+  //             const aToken = res.headers.get("token-1");
+  //             localStorage.setItem("rexxdex", aToken);
+  //             return res.json();
+  //           })
+  //           .then((resultx) => {
+  //             if (result.message === "Expired Access") {
+  //               navigate("/authentication/sign-in");
+  //               window.location.reload();
+  //             }
+  //             if (resultx.message === "Token Does Not Exist") {
+  //               navigate("/authentication/sign-in");
+  //               window.location.reload();
+  //             }
+  //             if (resultx.message === "Unauthorized Access") {
+  //               navigate("/authentication/forbiddenPage");
+  //               window.location.reload();
+  //             }
+  //             console.log(personalIds);
+  //             console.log(orgIDs);
+  //             console.log(result);
+  //             console.log(resultx);
+  //             if (isMounted) {
+  //               setMapp(resultx);
+  //             }
+  //           });
+  //         console.log(personalIds);
+  //         console.log(orgIDs);
+  //       }
+  //     });
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, []);
 
   // Return table
   return (
@@ -230,6 +368,67 @@ function ViewJobApplication() {
             </Container>
           </MDBox>
         </MDBox>
+        {cbtResult.length > 0 && cbtResult !== "" ? (
+          <div className="scrollbar scrollbar-primary mt-2 mx-auto" style={scrollContainerStyle}>
+            <MDBox mb={1.5}>
+              <Container>
+                <div className="row">
+                  {cbtResult.map((item) => (
+                    <Grid container spacing={0} key={item.id}>
+                      <Grid item xs={12} md={12} lg={12}>
+                        {/* <Link to={`/polls/vote-Polls?id=${api.id}`}> */}
+                        <Card style={{ backgroundColor: "#318CE7" }}>
+                          <CardContent>
+                            <MDTypography
+                              variant="h6"
+                              color="white"
+                              fontSize="75%"
+                              textAlign="left"
+                              mt={1}
+                            >
+                              Answers - {item.answers}
+                            </MDTypography>
+                            <MDTypography
+                              variant="h6"
+                              color="white"
+                              fontSize="75%"
+                              textAlign="left"
+                              mt={0}
+                            >
+                              Final Score - {item.finalScore}
+                            </MDTypography>
+                            <MDTypography
+                              variant="h6"
+                              color="white"
+                              fontSize="75%"
+                              textAlign="left"
+                              mt={0}
+                            >
+                              Grading - {item.grading}
+                            </MDTypography>
+                            <MDTypography
+                              variant="h6"
+                              color="white"
+                              fontSize="75%"
+                              textAlign="left"
+                              mt={0}
+                            >
+                              Questions -{item.questions}
+                            </MDTypography>
+                          </CardContent>
+                        </Card>{" "}
+                        &nbsp; &nbsp;
+                        {/* </Link> */}
+                      </Grid>
+                    </Grid>
+                  ))}
+                </div>
+              </Container>
+            </MDBox>
+          </div>
+        ) : (
+          <MDBox />
+        )}
       </Card>
       <Footer />
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>

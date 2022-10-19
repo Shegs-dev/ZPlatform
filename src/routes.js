@@ -78,6 +78,7 @@ import ViewJobPost from "layouts/JobApplication/ManualApplication/View";
 import ApplicationSettings from "layouts/applicationSettings";
 import ApplicationHistory from "layouts/applicationHistory";
 import ViewApplicationHistory from "layouts/applicationHistory/view";
+// import CBTRESULT from "layouts/cbtResult/index";
 
 const routes = [
   {
@@ -173,6 +174,26 @@ const routes = [
     route: "/Position-Held",
     component: <PositionHeld />,
   },
+  // {
+  //   type: "divider",
+  //   name: "",
+  //   key: "div6",
+  //   route: "",
+  // },
+  // {
+  //   type: "title",
+  //   title: "Recruitment",
+  //   key: "tit6",
+  //   route: "",
+  // },
+  // {
+  //   type: "collapse",
+  //   name: "CBT Result",
+  //   key: "cbtResult",
+  //   icon: <Icon fontSize="small">dvr</Icon>,
+  //   route: "/cbt-Result",
+  //   component: <CBTRESULT />,
+  // },
   {
     type: "divider",
     name: "",

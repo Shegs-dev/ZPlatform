@@ -52,6 +52,7 @@ function JobApplications() {
 
     return "False";
   };
+  console.log(applications);
 
   // Method to handle view
   const handleView = (value) => {
