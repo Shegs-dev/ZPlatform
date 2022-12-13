@@ -31,14 +31,13 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import SearchIcon from "@mui/icons-material/Search";
-// import InputBase from "@mui/material/InputBase";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
+// import SearchIcon from "@mui/icons-material/Search";
+// // import InputBase from "@mui/material/InputBase";
+// import InputAdornment from "@mui/material/InputAdornment";
+// import TextField from "@mui/material/TextField";
 
 // Material Dashboard 2 React example components
 import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
-import bgImage from "assets/images/plutospace-1.png";
 
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
@@ -50,7 +49,7 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
-import defaulto from "./defaulto.png";
+// import defaulto from "./defaulto.png";
 
 // Material Dashboard 2 PRO React context
 
@@ -213,6 +212,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       setNewRenderRoutes(jsonData);
     }
   };
+  console.log(searchFunc);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = newRenderRoutes.map(
@@ -274,12 +274,12 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   );
 
   // useEffect for company image
-  const [link, setLink] = useState("");
-  const [isImg, setIsImg] = useState(false);
+  // const [link, setLink] = useState("");
+  // const [isImg, setIsImg] = useState(false);
   const { allGHeaders: miHeaders } = GHeaders();
-  const styles = {
-    image: { width: 150, height: 100, borderRadius: 20, marginBottom: 10, marginTop: 10 },
-  };
+  // const styles = {
+  //   image: { width: 150, height: 100, borderRadius: 20, marginBottom: 10, marginTop: 10 },
+  // };
 
   const handleGetImage = () => {
     const data11 = JSON.parse(localStorage.getItem("MonoUser1"));
@@ -338,12 +338,12 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 window.location.reload();
               }
               console.log(resultxx[0]);
-              setLink(resultxx[0]);
-              if (resultxx.length === 0) {
-                setIsImg(false);
-              } else {
-                setIsImg(true);
-              }
+              // setLink(resultxx[0]);
+              // if (resultxx.length === 0) {
+              //   setIsImg(false);
+              // } else {
+              //   setIsImg(true);
+              // }
             });
         });
     }
@@ -381,9 +381,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             <Icon sx={{ fontWeight: "bold" }}>close</Icon>
           </MDTypography>
         </MDBox>
-        <MDBox component={NavLink} to="/" display="flex" alignItems="center">
-          {brand && <MDBox component="img" src={bgImage} alt="Brand" width="10rem" />}
-        </MDBox>
         <br />
         <MDBox
           variant="gradient"
@@ -392,11 +389,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           coloredShadow="light"
           onClick={() => navigate("/user-Profile")}
         >
-          {isImg ? (
-            <img src={link} style={styles.image} alt="Thumb" />
-          ) : (
-            <img src={defaulto} style={styles.image} alt="default" />
-          )}
           <MDTypography
             color="white"
             display="block"
@@ -409,7 +401,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </MDTypography>
         </MDBox>
       </MDBox>
-      <MDBox align="center" sx={{ align: "center" }}>
+      {/* <MDBox align="center" sx={{ align: "center" }}>
         <TextField
           id="outlined-search"
           placeholder="Search"
@@ -425,7 +417,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             ),
           }}
         />
-      </MDBox>
+      </MDBox> */}
       <Divider
         light={
           (!darkMode && !whiteSidenav && !transparentSidenav) ||
@@ -435,7 +427,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       <List>{renderRoutes}</List>
       <MDBox p={2} mt="auto">
         <MDButton variant="gradient" color="info" onClick={handleLogOut} fullWidth>
-          Sign Out
+          Log Out
         </MDButton>
       </MDBox>
     </SidenavRoot>

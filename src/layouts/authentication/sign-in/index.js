@@ -1,19 +1,4 @@
-/*
-=========================================================
-* Material Dashboard 2 React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // react-router-dom components
 import { Link, useNavigate } from "react-router-dom";
@@ -35,9 +20,14 @@ import MDButton from "components/MDButton";
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
-// Images
-import bgImage from "assets/images/bg-sign-in-basic.gif";
-import plutospaceImg from "assets/images/PlutoSpaceImg.png";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+// import OtpInput from "react-otp-input";
+import backgroundimage1 from "assets/images/backgroundimage1.jpg";
+import { Typography } from "@mui/material";
 
 function Basic() {
   const navigate = useNavigate();
@@ -49,6 +39,8 @@ function Basic() {
   const MySwal = withReactContent(Swal);
 
   const [passwordShown, setPasswordShown] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [otpx, setOTP] = useState("");
 
   // Password toggle handler
   const togglePassword = () => {
@@ -57,16 +49,9 @@ function Basic() {
     setPasswordShown(!passwordShown);
   };
 
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      localStorage.removeItem("rexxdex");
-      localStorage.removeItem("MonoUser1");
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const openModal = () => {
+    setOpen(true);
+  };
 
   const handleClick = () => {
     setOpened(true);
@@ -80,47 +65,93 @@ function Basic() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/dologin`, requestOptions)
-      .then(async (res) => {
-        // console.log(res.headers);;;;
-        const aToken = res.headers.get("token-1");
-        localStorage.setItem("rexxdex1", aToken);
+    fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/login`, requestOptions)
+      .then((res) => {
+        if (!res.ok) {
+          return res.text().then((text) => {
+            throw new Error(text);
+          });
+        }
         return res.json();
       })
       .then((result) => {
         setOpened(false);
-        if (result.status === "SUCCESS") {
-          localStorage.setItem("MonoUser1", JSON.stringify(result.otherDetailsDTO.personal));
-          localStorage.setItem("MonoUserOtherDets", JSON.stringify(result.otherDetailsDTO));
-          localStorage.setItem("MonoBirthDayStatus", JSON.stringify(result.wishBirthday));
-
-          if (result.otherDetailsDTO.autopass === 1) {
-            navigate("/authentication/userlogin", { replace: true });
-          } else {
-            navigate("/dashboard", { replace: true });
-            window.location.reload();
-          }
-        } else {
-          MySwal.fire({
-            title: result.status,
-            type: "error",
-            text: result.message,
-          });
-        }
+        localStorage.setItem("id", JSON.stringify(result));
+        openModal();
       })
       .catch((error) => {
         setOpened(false);
         MySwal.fire({
-          title: error.status,
+          title: "ERROR",
           type: "error",
           text: error.message,
         });
       });
   };
 
+  const handleClose = () => setOpen(false);
+
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 250,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const handleAuthentication = () => {
+    setOpened(true);
+    handleClose();
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const lastResult = JSON.parse(localStorage.getItem("id"));
+    const id = lastResult.message;
+    const raw = JSON.stringify({ userId: id, token: otpx });
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/login/authenticate-login`, requestOptions)
+      .then((res) => {
+        if (!res.ok) {
+          return res.text().then((text) => {
+            throw new Error(text);
+          });
+        }
+        return res.json();
+      })
+      .then((result) => {
+        setOpened(false);
+        localStorage.setItem("user", result);
+        MySwal.fire({
+          title: "SUCCESS",
+          type: "success",
+          text: "Login Successful",
+        }).then(() => {
+          navigate("/dashboard");
+        });
+      })
+      .catch((error) => {
+        setOpened(false);
+        const err = JSON.parse(error);
+        MySwal.fire({
+          title: "ERROR",
+          type: "error",
+          text: err.error,
+        });
+      });
+  };
+
   return (
     <div>
-      <BasicLayout image={bgImage}>
+      <BasicLayout image={backgroundimage1}>
         <Card>
           <MDBox
             variant="gradient"
@@ -133,9 +164,8 @@ function Basic() {
             mb={1}
             textAlign="center"
           >
-            <MDBox component="img" src={plutospaceImg} alt="PlutoSpace" width="15rem" />
             <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-              Sign In
+              ZPlatform Sign In
             </MDTypography>
           </MDBox>
 
@@ -200,9 +230,18 @@ function Basic() {
                   </div>
                 </Container>
               </MDBox>
-              <MDButton variant="gradient" onClick={handleClick} color="info" fullWidth>
-                sign In
-              </MDButton>
+              <MDBox textAlign="center">
+                <MDButton
+                  variant="gradient"
+                  onClick={() => {
+                    handleClick();
+                  }}
+                  color="info"
+                  width="50%"
+                >
+                  Sign In
+                </MDButton>
+              </MDBox>
               <MDBox mt={1} textAlign="center">
                 <MDTypography variant="button" color="text">
                   Don&apos;t have an account?{" "}
@@ -213,6 +252,7 @@ function Basic() {
                     color="info"
                     fontWeight="medium"
                     textGradient
+                    // style={Styles.textSx}
                   >
                     Sign Up
                   </MDTypography>
@@ -227,24 +267,100 @@ function Basic() {
                   fontWeight="medium"
                   textGradient
                 >
-                  Forgot Password
+                  Reset Password
                 </MDTypography>
-              </MDBox>
-              <MDBox mb={1} mt={-1} textAlign="center">
-                {/* <MDTypography
-                  component={Link}
-                  to="/authentication/renew-Login"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Renew Subscription
-                </MDTypography> */}
               </MDBox>
             </MDBox>
           </MDBox>
         </Card>
+        <div>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={modalStyle}>
+              <Grid>
+                <Grid item xs={6} md={6}>
+                  {" "}
+                  {/* <HighlightOffIcon
+                    onClick={handleClose}
+                    fontSize="large"
+                    style={{
+                      padding: "5px",
+                      color: "red",
+                      float: "right",
+                      cursor: "pointer",
+                    }}
+                  /> */}
+                  <Box>
+                    <MDBox component="form" role="form" paddingLeft="70px">
+                      <MDBox
+                        variant="gradient"
+                        borderRadius="lg"
+                        coloredShadow="success"
+                        mx={-6}
+                        mt={0}
+                        p={3}
+                        mb={1}
+                        bgColor="info"
+                        textAlign="center"
+                        // paddingLeft="80px"
+                        // style={Styles.boxSx}
+                      >
+                        <Typography variant="h6" fontWeight="medium" color="white" mt={1}>
+                          OTP
+                        </Typography>
+                      </MDBox>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        {/* <OtpInput
+                          value={otpx || ""}
+                          onChange={handleOTP}
+                          numInputs={6}
+                          separator={<span>&nbsp;&nbsp;</span>}
+                        /> */}
+                        <Box sx={{ minWidth: 200 }} paddingLeft="20px">
+                          <FormControl fullWidth>
+                            <TextField
+                              id="filled-number"
+                              value={otpx || ""}
+                              label="OTP"
+                              placeholder="OTP "
+                              size="small"
+                              name="otp"
+                              type="text"
+                              onChange={(e) => setOTP(e.target.value)}
+                              required
+                            />
+                          </FormControl>
+                        </Box>
+                      </Box>
+                      <MDBox mt={4} mb={1} paddingLeft="20px">
+                        <MDButton
+                          variant="gradient"
+                          onClick={handleAuthentication}
+                          color="info"
+                          width="50%"
+                          align="left"
+                        >
+                          Save
+                        </MDButton>
+                      </MDBox>
+                    </MDBox>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </Modal>
+        </div>
+        <br />
         <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={opened}>
           <CircularProgress color="info" />
         </Backdrop>

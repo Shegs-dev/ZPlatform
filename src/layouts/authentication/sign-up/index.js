@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // react-router-dom components
 import { Link, useNavigate } from "react-router-dom";
 
@@ -25,14 +10,12 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
-import AllCountriesAndStates from "countries-states-master/countries";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
-import plutospaceImg from "assets/images/PlutoSpaceImg.png";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -42,22 +25,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
 
-import GHeaders from "getHeader";
+import PHeaders from "postHeader";
+import AllCountriesAndStates from "countries-states-master/countries";
 
 function Cover() {
   const [passwordShown, setPasswordShown] = useState(false);
 
-  const { allGHeaders: miHeaders } = GHeaders();
+  const { allPHeaders: myHeaders } = PHeaders();
   // Password toggle handler
   const togglePassword = () => {
-    // When the handler is invoked
-    // inverse the boolean state of passwordShown
+    // When the handler is invoked inverse the boolean state of passwordShown
     setPasswordShown(!passwordShown);
   };
-  const [phonex, setPhone] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [checkedPemail, setCheckedPEmail] = useState("");
   const [checkedPass, setCheckedPass] = useState("");
@@ -65,39 +45,41 @@ function Cover() {
   const [checkedLast, setCheckedLast] = useState("");
 
   const navigate = useNavigate();
-
-  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
+  const [files, setFiles] = useState();
 
   const MySwal = withReactContent(Swal);
 
   const [fnamex, setFname] = useState("");
   const [lnamex, setLname] = useState("");
-  const [onamex, setOname] = useState("");
   const [emailx, setEmail] = useState("");
-  const [nationalityx, setNationality] = useState("");
-  const [residentialStreetx, setResidentialStreet] = useState("");
-  const [residentialCityx, setResidentialCity] = useState("");
-  const [residentialStatex, setResidentialState] = useState("");
-  const [residentialCountryx, setResidentialCountry] = useState("");
   const [maritalStatusx, setMaritalStatus] = useState("");
   const [passwordx, setPassword] = useState("");
   const [retypePasswordx, setRetypePassword] = useState("");
-  const [allStates, setAllStates] = useState([]);
+  const [genderx, setGender] = useState("");
+  const [nationalityx, setNationality] = useState("");
+  const [selectedImage, setSelectedImage] = useState();
+  const [imgChanged, setImgChanged] = useState(false);
+
+  const { countriesAndStates: AlCountry } = AllCountriesAndStates();
 
   const [opened, setOpened] = useState(false);
 
-  const handleOnChangeRCCountry = (e) => {
-    const filteredItems = AlCountry.filter((item) => item.name === e.target.value);
-    setAllStates(filteredItems[0].states);
-    setResidentialCountry(e.target.value);
-  };
-
-  const handleOnChangeRCState = (e) => {
-    setResidentialState(e.target.value);
-  };
-
   const handleOnChangeNationality = (e) => {
     setNationality(e.target.value);
+  };
+
+  // modal
+  const style = {
+    position: "relative",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "#ffffff",
+    // border: "2px solid #000",
+    boxShadow: 24,
+    borderRadius: 3,
+    p: 4,
   };
 
   const handleOnFirstKeys = (value) => {
@@ -138,23 +120,6 @@ function Cover() {
     }
   };
 
-  const handleOnOtherKeys = (value) => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!value.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("other").innerHTML =
-        "Other Name - input only capital and small letters<br>";
-    }
-    if (value.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("other").innerHTML = "";
-    }
-    if (value.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("other").innerHTML = "Other Name is required<br>";
-    }
-  };
-
   const handleOnPEmailKeys = (value) => {
     const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
     if (!value.match(letters)) {
@@ -173,39 +138,6 @@ function Cover() {
     }
   };
 
-  const handleOnStreetKeys = (value) => {
-    // eslint-disable-next-line no-invalid-regexp
-    const letters = /^[a-zA-Z0-9 ,-]+$/;
-    if (!value.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street - use only [ - , ] as symbols<br>";
-    }
-    if (value.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "";
-    }
-    if (value.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("street").innerHTML = "Street is required<br>";
-    }
-  };
-
-  const handleOnCityKeys = (value) => {
-    const letters = /^[a-zA-Z ]+$/;
-    if (!value.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "City - input only capital and small letters<br>";
-    }
-    if (value.match(letters)) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "";
-    }
-    if (value.length === 0) {
-      // eslint-disable-next-line no-unused-expressions
-      document.getElementById("city").innerHTML = "City is required<br>";
-    }
-  };
-
   const handleOnPasswordKeys = (value) => {
     const passwordValidate = new RegExp("^(?=.*[a-z!@#$%^&*.,])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
     if (!value.match(passwordValidate)) {
@@ -218,17 +150,6 @@ function Cover() {
       // eslint-disable-next-line no-unused-expressions
       document.getElementById("password").innerHTML = "";
       setCheckedPass(true);
-    }
-    if (retypePasswordx.length !== 0) {
-      if (retypePasswordx !== value) {
-        setCheckedPass(false);
-        // eslint-disable-next-line no-unused-expressions
-        document.getElementById("password").innerHTML = "Passwords don't match<br>";
-      } else {
-        setCheckedPass(true);
-        // eslint-disable-next-line no-unused-expressions
-        document.getElementById("password").innerHTML = "";
-      }
     }
     if (value.length === 0) {
       // eslint-disable-next-line no-unused-expressions
@@ -248,35 +169,29 @@ function Cover() {
     }
   };
 
-  const handleClick = (e) => {
+  const handleClick = (e, imgUrl) => {
     setOpened(true);
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    let dayx = "";
-    let monthx = "";
-    let yearx = "";
-    if (startDate != null) {
-      dayx = startDate.getDate();
-      monthx = startDate.getMonth() + 1;
-      yearx = startDate.getFullYear();
-    }
     e.preventDefault();
+    const dob = new Date(startDate).getTime();
+
     const raw = JSON.stringify({
-      fname: fnamex,
-      lname: lnamex,
-      oname: onamex,
+      firstName: fnamex,
+      lastName: lnamex,
+      gender: genderx,
       email: emailx,
-      pno: phonex,
-      nationality: nationalityx,
-      residentialStreet: residentialStreetx,
-      residentialCity: residentialCityx,
-      residentialState: residentialStatex,
-      residentialCountry: residentialCountryx,
-      dayOfBirth: dayx,
-      monthOfBirth: monthx,
-      yearOfBirth: yearx,
+      dateOfBirth: dob,
+      profilePhoto: {
+        id: imgUrl.id,
+        name: imgUrl.name,
+        displayName: imgUrl.displayName,
+        key: imgUrl.key,
+        type: imgUrl.type,
+        createdTime: imgUrl.createdTime,
+        deleteFlag: imgUrl.deleteFlag,
+      },
       maritalStatus: maritalStatusx,
+      nationality: nationalityx,
+      password: passwordx,
     });
     const requestOptions = {
       method: "POST",
@@ -284,89 +199,127 @@ function Cover() {
       body: raw,
       redirect: "follow",
     };
-    // localStorage.setItem("pass1", passwordx);
-
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/add`, requestOptions)
-      .then((res) => res.json())
-      .then((result) => {
-        setOpened(false);
-        if (result.status === "SUCCESS") {
-          MySwal.fire({
-            title: result.status,
-            type: "success",
-            text: result.message,
-          }).then(() => {
-            const raw2 = JSON.stringify({
-              empID: result.data.id,
-              username: result.data.email,
-              password: passwordx,
-            });
-            const requestOptions2 = {
-              method: "POST",
-              headers: myHeaders,
-              body: raw2,
-              redirect: "follow",
-            };
-            fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/add`, requestOptions2)
-              .then((res) => res.json())
-              .then((resultIL) => {
-                MySwal.fire({
-                  title: resultIL.status,
-                  type: "success",
-                  text: resultIL.message,
-                }).then(() => {
-                  localStorage.setItem("user", JSON.stringify(result.data));
-                  navigate("/authentication/sign-in", { replace: true });
-                });
-              });
-          });
-        } else {
-          MySwal.fire({
-            title: result.status,
-            type: "error",
-            text: result.message,
+    fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/users/register`, requestOptions)
+      .then((res) => {
+        if (!res.ok) {
+          return res.text().then((text) => {
+            throw new Error(text);
           });
         }
+        return res.json();
+      })
+      .then((result) => {
+        localStorage.setItem("lastResult", result);
+        setOpened(false);
+        MySwal.fire({
+          title: "SUCCESS",
+          type: "success",
+          text: "Registration Complete And Successful",
+        }).then(() => {
+          setImgChanged(false);
+          navigate("/authentication/sign-in");
+        });
       })
       .catch((error) => {
         setOpened(false);
         MySwal.fire({
-          title: error.status,
+          title: "ERROR",
           type: "error",
           text: error.message,
         });
       });
   };
 
-  const handleValidate = (e) => {
-    if (checkedFirst && checkedLast && checkedPemail && checkedPass === true) {
+  const handleImageUpload = (e) => {
+    if (files !== "" && files !== 0) {
+      if (files === undefined) {
+        MySwal.fire({
+          title: "INVALID_INPUT",
+          type: "error",
+          text: "Please input a file",
+        });
+      } else {
+        setOpened(true);
+        e.preventDefault();
+        // Headers for upload image
+        const iiHeaders = new Headers();
+
+        const dateQ = new Date().getTime();
+        const imgKey = `USR-PROF-${dateQ}`;
+
+        const formData = new FormData();
+        formData.append("file", files[0]);
+        formData.append("key", imgKey);
+        formData.append("type", files[0].type);
+
+        const raw = formData;
+
+        const requestOptions = {
+          method: "POST",
+          headers: iiHeaders,
+          body: raw,
+          redirect: "follow",
+        };
+
+        fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/media/uploadFile`, requestOptions)
+          .then((res) => {
+            if (!res.ok) {
+              return res.text().then((text) => {
+                throw new Error(text);
+              });
+            }
+            return res.json();
+          })
+          .then((result) => {
+            setOpened(false);
+            if (result.length === 0) {
+              MySwal.fire({
+                title: "INVALID_IMAGE",
+                type: "error",
+                text: "There is no image present",
+              });
+            } else {
+              handleClick(e, result);
+            }
+          });
+      }
+    } else {
       handleClick(e);
     }
   };
 
-  const getPersonalInformation = (e) => {
-    const headers = miHeaders;
-    setEmail(e.target.value);
-    const letters = new RegExp("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+.[a-zA-Z]$");
-    const emailpersonal = e.target.value;
-    if (emailpersonal.length === 0 || !emailpersonal.match(letters)) {
-      // Email Invalid
+  const handleValidate = (e) => {
+    handleOnFirstKeys(fnamex);
+    handleOnLastKeys(lnamex);
+    handleOnPEmailKeys(emailx);
+    handleOnPasswordKeys(passwordx);
+    handleOnRTPasswordKeys(retypePasswordx);
+    if (checkedFirst && checkedLast && checkedPemail && checkedPass === true) {
+      handleImageUpload(e);
+    }
+  };
+
+  const previewImage = (e) => {
+    setFiles(e.target.files);
+    if (e.target.files[0].size > 522240) {
+      setImgChanged(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "File should not exceed 500kb<br>";
+    } else if (
+      e.target.files[0].type !== "image/png" &&
+      e.target.files[0].type !== "image/jpg" &&
+      e.target.files[0].type !== "image/jpeg" &&
+      e.target.files[0].type !== "image/gif"
+    ) {
+      setImgChanged(false);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML =
+        "use only JPG, JPEG, PNG, JFIF or GIF image formats<br>";
     } else {
-      fetch(`${process.env.REACT_APP_ZAVE_URL}/personal/getByEmail/teptvv@gmail.com`, { headers })
-        .then(async (res) => {
-          const aToken = res.headers.get("token-1");
-          localStorage.setItem("rexxdex", aToken);
-          return res.json();
-        })
-        .then((result) => {
-          console.log(result);
-          if (result.id !== null) {
-            console.log(result);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setSelectedImage(e.target.files[0]);
+      setImgChanged(true);
+      // eslint-disable-next-line no-unused-expressions
+      document.getElementById("imageVal").innerHTML = "";
     }
   };
 
@@ -384,52 +337,43 @@ function Cover() {
           mb={1}
           textAlign="center"
         >
-          <MDBox component="img" src={plutospaceImg} alt="PlutoSpace" width="10rem" />
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Create an Account
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={0}
-              mt={0}
-              p={3}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+            <MDBox mx={0} mt={0} p={3} mb={1} textAlign="center">
+              <MDTypography
+                variant="h6"
+                style={{
+                  color: "#318CE7",
+                  borderColor: "#318CE7",
+                  borderWidth: "5",
+                  borderStyle: "solid",
+                  borderRadius: "5",
+                }}
+                fontWeight="medium"
+                // color="white"
+                mt={1}
+              >
                 BASIC INFO
               </MDTypography>
             </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="error"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={3}
-              mt={1}
-              p={1}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="first">
+            <MDBox sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="first">
                 {" "}
               </MDTypography>
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="last">
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="last">
                 {" "}
               </MDTypography>
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="other">
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="other">
                 {" "}
               </MDTypography>
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="email">
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="email">
                 {" "}
               </MDTypography>
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="phone">
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="phone">
                 {" "}
               </MDTypography>
             </MDBox>
@@ -463,31 +407,14 @@ function Cover() {
             </MDBox>
             <Container>
               <div className="row">
-                <div className="col-sm-10">
-                  <MDBox mb={2}>
-                    <MDInput
-                      type="text"
-                      label="Other Name"
-                      value={onamex || ""}
-                      onKeyUp={(e) => handleOnOtherKeys(e.target.value)}
-                      onChange={(e) => setOname(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </MDBox>
-                </div>
-              </div>
-            </Container>
-            <Container>
-              <div className="row">
-                <div className="col-sm-10">
+                <div className="col-sm-12">
                   <MDBox mb={2}>
                     <MDInput
                       type="email"
-                      label="Personal Email"
+                      label="Email *"
                       value={emailx || ""}
                       onKeyUp={(e) => handleOnPEmailKeys(e.target.value)}
-                      onChange={getPersonalInformation}
+                      onChange={(e) => setEmail(e.target.value)}
                       variant="standard"
                       fullWidth
                     />
@@ -498,126 +425,91 @@ function Cover() {
             <MDBox mb={2}>
               <Container>
                 <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text">
-                      Phone Number
+                  <div className="col-sm-6">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      Gender
                     </MDTypography>
-                    <PhoneInput
-                      value={phonex}
-                      inputStyle={{ width: "150%" }}
-                      buttonStyle={{}}
-                      onChange={setPhone}
-                    />
+                    <MDBox mb={2}>
+                      <Form.Select
+                        onChange={(e) => setGender(e.target.value)}
+                        value={genderx || ""}
+                        aria-label="Default select example"
+                      >
+                        <option>---Gender---</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </Form.Select>
+                    </MDBox>
+                  </div>
+                  <div className="col-sm-6">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
+                      Marital Status
+                    </MDTypography>
+                    <MDBox mb={2}>
+                      <Form.Select
+                        onChange={(e) => setMaritalStatus(e.target.value)}
+                        value={maritalStatusx || ""}
+                        aria-label="Default select example"
+                      >
+                        <option value="">---Marital Status---</option>
+                        <option value="SINGLE">Single</option>
+                        <option value="MARRIED">Married</option>
+                        <option value="DIVORCED">Divorced</option>
+                        <option value="WIDOWED">Widowed</option>
+                      </Form.Select>
+                    </MDBox>
                   </div>
                 </div>
               </Container>
             </MDBox>
-            <Container>
-              <div className="row">
-                <div className="col-sm-8">
-                  <MDBox mb={2}>
-                    <MDTypography variant="button" fontWeight="regular" color="text">
-                      Marital Status
-                    </MDTypography>
-                    <Form.Select
-                      onChange={(e) => setMaritalStatus(e.target.value)}
-                      value={maritalStatusx || ""}
-                      aria-label="Default select example"
-                    >
-                      <option>---Marital Status---</option>
-                      <option value="Single">Single</option>
-                      <option value="Married">Married</option>
-                      <option value="Divorced">Divorced</option>
-                    </Form.Select>
-                  </MDBox>
-                </div>
-              </div>
-            </Container>
-            <Container>
-              <div className="row">
-                <div className="col-sm-12">
-                  <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
-                    Date Of Birth
-                  </MDTypography>
-                  <MDBox mb={4} mt={-1}>
-                    <div>
-                      <style>
-                        {`.date-picker input {
-                      width: 50%
-                 }`}
-                      </style>
-                      <DatePicker
-                        date={startDate}
-                        wrapperClassName="date-picker"
-                        placeholder="Select Birth Date"
-                        dateFormat="dd/MM/yyyy"
-                        confirmBtnText="Confirm"
-                        showCancelButton="true"
-                        customStyles={{
-                          placeholderText: {
-                            fontSize: 5,
-                          },
-                          dateIcon: {
-                            height: 0,
-                            width: 0,
-                          },
-                          dateText: {
-                            color: "#b3b4b5",
-                            fontSize: 16,
-                          },
-                          dateInput: {
-                            borderWidth: 0,
-                          },
-                        }}
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                      />
-                    </div>
-                  </MDBox>
-                </div>
-              </div>
-            </Container>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={0}
-              mt={0}
-              p={3}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-                ADDRESS
-              </MDTypography>
-            </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="error"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={3}
-              mt={1}
-              p={1}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="street">
-                {" "}
-              </MDTypography>
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="city">
-                {" "}
-              </MDTypography>
-            </MDBox>
-            <MDBox mb={2}>
+            <MDBox>
               <Container>
                 <div className="row">
-                  <div className="col-sm-8">
+                  <div className="col-sm-6">
+                    <MDTypography variant="button" fontWeight="regular" color="text" mt={1}>
+                      Date Of Birth
+                    </MDTypography>
+                    <MDBox mb={0} mt={0}>
+                      <div>
+                        <style>
+                          {`.date-picker input {
+                      width: 80%
+                 }`}
+                        </style>
+                        <DatePicker
+                          date={startDate}
+                          wrapperClassName="date-picker"
+                          placeholder="Select Birth Date"
+                          dateFormat="dd/MM/yyyy"
+                          confirmBtnText="Confirm"
+                          showCancelButton="true"
+                          customStyles={{
+                            placeholderText: {
+                              fontSize: 5,
+                            },
+                            dateIcon: {
+                              height: 0,
+                              width: 0,
+                            },
+                            dateText: {
+                              color: "#b3b4b5",
+                              fontSize: 16,
+                            },
+                            dateInput: {
+                              borderWidth: 0,
+                            },
+                          }}
+                          selected={startDate}
+                          onChange={(date) => setStartDate(date)}
+                          peekNextMonth
+                          showMonthDropdown
+                          showYearDropdown
+                          dropdownMode="select"
+                        />
+                      </div>
+                    </MDBox>
+                  </div>
+                  <div className="col-sm-6">
                     <MDTypography variant="button" fontWeight="regular" color="text" mt={3}>
                       Nationality
                     </MDTypography>
@@ -639,112 +531,63 @@ function Cover() {
                 </div>
               </Container>
             </MDBox>
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDInput
-                      type="text"
-                      label="Street"
-                      value={residentialStreetx || ""}
-                      onKeyUp={(e) => handleOnStreetKeys(e.target.value)}
-                      onChange={(e) => setResidentialStreet(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-sm-4">
-                    <MDInput
-                      type="text"
-                      label="City"
-                      value={residentialCityx || ""}
-                      onKeyUp={(e) => handleOnCityKeys(e.target.value)}
-                      onChange={(e) => setResidentialCity(e.target.value)}
-                      variant="standard"
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox mb={2}>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                      Country
-                    </MDTypography>
-                    <MDBox textAlign="right">
-                      <Form.Select
-                        value={residentialCountryx || ""}
-                        aria-label="Default select example"
-                        onChange={handleOnChangeRCCountry}
-                      >
-                        <option>--Select Country--</option>
-                        {AlCountry.map((apic) => (
-                          <option key={apic.code3} value={apic.name}>
-                            {apic.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </MDBox>
-                  </div>
-                </div>
-              </Container>
-              <Container>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <MDTypography variant="button" fontWeight="regular" color="text" mt={2}>
-                      State
-                    </MDTypography>
-                    <MDBox textAlign="right">
-                      <Form.Select
-                        value={residentialStatex || ""}
-                        aria-label="Default select example"
-                        onChange={handleOnChangeRCState}
-                      >
-                        <option>--Select State--</option>
-                        {allStates.map((apis) => (
-                          <option key={apis.code} value={apis.name}>
-                            {apis.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </MDBox>
-                  </div>
-                </div>
-              </Container>
-            </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={0}
-              mt={0}
-              p={3}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
+            <br />
+            <div align="left">
+              <div>
+                <MDTypography
+                  fontSize="70%"
+                  // variant="h6"
+                  // style={{
+                  //   color: "#318CE7",
+                  //   borderColor: "#318CE7",
+                  //   borderWidth: "5",
+                  //   borderStyle: "solid",
+                  //   borderRadius: "5",
+                  // }}
+                  // fontWeight="medium"
+                  // color="white"
+                >
+                  Add Profile Image
+                </MDTypography>
+                <MDInput type="file" files={files} onChange={previewImage} />
+                <p id="imageVal" style={{ color: "red", fontSize: 13 }}>
+                  <i> </i>
+                </p>
+
+                {imgChanged ? (
+                  <img
+                    src={URL.createObjectURL(selectedImage)}
+                    style={{ maxWidth: "50%", maxHeight: "50%", borderRadius: 5 }}
+                    alt="Thumb"
+                  />
+                ) : (
+                  <div />
+                )}
+              </div>
+            </div>
+            <br />
+            <MDBox mx={0} mt={0} p={3} mb={1} textAlign="center">
+              <MDTypography
+                variant="h6"
+                style={{
+                  color: "#318CE7",
+                  borderColor: "#318CE7",
+                  borderWidth: "5",
+                  borderStyle: "solid",
+                  borderRadius: "5",
+                }}
+                fontWeight="medium"
+                // color="white"
+                mt={1}
+              >
                 PASSWORD
               </MDTypography>
             </MDBox>
-            <MDBox
-              variant="gradient"
-              bgColor="error"
-              borderRadius="lg"
-              coloredShadow="success"
-              mx={3}
-              mt={1}
-              p={1}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="password">
+            <MDBox sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="password">
                 {" "}
               </MDTypography>
-              <MDTypography variant="gradient" fontSize="60%" color="white" id="rtPassword">
+              <MDTypography variant="gradient" fontSize="60%" color="error" id="rtPassword">
                 {" "}
               </MDTypography>
             </MDBox>
@@ -754,7 +597,7 @@ function Cover() {
                   <MDBox mb={2}>
                     <MDInput
                       type={passwordShown ? "text" : "password"}
-                      label="Password"
+                      label="Password *"
                       value={passwordx || ""}
                       onKeyUp={(e) => handleOnPasswordKeys(e.target.value)}
                       onChange={(e) => setPassword(e.target.value)}

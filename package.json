@@ -64,6 +64,7 @@
     "react-iframe": "^1.8.0",
     "react-loader-spinner": "^5.1.0",
     "react-monnify": "^0.0.5",
+    "react-otp-input": "^2.4.0",
     "react-phone-input-2": "^2.14.0",
     "react-phone-number-input": "^3.1.44",
     "react-promise-tracker": "^2.1.0",

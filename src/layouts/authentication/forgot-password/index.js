@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import { useState } from "react";
 import Card from "@mui/material/Card";
@@ -49,7 +34,7 @@ function ForgotPass() {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      username: emailx,
+      email: emailx,
     });
     const requestOptions = {
       method: "POST",
@@ -58,15 +43,15 @@ function ForgotPass() {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_ZAVE_URL}/individualLogin/forgotPassword`, requestOptions)
+    fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/login/initiate-reset-password`, requestOptions)
       .then((res) => res.json())
       .then((result) => {
         setOpened(false);
         if (result.status === "SUCCESS") {
           MySwal.fire({
-            title: result.status,
+            title: "SUCCESS",
             type: "success",
-            text: result.message,
+            text: "You will receive an email to rest your password shortly",
           }).then(() => {
             navigate("/authentication/sign-in", { replace: true });
           });
@@ -103,10 +88,10 @@ function ForgotPass() {
           textAlign="center"
         >
           <MDTypography variant="h3" fontWeight="medium" color="white" mt={1}>
-            Forgot Password
+            Reset Password
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            You will receive an e-mail to change your password
+            You will receive an e-mail to reset your password
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
