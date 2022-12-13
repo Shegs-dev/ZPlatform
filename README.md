@@ -6,3 +6,5 @@ To run this project you need to run these:
 - npm start
 
 The project would run on localhost:3000
+
+There is a liver url which is: https://zplatform-companyz.netlify.app/
