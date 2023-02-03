@@ -279,7 +279,7 @@ function Cover() {
                 text: "There is no image present",
               });
             } else {
-              handleClick(e, result);
+              handleClick(e, result.data);
             }
           });
       }

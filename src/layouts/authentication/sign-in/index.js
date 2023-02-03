@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // react-router-dom components
 import { Link, useNavigate } from "react-router-dom";
@@ -41,6 +41,7 @@ function Basic() {
   const [passwordShown, setPasswordShown] = useState(false);
   const [open, setOpen] = useState(false);
   const [otpx, setOTP] = useState("");
+  const handleOpen = () => setOpen(false);
 
   // Password toggle handler
   const togglePassword = () => {
@@ -76,8 +77,9 @@ function Basic() {
       })
       .then((result) => {
         setOpened(false);
-        localStorage.setItem("id", JSON.stringify(result));
+        localStorage.setItem("id", JSON.stringify(result.data));
         openModal();
+        console.log(result);
       })
       .catch((error) => {
         setOpened(false);
@@ -103,51 +105,123 @@ function Basic() {
     p: 4,
   };
 
+  // const handleAuthentication = (e) => {
+  //   setOpened(true);
+  //   handleClose();
+  //   e.preventDefault();
+  //   const myHeaders = new Headers();
+  //   myHeaders.append("Content-Type", "application/json");
+  //   const lastResult = JSON.parse(localStorage.getItem("id"));
+  //   const id = lastResult.message;
+  //   console.log(id);
+  //   const raw = JSON.stringify({ userId: id, token: otpx });
+  //   console.log(raw);
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: myHeaders,
+  //     body: raw,
+  //     redirect: "follow",
+  //   };
+
+  //   fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/login/authenticate-login`, requestOptions)
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         return res.text().then((text) => {
+  //           throw new Error(text);
+  //         });
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((result) => {
+  //       console.log(result);
+  //       setOpened(false);
+  //       localStorage.setItem("user", result);
+  //       if (result.status === "SUCCESS") {
+  //         console.log(result);
+  //         MySwal.fire({
+  //           title: "SUCCESS",
+  //           type: "success",
+  //           text: "Login Successful",
+  //         }).then(() => {
+  //           console.log("nnoo");
+  //           // navigate("/dashboard");
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setOpened(false);
+  //       const err = JSON.parse(error);
+  //       MySwal.fire({
+  //         title: "ERROR",
+  //         type: "error",
+  //         text: err.error,
+  //       });
+  //     });
+  // };
   const handleAuthentication = () => {
-    setOpened(true);
-    handleClose();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const lastResult = JSON.parse(localStorage.getItem("id"));
-    const id = lastResult.message;
-    const raw = JSON.stringify({ userId: id, token: otpx });
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
 
-    fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/login/authenticate-login`, requestOptions)
-      .then((res) => {
-        if (!res.ok) {
-          return res.text().then((text) => {
-            throw new Error(text);
-          });
-        }
-        return res.json();
-      })
-      .then((result) => {
-        setOpened(false);
-        localStorage.setItem("user", result);
-        MySwal.fire({
-          title: "SUCCESS",
-          type: "success",
-          text: "Login Successful",
-        }).then(() => {
-          navigate("/dashboard");
+    if (otpx.length === 6) {
+      console.log("zombie");
+    }
+
+    if (otpx.length === 6) {
+      const lastResult = JSON.parse(localStorage.getItem("id"));
+      console.log(lastResult);
+      const id = lastResult;
+      console.log(id);
+      const raw = JSON.stringify({ userId: id, token: otpx });
+      console.log(raw);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+      // setOpen(true);
+      // setOpened(true);
+
+      fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/login/authenticate-login`, requestOptions)
+        .then(async (res) => {
+          // console.log(res.headers);;;;
+          const aToken = res.headers.get("token-1");
+          localStorage.setItem("rexxdex1", aToken);
+          return res.json();
+        })
+        .then((result) => {
+          console.log(result);
+          if (result.id !== null) {
+            handleOpen();
+            localStorage.setItem("user1", JSON.stringify(result));
+            // navigate("/dashboard");
+            MySwal.fire({
+              title: "SUCCESS",
+              type: "success",
+              text: "Login Successful",
+            }).then(() => {
+              console.log("nnoo");
+              handleOpen();
+              navigate("/dashboard");
+            });
+            handleOpen();
+          } else {
+            MySwal.fire({
+              title: "ERROR",
+              type: "error",
+              text: result.message,
+            });
+          }
+          handleOpen();
         });
-      })
-      .catch((error) => {
-        setOpened(false);
-        const err = JSON.parse(error);
-        MySwal.fire({
-          title: "ERROR",
-          type: "error",
-          text: err.error,
-        });
-      });
+    }
   };
+
+  useEffect(() => {
+    if (otpx.length === 6) {
+      handleAuthentication();
+    }
+  }, [otpx]);
 
   return (
     <div>
@@ -342,7 +416,7 @@ function Basic() {
                           </FormControl>
                         </Box>
                       </Box>
-                      <MDBox mt={4} mb={1} paddingLeft="20px">
+                      {/* <MDBox mt={4} mb={1} paddingLeft="20px">
                         <MDButton
                           variant="gradient"
                           onClick={handleAuthentication}
@@ -352,7 +426,7 @@ function Basic() {
                         >
                           Save
                         </MDButton>
-                      </MDBox>
+                      </MDBox> */}
                     </MDBox>
                   </Box>
                 </Grid>

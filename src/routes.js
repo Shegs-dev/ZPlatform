@@ -7,7 +7,6 @@ import Userlogin from "layouts/authentication/userlogin";
 // // @mui icons
 import Icon from "@mui/material/Icon";
 import ForgotPass from "layouts/authentication/forgot-password";
-import ComForgotPass from "layouts/authentication/complete-forgotPassword";
 import Verification from "layouts/authentication/verification";
 import ComResetPass from "layouts/authentication/complete-reset-Password";
 
@@ -62,13 +61,6 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/forgot-password",
     component: <ForgotPass />,
-  },
-  {
-    name: "Complete Reset Password",
-    key: "complete-ResetPassword",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "authentication/complete-forgot-Password",
-    component: <ComForgotPass />,
   },
 ];
 

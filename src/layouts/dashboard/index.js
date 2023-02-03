@@ -36,7 +36,7 @@ function UserProfile() {
     const headers = miHeaders;
     let isMounted = true;
     const lastResult = JSON.parse(localStorage.getItem("id"));
-    const id = lastResult.message;
+    const id = lastResult;
     fetch(`${process.env.REACT_APP_ZPLATFORM_URL}/users/get/${id}`, {
       headers,
     })

@@ -65,7 +65,7 @@ function Verification() {
     // setOpened(true);
     e.preventDefault();
     const lastResult = JSON.parse(localStorage.getItem("id"));
-    const id = lastResult.message;
+    const id = lastResult;
 
     const raw = JSON.stringify({
       userId: id,
@@ -177,7 +177,7 @@ function Verification() {
                   text: "There is no document present",
                 });
               } else {
-                handleClick(e, result);
+                handleClick(e, result.data);
               }
             });
         }
