@@ -141,7 +141,11 @@ function UserProfile() {
   const view = formatDate(new Date(userProfilex.dateOfBirth));
 
   const calculateAge = (birthday) => {
+    const myDate = new Date(birthday);
+    console.log(myDate);
     const ageDifMs = Date.now() - new Date(birthday).getTime();
+    console.log(Date.now());
+    console.log(birthday);
     const ageDate = new Date(ageDifMs);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   };

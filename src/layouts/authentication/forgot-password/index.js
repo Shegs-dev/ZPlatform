@@ -88,10 +88,10 @@ function ForgotPass() {
           textAlign="center"
         >
           <MDTypography variant="h3" fontWeight="medium" color="white" mt={1}>
-            Reset Password
+            Welcome
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            You will receive an e-mail to reset your password
+            This is the COVID-19 Game
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -99,7 +99,7 @@ function ForgotPass() {
             <MDBox mb={4}>
               <MDInput
                 type="email"
-                label="Email"
+                label="Username"
                 variant="standard"
                 value={emailx || ""}
                 onChange={(e) => setEmail(e.target.value)}
@@ -108,7 +108,7 @@ function ForgotPass() {
             </MDBox>
             <MDBox mt={6} mb={1}>
               <MDButton variant="gradient" color="info" onClick={handleClick} fullWidth>
-                Send
+                Go!
               </MDButton>
             </MDBox>
           </MDBox>
